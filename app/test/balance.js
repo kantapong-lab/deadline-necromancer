@@ -3,15 +3,24 @@
 //   rounds  games per size            (default 1000)
 //   sizes   comma list of player counts (default 6,7,8,9,10,11,12)
 //   acc     chance a light voter picks a real dark player instead of a random one (default 0.4)
+// Env overrides BALANCE_COMP / BALANCE_MANA let you try rule changes before editing the engine.
 // Bots are crude: skills hit random targets, so treat results as direction, not truth.
 // Light win rate near 50% at every size is the goal; compare before/after a rules change.
 const { Game } = require('../src/engine');
+const { COMP } = require('../src/engine/constants');
+
+// What-if overrides without editing the engine: BALANCE_COMP='9:6,2,1;10:7,2,1' (light,dark,freelancer)
+// and BALANCE_MANA='9:5;10:6' (ManaMax per size).
+const parse = v => Object.fromEntries((v || '').split(';').filter(Boolean).map(p => p.split(':')));
+const MANA = parse(process.env.BALANCE_MANA);
+for (const [n, c] of Object.entries(parse(process.env.BALANCE_COMP))) COMP[n] = c.split(',').map(Number);
 
 const rnd = a => a[Math.floor(Math.random() * a.length)];
 const ONCE = new Set(['chrono_tech_lead', 'chaos_devops']);
 
 function play(N, o) {
   const G = new Game(Array.from({ length: N }, (_, i) => 'P' + i));
+  if (MANA[N]) G.manaMax = Number(MANA[N]);
   for (let guard = 0; G.phase !== 'OVER' && guard < 50; guard++) {
     if (G.phase === 'MORNING') G.toVote();
     if (G.phase === 'VOTE') {

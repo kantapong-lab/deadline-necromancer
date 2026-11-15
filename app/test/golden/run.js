@@ -12,7 +12,7 @@ const args = process.argv.slice(2);
 const record = args.includes('--record');
 const dumpIdx = args.indexOf('--dump');
 const dumpFile = dumpIdx >= 0 ? args[dumpIdx + 1] : null;
-const SEEDS = Number(process.env.GOLDEN_SEEDS || 15);
+const SEEDS = Number(process.env.GOLDEN_SEEDS || 20);
 
 const cov = new Coverage();
 const games = [], dump = {};
