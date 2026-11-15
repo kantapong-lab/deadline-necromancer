@@ -130,7 +130,8 @@ function observe(g, cov) {
     if (p.role === 'chaos_intern' && p.alive && g.day >= 4) add('chaosInternDouble');
   });
   g.traps.forEach(t => add('trapOnBoard:' + t.kind));
-  const text = g.feed.map(f => f.text).join('\n') + '\n' + g.report.join('\n') + '\n' + g.timeline.map(t => t.title + ' ' + t.text).join('\n');
+  const priv = Object.values(g.intel || {}).flat().map(e => e.text).join('\n');   // Alibi/Blame ไม่ประกาศสาธารณะ แจ้งเฉพาะเจ้าของ Trap
+  const text = priv + '\n' + g.feed.map(f => f.text).join('\n') + '\n' + g.report.join('\n') + '\n' + g.timeline.map(t => t.title + ' ' + t.text).join('\n');
   Object.entries(TRAPS).forEach(([k, t]) => { if (text.includes('Trap Card ทำงาน: ' + t.n)) add('trapTriggered:' + k); });
   Object.entries(BOOSTERS).forEach(([k, b]) => { if (text.includes('Sprint Booster เปิดใช้: ' + b.n)) add('booster:' + k); });
   if (text.includes('Hotfix Rollback: คำสาปและบั๊ก')) add('chronoRollback');

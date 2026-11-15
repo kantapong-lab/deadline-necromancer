@@ -12,7 +12,7 @@ module.exports = {
     return this.players.map(p => {
       const rv = this.revealed(p, viewer, god);
       return {
-        id: p.id, name: p.name, alive: p.alive, cause: p.alive ? null : p.cause, silenced: p.alive && p.silenced,
+        id: p.id, name: p.name, alive: p.alive, cause: p.alive ? null : p.cause, silenced: p.alive && p.silenced && (god || p.id === viewer?.id),   // ห้ามเปิดเผยคนอื่น: คนที่โดนสกิลฝ่ายมืดต้องไม่ใช่ฝ่ายมืด
         role: rv ? p.role : null, faction: rv ? p.faction : null,
         me: p.id === viewer?.id, mate: !!viewer && viewer.faction === 'dark' && p.faction === 'dark' && p.id !== viewer.id,
       };

@@ -24,7 +24,7 @@ module.exports = {
     A.filter(a => a.side && a.type === 'TRAP').forEach(a => {
       if (G.trapCharges > 0 && a.trapId) {
         G.trapCharges--; placedNow++;
-        G.traps.push({ kind: a.trapId, target: a.targets[0], day: G.day, fresh: true, triggered: false });
+        G.traps.push({ kind: a.trapId, owner: a.p.id, target: a.targets[0], day: G.day, fresh: true, triggered: false });
         add(a.p.id, `หมอบ Trap Card: ${TRAPS[a.trapId].n}${a.targets[0] != null ? ' ที่ ' + nm(a.targets[0]) : ''} (โควตา Trap เหลือ ${G.trapCharges})`);
       } else { a.type = 'FAKE'; add(a.p.id, 'โควตา Trap หมดแล้ว — กลายเป็นส่งงานหลอก'); }
     });
@@ -195,7 +195,11 @@ module.exports = {
       const victims = shuffle(Object.keys(notes).map(Number).filter(id => id !== a.p.id && notes[id].length));
       broadcast.push(victims.length ? `[Reply All] ${notes[victims[0]][0].text}` : '[Reply All] ไม่มีแจ้งเตือนให้ป่าวประกาศเลย');
     });
-    G.traps.filter(t => t.fresh && t.triggered).forEach(t => rep.push(`🪤 Trap Card ทำงาน: ${TRAPS[t.kind].n}`));
+    // ประกาศสาธารณะบอกแค่ชื่อ Trap ที่ทำงาน; รายละเอียด Alibi Mirror แจ้งเฉพาะเจ้าของ Trap
+    G.traps.filter(t => t.fresh && t.triggered).forEach(t => {
+      if (t.kind === 'alibi' && G.intel[t.owner]) G.intel[t.owner].push({ day: G.day, text: `🪤 Alibi Mirror (ส่วนตัว): ${nm(t.target)} ถูกสกิลฝ่ายแสงส่องเมื่อคืน แต่ผลดูเป็นฝ่ายแสงปกติ` });
+      rep.push(`🪤 Trap Card ทำงาน: ${TRAPS[t.kind].n}`);
+    });
     G.traps = G.traps.filter(t => !['honeypot', 'alibi', 'insurance'].includes(t.kind));
     G.traps.forEach(t => t.fresh = false);
     // deaths

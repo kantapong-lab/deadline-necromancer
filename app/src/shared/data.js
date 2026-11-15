@@ -51,7 +51,7 @@ const EVENTS = {
 };
 // Trap Card ของฝ่ายมืด (ใช้แทน side action) / Sprint Booster (โหวตสาธารณะตอนเช้า)
 const TRAPS = {
-  blame:     {img:'01_blame_shifting.jpg', n:'Blame Shifting',    need:null,      d:'ถ้าฝ่ายมืดถูกโหวตไล่ออกอันดับ 1 วันถัดไป → ยกเลิกและบังคับผลเป็น Skip'},
+  blame:     {img:'01_blame_shifting.jpg', n:'Blame Shifting',    need:null,      d:'ถ้ามีใคร (ฝ่ายไหนก็ได้ รวมถึง Severance Seeker ซึ่งจะไม่ชนะจากการถูกไล่ออก) ถูกโหวตไล่ออกอันดับ 1 วันถัดไป → ยกเลิกและบังคับผลเป็น Skip'},
   honeypot:  {img:'02_honeypot_bug.jpg', n:'Honeypot Bug',      need:'any',     d:'หมอบที่ผู้เล่น 1 คน — สายสืบ (Senior Dev/QA/UX) ที่ส่องคนนี้คืนนี้จะได้ข้อมูลปลอม'},
   alibi:     {img:'03_alibi_mirror.jpg', n:'Alibi Mirror',      need:'dark',    d:'หมอบที่ฝ่ายมืด 1 คน — โดนสกิลฝ่ายแสงคืนนี้จะดูเป็นฝ่ายแสงปกติ และไม่ทำให้บาเรียของ PM แตก'},
   hijack:    {img:'04_meeting_hijack.jpg', n:'Meeting Hijack',    need:null,      d:'เช้าวันถัดไปเวลาคุยลด 30% และสุ่มผู้เล่น 1 คนให้ Skip อัตโนมัติ'},

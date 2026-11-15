@@ -41,8 +41,8 @@ module.exports = {
     G.bonusVotes = G.pendingBonus; G.pendingBonus = [];
     G.alive().forEach(p => { p.locked = p.lockedNext; p.lockedNext = false; p.silenced = p.silencedNext; p.zero = p.zeroNext; p.dbl = p.dblNext; p.silencedNext = p.zeroNext = p.dblNext = false; });
     G.players.filter(p => !p.alive).forEach(p => p.silenced = p.zero = p.dbl = false);
-    const sil = G.alive().filter(p => p.silenced).map(p => p.name);
-    if (sil.length) G.addNightLine('🤐 NDA Silence: ' + sil.join(', ') + ' ถูกปิดปาก (พิมพ์แชทและโหวตไม่ได้วันนี้)');
+    // ไม่ประกาศชื่อผู้ถูก NDA Silence ต่อสาธารณะ (เป็นการยืนยันว่าไม่ใช่ฝ่ายมืด) — แจ้งเฉพาะเจ้าตัวแบบลับ
+    G.alive().filter(p => p.silenced && G.intel[p.id]).forEach(p => G.intel[p.id].push({ day: G.day, text: '🤐 NDA Silence: คุณถูกปิดปาก (พิมพ์แชทได้แค่อีโมจิ และโหวตไม่ได้วันนี้)' }));
     G.phase = 'MORNING'; G.votes = {}; G.timer = null;
     G.sys('— เช้าวัน' + DAYS[G.day - 1] + ' —');
     G.log('เริ่มเช้าวัน' + DAYS[G.day - 1], 'ประกาศผลเมื่อคืนและเปิดห้องประชุม');
@@ -53,7 +53,7 @@ module.exports = {
       const pool = G.alive().filter(p => !p.silenced);
       if (pool.length) G.hijackVoter = rnd(pool).id;
       G.traps = G.traps.filter(t => t !== hj);
-      const m = '🪤 Trap Card ทำงาน: Meeting Hijack — เวลาคุยลด 30% และมีผู้เล่น 1 คนถูกบังคับให้ Skip';
+      const m = '🪤 Trap Card ทำงาน: Meeting Hijack';
       G.addNightLine(m, { sys: true });
       if (G.hijackVoter != null) G.intel[G.hijackVoter].push({ day: G.day, text: '🎤 ไมค์ของคุณถูกยึด (Meeting Hijack) — วันนี้คุณถูกบังคับให้โหวต Skip' });
     }

@@ -303,9 +303,9 @@ const cases = {
     const pub = [...T.common().report, ...T.common().feed.map(f => f.text)].join('\n');
     assert.doesNotMatch(pub, /Meeting Hijack/, 'hijack line not public'); assert.doesNotMatch(pub, /NDA Silence/, 'NDA line not public');
     const onT = T.event.onCall; assert(T.P(onT).alive);
-    assert.match(intel(T, onT), /Meeting Hijack/, 'on-call gets hijack line'); assert.match(intel(T, onT), /NDA Silence/, 'on-call gets NDA line');
+    assert.match(intel(T, onT), /Meeting Hijack/, 'on-call gets hijack line'); assert.doesNotMatch(intel(T, onT), /\sถูกปิดปาก \(พิมพ์แชทและโหวตไม่ได้วันนี้\)/, 'on-call must not learn who was silenced');
     const sr = T.modView(false).statusReport.join('\n');
-    assert.match(sr, /Meeting Hijack/); assert.match(sr, /NDA Silence/);
+    assert.match(sr, /Meeting Hijack/);
     // control: another card publishes the full report as before
     const C = mk(); C.deck = ['approve']; C.closeNight(); assert(C.report.some(l => /Mana/.test(l)), 'full report public'); assert.strictEqual(C.modView(false).statusReport, undefined);
     // Chaos Intern + #20 in one night: no crash
@@ -324,4 +324,18 @@ for (const [id, e] of Object.entries(EVENTS)) {
 }
 Object.keys(cases).filter(id => !EVENTS[id]).forEach(id => { failed++; console.log('  FAIL ' + id + ' has a test but no event card'); });
 console.log(failed ? `\n${failed} event test(s) failed` : `\nall ${Object.keys(EVENTS).length} event cards tested`);
+// Blame Shifting: cancels the top-voted ejection of any faction, Severance Seeker included (blocks his eject-win)
+{
+  const run = target => {
+    const G = table(); G.phase = 'VOTE'; G.votes = {}; G.traps = [{ kind: 'blame', owner: HR, day: G.day - 1 }];
+    G.alive().forEach(p => { if (p.id !== target) G.castVote(p.id, target); });
+    G.closeVote(); return G;
+  };
+  const light = run(0); assert(light.P(0).alive, 'Blame cancels a light ejection'); assert.match(light.voteResult.text, /Blame Shifting/);
+  const dark = run(DEVOPS); assert(dark.P(DEVOPS).alive, 'Blame cancels a dark ejection');
+  const sk = run(10); assert(sk.P(10).alive && !sk.P(10).soloWon, 'Blame stops the Severance Seeker eject-win'); assert.match(sk.voteResult.text, /Blame Shifting/);
+  console.log('  ok   Blame Shifting any faction, Seeker included');
+}
+
 process.exit(failed ? 1 : 0);
+

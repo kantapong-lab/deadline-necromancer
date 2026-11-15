@@ -64,7 +64,11 @@ module.exports = {
     const trapMsgs = [];
     if (outcome !== null) {
       const bl = G.traps.find(t => t.kind === 'blame' && t.day === G.day - 1);
-      if (bl && P(outcome).faction === 'dark') { outcome = null; G.traps = G.traps.filter(t => t !== bl); trapMsgs.push('🪤 Trap Card ทำงาน: Blame Shifting — ยกเลิกการไล่ออก ผลโหวตกลายเป็น Skip'); }
+      if (bl) {   // ทำงานกับทุกฝ่ายรวม Severance Seeker (ขัดการชนะด้วยการถูกไล่ออก) เพื่อให้บลัฟได้
+        // ประกาศสาธารณะบอกแค่ชื่อ Trap (ต่อท้ายผลโหวต); ชื่อเป้าหมายแจ้งเฉพาะเจ้าของ Trap
+        if (G.intel[bl.owner]) G.intel[bl.owner].push({ day: G.day, text: `🪤 Blame Shifting (ส่วนตัว): ยกเลิกการไล่ออก ${nm(outcome)} (ผลโหวตกลายเป็น Skip)` });
+        outcome = null; G.traps = G.traps.filter(t => t !== bl); trapMsgs.push('🪤 Trap Card ทำงาน: Blame Shifting');
+      }
     }
     if (outcome !== null) {
       const ex = G.traps.find(t => t.kind === 'exit' && t.day === G.day - 1 && t.target === outcome);
@@ -72,10 +76,10 @@ module.exports = {
         G.traps = G.traps.filter(t => t !== ex); G.mana = Math.max(0, G.mana - 1);
         const lights = G.alive().filter(p => p.faction === 'light' && p.id !== outcome);
         if (lights.length) G.blockIntel = rnd(lights).id;
-        trapMsgs.push('🪤 Trap Card ทำงาน: Exit Scam — Mana −1 และแจ้งเตือนลับของฝ่ายแสง 1 คนจะถูกบล็อกพรุ่งนี้เช้า');
+        trapMsgs.push('🪤 Trap Card ทำงาน: Exit Scam');
       }
     }
-    const lines = G.alive().map(p => p.silenced ? `${p.name}: 🤐 ถูกปิดปาก โหวตไม่ได้` : (votes[p.id] === undefined ? `${p.name}: (ไม่ลงคะแนน)` : `${p.name} → ${votes[p.id] === 'SKIP' ? 'Skip' : nm(votes[p.id])}`));
+    const lines = G.alive().map(p => p.silenced ? `${p.name}: (ไม่ลงคะแนน)` : (votes[p.id] === undefined ? `${p.name}: (ไม่ลงคะแนน)` : `${p.name} → ${votes[p.id] === 'SKIP' ? 'Skip' : nm(votes[p.id])}`));
     if (bonusUsed) lines.push(`🎯 มีคะแนนโหวตลับ +1 จากสกิล ${bonusUsed} คะแนนถูกนับรวม`);
     if (outcome === null) {
       if (G.retro) { G.noPenalty = true; text = 'คะแนนเสมอหรือ Skip ชนะ — ไม่มีใครถูกไล่ออก (Retrospective: ยกเลิกโทษ Skip รอบนี้)'; }
