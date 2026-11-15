@@ -215,6 +215,20 @@ const cases = {
       assert.strictEqual(/→ มีฝ่ายมืด/.test(line), ids.some(id => G.P(id).faction === 'dark'), 'truthful');
       assert(G.feed.some(f => f.text === line) && G.report.includes(line));
     }
+    // ejection really happens: every alive player votes HR, so HR is out before the UAT pool is drawn
+    for (let i = 0; i < 60; i++) {
+      const G = setEvent(table(), 'uat'); G.phase = 'VOTE'; G.votes = {}; G.voteRound = 0;
+      G.alive().forEach(p => { G.votes[p.id] = HR; });
+      G.closeVote();
+      assert.strictEqual(G.P(HR).alive, false, 'HR ejected');
+      const line = G.voteResult.lines[G.voteResult.lines.length - 1];
+      assert.match(line, /UAT Too Late: สุ่มทดสอบ P\d+, P\d+, P\d+ → /);
+      const picks = line.split('→')[0];
+      const ids = [...picks.matchAll(/P(\d+)/g)].map(m => +m[1]);
+      assert.strictEqual(new Set(ids).size, 3, 'distinct');
+      assert(!ids.includes(HR) && !picks.includes(G.P(HR).name), 'ejected name never in the UAT line');
+      ids.forEach(id => assert(G.P(id).alive, 'every named player is alive'));
+    }
     // ignores Honeypot, Alibi, Overpromise: only seat 7 (dark) + 0 + 1 alive, so it is always picked
     const H = setEvent(table(), 'uat'); H.players.forEach(p => { if (p.id !== HR && p.id !== 0 && p.id !== 1) p.alive = false; });
     H.P(0).overpromised = true; H.traps = [{ kind: 'honeypot', target: HR, day: H.day }, { kind: 'alibi', target: HR, day: H.day }];
@@ -283,6 +297,15 @@ const cases = {
     assert(G.modView(false).statusReport.length > 1 && G.modView(false).statusReport.some(l => /Mana/.test(l)), 'moderator keeps the full report');
     assert.strictEqual(G.common().mana, G.mana); assert.strictEqual(G.common().manaMax, 6);
     assert(!JSON.stringify(G.common()).includes('onCall') && !JSON.stringify(G.pubPlayers(G.P(5), false)).includes('onCall'));
+    // Meeting Hijack trap + NDA-silenced player: both status lines withheld from public, both in on-call intel and moderator statusReport
+    const T = mk(); T.traps = [{ kind: 'hijack', target: null, day: T.day, fresh: false, triggered: false }]; T.P(5).silencedNext = true;
+    T.closeNight();
+    const pub = [...T.common().report, ...T.common().feed.map(f => f.text)].join('\n');
+    assert.doesNotMatch(pub, /Meeting Hijack/, 'hijack line not public'); assert.doesNotMatch(pub, /NDA Silence/, 'NDA line not public');
+    const onT = T.event.onCall; assert(T.P(onT).alive);
+    assert.match(intel(T, onT), /Meeting Hijack/, 'on-call gets hijack line'); assert.match(intel(T, onT), /NDA Silence/, 'on-call gets NDA line');
+    const sr = T.modView(false).statusReport.join('\n');
+    assert.match(sr, /Meeting Hijack/); assert.match(sr, /NDA Silence/);
     // control: another card publishes the full report as before
     const C = mk(); C.deck = ['approve']; C.closeNight(); assert(C.report.some(l => /Mana/.test(l)), 'full report public'); assert.strictEqual(C.modView(false).statusReport, undefined);
     // Chaos Intern + #20 in one night: no crash
