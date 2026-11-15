@@ -1,0 +1,11 @@
+Task: change-refactor-structure  Brain: E:/projects/deadline-necromancer/.team/brain  Scope: internal
+Worktree: E:/projects/deadline-necromancer/.worktrees/be-change-refactor-structure · Branch: be/change-refactor-structure
+Don't touch: docs/, poc/, app/public/, app/tools/, app/package-lock.json, .team/
+Shared files you may not write (a guard blocks them; report in your hand-off instead): docs/strategy.md, docs/architecture/baseline.md, docs/architecture/overview.html, docs/architecture/README.md, docs/plan/<task>-gantt.html, docs/design/screen-map.html, docs/design-system/tokens.css
+Commit trailer: Co-Authored-By: Claude Sonnet 5.5 <noreply@anthropic.com>
+Final message (silent execution): on success (`status: done`, no blockers, checks passed) output ONLY the one-line JSON hand-off block, no prose; results, paths and details go in the JSON (`summary` ≤ 1 line) and the files. Prose (≤ 8 lines, ≤ 1,200 characters) only on an error, `blocked`/`not-ready`, or a decision the Orchestrator or user must make, with blockers `B-n`. Then the one-line JSON hand-off block. Do not Read handoff.schema.json; copy this shape and run validate-handoff.mjs on the file. Record each choice you made and why in `decisions` (D-n, stable across rounds): a later round is a fresh spawn that reads it from the file.
+Goal: Execute the approved refactor plan (plan steps 2-8, E0-E9, S1-S4) in your worktree; behaviour must not change
+Done when: handoff validates, every AC-1..AC-6 listed, npm test (all four tests) green at the last commit, one commit per plan step
+Read: E:/projects/deadline-necromancer/.worktrees/feature-change-refactor-structure/.team/change-refactor-structure/ac.md, E:/projects/deadline-necromancer/.team/refactor-structure/refactor-plan.md
+Write: app/, .claude/launch.json, E:/projects/deadline-necromancer/.worktrees/feature-change-refactor-structure/.team/change-refactor-structure/handoff/4-backend-dev-r1.json
+Hand-off shape: {"role":"backend-dev","task":"change-refactor-structure","step":"4","round":1,"status":"done","paths_written":["<path>"],"decisions":[{"id":"D-1","decision":"<choice made>","why":"<reason, and the alternative rejected>"}],"blockers":[],"quality_checks":{"passed":true,"failed":[]},"summary":"one line"}

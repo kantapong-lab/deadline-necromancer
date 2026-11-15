@@ -22,11 +22,20 @@ npm start          # http://localhost:3000
 ## โครงสร้าง
 | ไฟล์ | หน้าที่ |
 | :--- | :--- |
-| `engine.js` | กติกาเกมทั้งหมด (server-authoritative) · ส่งข้อมูลลับเฉพาะคนผ่าน `viewFor(pid)` / `modView()` |
-| `server.js` | HTTP + Socket.IO, ห้อง (room), reconnect ด้วย token |
-| `data.js` | ข้อมูลบทบาท/การ์ด ใช้ร่วมกับ client |
-| `public/index.html` · `public/mod.html` | หน้าผู้เล่น / หน้า Moderator |
-| `test/simulate.js` | ทดสอบ end-to-end ด้วย Moderator + ผู้เล่น 6–12 คน (`npm test`) |
+| `src/server/index.js` | จุดเริ่มระบบ (`npm start`): สร้าง HTTP + Socket.IO, ต่อ handler, listen · export `{ httpServer, io, rooms }` |
+| `src/server/paths.js` | path ทั้งหมดของ server คำนวณจาก `APP_ROOT` ที่เดียว (ไม่ขึ้นกับ cwd) |
+| `src/server/http.js` | เสิร์ฟไฟล์ static และตาราง URL (`/`, `/mod`, `/gallery`, `/data.js`, `/docs/*.jpg\|png`) — URL สาธารณะห้ามเปลี่ยน |
+| `src/server/rooms.js` | ที่เก็บห้อง (room), รหัสห้อง/token, lobby view, `pushState` |
+| `src/server/handlers/` | socket handler: `session.js` (สร้าง/เข้าห้อง, reconnect ด้วย token, disconnect) · `moderator.js` (`mod:do`) · `player.js` (`p:*`) |
+| `src/engine/index.js` | ทางเข้า engine: export `{ Game, COMP, MIN_PLAYERS, MAX_PLAYERS, EMOJIS }` |
+| `src/engine/game.js` | คลาส `Game` (state + helper) และรวม method จากไฟล์ด้านล่างด้วย `mixin` (ชื่อซ้ำจะ throw) |
+| `src/engine/{chat,events,vote,night-input,night-resolve,phases,win,views,mod-view}.js` | กติกาเกมแยกตามหน้าที่ (server-authoritative) · ส่งข้อมูลลับเฉพาะคนผ่าน `viewFor(pid)` / `modView()` · ลำดับ `Math.random` เป็นส่วนหนึ่งของพฤติกรรม ห้ามสลับ |
+| `src/engine/{constants,random}.js` | จำนวนผู้เล่น/สัดส่วนฝ่าย/อีโมจิ · `shuffle`, `rnd` |
+| `src/shared/data.js` | ข้อมูลบทบาท/การ์ด ใช้ร่วม server กับ client (เสิร์ฟที่ `/data.js`) |
+| `public/index.html` · `public/mod.html` · `public/gallery.html` | หน้าผู้เล่น / หน้า Moderator / แกลเลอรี |
+| `test/simulate.js` | ทดสอบ end-to-end ด้วย Moderator + ผู้เล่น 6–12 คน |
+| `test/golden/` | golden-master ของ engine (เกมสุ่มแบบ seed ~100 เกม เทียบ hash กับ `snapshot.json`) — `node test/golden/run.js` (`--record` เฉพาะเมื่อเปลี่ยนกติกาจริง) |
+| `test/http-parity.js` · `test/mod-actions.js` | ตรวจ URL สาธารณะ (status/content-type/body) และคำสั่ง Moderator/ห้องผ่าน socket เทียบกับไฟล์ `.json` |
 
 ผู้เล่นที่รีเฟรชหรือหลุดการเชื่อมต่อเข้ากลับมาได้เอง (เก็บ token ใน sessionStorage ของแท็บ จึงเปิดหลายแท็บในเครื่องเดียวเพื่อทดสอบได้) ถ้าปิดแท็บไปแล้ว ให้เข้าห้องใหม่ด้วย **ชื่อเดิม** — ระบบให้รับช่วงที่นั่งต่อได้เฉพาะเมื่อชื่อนั้นออฟไลน์อยู่ (ใช้ในกลุ่มที่เชื่อใจกัน)
 

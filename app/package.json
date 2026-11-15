@@ -3,10 +3,10 @@
   "version": "0.1.0",
   "private": true,
   "description": "Deadline Necromancer — multiplayer web game (Node + Socket.IO) พร้อมหน้าจอ Moderator",
-  "main": "server.js",
+  "main": "src/server/index.js",
   "scripts": {
-    "start": "node server.js",
-    "test": "node test/simulate.js"
+    "start": "node src/server/index.js",
+    "test": "node test/golden/run.js && node test/http-parity.js && node test/mod-actions.js && node test/simulate.js"
   },
   "dependencies": {
     "socket.io": "^4.7.5"
