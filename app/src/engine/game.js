@@ -1,17 +1,17 @@
 // Game engine (server-authoritative) — พอร์ตกติกาจาก poc/index.html เป็นโมดูลไม่มี UI/บอท
 // Moderator เป็นคนสั่งเปลี่ยนเฟส ผู้เล่นส่งแอ็กชันของตัวเองผ่าน method ด้านล่าง
-const { ROLES, EVENTS, TRAPS, BOOSTERS, FNAME, DAYS, LIGHT, DARK, INDIE } = require('../shared/data');
+const { ROLES, EVENTS, DAYS, LIGHT, DARK, INDIE } = require('../shared/data');
 const { shuffle, rnd } = require('./random');
 const { COMP, MIN_PLAYERS, MAX_PLAYERS, EMOJIS } = require('./constants');
-const views = require('./views');
-const modViewPart = require('./mod-view');
-const phases = require('./phases');
-const win = require('./win');
-const events = require('./events');
 const chat = require('./chat');
+const events = require('./events');
 const vote = require('./vote');
 const nightInput = require('./night-input');
 const nightResolve = require('./night-resolve');
+const phases = require('./phases');
+const win = require('./win');
+const views = require('./views');
+const modViewPart = require('./mod-view');
 
 // Mixes the method groups of src/engine/*.js onto Game.prototype (non-enumerable, like class methods).
 // Throws if a name is already defined, so two parts can never silently shadow each other.
@@ -82,6 +82,6 @@ class Game {
   }
 }
 
-mixin(Game, views, modViewPart, phases, win, events, chat, vote, nightInput, nightResolve);
+mixin(Game, chat, events, vote, nightInput, nightResolve, phases, win, views, modViewPart);
 
 module.exports = { Game, COMP, MIN_PLAYERS, MAX_PLAYERS, EMOJIS };
