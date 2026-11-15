@@ -1,0 +1,6 @@
+[shell_environment_policy]
+inherit = "core"
+
+[shell_environment_policy.set]
+SECOND_BRAIN_VAULT = "<absolute path to your Obsidian vault>"
+MUFFY_GUARD = "1"
