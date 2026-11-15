@@ -46,6 +46,7 @@ class Game {
     this.booster = { open: false, votes: {} };
     this.night = {}; this.votes = {}; this.voteResult = null; this.lastVotes = {};
     this.feed = []; this.darkChat = []; this.intel = {}; this.report = []; this.timeline = [];
+    this.voteRound = 0; this.interim = null; this.nightStash = null;
     this.credit = {}; this.over = null; this.paused = false; this.timer = null;
     this.players.forEach(p => { this.credit[p.id] = 0; this.intel[p.id] = []; });
     const rec = this.players.find(p => p.role === 'soul_recruiter');

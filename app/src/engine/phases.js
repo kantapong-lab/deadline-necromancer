@@ -10,7 +10,7 @@ module.exports = {
     if (this.event?.pending) this.closeEventVote();
     if (this.booster.open) this.closeBoosterVote();
     if (this.phase === 'OVER') return null;
-    this.phase = 'VOTE'; this.votes = {};
+    this.phase = 'VOTE'; this.votes = {}; this.voteRound = this.evIs('redesign') ? 1 : 0;
     this.log('เริ่มเฟสโหวตไล่ออก', this.evIs('marathon') ? 'ประชุมมาราธอน: ห้าม Skip' : '');
     this.sys('🗳️ เริ่มเฟสโหวตไล่ออก (PIP Vote)');
     return null;
@@ -33,16 +33,16 @@ module.exports = {
       if (p.faction === 'dark') { n.side = 'FAKE'; n.sideTargets = []; }
       G.night[p.id] = n;
     });
-    G.resolveNight();
+    G.resolveNight({ defer: true });
     G.cleanSprint = G.freeze = G.retro = G.noPenalty = false;
-    if (G.checkEnd()) return null;
-    if (G.day >= 5) { G.endGame('timeout'); return null; }
+    if (G.checkEnd()) { G.publishNight({ gated: false }); return null; }
+    if (G.day >= 5) { G.publishNight({ gated: false }); G.endGame('timeout'); return null; }
     G.day++;
     G.bonusVotes = G.pendingBonus; G.pendingBonus = [];
     G.alive().forEach(p => { p.locked = p.lockedNext; p.lockedNext = false; p.silenced = p.silencedNext; p.zero = p.zeroNext; p.dbl = p.dblNext; p.silencedNext = p.zeroNext = p.dblNext = false; });
     G.players.filter(p => !p.alive).forEach(p => p.silenced = p.zero = p.dbl = false);
     const sil = G.alive().filter(p => p.silenced).map(p => p.name);
-    if (sil.length) G.report.push('🤐 NDA Silence: ' + sil.join(', ') + ' ถูกปิดปาก (พิมพ์แชทและโหวตไม่ได้วันนี้)');
+    if (sil.length) G.addNightLine('🤐 NDA Silence: ' + sil.join(', ') + ' ถูกปิดปาก (พิมพ์แชทและโหวตไม่ได้วันนี้)');
     G.phase = 'MORNING'; G.votes = {}; G.timer = null;
     G.sys('— เช้าวัน' + DAYS[G.day - 1] + ' —');
     G.log('เริ่มเช้าวัน' + DAYS[G.day - 1], 'ประกาศผลเมื่อคืนและเปิดห้องประชุม');
@@ -54,10 +54,11 @@ module.exports = {
       if (pool.length) G.hijackVoter = rnd(pool).id;
       G.traps = G.traps.filter(t => t !== hj);
       const m = '🪤 Trap Card ทำงาน: Meeting Hijack — เวลาคุยลด 30% และมีผู้เล่น 1 คนถูกบังคับให้ Skip';
-      G.report.push(m); G.sys(m);
+      G.addNightLine(m, { sys: true });
       if (G.hijackVoter != null) G.intel[G.hijackVoter].push({ day: G.day, text: '🎤 ไมค์ของคุณถูกยึด (Meeting Hijack) — วันนี้คุณถูกบังคับให้โหวต Skip' });
     }
     G.drawEvent();
+    G.publishNight({ gated: G.evIs('status') });
     G.checkEnd();
     return null;
   },
