@@ -31,6 +31,8 @@ socket.on('connect', async () => {
 });
 socket.on('state', st => {
   S = st;
+  if (r1Day !== st.day) { r1Day = st.day; r1Vote = undefined; }
+  if (st.voteRound === 1 && st.me) r1Vote = st.me.voted;
   const key = st.day + ':' + st.phase;
   if (UI.key !== key) {
     UI = { key, choice: null, sel: [], side: null, sideSel: [], trapId: null, plus1: false, voteSel: null, boosterSel: null };
@@ -50,6 +52,7 @@ async function join() {
 async function act(ev, data) { const r = await emit(socket, ev, data); if (!r.ok) { error = r.error; } else error = ''; render(); }
 const me = () => S.me;
 function setTab(t) { tab = t; if (t === 'me') seenIntel = S.me.intel.length; if (t === 'dark' && S.dark) seenDark = S.dark.chat.length; render(); window.scrollTo(0, 0); }
+const isExtra = () => !!(S && S.event && Array.isArray(S.event.extra) && S.event.extra.includes(S.youId));
 const pname = id => S.players.find(p => p.id === id)?.name || '?';
 
 // ---------- actions ----------
@@ -66,8 +69,28 @@ function sendNight() {
   act('p:night', a);
 }
 const pickVote = v => { UI.voteSel = v; render(); };
-const sendVote = () => act('p:vote', { target: UI.voteSel });
-const sendChat = e => { e.preventDefault(); const i = $('#chatIn'); const t = i.value.trim(); if (!t) return; i.value = ''; act('p:chat', { text: t }); };
+// รอบ 2 (#19): ใช้โหวตรอบแรกเป็นค่าเริ่มต้น ถ้ายังไม่ได้เลือกใหม่
+const curVoteSel = () => UI.voteSel != null ? UI.voteSel : (S && S.voteRound === 2 && S.me && S.me.voted !== undefined ? S.me.voted : null);
+const sendVote = () => act('p:vote', { target: curVoteSel() });
+const QUICK_EMO = ['👍', '🤔', '😡', '😂', '🙏'];
+let chatErr = '', chatDraft = '', chatErrTimer = null, r1Vote, r1Day = 0;
+const chatLen = t => Array.from(QUICK_EMO.reduce((a, e) => a.split(e).join(''), t).trim()).length;
+function setChatErr(msg) { chatErr = msg; clearTimeout(chatErrTimer); if (msg) chatErrTimer = setTimeout(() => { chatErr = ''; const el = $('#chatErr'); if (el) el.innerHTML = ''; }, 4000); }
+function clearChatErr() { if (!chatErr) return; setChatErr(''); const el = $('#chatErr'); if (el) el.innerHTML = ''; }
+async function sendChat(e) {
+  e.preventDefault(); const i = $('#chatIn'); const t = i.value.trim(); if (!t) return;
+  const lim = S.chatLimit, len = chatLen(t);
+  if (lim && len > lim.len) { chatDraft = t; setChatErr(`ข้อความยาวเกิน ${lim.len} ตัวอักษร (พิมพ์มา ${len}) ไม่ถูกส่งและไม่เสียโควตา`); return render(); }
+  if (lim && len > 0 && me().chatLeft === 0) { chatDraft = t; setChatErr('โควตาข้อความวันนี้หมดแล้ว'); return render(); }
+  const r = await emit(socket, 'p:chat', { text: t });
+  if (r.ok) { chatDraft = ''; setChatErr(''); error = ''; i.value = ''; }
+  else {
+    chatDraft = t; error = '';
+    const er = r.error || '';
+    setChatErr(er.includes('ยาวเกิน') ? `ข้อความยาวเกิน ${(lim && lim.len) || 30} ตัวอักษร (พิมพ์มา ${len}) ไม่ถูกส่งและไม่เสียโควตา` : er.includes('โควตา') ? 'โควตาข้อความวันนี้หมดแล้ว' : er);
+  }
+  render();
+}
 const sendDark = e => { e.preventDefault(); const i = $('#darkIn'); const t = i.value.trim(); if (!t) return; i.value = ''; act('p:dark', { text: t }); };
 const emoji = t => act('p:chat', { text: t });
 
@@ -112,9 +135,18 @@ function gameHTML() {
     ${sideHTML()}${S.dark && isMobile() ? darkTabHTML() : ''}</main>${nav}`;
 }
 function chatBar() {
-  if (S.phase !== 'MORNING' || !me().alive) return '';
-  return `<form class="chatbar" onsubmit="sendChat(event)"><input id="chatIn" placeholder="${me().silenced ? '🤐 ถูกปิดปาก — ส่งได้แค่อีโมจิ' : 'พิมพ์ข้อความ…'}" ${me().silenced ? 'disabled' : ''} autocomplete="off">
-    ${['👍', '🤔', '😡', '😂', '🙏'].map(e => `<button type="button" class="btn emo" onclick="emoji('${e}')">${e}</button>`).join('')}</form>`;
+  if ((S.phase !== 'MORNING' && S.phase !== 'VOTE_INTERIM') || !me().alive) return '';
+  const lim = S.chatLimit, left = me().chatLeft, limited = !!lim && typeof left === 'number';
+  const total = (lim && lim.msgs) || 3, max = (lim && lim.len) || 30, out = limited && left <= 0;
+  let chip = '';
+  if (limited) {
+    chip = out ? `<span class="chip bad">✂️ โควตาข้อความหมดแล้ว (0/${total}) — ส่งอีโมจิได้เท่านั้น</span>`
+      : `<span class="chip ${left === 1 ? 'bad' : ''}">✂️ พิมพ์ได้อีก ${left}/${total} ข้อความ · ไม่เกิน ${max} ตัวอักษร</span>`;
+    chip = `<div class="chips" aria-live="polite">${chip}</div>`;
+  }
+  const ph = me().silenced ? '🤐 ถูกปิดปาก — ส่งได้แค่อีโมจิ' : out ? 'โควตาหมดแล้ว — ส่งได้แค่อีโมจิ' : limited ? `พิมพ์ข้อความ… (ไม่เกิน ${max} ตัวอักษร)` : 'พิมพ์ข้อความ…';
+  return `${chip}<form class="chatbar" onsubmit="sendChat(event)"><input id="chatIn" oninput="chatDraft=this.value;clearChatErr()" value="${esc(chatDraft)}" placeholder="${ph}" ${me().silenced || out ? 'disabled' : ''} autocomplete="off">
+    ${QUICK_EMO.map(e => `<button type="button" class="btn emo" onclick="emoji('${e}')">${e}</button>`).join('')}</form><div id="chatErr">${chatErr ? `<div class="hint bad">${esc(chatErr)}</div>` : ''}</div>`;
 }
 function waitMod(text) { return `<p class="hint">⏳ ${text} — รอ Moderator</p>`; }
 
@@ -132,11 +164,20 @@ function stageHTML() {
     if (!m.alive) return `<div class="card stage">${deadBanner}<h2>🗳️ โหวตไล่ออก</h2>${waitMod('กำลังโหวต')}</div>`;
     if (m.silenced) return `<div class="card stage"><h2>🗳️ โหวตไล่ออก</h2><p>🤐 คุณถูก NDA Silence — โหวตไม่ได้ในรอบนี้</p>${waitMod('รอปิดโหวต')}</div>`;
     if (m.hijacked) return `<div class="card stage"><h2>🗳️ โหวตไล่ออก</h2><p>🎤 Meeting Hijack — ไมค์ของคุณถูกยึด คุณถูกบังคับให้ Skip ในรอบนี้</p>${waitMod('รอปิดโหวต')}</div>`;
-    const ts = s.voteCandidates.map(id => `<button class="btn ${UI.voteSel === id ? 'sel' : ''}" onclick="pickVote(${id})">${esc(pname(id))}</button>`).join('');
+    const sel = curVoteSel(), rd = s.voteRound;
+    const ts = s.voteCandidates.map(id => `<button class="btn ${sel === id ? 'sel' : ''}" onclick="pickVote(${id})">${esc(pname(id))}</button>`).join('');
     const voted = m.voted !== undefined ? `<p class="ok">✅ คุณโหวต: ${m.voted === 'SKIP' ? 'Skip' : esc(pname(m.voted))} (เปลี่ยนใจได้จนกว่า Moderator จะปิดโหวต)</p>` : '';
-    return `<div class="card stage"><h2>🗳️ PIP Vote — ไล่ใครออก?</h2><p>${s.marathon ? '🕰️ ประชุมมาราธอน: วันนี้ห้ามกด Skip · ' : ''}คะแนนสูงสุดและมากกว่า Skip จะถูกไล่ออก (ไม่โหวต = Skip)${m.role === 'chaos_intern' && s.day >= 4 ? ' · 🗳️ วันนี้โหวตของคุณนับ x2' : ''}</p>
-      <div class="targets">${ts}${s.marathon ? '' : `<button class="btn ${UI.voteSel === 'SKIP' ? 'sel' : ''}" onclick="pickVote('SKIP')">⏭️ Skip</button>`}</div>
-      <div class="confirmbar"><button class="btn primary" ${UI.voteSel == null ? 'disabled' : ''} onclick="sendVote()">ยืนยันโหวต</button></div>${voted}</div>`;
+    const title = rd === 1 ? '🗳️ PIP Vote รอบแรก — ไล่ใครออก?' : rd === 2 ? '🗳️ PIP Vote รอบสอง — ไล่ใครออก?' : '🗳️ PIP Vote — ไล่ใครออก?';
+    const r1note = rd === 1 ? ' · รอบแรกยังไม่ไล่ใครออก เห็นคะแนนรวมก่อนโหวตรอบสอง' : '';
+    const r2hint = rd === 2 && r1Vote !== undefined ? `<p class="hint">โหวตรอบแรกของคุณ (${r1Vote === 'SKIP' ? 'Skip' : esc(pname(r1Vote))}) ยังนับอยู่ กดเลือกใหม่เพื่อเปลี่ยน</p>` : '';
+    return `<div class="card stage"><h2>${title}</h2><p>${s.marathon ? '🕰️ ประชุมมาราธอน: วันนี้ห้ามกด Skip · ' : ''}คะแนนสูงสุดและมากกว่า Skip จะถูกไล่ออก (ไม่โหวต = Skip)${m.role === 'chaos_intern' && s.day >= 4 ? ' · 🗳️ วันนี้โหวตของคุณนับ x2' : ''}${r1note}</p>
+      ${r2hint}<div class="targets">${ts}${s.marathon ? '' : `<button class="btn ${sel === 'SKIP' ? 'sel' : ''}" onclick="pickVote('SKIP')">⏭️ Skip</button>`}</div>
+      <div class="confirmbar"><button class="btn primary" ${sel == null ? 'disabled' : ''} onclick="sendVote()">ยืนยันโหวต</button></div>${voted}</div>`;
+  }
+  if (s.phase === 'VOTE_INTERIM') {
+    const voted = m.alive && m.voted !== undefined ? '<p class="hint">โหวตรอบแรกของคุณยังนับอยู่ ถ้าไม่โหวตใหม่ในรอบสอง</p>' : '';
+    return `<div class="card stage">${deadBanner}<h2>📊 คะแนนโหวตรอบแรก</h2><p>ยังไม่มีใครถูกไล่ออก · เห็นแค่คะแนนรวม ไม่เห็นว่าใครโหวตใคร คุยกันต่อแล้วรอผู้ดำเนินเกมเปิดโหวตรอบสอง</p>
+      ${interimVotesHTML(s)}${voted}${waitMod('รอเปิดโหวตรอบสอง')}</div>`;
   }
   if (s.phase === 'VOTE_RESULT') {
     const vr = s.voteResult;
@@ -225,7 +266,7 @@ function nightHTML() {
   if (m.role === 'glory_thief') chips.push(`⭐ Credit <b>${m.credit}/2</b>`);
   if (m.faction === 'indie') chips.push(m.dodgeUsed ? '🛡️ Dodge ใช้แล้ว' : '🛡️ Dodge เหลือ 1');
   if (m.role === 'chaos_intern' && S.day >= 4) chips.push('🗳️ โหวต x2 (พฤ–ศ)');
-  if (m.dbl) chips.push('☕ โหวต x2'); if (m.zero) chips.push('📉 โหวต 0'); if (m.locked) chips.push('🔒 สกิลถูกล็อก');
+  if (m.dbl) chips.push('☕ โหวต x2'); if (m.zero) chips.push(isExtra() ? '🧑‍🤝‍🧑 ทีมเสริม — โหวต 0' : '📉 โหวต 0'); if (m.locked) chips.push('🔒 สกิลถูกล็อก');
   if (dk) chips.push(`🪤 Trap ว่าง <b>${dk.trapFree}/${dk.trapCharges}</b>`);
   return `<div class="card stage"><h2>🌙 Night Work — คืนวัน${S.dayName}</h2>${chips.length ? `<div class="chips">${chips.map(c => `<span class="chip">${c}</span>`).join('')}</div>` : ''}${sent}
     ${S.event ? `<div class="report" style="border-color:var(--light)">📞 ${esc(S.event.t)}${S.event.choice && S.event.accepted !== null ? ' (' + esc(S.event.accepted ? S.event.yes : S.event.no) + ')' : ''} — ${esc(S.event.d)}</div>` : ''}
@@ -243,7 +284,7 @@ function sideHTML() {
   const target = m.role === 'soul_recruiter' ? `<p class="hint">🎯 เป้าหมายลับ: <b>${esc(m.targetName)}</b></p>` : '';
   const credit = m.role === 'glory_thief' ? `<p class="hint">⭐ Credit: <b>${m.credit}/2</b></p>` : '';
   const dodge = m.faction === 'indie' ? `<p class="hint">🛡️ Freelance Dodge: ${m.dodgeUsed ? 'ใช้ไปแล้ว' : 'ยังเหลือ 1 ครั้ง (รับคำสาป Burnout ได้ 1 ครั้ง · เมื่อทำงานระบบจะแจ้งคุณว่าเกราะถูกทำลาย)'}</p>` : '';
-  const flags = [m.dbl ? '☕ โหวต x2 วันนี้' : '', m.zero ? '📉 พลังโหวตวันนี้เป็น 0 (PIP Curse)' : '', m.locked ? '🔒 สกิลใช้ไม่ได้คืนนี้ (บาเรียแตก)' : ''].filter(Boolean).map(t => `<p class="hint">${t}</p>`).join('');
+  const flags = [m.dbl ? '☕ โหวต x2 วันนี้' : '', m.zero ? (isExtra() ? '🧑‍🤝‍🧑 คุณเป็นทีมเสริมวันนี้ — พลังโหวตเป็น 0 (ยังโหวตและถูกโหวตได้)' : '📉 พลังโหวตวันนี้เป็น 0 (PIP Curse)') : '', m.locked ? '🔒 สกิลใช้ไม่ได้คืนนี้ (บาเรียแตก)' : ''].filter(Boolean).map(t => `<p class="hint">${t}</p>`).join('');
   return `<aside class="center-col sec sec-me ${tab === 'me' ? 'active' : ''}"><div class="card rolecard"><h3>บทบาทของคุณ</h3><img src="${ROLETHUMB_MD + m.img}" onerror="this.onerror=null;this.src='${IMG + m.img}'" onclick="window.open(IMG + '${m.img}')" style="cursor:zoom-in" alt="${esc(m.roleName)}">
     <div class="skill"><span class="tag ${m.faction}">${esc(m.factionName)}</span><br><b>${esc(m.roleName)}</b> ${esc(m.sub)}<br><b>สกิล:</b> ${esc(m.skill)}<br>${esc(m.desc)}<br><b>เป้าหมาย:</b> ${esc(m.goal)}</div>${mates}${target}${credit}${dodge}${flags}</div>
     <div class="card"><h3>ข้อมูลลับของคุณ</h3><div class="intel">${m.intel.length ? m.intel.slice().reverse().map(i => `<div><small>วัน${DAYS[i.day - 1]}</small><br>${esc(i.text)}</div>`).join('') : '<span class="hint">ยังไม่มีข้อมูลลับ</span>'}</div></div></aside>`;

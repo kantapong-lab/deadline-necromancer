@@ -66,6 +66,7 @@ function lobbyHTML() {
 const ACTIONS = {
   MORNING: { label: 'ไปเฟสโหวตไล่ออก →', act: 'toVote' },
   VOTE: { label: 'ปิดโหวตและประกาศผล', act: 'closeVote' },
+  VOTE_INTERIM: { label: 'เปิดโหวตรอบสอง →', act: 'openRound2' },
   VOTE_RESULT: { label: 'เข้าสู่กลางคืน 🌙', act: 'toNight' },
   NIGHT: { label: 'ปิดกลางคืนและประมวลผล ☀️', act: 'closeNight' },
   OVER: { label: 'เริ่มห้องใหม่ (ผู้เล่นชุดเดิม)', act: 'reset' },
@@ -76,7 +77,13 @@ function progress(p, label) {
   return `<div style="margin:8px 0"><b>${label}</b> ${p.done}/${p.total}<div class="progress"><div style="width:${pct}%"></div></div>${p.waiting.length ? `<div class="hint">ยังไม่ส่ง: ${p.waiting.map(esc).join(', ')}</div>` : '<div class="ok hint">ครบแล้ว ✅</div>'}</div>`;
 }
 function gameHTML() {
-  const g = S.guidance, a = ACTIONS[S.phase], pd = S.pending || {};
+  const interim = S.phase === 'VOTE_INTERIM';
+  const g0 = S.guidance || {};
+  const g = { title: g0.title || (interim ? 'พักรอบโหวต — คะแนนรอบแรก' : ''), steps: g0.steps || (interim ? ['แจกจ่ายให้ผู้เล่นคุยกันก่อน แล้วกด "เปิดโหวตรอบสอง"'] : []), next: g0.next || '' };
+  const a = S.phase === 'VOTE' && S.voteRound === 1 ? { label: 'ปิดโหวตรอบแรก (ยังไม่ไล่ใคร)', act: 'closeVote' } : ACTIONS[S.phase], pd = S.pending || {};
+  const voteLabel = S.voteRound === 1 ? 'โหวตรอบแรก' : S.voteRound === 2 ? 'โหวตรอบสอง' : 'โหวตไล่ออก';
+  const statusRep = Array.isArray(S.statusReport) ? `<div class="report"><div><b>🛠️ รายงานเต็ม (เฉพาะผู้ดำเนินเกม + วิศวกรเวร):</b></div>${S.statusReport.length ? S.statusReport.map(r => `<div>${esc(r)}</div>`).join('') : '<div class="hint">เมื่อคืนไม่มีอะไรผิดปกติ</div>'}${S.onCall != null && S.players[S.onCall] ? `<div class="hint">🛠️ วิศวกรเวร: ${esc(S.players[S.onCall].name)}</div>` : ''}</div>` : '';
+  const interimBox = interim ? interimVotesHTML(S) : '';
   const timers = [60, 120, 180, 300].map(t => `<button class="btn" onclick="doAct('timer',{sec:${t}})">${t >= 60 ? t / 60 + ' นาที' : t + ' วิ'}</button>`).join('');
   const tl = S.timeline.slice().reverse().map((t, i) => `<div class="tl ${i === 0 ? 'cur' : ''}"><small>วัน${DAYS[t.day - 1] || ''} · ${new Date(t.ts).toLocaleTimeString('th-TH', { hour: '2-digit', minute: '2-digit', second: '2-digit' })}</small><br><b>${esc(t.title)}</b>${t.text ? `<br><span class="mut">${esc(t.text)}</span>` : ''}</div>`).join('');
   const extraTags = p => S.secrets ? [p.credit ? `<span class="tag">⭐${p.credit}</span>` : '', p.zero ? '<span class="tag">📉0</span>' : '', p.locked ? '<span class="tag">🔒</span>' : ''].filter(Boolean) : [];
@@ -94,8 +101,8 @@ function gameHTML() {
       ${S.over ? overHTML(S) : ''}
       <div class="card stage"><h3>ตอนนี้</h3><h2>${esc(g.title)}</h2>
         <div class="hint">สิ่งที่ต้องแจ้งผู้เล่น:</div><ol class="steps">${g.steps.map(x => `<li>${esc(x)}</li>`).join('')}</ol>
-        ${evInfo}
-        ${progress(pd.event, 'โหวตการ์ดเหตุการณ์')}${progress(pd.booster, 'โหวต Sprint Booster')}${progress(pd.vote, 'โหวตไล่ออก')}${progress(pd.night, 'ส่งแอ็กชันกลางคืน')}
+        ${evInfo}${statusRep}${interimBox}
+        ${progress(pd.event, 'โหวตการ์ดเหตุการณ์')}${progress(pd.booster, 'โหวต Sprint Booster')}${progress(pd.vote, voteLabel)}${progress(pd.night, 'ส่งแอ็กชันกลางคืน')}
         <div class="next">👉 <b>ขั้นตอนถัดไป:</b> ${esc(g.next)}</div>
         <div class="row stickybar" style="margin-top:14px">${mainBtn}${side.join('')}</div></div>
       <div class="card"><h3>ควบคุมห้อง</h3>
