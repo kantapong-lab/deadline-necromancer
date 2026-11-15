@@ -1,0 +1,7 @@
+app/node_modules/
+# muffy
+.claude/settings.local.json
+.worktrees/
+.team/**/diff*.patch
+.team/**/logs/
+.team/onboard/pending.json

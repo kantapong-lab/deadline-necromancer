@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Deadline Necromancer — แกลเลอรีการ์ด</title>
+<link rel="stylesheet" href="/style.css">
+<style>
+  body{padding-bottom:40px}
+  .gal-top{position:sticky;top:0;z-index:20;background:#120f20;border-bottom:1px solid var(--line);padding:10px 16px;display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+  .gal-top h1{font-size:18px;margin-right:auto}
+  .gal-top .btn{padding:6px 12px}
+  .gal-wrap{padding:16px 20px;max-width:1500px;margin:0 auto}
+  .gal-sec{margin:22px 0 8px;font-size:15px;color:var(--mut);text-transform:uppercase;letter-spacing:.6px}
+  .gal-sec b{color:var(--txt)}
+  .gal-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:14px}
+  .gcard{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:8px;cursor:zoom-in;transition:.15s;display:flex;flex-direction:column;gap:6px}
+  .gcard:hover{border-color:var(--dark);transform:translateY(-2px)}
+  .gcard img{width:100%;aspect-ratio:3/4;object-fit:cover;border-radius:8px;display:block;background:#0b0914}
+  .gcard .t{font-size:13px;font-weight:600;line-height:1.3}
+  .gcard .s{font-size:11px;color:var(--mut);line-height:1.35}
+  .gcard.light{border-top:3px solid var(--light)} .gcard.dark{border-top:3px solid var(--dark)} .gcard.indie{border-top:3px solid var(--indie)} .gcard.event{border-top:3px solid #ff9f6b}
+  .lb{position:fixed;inset:0;background:rgba(8,6,16,.92);z-index:50;display:none;align-items:center;justify-content:center;padding:16px}
+  .lb.on{display:flex}
+  .lb-in{display:flex;gap:22px;align-items:center;max-width:1100px;max-height:100%;padding:0 64px}
+  .lb img{max-height:90vh;max-width:min(60vw,560px);border-radius:12px;border:1px solid var(--line)}
+  .lb .info{max-width:360px}
+  .lb .info h2{margin-bottom:6px}
+  .lb .info p{color:var(--mut);margin:6px 0;line-height:1.5}
+  .lb .nav{position:absolute;top:50%;transform:translateY(-50%);font-size:28px;background:#1d1a33;border:1px solid var(--line);border-radius:50%;width:48px;height:48px;color:#fff;cursor:pointer}
+  .lb .prev{left:12px} .lb .next{right:12px} .lb .x{position:absolute;top:12px;right:14px;font-size:22px;background:none;border:0;color:#fff;cursor:pointer}
+  .gal-note{margin:0 0 12px;padding:10px 12px;background:#161230;border-left:3px solid var(--indie);border-radius:6px;font-size:13px;color:var(--mut);line-height:1.5}
+  .lb .info .sub{color:var(--light);font-size:13px;margin:2px 0 6px} .lb .info .skillname{margin:2px 0 8px;font-size:13px}
+  .isec{margin:10px 0;padding:8px 10px;background:#14112a;border-radius:8px;border:1px solid var(--line)} .isec.win{border-color:var(--indie)} .isec.tip{border-color:#6b5a2a}
+  .isec .il{font-size:12px;color:var(--mut);margin-bottom:3px} .isec .it{font-size:14px;line-height:1.55;color:var(--txt)}
+  .lb .info{max-width:420px;max-height:90vh;overflow:auto}
+  @media(max-width:700px){ .gal-wrap{padding:10px 12px} .gal-grid{grid-template-columns:repeat(2,1fr);gap:10px} .lb-in{flex-direction:column;overflow:auto} .lb img{max-width:92vw;max-height:62vh} .lb .nav{top:auto;bottom:14px;transform:none} }
+</style>
+</head>
+<body>
+<div class="gal-top"><h1>🃏 แกลเลอรีการ์ด</h1><div id="filters" class="row"></div></div>
+<div class="gal-wrap" id="gal"></div>
+<div class="lb" id="lb" onclick="if(event.target===this)closeLb()">
+  <button class="x" onclick="closeLb()">✕</button><button class="nav prev" onclick="step(-1)">‹</button><button class="nav next" onclick="step(1)">›</button>
+  <div class="lb-in"><img id="lbImg" alt=""><div class="ph big" id="lbPh" style="display:none"></div><div class="info" id="lbInfo"></div></div>
+</div>
+<script src="/data.js"></script>
+<script src="/card-info.js"></script>
+<script>
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+// รวมการ์ดทั้งหมดจาก data.js
+const FN = { light: 'Team Deliver', dark: 'Cult of Burnout', indie: 'Severance Seekers' };
+const roleItems = (list, tag) => list.map(k => { const r = ROLES[k], i = CARD_INFO.roles[k] || {};
+  return { src: IMG + r.img, th: ROLETHUMB + r.img, t: r.n, sub: r.sub + ' · ' + i.type, s: i.one || r.d, skill: r.skill, what: i.what, when: i.when, tip: i.tip, win: i.win, tag }; });
+const GROUPS = [
+  { id: 'light', title: 'Team Deliver (ฝ่ายแสง)', cls: 'light', items: roleItems(LIGHT, FN.light) },
+  { id: 'dark', title: 'Cult of Burnout (ฝ่ายมืด)', cls: 'dark', items: roleItems(DARK, FN.dark) },
+  { id: 'indie', title: 'Severance Seekers (ฝ่ายอิสระ)', cls: 'indie', items: roleItems(INDIE, FN.indie) },
+  { id: 'trap', title: 'Trap Card ของฝ่ายมืด (6 ใบ)', cls: 'dark', note: CARD_INFO.trapGeneral, items: Object.entries(TRAPS).map(([k, t]) => { const i = CARD_INFO.traps[k] || {};
+    return { src: TRAPIMG + t.img, th: TRAPTHUMB + t.img, t: t.n, s: i.one || t.d, what: i.what, when: i.when, tip: i.tip, tag: 'Trap Card' }; }) },
+  { id: 'booster', title: 'Sprint Booster (โหวตสาธารณะ · 3 แบบ)', cls: 'booster', note: CARD_INFO.boosterGeneral, items: Object.entries(BOOSTERS).map(([k, b]) => { const i = CARD_INFO.boosters[k] || {};
+    return { src: BOOSTERIMG + b.img, th: BOOSTERTHUMB + b.img, t: b.n, s: i.one || b.d, what: i.what, when: i.when, tip: i.tip, tag: 'Sprint Booster' }; }) },
+  { id: 'event', title: 'Event Card (15 ใบ)', cls: 'event', note: 'สุ่มเปิดวันละ 1 ใบ ตั้งแต่เช้าวันอังคารถึงศุกร์ การ์ดแบบ "โหวต" ทุกคนต้องโหวตรับ/ปฏิเสธก่อนเข้าเฟสโหวตไล่ออก', items: Object.entries(EVENTS).sort((a, b) => a[1].n - b[1].n).map(([k, e]) => { const i = CARD_INFO.events[k] || {};
+    return { src: EVIMG + e.img, th: EVTHUMB + e.img, t: '#' + String(e.n).padStart(2, '0') + ' ' + e.t, sub: e.choice ? 'โหวตรับ / ปฏิเสธ' : e.now ? 'ผลทันที' : 'กติกาพิเศษ', s: i.one || e.d, what: i.what, when: i.when, tip: i.tip, tag: 'Event Card' }; }) },
+];
+let flat = [], cur = 0, filter = 'all';
+function render() {
+  $f = document.getElementById('filters');
+  $f.innerHTML = [['all', `ทั้งหมด (${GROUPS.reduce((a, g) => a + g.items.length, 0)})`], ...GROUPS.map(g => [g.id, `${g.title.split(' (')[0]} (${g.items.length})`])]
+    .map(([id, l]) => `<button class="btn ${filter === id ? 'sel' : ''}" onclick="setFilter('${id}')">${esc(l)}</button>`).join('');
+  flat = [];
+  document.getElementById('gal').innerHTML = GROUPS.filter(g => filter === 'all' || filter === g.id).map(g => {
+    const cards = g.items.map(it => { const i = flat.push({ ...it, cls: g.cls }) - 1;
+      const pic = it.src ? `<img loading="lazy" src="${esc(it.th || it.src)}" onerror="this.onerror=null;this.src='${esc(it.src)}'" alt="${esc(it.t)}">` : `<div class="ph"><span>${it.ic || '🃏'}</span><small>ยังไม่มีรูป</small></div>`;
+      return `<div class="gcard ${g.cls}" onclick="openLb(${i})">${pic}<div class="t">${esc(it.t)}</div><div class="s">${esc(it.s)}</div></div>`; }).join('');
+    return `<div class="gal-sec"><b>${esc(g.title)}</b> · ${g.items.length} ใบ</div>${g.note ? `<div class="gal-note">${esc(g.note)}</div>` : ''}<div class="gal-grid">${cards}</div>`;
+  }).join('');
+}
+const setFilter = f => { filter = f; render(); window.scrollTo(0, 0); };
+function openLb(i) { cur = i; const it = flat[i];
+  const im = document.getElementById('lbImg'); im.style.display = it.src ? '' : 'none'; if (it.src) im.src = it.src;
+  document.getElementById('lbPh').style.display = it.src ? 'none' : 'flex'; document.getElementById('lbPh').innerHTML = `<span>${it.ic || '🃏'}</span>`;
+  const sec = (label, text, cls = '') => text ? `<div class="isec ${cls}"><div class="il">${label}</div><div class="it">${esc(text).split(String.fromCharCode(10)).join('<br>')}</div></div>` : '';
+  document.getElementById('lbInfo').innerHTML = `<span class="tag ${it.cls === 'event' ? '' : it.cls}">${esc(it.tag)}</span><h2>${esc(it.t)}</h2>${it.sub ? `<p class="sub">${esc(it.sub)}</p>` : ''}
+    ${it.skill ? `<p class="skillname">สกิล: <b>${esc(it.skill)}</b></p>` : ''}${sec('🎯 ชนะเมื่อ', it.win, 'win')}${sec('📖 คืออะไร', it.what || it.s)}${sec('⏰ ใช้/เกิดตอนไหน', it.when)}${sec('💡 ควรรู้', it.tip, 'tip')}
+    <p class="hint">${i + 1} / ${flat.length} · ใช้ ← → เลื่อนดู, Esc ปิด</p>`;
+  document.getElementById('lb').classList.add('on'); }
+const closeLb = () => document.getElementById('lb').classList.remove('on');
+const step = d => openLb((cur + d + flat.length) % flat.length);
+addEventListener('keydown', e => { if (!document.getElementById('lb').classList.contains('on')) return; if (e.key === 'Escape') closeLb(); if (e.key === 'ArrowRight') step(1); if (e.key === 'ArrowLeft') step(-1); });
+render();
+</script>
+</body>
+</html>

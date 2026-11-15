@@ -1,0 +1,68 @@
+{
+  "generated": "2026-11-15T00:45:12.722Z",
+  "root": "E:/projects/deadline-necromancer",
+  "hasCode": true,
+  "git": {
+    "head": null,
+    "branch": null,
+    "commits": null
+  },
+  "manifests": [],
+  "sourceFiles": {
+    "total": 7,
+    "byExtension": {
+      ".js": 6,
+      ".py": 1
+    },
+    "truncated": false
+  },
+  "node": null,
+  "python": null,
+  "runtimePins": {},
+  "structure": {
+    "topDirs": [
+      "app",
+      "docs",
+      "poc"
+    ],
+    "children": {
+      "app": [
+        "node_modules",
+        "public",
+        "test",
+        "tools"
+      ]
+    },
+    "monorepo": []
+  },
+  "tests": {
+    "files": 0,
+    "sample": []
+  },
+  "infra": [],
+  "docs": {
+    "readme": null,
+    "claudeMd": false,
+    "agentsMd": false,
+    "contributing": false,
+    "docsDir": [
+      "booster_cards",
+      "deadline_necromancer_design.md",
+      "deadline_necromancer_event_cards.md",
+      "deadline_necromancer_player_rules.md",
+      "deadline_necromancer_role_cards",
+      "deadline_necromancer_trap_cards",
+      "event_cards"
+    ],
+    "adrCount": 0,
+    "hasBaseline": false
+  },
+  "ui": {
+    "likely": false,
+    "tokenFiles": []
+  },
+  "envFiles": {
+    "names": [],
+    "note": "listed by name only, never opened"
+  }
+}

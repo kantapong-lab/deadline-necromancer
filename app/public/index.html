@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Deadline Necromancer — ผู้เล่น</title>
+<link rel="stylesheet" href="/style.css">
+</head>
+<body>
+<div id="app"></div>
+<script src="/socket.io/socket.io.js"></script>
+<script src="/data.js"></script>
+<script src="/common.js"></script>
+<script>
+const socket = io();
+let S = null;                // state ล่าสุดจาก server
+let session = null;          // {code, token, name}
+let UI = { key: '', choice: null, sel: [], side: null, sideSel: [], trapId: null, plus1: false, voteSel: null, boosterSel: null };
+let error = '';
+let tab = 'game', seenIntel = 0, seenDark = 0;   // แท็บบนมือถือ: game | me | players | dark (ฝ่ายมืด)
+const isMobile = () => matchMedia('(max-width:1000px)').matches;
+matchMedia('(max-width:1000px)').addEventListener?.('change', () => { if (!isMobile() && tab === 'dark') tab = 'game'; if (S && session) render(); });
+
+const saved = () => { try { return JSON.parse(sessionStorage.getItem('dn-session') || 'null'); } catch { return null; } };
+const urlCode = () => (new URLSearchParams(location.search).get('room') || '').toUpperCase();
+
+socket.on('connect', async () => {
+  const s = saved();
+  if (s && (!urlCode() || urlCode() === s.code)) { const r = await emit(socket, 'player:join', { code: s.code, token: s.token, name: s.name }); if (r.ok) session = s; else { sessionStorage.removeItem('dn-session'); } }
+  render();
+});
+socket.on('state', st => {
+  S = st;
+  const key = st.day + ':' + st.phase;
+  if (UI.key !== key) {
+    UI = { key, choice: null, sel: [], side: null, sideSel: [], trapId: null, plus1: false, voteSel: null, boosterSel: null };
+    // เปลี่ยนเฟส → กลับแท็บเกม และสั่นเตือนเมื่อถึงตาที่ต้องทำอะไร (เฉพาะอุปกรณ์ที่รองรับ)
+    if (st.me) { tab = 'game'; if (st.me.alive && (st.phase === 'VOTE' || st.phase === 'NIGHT')) navigator.vibrate?.(120); }
+  }
+  setTimerFrom(st); render();
+});
+socket.on('kicked', () => { sessionStorage.removeItem('dn-session'); session = null; S = null; error = 'คุณถูกเชิญออกจากห้อง'; render(); });
+
+async function join() {
+  const code = ($('#jcode').value || '').trim().toUpperCase(), name = ($('#jname').value || '').trim();
+  const r = await emit(socket, 'player:join', { code, name });
+  if (!r.ok) { error = r.error; return render(); }
+  session = { code: r.code, token: r.token, name: r.name }; sessionStorage.setItem('dn-session', JSON.stringify(session)); error = '';
+}
+async function act(ev, data) { const r = await emit(socket, ev, data); if (!r.ok) { error = r.error; } else error = ''; render(); }
+const me = () => S.me;
+function setTab(t) { tab = t; if (t === 'me') seenIntel = S.me.intel.length; if (t === 'dark' && S.dark) seenDark = S.dark.chat.length; render(); window.scrollTo(0, 0); }
+const pname = id => S.players.find(p => p.id === id)?.name || '?';
+
+// ---------- actions ----------
+const chooseAction = t => { UI.choice = t; UI.sel = []; render(); };
+const chooseSide = t => { UI.side = t; UI.sideSel = []; UI.trapId = null; render(); };
+const chooseTrap = k => { UI.trapId = k; UI.sideSel = []; render(); };
+const chooseMode = b => { UI.plus1 = b; render(); };
+function toggleT(id) { const need = Math.max(me().spec?.t || 0, 0), i = UI.sel.indexOf(id); if (i >= 0) UI.sel.splice(i, 1); else { if (UI.sel.length >= need) UI.sel.shift(); UI.sel.push(id); } render(); }
+function toggleS(id) { UI.sideSel = [id]; render(); }
+function sendNight() {
+  const a = { type: UI.choice, targets: UI.sel.slice() };
+  if (UI.plus1) a.plus1 = true;
+  if (me().faction === 'dark') { a.side = UI.side; a.sideTargets = UI.sideSel.slice(); if (UI.side === 'TRAP') a.trapId = UI.trapId; }
+  act('p:night', a);
+}
+const pickVote = v => { UI.voteSel = v; render(); };
+const sendVote = () => act('p:vote', { target: UI.voteSel });
+const sendChat = e => { e.preventDefault(); const i = $('#chatIn'); const t = i.value.trim(); if (!t) return; i.value = ''; act('p:chat', { text: t }); };
+const sendDark = e => { e.preventDefault(); const i = $('#darkIn'); const t = i.value.trim(); if (!t) return; i.value = ''; act('p:dark', { text: t }); };
+const emoji = t => act('p:chat', { text: t });
+
+// ---------- render ----------
+function render() {
+  const app = $('#app');
+  const focus = document.activeElement?.id, val = document.activeElement?.value;
+  if (!S || !session) { app.innerHTML = joinHTML(); }
+  else if (S.phase === 'LOBBY') { app.innerHTML = lobbyHTML(); }
+  else keepScroll('.chat', () => { app.innerHTML = gameHTML(); });
+  if (focus && $('#' + focus) && val !== undefined) { const el = $('#' + focus); el.value = val; el.focus(); }
+  tickTimer();
+}
+function joinHTML() {
+  return `<div class="setup"><h1>🧙 Deadline Necromancer</h1><p>เข้าห้องเล่นกับเพื่อนๆ — รับรหัสห้อง 4 ตัวอักษรจาก Moderator</p>
+    ${error ? `<div class="banner warn">${esc(error)}</div>` : ''}
+    <label>รหัสห้อง</label><input id="jcode" class="input" style="width:100%;text-transform:uppercase" maxlength="4" value="${esc(urlCode())}" placeholder="ABCD">
+    <label>ชื่อของคุณ</label><input id="jname" class="input" style="width:100%" maxlength="14" placeholder="ชื่อเล่น">
+    <div style="margin-top:20px"><button class="btn primary" onclick="join()">เข้าห้อง</button></div></div>`;
+}
+function lobbyHTML() {
+  return `<div class="setup"><h1>🪑 ล็อบบี้ห้อง <span class="code" style="font-size:28px;letter-spacing:6px">${esc(S.code)}</span></h1>
+    <p>รอ Moderator เริ่มเกม (ต้องมีผู้เล่น ${S.min}–${S.max} คน)</p>
+    <div class="plist">${S.players.map(p => `<div class="pl ${p.name === session.name ? 'me' : ''}"><div class="av">${esc(p.name[0])}</div><div class="nm">${esc(p.name)}${p.name === session.name ? ' (คุณ)' : ''} ${p.connected ? '' : '<span class="mut">(ออฟไลน์)</span>'}</div></div>`).join('')}</div>
+    <p class="hint" style="margin-top:12px">ผู้เล่นตอนนี้ ${S.players.length} คน</p></div>`;
+}
+function gameHTML() {
+  const feed = S.feed.map(m => ({ ...m, mine: m.kind === 'chat' && m.who === S.youId }));
+  if (tab === 'me' && S.me) seenIntel = S.me.intel.length;
+  const unread = tab === 'me' ? 0 : Math.max(0, S.me.intel.length - seenIntel);
+  if (tab === 'dark' && S.dark) seenDark = S.dark.chat.length;
+  const darkUnread = S.dark && tab !== 'dark' ? Math.max(0, S.dark.chat.length - seenDark) : 0;
+  const nav = `<nav class="tabs">
+    <button class="${tab === 'game' ? 'on' : ''}" onclick="setTab('game')"><b>🎮</b>เกม</button>
+    <button class="${tab === 'me' ? 'on' : ''}" onclick="setTab('me')"><b>🎭</b>ฉัน${unread ? `<span class="badge">${unread}</span>` : ''}</button>
+    ${S.dark && isMobile() ? `<button class="${tab === 'dark' ? 'on' : ''}" onclick="setTab('dark')"><b>🕯️</b>แชทลับ${darkUnread ? `<span class="badge">${darkUnread}</span>` : ''}</button>` : ''}
+    <button class="${tab === 'players' ? 'on' : ''}" onclick="setTab('players')"><b>👥</b>ผู้เล่น (${S.players.filter(p => p.alive).length})</button></nav>`;
+  return topbar(S) + `<main>
+    <aside class="card sec sec-players ${tab === 'players' ? 'active' : ''}"><h3>พนักงาน (${S.players.filter(p => p.alive).length}/${S.players.length})</h3>${playersListHTML(S.players)}</aside>
+    <section class="center-col sec sec-game ${tab === 'game' ? 'active' : ''}">${error ? `<div class="banner warn">${esc(error)}</div>` : ''}${S.paused ? '<div class="banner">⏸️ Moderator พักเกมชั่วคราว</div>' : ''}${stageHTML()}
+      <div class="card"><h3>แชทกลาง</h3><div class="chat">${feedHTML(feed)}</div>${chatBar()}</div></section>
+    ${sideHTML()}${S.dark && isMobile() ? darkTabHTML() : ''}</main>${nav}`;
+}
+function chatBar() {
+  if (S.phase !== 'MORNING' || !me().alive) return '';
+  return `<form class="chatbar" onsubmit="sendChat(event)"><input id="chatIn" placeholder="${me().silenced ? '🤐 ถูกปิดปาก — ส่งได้แค่อีโมจิ' : 'พิมพ์ข้อความ…'}" ${me().silenced ? 'disabled' : ''} autocomplete="off">
+    ${['👍', '🤔', '😡', '😂', '🙏'].map(e => `<button type="button" class="btn emo" onclick="emoji('${e}')">${e}</button>`).join('')}</form>`;
+}
+function waitMod(text) { return `<p class="hint">⏳ ${text} — รอ Moderator</p>`; }
+
+function stageHTML() {
+  const m = me(), s = S;
+  if (s.phase === 'OVER') return overHTML(s) + `<div class="card"><b class="${s.over.winners.includes(m.id) ? 'ok' : 'bad'}">${s.over.winners.includes(m.id) ? 'คุณชนะ! 🎉' : 'คุณแพ้'}</b></div>`;
+  const deadBanner = !m.alive ? `<div class="banner">👻 คุณออกจากเกมแล้ว — ดูเกมต่อได้ แต่ทำแอ็กชันไม่ได้</div>` : '';
+  const rep = s.report.map(r => `<div>${esc(r)}</div>`).join('');
+  if (s.phase === 'MORNING') {
+    return `<div class="card stage">${deadBanner}<h2>☀️ Morning Stand-up — วัน${s.dayName}</h2><div class="report">${rep}</div>
+      ${eventPanel()}${boosterPanel()}
+      <p class="hint">⚠️ ผ่านคืน = Mana +1 แต่ถ้าโหวตแล้วไม่มีใครถูกไล่ออก ประชุมจะเสียเวลา · ไล่ฝ่ายมืดออกได้ Mana +2</p>${waitMod('คุยจับผิดในแชท แล้ว Moderator จะเปิดเฟสโหวต')}</div>`;
+  }
+  if (s.phase === 'VOTE') {
+    if (!m.alive) return `<div class="card stage">${deadBanner}<h2>🗳️ โหวตไล่ออก</h2>${waitMod('กำลังโหวต')}</div>`;
+    if (m.silenced) return `<div class="card stage"><h2>🗳️ โหวตไล่ออก</h2><p>🤐 คุณถูก NDA Silence — โหวตไม่ได้ในรอบนี้</p>${waitMod('รอปิดโหวต')}</div>`;
+    if (m.hijacked) return `<div class="card stage"><h2>🗳️ โหวตไล่ออก</h2><p>🎤 Meeting Hijack — ไมค์ของคุณถูกยึด คุณถูกบังคับให้ Skip ในรอบนี้</p>${waitMod('รอปิดโหวต')}</div>`;
+    const ts = s.voteCandidates.map(id => `<button class="btn ${UI.voteSel === id ? 'sel' : ''}" onclick="pickVote(${id})">${esc(pname(id))}</button>`).join('');
+    const voted = m.voted !== undefined ? `<p class="ok">✅ คุณโหวต: ${m.voted === 'SKIP' ? 'Skip' : esc(pname(m.voted))} (เปลี่ยนใจได้จนกว่า Moderator จะปิดโหวต)</p>` : '';
+    return `<div class="card stage"><h2>🗳️ PIP Vote — ไล่ใครออก?</h2><p>${s.marathon ? '🕰️ ประชุมมาราธอน: วันนี้ห้ามกด Skip · ' : ''}คะแนนสูงสุดและมากกว่า Skip จะถูกไล่ออก (ไม่โหวต = Skip)${m.role === 'chaos_intern' && s.day >= 4 ? ' · 🗳️ วันนี้โหวตของคุณนับ x2' : ''}</p>
+      <div class="targets">${ts}${s.marathon ? '' : `<button class="btn ${UI.voteSel === 'SKIP' ? 'sel' : ''}" onclick="pickVote('SKIP')">⏭️ Skip</button>`}</div>
+      <div class="confirmbar"><button class="btn primary" ${UI.voteSel == null ? 'disabled' : ''} onclick="sendVote()">ยืนยันโหวต</button></div>${voted}</div>`;
+  }
+  if (s.phase === 'VOTE_RESULT') {
+    const vr = s.voteResult;
+    return `<div class="card stage"><h2>📋 ผลโหวต</h2><div class="votes">${vr.lines.map(esc).join('<br>')}</div>
+      <div class="report"><div>${esc(vr.text)}</div></div>${waitMod('เตรียมเข้ากลางคืน')}</div>`;
+  }
+  if (s.phase === 'NIGHT') return m.alive ? nightHTML() : `<div class="card stage">${deadBanner}<h2>🌙 กลางคืน</h2>${waitMod('ผู้เล่นกำลังเลือกแอ็กชัน')}</div>`;
+  return '';
+}
+function eventPanel() {
+  const ev = S.event; if (!ev) return '';
+  let extra = '';
+  if (ev.pending && me().alive) {
+    const v = me().eventVote;
+    extra = `<div class="acts"><button class="btn ${v === true ? 'sel' : ''}" onclick="act('p:event',{accept:true})">✅ ${esc(ev.yes)}</button><button class="btn ${v === false ? 'sel' : ''}" onclick="act('p:event',{accept:false})">❌ ${esc(ev.no)}</button></div>
+      <p class="hint">ทุกคนโหวต เสียงข้างมากชนะ (เสมอ = ปฏิเสธ) ${v !== undefined ? '· คุณโหวตแล้ว เปลี่ยนใจได้จน Moderator ปิดโหวต' : ''}</p>`;
+  } else if (ev.choice && !ev.pending) extra = `<p class="hint">ผลโหวต: <b>${ev.accepted ? esc(ev.yes) : esc(ev.no)}</b></p>`;
+  return eventCardHTML(ev, extra);
+}
+function boosterPanel() {
+  if (!S.boosterOpen || !me().alive) return S.boosterCharges > 0 || !S.boosterOpen ? '' : '';
+  const v = me().boosterVote;
+  const opts = Object.entries(BOOSTERS).map(([k, b]) => optImg(v === k, `act('p:booster',{key:'${k}'})`, b.n, esc(b.d), BOOSTERTHUMB + b.img)).join('');
+  return `<div class="report" style="border-color:var(--indie)"><div><b>🚀 Sprint Booster (โหวตสาธารณะ — เหลือโควตา ${S.boosterCharges})</b></div>
+    <div class="hint">ทุกคนโหวตไม่เปิดเผยฝั่ง เสียงข้างมากชนะ เสมอ = ไม่เปิดใช้ (ไม่โหวต = ไม่เปิด)</div>
+    <div class="opts">${opts}${opt(v === 'NONE', false, "act('p:booster',{key:'NONE'})", 'ไม่เปิดใช้', 'เก็บโควตาไว้')}</div></div>`;
+}
+
+const SIDE_INFO = {
+  FAKE: { ic: '🎭', n: 'ส่งงานหลอก', d: 'Mana +0 · Log ที่สายสืบส่องจะดูเหมือน "ส่งงานจริง" (พรางตัว)' },
+  SABOTAGE: { ic: '🐛', n: 'วางบั๊ก', d: 'Mana −1 (หักสูงสุด −1/คืน) · Log จะขึ้นว่า "แอบวางบั๊ก"' },
+  CURSE: { ic: '💀', n: 'สาป Burnout', d: 'เลือก 1 คนที่ไม่ใช่ฝ่ายมืด ตกรอบถ้าไม่ถูกกัน/ฮีล · Log: ไม่ได้ส่งงาน' },
+  TRAP: { ic: '🪤', n: 'หมอบ Trap Card', d: 'ใช้โควตาส่วนกลางของทีมมืด · Log: ไม่ได้ส่งงาน' },
+};
+const opt = (sel, dis, click, title, desc) => `<button class="opt ${sel ? 'sel' : ''}" ${dis ? 'disabled' : ''} onclick="${click}"><b>${title}</b>${desc ? `<small>${desc}</small>` : ''}</button>`;
+const optImg = (sel, click, title, desc, src) => `<button class="opt img ${sel ? 'sel' : ''}" onclick="${click}"><img loading="lazy" src="${src}" alt=""><span class="txt"><b>${title}</b><small>${desc}</small></span></button>`;
+const nameList = ids => ids.map(pname).join(', ');
+function darkTabHTML() {
+  const dk = S.dark;
+  return `<section class="card sec sec-dark ${tab === 'dark' ? 'active' : ''}"><h3>🕯️ ห้องแชทลับฝ่ายมืด</h3>
+    <div class="hint">เพื่อนร่วมลัทธิ: ${dk.mates.map(x => esc(x.name) + (x.alive ? '' : ' (ออกแล้ว)')).join(', ') || '—'} · ใช้ได้เฉพาะช่วงกลางคืน</div>
+    <div class="chat" style="margin-top:10px">${dk.chat.map(c => `<div class="msg"><b>${esc(c.name)}:</b> ${esc(c.text)}</div>`).join('') || '<div class="hint">ยังไม่มีใครพูด</div>'}</div>
+    <form class="chatbar" onsubmit="sendDark(event)"><input id="darkIn" placeholder="นัดแนะแผนกับเพื่อนร่วมลัทธิ…" autocomplete="off" ${S.phase === 'NIGHT' ? '' : 'disabled'}><button class="btn" type="submit">ส่ง</button></form></section>`;
+}
+function nightHTML() {
+  const m = me(), s = m.spec, dk = S.dark;
+  const need = Math.max(s?.t || 0, 0);
+  const banned = m.skillsBanned, snack = m.snack, skillOK = m.skillOK;
+  const skillLabel = `✨ ใช้สกิล: ${esc(s ? s.skill : '—')}${m.role === 'mystery_intern' && m.copy ? ` (ก๊อปจาก ${esc(m.copyFrom)} → ${esc(m.copyName)})` : ''}${m.once && m.used ? ' (ใช้แล้ว)' : ''}`;
+  const restLabel = snack ? '🍩 พักกินขนม (คุ้มกันจากคำสาป)' : banned ? '🚨 แก้บั๊ก Production ร่วมกัน (ห้ามใช้สกิล)' : '😴 ' + (skillOK ? 'เก็บสกิลไว้' : (m.locked ? 'บาเรียแตก — ใช้สกิลไม่ได้คืนนี้' : 'ไม่มีสกิลให้ใช้'));
+  const tpick = UI.choice === 'SKILL' && need > 0 ? `<p class="hint">เลือกเป้าหมาย ${need} คน (เลือกแล้ว ${UI.sel.length}/${need})</p><div class="targets">${m.candidates.map(id => `<button class="btn ${UI.sel.includes(id) ? 'sel' : ''}" onclick="toggleT(${id})">${esc(pname(id))}${id === m.id ? ' (ตัวเอง)' : ''}</button>`).join('')}</div>` : '';
+  const recruiter = UI.choice === 'SKILL' && m.role === 'soul_recruiter' ? `<div class="opts">${opt(!UI.plus1, false, 'chooseMode(false)', '👁️ ส่องเป้าหมายลับ', `ดูว่า ${esc(m.targetName)} โดนใครโหวตในรอบล่าสุด`)}${opt(UI.plus1, m.plus1Used, 'chooseMode(true)', '🎯 ยัดคะแนน +1 ใส่เป้าหมายลับ', m.plus1Used ? 'ใช้สิทธิ์แล้ว' : `ใส่ ${esc(m.targetName)} ในรอบโหวตพรุ่งนี้ (1 ครั้ง/เกม)`)}</div>` : '';
+
+  let side = '', sideOK = true, sideSum = '';
+  if (dk) {
+    const need2 = UI.side === 'TRAP' && UI.trapId ? dk.trapNeed[UI.trapId] : null;
+    const alive = S.players.filter(p => p.alive);
+    const tl = UI.side === 'CURSE' ? alive.filter(p => dk.lights.includes(p.id))
+      : need2 === 'dark' ? alive.filter(p => p.me || p.mate) : need2 === 'nondark' ? alive.filter(p => !(p.me || p.mate)) : need2 === 'any' ? alive : [];
+    sideOK = !!UI.side && (UI.side === 'CURSE' ? UI.sideSel.length === 1 : UI.side === 'TRAP' ? (!!UI.trapId && (!need2 || UI.sideSel.length === 1)) : true);
+    const cursed = dk.curseBlocked ? (S.day === 1 ? ' (ห้ามคืนแรก)' : ' (ลูกค้าเฝ้าอยู่)') : '';
+    const sideBtns = Object.entries(SIDE_INFO).map(([k, v]) => opt(UI.side === k, (k === 'CURSE' && dk.curseBlocked) || (k === 'TRAP' && dk.trapFree <= 0), `chooseSide('${k}')`,
+      `${v.ic} ${v.n}${k === 'CURSE' ? cursed : ''}${k === 'TRAP' ? ` (โควตา ${dk.trapCharges}${dk.trapFree < dk.trapCharges ? ` · เพื่อนจองแล้ว ${dk.trapCharges - dk.trapFree}` : ''})` : ''}`, v.d)).join('');
+    const trapPick = UI.side === 'TRAP' ? `<p class="hint">เลือก Trap Card 1 ใบ</p>
+      ${UI.trapId ? `<div class="trap-prev"><img src="${TRAPTHUMB + TRAPS[UI.trapId].img}" alt="${esc(TRAPS[UI.trapId].n)}" onclick="window.open(TRAPIMG + TRAPS['${UI.trapId}'].img)"><div><b>${esc(TRAPS[UI.trapId].n)}</b><div class="hint">${esc(TRAPS[UI.trapId].d)}</div><div class="hint">แตะรูปเพื่อดูภาพเต็ม</div></div></div>` : ''}
+      <div class="opts">${Object.entries(TRAPS).map(([k, t]) => optImg(UI.trapId === k, `chooseTrap('${k}')`, t.n, esc(t.d), TRAPTHUMB + t.img)).join('')}</div>` : '';
+    const needTxt = UI.side === 'CURSE' ? 'เลือกเหยื่อ 1 คน' : need2 === 'dark' ? 'เลือกฝ่ายมืด 1 คนที่จะวางกระจก' : need2 === 'nondark' ? 'เลือกเป้าหมายที่ไม่ใช่ฝ่ายมืด 1 คน' : need2 === 'any' ? 'เลือกผู้เล่น 1 คน' : '';
+    side = `<h3 class="step-h">② แอ็กชันก่อกวน <small>(เลือก 1)</small></h3><div class="opts">${sideBtns}</div>${trapPick}
+      ${tl.length ? `<p class="hint">${needTxt}</p><div class="targets">${tl.map(p => `<button class="btn ${UI.sideSel.includes(p.id) ? 'sel' : ''}" onclick="toggleS(${p.id})">${esc(p.name)}${p.me ? ' (ตัวเอง)' : ''}</button>`).join('')}</div>` : ''}`;
+    if (UI.side) sideSum = SIDE_INFO[UI.side].n + (UI.side === 'TRAP' && UI.trapId ? ` (${TRAPS[UI.trapId].n})` : '') + (UI.sideSel.length ? ' → ' + nameList(UI.sideSel) : '');
+  }
+  const skillOKsel = UI.choice && UI.sel.length === (UI.choice === 'SKILL' ? need : 0);
+  const ready = skillOKsel && sideOK;
+  // สรุปสิ่งที่เลือก / สิ่งที่ยังขาด
+  const missing = [];
+  if (!UI.choice) missing.push(dk ? 'เลือกข้อ ① (สกิลหรือพัก)' : 'เลือกสกิลหรือพัก');
+  else if (UI.choice === 'SKILL' && UI.sel.length < need) missing.push(`เลือกเป้าหมายสกิลอีก ${need - UI.sel.length} คน`);
+  if (dk) { if (!UI.side) missing.push('เลือกข้อ ② แอ็กชันก่อกวน'); else if (!sideOK) missing.push(UI.side === 'TRAP' && !UI.trapId ? 'เลือก Trap Card' : 'เลือกเป้าหมายของแอ็กชันก่อกวน'); }
+  const skillSum = UI.choice === 'SKILL' ? `สกิล ${s ? s.skill : ''}${m.role === 'soul_recruiter' ? (UI.plus1 ? ': ยัดคะแนน +1 ใส่ ' + m.targetName : ': ส่อง ' + m.targetName) : ''}${UI.sel.length ? ' → ' + nameList(UI.sel) : ''}` : UI.choice === 'REST' ? 'พักสกิล' : '';
+  const summary = missing.length ? `<span class="bad">ยังขาด: ${missing.join(' · ')}</span>` : `<b>${[skillSum, sideSum].filter(Boolean).map(esc).join('  +  ')}</b>`;
+  const sent = m.submitted ? `<div class="banner">✅ ส่งแอ็กชันแล้ว — แก้ไขและส่งใหม่ได้จนกว่า Moderator จะปิดกลางคืน</div>` : '';
+  const dchat = dk && !isMobile() ? `<div class="report" style="border-color:var(--dark);margin-top:14px"><b>🕯️ ห้องแชทลับฝ่ายมืด</b>${dk.chat.map(c => `<div><b>${esc(c.name)}:</b> ${esc(c.text)}</div>`).join('') || '<div class="hint">ยังไม่มีใครพูด</div>'}
+    <form class="chatbar" onsubmit="sendDark(event)"><input id="darkIn" placeholder="นัดแนะแผนกับเพื่อนร่วมลัทธิ…" autocomplete="off"><button class="btn emo" type="submit">ส่ง</button></form></div>` : '';
+  const chips = [];
+  if (m.role === 'soul_recruiter') chips.push(`🎯 เป้าหมายลับ: <b>${esc(m.targetName)}</b>`);
+  if (m.role === 'glory_thief') chips.push(`⭐ Credit <b>${m.credit}/2</b>`);
+  if (m.faction === 'indie') chips.push(m.dodgeUsed ? '🛡️ Dodge ใช้แล้ว' : '🛡️ Dodge เหลือ 1');
+  if (m.role === 'chaos_intern' && S.day >= 4) chips.push('🗳️ โหวต x2 (พฤ–ศ)');
+  if (m.dbl) chips.push('☕ โหวต x2'); if (m.zero) chips.push('📉 โหวต 0'); if (m.locked) chips.push('🔒 สกิลถูกล็อก');
+  if (dk) chips.push(`🪤 Trap ว่าง <b>${dk.trapFree}/${dk.trapCharges}</b>`);
+  return `<div class="card stage"><h2>🌙 Night Work — คืนวัน${S.dayName}</h2>${chips.length ? `<div class="chips">${chips.map(c => `<span class="chip">${c}</span>`).join('')}</div>` : ''}${sent}
+    ${S.event ? `<div class="report" style="border-color:var(--light)">📞 ${esc(S.event.t)}${S.event.choice && S.event.accepted !== null ? ' (' + esc(S.event.accepted ? S.event.yes : S.event.no) + ')' : ''} — ${esc(S.event.d)}</div>` : ''}
+    <p class="hint">ทีมปั่นงานพื้นฐานให้อัตโนมัติ <b>Mana +1</b> ทุกคืน (บั๊กฝ่ายมืดหักได้สูงสุด −1/คืน · ถ้ารอบโหวตเสียเวลา จะได้น้อยลง) — ทุกคนต้อง<b>ใช้สกิล</b>${m.canRest && m.once && skillOK ? ' (สกิลครั้งเดียวเก็บไว้ได้)' : ''}</p>
+    <h3 class="step-h">${dk ? '① ' : ''}สกิลประจำตัว</h3>
+    <div class="opts">${opt(UI.choice === 'SKILL', !(skillOK && !banned), "chooseAction('SKILL')", skillLabel, s ? esc(s.d) : '')}
+      ${m.canRest ? opt(UI.choice === 'REST', false, "chooseAction('REST')", restLabel, '') : ''}</div>
+    ${recruiter}${tpick}${side}${dchat}
+    <div class="confirmbar"><div class="sumline">${summary}</div>
+      <button class="btn primary" ${ready ? '' : 'disabled'} onclick="sendNight()">${m.submitted ? 'ส่งใหม่' : 'ยืนยัน'} แล้วรอเช้า ☀️</button></div></div>`;
+}
+function sideHTML() {
+  const m = me();
+  const mates = S.dark ? `<p class="hint">เพื่อนร่วมลัทธิ: ${S.dark.mates.map(x => esc(x.name) + (x.alive ? '' : ' (ออกแล้ว)')).join(', ') || '—'} · โควตา Trap ${S.dark.trapCharges}</p>` : '';
+  const target = m.role === 'soul_recruiter' ? `<p class="hint">🎯 เป้าหมายลับ: <b>${esc(m.targetName)}</b></p>` : '';
+  const credit = m.role === 'glory_thief' ? `<p class="hint">⭐ Credit: <b>${m.credit}/2</b></p>` : '';
+  const dodge = m.faction === 'indie' ? `<p class="hint">🛡️ Freelance Dodge: ${m.dodgeUsed ? 'ใช้ไปแล้ว' : 'ยังเหลือ 1 ครั้ง (รับคำสาป Burnout ได้ 1 ครั้ง · เมื่อทำงานระบบจะแจ้งคุณว่าเกราะถูกทำลาย)'}</p>` : '';
+  const flags = [m.dbl ? '☕ โหวต x2 วันนี้' : '', m.zero ? '📉 พลังโหวตวันนี้เป็น 0 (PIP Curse)' : '', m.locked ? '🔒 สกิลใช้ไม่ได้คืนนี้ (บาเรียแตก)' : ''].filter(Boolean).map(t => `<p class="hint">${t}</p>`).join('');
+  return `<aside class="center-col sec sec-me ${tab === 'me' ? 'active' : ''}"><div class="card rolecard"><h3>บทบาทของคุณ</h3><img src="${ROLETHUMB_MD + m.img}" onerror="this.onerror=null;this.src='${IMG + m.img}'" onclick="window.open(IMG + '${m.img}')" style="cursor:zoom-in" alt="${esc(m.roleName)}">
+    <div class="skill"><span class="tag ${m.faction}">${esc(m.factionName)}</span><br><b>${esc(m.roleName)}</b> ${esc(m.sub)}<br><b>สกิล:</b> ${esc(m.skill)}<br>${esc(m.desc)}<br><b>เป้าหมาย:</b> ${esc(m.goal)}</div>${mates}${target}${credit}${dodge}${flags}</div>
+    <div class="card"><h3>ข้อมูลลับของคุณ</h3><div class="intel">${m.intel.length ? m.intel.slice().reverse().map(i => `<div><small>วัน${DAYS[i.day - 1]}</small><br>${esc(i.text)}</div>`).join('') : '<span class="hint">ยังไม่มีข้อมูลลับ</span>'}</div></div></aside>`;
+}
+render();
+</script>
+</body>
+</html>

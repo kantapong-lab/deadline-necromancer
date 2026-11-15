@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Deadline Necromancer — Moderator</title>
+<link rel="stylesheet" href="/style.css">
+</head>
+<body>
+<div id="app"></div>
+<script src="/socket.io/socket.io.js"></script>
+<script src="/data.js"></script>
+<script src="/common.js"></script>
+<script>
+const socket = io();
+let S = null, session = null, error = '';
+const saved = () => { try { return JSON.parse(localStorage.getItem('dn-mod') || 'null'); } catch { return null; } };
+
+socket.on('connect', async () => {
+  const s = saved();
+  if (s) { const r = await emit(socket, 'mod:join', s); if (r.ok) session = s; else localStorage.removeItem('dn-mod'); }
+  render();
+});
+socket.on('state', st => { S = st; setTimerFrom(st); render(); });
+
+async function createRoom() {
+  const r = await emit(socket, 'mod:create');
+  if (!r.ok) { error = 'สร้างห้องไม่สำเร็จ'; return render(); }
+  session = { code: r.code, modToken: r.modToken }; localStorage.setItem('dn-mod', JSON.stringify(session));
+}
+function leaveRoom() { localStorage.removeItem('dn-mod'); session = null; S = null; render(); }
+async function doAct(action, payload) {
+  const r = await emit(socket, 'mod:do', { action, payload });
+  error = r.ok ? '' : r.error; if (!r.ok) render();
+}
+const joinUrl = () => location.origin + '/?room=' + session.code;
+function announce(e) { e.preventDefault(); const i = $('#annIn'); const t = i.value.trim(); if (!t) return; i.value = ''; doAct('announce', { text: t }); }
+const copyUrl = () => navigator.clipboard?.writeText(joinUrl());
+const confirmDo = (msg, a, p) => { if (confirm(msg)) doAct(a, p); };
+
+function render() {
+  const app = $('#app');
+  const focus = document.activeElement?.id, val = document.activeElement?.value;
+  if (!session || !S) app.innerHTML = startHTML();
+  else if (S.phase === 'LOBBY') app.innerHTML = lobbyHTML();
+  else app.innerHTML = gameHTML();
+  if (focus && $('#' + focus) && val !== undefined) { const el = $('#' + focus); el.value = val; el.focus(); }
+  tickTimer();
+}
+function startHTML() {
+  return `<div class="setup"><h1>🎛️ Moderator</h1><p>สร้างห้องใหม่ แล้วแจกรหัสห้องให้ผู้เล่น (Moderator ไม่ได้เล่น — ควบคุมจังหวะเกมเท่านั้น)</p>
+    ${error ? `<div class="banner warn">${esc(error)}</div>` : ''}<button class="btn primary bigbtn" onclick="createRoom()">สร้างห้องใหม่</button></div>`;
+}
+function lobbyHTML() {
+  const n = S.players.length, ok = n >= S.min && n <= S.max;
+  return `<div class="setup" style="max-width:640px"><h1>🪑 ล็อบบี้</h1>
+    <p>ให้ผู้เล่นเปิดลิงก์นี้ หรือกรอกรหัสห้อง</p>
+    <div class="code">${esc(S.code)}</div>
+    <div class="row" style="margin:8px 0 18px"><code class="pill">${esc(joinUrl())}</code><button class="btn" onclick="copyUrl()">คัดลอกลิงก์</button></div>
+    ${error ? `<div class="banner warn">${esc(error)}</div>` : ''}
+    <div class="plist">${S.players.map(p => `<div class="pl"><div class="av">${esc(p.name[0])}</div><div class="nm" style="flex:1">${esc(p.name)} ${p.connected ? '<span class="ok">●</span>' : '<span class="mut">○ ออฟไลน์</span>'}</div><button class="btn" onclick="doAct('kick',{name:'${esc(p.name)}'})">เตะ</button></div>`).join('') || '<p class="hint">ยังไม่มีผู้เล่น</p>'}</div>
+    <p class="hint" style="margin-top:12px">ผู้เล่น ${n} คน · ต้องมี ${S.min}–${S.max} คน · ไม่มีบอท ต้องเป็นคนจริงทั้งหมด</p>
+    <div class="row" style="margin-top:16px"><button class="btn primary bigbtn" ${ok ? '' : 'disabled'} onclick="doAct('start')">เริ่มเกม</button><button class="btn" onclick="leaveRoom()">ออกจากห้องนี้</button></div></div>`;
+}
+
+const ACTIONS = {
+  MORNING: { label: 'ไปเฟสโหวตไล่ออก →', act: 'toVote' },
+  VOTE: { label: 'ปิดโหวตและประกาศผล', act: 'closeVote' },
+  VOTE_RESULT: { label: 'เข้าสู่กลางคืน 🌙', act: 'toNight' },
+  NIGHT: { label: 'ปิดกลางคืนและประมวลผล ☀️', act: 'closeNight' },
+  OVER: { label: 'เริ่มห้องใหม่ (ผู้เล่นชุดเดิม)', act: 'reset' },
+};
+function progress(p, label) {
+  if (!p) return '';
+  const pct = p.total ? Math.round(p.done / p.total * 100) : 100;
+  return `<div style="margin:8px 0"><b>${label}</b> ${p.done}/${p.total}<div class="progress"><div style="width:${pct}%"></div></div>${p.waiting.length ? `<div class="hint">ยังไม่ส่ง: ${p.waiting.map(esc).join(', ')}</div>` : '<div class="ok hint">ครบแล้ว ✅</div>'}</div>`;
+}
+function gameHTML() {
+  const g = S.guidance, a = ACTIONS[S.phase], pd = S.pending || {};
+  const timers = [60, 120, 180, 300].map(t => `<button class="btn" onclick="doAct('timer',{sec:${t}})">${t >= 60 ? t / 60 + ' นาที' : t + ' วิ'}</button>`).join('');
+  const tl = S.timeline.slice().reverse().map((t, i) => `<div class="tl ${i === 0 ? 'cur' : ''}"><small>วัน${DAYS[t.day - 1] || ''} · ${new Date(t.ts).toLocaleTimeString('th-TH', { hour: '2-digit', minute: '2-digit', second: '2-digit' })}</small><br><b>${esc(t.title)}</b>${t.text ? `<br><span class="mut">${esc(t.text)}</span>` : ''}</div>`).join('');
+  const extraTags = p => S.secrets ? [p.credit ? `<span class="tag">⭐${p.credit}</span>` : '', p.zero ? '<span class="tag">📉0</span>' : '', p.locked ? '<span class="tag">🔒</span>' : ''].filter(Boolean) : [];
+  const mainBtn = a ? `<button class="btn primary bigbtn" onclick="${a.act === 'reset' ? "confirmDo('เริ่มห้องใหม่? จะกลับไปล็อบบี้ด้วยผู้เล่นชุดเดิม','reset')" : `doAct('${a.act}')`}">${a.label}</button>` : '';
+  const side = [];
+  if (S.event?.pending) side.push(`<button class="btn" onclick="doAct('closeEvent')">ปิดโหวตการ์ดเหตุการณ์</button>`);
+  if (S.boosterOpen && S.phase === 'MORNING') side.push(`<button class="btn" onclick="doAct('closeBooster')">ปิดโหวต Sprint Booster</button>`);
+  const secretInfo = S.secrets ? `<div class="card"><h3>🔒 ข้อมูลลับ</h3><div class="hint">Trap ที่หมอบอยู่: ${S.traps.length ? S.traps.map(t => (TRAPS[t.kind]?.n || t.kind) + (t.target != null ? ' → ' + esc(S.players[t.target]?.name) : '')).join(', ') : 'ไม่มี'} · โควตา Trap ${S.trapCharges}</div>
+    ${S.nightActions ? `<div class="intel">${S.players.filter(p => S.nightActions[p.id]).map(p => { const n = S.nightActions[p.id]; return `<div><b>${esc(p.name)}</b> ${esc(ROLES[p.role]?.n || '')}: ${n.type}${n.targets?.length ? ' → ' + n.targets.map(t => esc(S.players[t]?.name)).join(',') : ''}${n.side ? ' + ' + n.side + (n.trapId ? ':' + n.trapId : '') + (n.sideTargets?.length ? ' → ' + n.sideTargets.map(t => esc(S.players[t]?.name)).join(',') : '') : ''}</div>`; }).join('')}</div>` : ''}</div>` : '';
+  const evInfo = S.event ? eventCardHTML(S.event, S.event.pending ? `<p class="hint">รอโหวต: ${pd.event ? pd.event.done + '/' + pd.event.total : ''}</p>` : (S.event.choice ? `<p class="hint">ผลโหวต: <b>${esc(S.event.accepted ? S.event.yes : S.event.no)}</b></p>` : '')) : '';
+  return topbar(S, `<button class="btn" onclick="leaveRoom()">ออก</button>`) + `<div class="modwrap">
+    <aside class="card"><h3>ลำดับเหตุการณ์ (ล่าสุดอยู่บน)</h3><div class="timeline">${tl}</div></aside>
+    <section class="center-col">
+      ${error ? `<div class="banner warn">${esc(error)}</div>` : ''}
+      ${S.over ? overHTML(S) : ''}
+      <div class="card stage"><h3>ตอนนี้</h3><h2>${esc(g.title)}</h2>
+        <div class="hint">สิ่งที่ต้องแจ้งผู้เล่น:</div><ol class="steps">${g.steps.map(x => `<li>${esc(x)}</li>`).join('')}</ol>
+        ${evInfo}
+        ${progress(pd.event, 'โหวตการ์ดเหตุการณ์')}${progress(pd.booster, 'โหวต Sprint Booster')}${progress(pd.vote, 'โหวตไล่ออก')}${progress(pd.night, 'ส่งแอ็กชันกลางคืน')}
+        <div class="next">👉 <b>ขั้นตอนถัดไป:</b> ${esc(g.next)}</div>
+        <div class="row stickybar" style="margin-top:14px">${mainBtn}${side.join('')}</div></div>
+      <div class="card"><h3>ควบคุมห้อง</h3>
+        <div class="row"><span class="mut">ตั้งเวลา (ผู้เล่นเห็นนับถอยหลัง ไม่เปลี่ยนเฟสอัตโนมัติ):</span>${timers}<button class="btn" onclick="doAct('timer',{sec:0})">ยกเลิกเวลา</button></div>
+        <div class="row" style="margin-top:10px"><button class="btn" onclick="doAct('pause',{on:${!S.paused}})">${S.paused ? '▶️ เล่นต่อ' : '⏸️ พักเกม'}</button>
+          <button class="btn" onclick="doAct('secrets',{on:${!S.secrets}})">${S.secrets ? '🙈 ซ่อนข้อมูลลับ' : '👁️ แสดงข้อมูลลับ (บทบาททุกคน)'}</button></div>
+        <form class="chatbar" onsubmit="announce(event)"><input id="annIn" placeholder="ประกาศข้อความถึงทุกคน…" autocomplete="off"><button class="btn" type="submit">📣 ประกาศ</button></form></div>
+      ${secretInfo}
+      <div class="card"><h3>ฟีดสาธารณะ</h3><div class="chat">${feedHTML(S.feed)}</div></div>
+    </section>
+    <aside class="center-col"><div class="card"><h3>พนักงาน (${S.players.filter(p => p.alive).length}/${S.players.length}) · ห้อง ${esc(session.code)}</h3>${playersListHTML(S.players, { extra: extraTags })}</div>
+      <div class="card"><h3>สรุป</h3><div class="hint">Mana ${S.mana}/${S.manaMax} · Skip ติดกัน ${S.skipStreak} · โควตา Booster ${S.boosterCharges}${S.hijackSet ? ' · Meeting Hijack ทำงาน' : ''}</div></div></aside></div>`;
+}
+render();
+</script>
+</body>
+</html>
