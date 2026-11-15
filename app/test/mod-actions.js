@@ -8,7 +8,7 @@ const path = require('path');
 const crypto = require('crypto');
 process.env.PORT = process.env.TEST_PORT || '3113';
 const { io: Client } = require('socket.io-client');
-const { httpServer } = require('../server');
+const { httpServer } = require('../src/server/index');
 const { mulberry32 } = require('./golden/bot');
 
 const EXPECT = path.join(__dirname, 'mod-actions.json');

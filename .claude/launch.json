@@ -15,7 +15,7 @@
       "name": "app",
       "runtimeExecutable": "node",
       "runtimeArgs": [
-        "app/server.js"
+        "app/src/server/index.js"
       ],
       "port": 3000
     }

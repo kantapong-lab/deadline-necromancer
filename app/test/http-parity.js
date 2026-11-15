@@ -5,7 +5,7 @@ const fs = require('fs');
 const path = require('path');
 const crypto = require('crypto');
 process.env.PORT = process.env.TEST_PORT || '3112';
-const { httpServer } = require('../server');
+const { httpServer } = require('../src/server/index');
 
 const EXPECT = path.join(__dirname, 'http-parity.json');
 const BASE = 'http://localhost:' + process.env.PORT;

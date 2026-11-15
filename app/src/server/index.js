@@ -1,14 +1,16 @@
 // Deadline Necromancer — multiplayer server (Node + Socket.IO)
-// รัน: node server.js   →  ผู้เล่นเปิด http://<host>:3000/   Moderator เปิด http://<host>:3000/mod
+// รัน: node src/server/index.js   →  ผู้เล่นเปิด http://<host>:3000/   Moderator เปิด http://<host>:3000/mod
 const http = require('http');
 const fs = require('fs');
 const path = require('path');
 const { Server } = require('socket.io');
-const { Game, MIN_PLAYERS, MAX_PLAYERS } = require('./engine');
+const { Game, MIN_PLAYERS, MAX_PLAYERS } = require('../engine/game');
 
 const PORT = process.env.PORT || 3000;
-const PUBLIC = path.join(__dirname, 'public');
-const DOCS = path.join(__dirname, '..', 'docs');
+const APP_ROOT = path.resolve(__dirname, '..', '..');
+const PUBLIC = path.join(APP_ROOT, 'public');
+const DOCS = path.join(APP_ROOT, '..', 'docs');
+const SHARED = path.join(APP_ROOT, 'src', 'shared');
 const MIME = { '.html': 'text/html; charset=utf-8', '.js': 'text/javascript; charset=utf-8', '.css': 'text/css; charset=utf-8', '.jpg': 'image/jpeg', '.png': 'image/png', '.svg': 'image/svg+xml', '.json': 'application/json' };
 
 function serveFile(res, base, rel) {
@@ -25,7 +27,7 @@ const httpServer = http.createServer((req, res) => {
   if (url === '/') return serveFile(res, PUBLIC, 'index.html');
   if (url === '/mod') return serveFile(res, PUBLIC, 'mod.html');
   if (url === '/gallery') return serveFile(res, PUBLIC, 'gallery.html');   // แกลเลอรีรูปการ์ดทั้งหมด
-  if (url === '/data.js') return serveFile(res, __dirname, 'data.js');   // ข้อมูลบทบาท/การ์ดใช้ร่วมกับฝั่ง client
+  if (url === '/data.js') return serveFile(res, SHARED, 'data.js');   // ข้อมูลบทบาท/การ์ดใช้ร่วมกับฝั่ง client
   if (url.startsWith('/docs/')) {
     // เสิร์ฟเฉพาะรูปการ์ดจาก docs (ไม่เปิดไฟล์เอกสารอื่น)
     if (!/\.(jpg|png)$/i.test(url)) { res.writeHead(403); return res.end('forbidden'); }

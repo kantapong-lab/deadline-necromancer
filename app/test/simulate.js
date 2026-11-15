@@ -1,7 +1,7 @@
 // ทดสอบ end-to-end: Moderator + ผู้เล่นหลายคนผ่าน Socket.IO จนจบเกม (ไม่ต้องเปิดเบราว์เซอร์)
 process.env.PORT = process.env.TEST_PORT || '3111';
 const { io: Client } = require('socket.io-client');
-const { httpServer } = require('../server');
+const { httpServer } = require('../src/server/index');
 const URL = 'http://localhost:' + process.env.PORT;
 const rnd = a => a[Math.floor(Math.random() * a.length)];
 const emit = (s, ev, data) => new Promise(res => s.emit(ev, data, res));
