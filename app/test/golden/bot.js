@@ -65,6 +65,10 @@ function playGame(Game, N, seed, cov, onStep) {
         }
         call('vote-bad', () => g.castVote(alive[0].id, alive[0].id));
         call('closeVote', () => g.closeVote());
+      } else if (ph === 'VOTE_INTERIM') {
+        for (const p of g.alive().slice(0, 3)) call('chat-interim:' + p.id, () => g.chat(p.id, 'interim ' + p.id));
+        call('toNight-bad', () => g.toNight());
+        call('openRound2', () => g.openRound2());
       } else if (ph === 'VOTE_RESULT') {
         call('toVote-bad', () => g.toVote());
         call('toNight', () => g.toNight());
