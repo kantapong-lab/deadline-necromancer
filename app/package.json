@@ -6,7 +6,8 @@
   "main": "src/server/index.js",
   "scripts": {
     "start": "node src/server/index.js",
-    "test": "node test/golden/run.js && node test/http-parity.js && node test/mod-actions.js && node test/simulate.js && node test/events.js"
+    "balance": "node test/balance.js",
+    "test":"node test/golden/run.js && node test/http-parity.js && node test/mod-actions.js && node test/simulate.js && node test/events.js"
   },
   "dependencies": {
     "socket.io": "^4.7.5"
