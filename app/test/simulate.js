@@ -38,6 +38,9 @@ async function playGame(N, verbose) {
         const t = Math.random() < .35 && !p.v.marathon ? 'SKIP' : rnd(p.v.voteCandidates);
         const r = await emit(p.s, 'p:vote', { target: t }); if (!r.ok) errs.push('vote ' + r.error); }
       await md('closeVote');
+    } else if (ph === 'VOTE_INTERIM') {
+      const p = players.find(x => x.v.me.alive); if (p) await emit(p.s, 'p:chat', { text: 'interim ' + p.name });
+      await md('openRound2');
     } else if (ph === 'VOTE_RESULT') await md('toNight');
     else if (ph === 'NIGHT') {
       const sent = {};

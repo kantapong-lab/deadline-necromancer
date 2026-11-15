@@ -26,6 +26,7 @@ module.exports = function registerModerator(socket, { io, ctx, pushState }) {
         if (!g) { err = 'ยังไม่ได้เริ่มเกม'; break; }
         if (action === 'toVote') err = g.toVote();
         else if (action === 'closeVote') { if (g.phase !== 'VOTE') err = 'ไม่ได้อยู่ในเฟสโหวต'; else g.closeVote(); }
+        else if (action === 'openRound2') err = g.openRound2();
         else if (action === 'toNight') err = g.toNight();
         else if (action === 'closeNight') err = g.closeNight();
         else if (action === 'closeEvent') { if (!g.event?.pending) err = 'ไม่มีการโหวตการ์ดที่ค้างอยู่'; else g.closeEventVote(); }

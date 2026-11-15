@@ -14,6 +14,7 @@ module.exports = {
       return out;
     }
     if (G.phase === 'VOTE') { const need = al.filter(p => !p.silenced && p.id !== G.hijackVoter); return { vote: { done: need.filter(p => G.votes[p.id] !== undefined).length, total: need.length, waiting: list(need.filter(p => G.votes[p.id] === undefined)) } }; }
+    if (G.phase === 'VOTE_INTERIM') return {};
     if (G.phase === 'NIGHT') return { night: { done: al.filter(p => G.night[p.id]).length, total: al.length, waiting: list(al.filter(p => !G.night[p.id])) } };
     return {};
   },
@@ -28,6 +29,7 @@ module.exports = {
         return { title: 'ช่วงเช้า / ห้องประชุม', steps, next: 'เมื่อหมดเวลาคุย กด "ไปเฟสโหวตไล่ออก"' + (pd.event || pd.booster ? ' (ระบบจะปิดโหวตที่ค้างให้อัตโนมัติ)' : '') };
       }
       case 'VOTE': return { title: 'เฟสโหวตไล่ออก', steps: ['บอกให้ทุกคนโหวตเลือกคนที่จะไล่ออกหรือ Skip', G.evIs('marathon') ? 'วันนี้ห้าม Skip' : 'ใครไม่โหวตจะถูกนับเป็น Skip'], next: 'เมื่อโหวตครบ หรือหมดเวลา กด "ปิดโหวตและประกาศผล"' };
+      case 'VOTE_INTERIM': return { title: 'พักโหวต — ผลรอบแรก', steps: ['อ่านคะแนนรอบแรก (ยังไม่ตัดสิน) ให้ทุกคนฟัง: ' + (G.interim ? G.interim.tally.map(r => r.name + ' ' + r.n).concat('Skip ' + G.interim.skip).join(', ') : ''), 'ให้ทุกคนคุยกันก่อนโหวตรอบสอง'], next: 'กด "เปิดโหวตรอบสอง" เมื่อพร้อม' };
       case 'VOTE_RESULT': return { title: 'ประกาศผลโหวต', steps: ['อ่านผลโหวตให้ทุกคนฟัง: ' + (G.voteResult?.text || '')], next: 'กด "เข้าสู่กลางคืน" เมื่อพร้อม' };
       case 'NIGHT': return { title: 'กลางคืน — แอ็กชันลับ', steps: ['บอกให้ทุกคนหลับตา/ดูหน้าจอตัวเอง แล้วเลือกแอ็กชันลับ', 'ฝ่ายมืดคุยกันในห้องแชทลับได้'], next: 'เมื่อทุกคนส่งแล้ว (หรือหมดเวลา) กด "ปิดกลางคืนและประมวลผล" — ผู้ที่ไม่ส่งจะถูกตั้งค่าเริ่มต้น' };
       case 'OVER': return { title: 'จบเกม', steps: ['ประกาศผู้ชนะและเปิดบทบาททุกคน'], next: 'กด "เริ่มห้องใหม่" เพื่อเล่นรอบใหม่ด้วยผู้เล่นชุดเดิม' };
@@ -48,6 +50,8 @@ module.exports = {
       traps: secrets ? G.traps.map(t => ({ kind: t.kind, target: t.target, day: t.day })) : G.traps.length,
       trapCharges: G.trapCharges, hijackSet: G.hijackVoter != null,
       nightActions: secrets && G.phase !== 'MORNING' ? G.night : null,
+      ...(G.evIs('status') && G.event.fullReport ? { statusReport: G.event.fullReport } : {}),
+      ...(G.evIs('status') && secrets ? { onCall: G.event.onCall ?? null } : {}),
     };
   },
 };
