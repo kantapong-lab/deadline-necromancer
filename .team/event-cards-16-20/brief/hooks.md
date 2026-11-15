@@ -33,7 +33,7 @@ Shared hooks (all 5 cards)
 - Public surface: add a line to `voteResult.lines` (`vote.js:52`, shown on VOTE_RESULT) plus `G.sys` and `G.report`.
 - Tests: `events.js` new case; `vote.js` edge with <3 alive.
 
-## #19 Client Redesign (`redesign`, img `19_client_redesign.jpg`)  [structural]
+## #19 Client Redesign (`redesign`, img `19_client_redesign.jpg`)  `structural`
 - Phase guard for votes: `castVote` `vote.js:8-16` (VOTE only). Round 2 reuses VOTE, so castVote is unchanged.
 - Round-2 start must keep votes: `phases.js:8-17` toVote resets `this.votes = {}` at `:13`. A new open-round-2 transition must not reset.
 - Round-1 close: new function (suggested `closeRound1`) using the tally code at `vote.js:19-31` only. Must NOT touch: skipStreak `:57,:61`, traps `:40-51`, `G.lastVotes` `:34`, bonusVotes `:32-33`, mana `:69`, voteResult `:74`, phase `:75`, checkEnd `:77`.
@@ -45,7 +45,7 @@ Shared hooks (all 5 cards)
 - Test helper: `events.js:99-102` marathon test calls G.closeVote directly.
 - Poach/soul_recruiter reads `G.lastVotes` at `night-resolve.js:189`; keep final-only.
 
-## #20 Status Page Down (`status`, img `20_status_page_down.jpg`)  [structural]
+## #20 Status Page Down (`status`, img `20_status_page_down.jpg`)  `structural`
 - Night report built in `night-resolve.js`: Production Crisis lines `:71`, `:92`; curse blocked `:103`; Mana line `:126`; trap lines `:198`; Burnout names `:203-204` (stay public); `G.report = rep` `:212`; per-line publish `G.sys` `:214`; timeline `:217`; per-player intel `:209-211` (blockIntel check at :210).
 - Timing problem: resolveNight runs in closeNight `phases.js:36`, before drawEvent `:60`. Publication at `:212-214` happens before the morning card is drawn, so drawEvent cannot gate it. Hook needed: stash rep in resolveNight, publish in closeNight after drawEvent (`phases.js:60-61`).
 - On-call pick: in drawEvent (`events.js:52-61`) using alive list (after this morning's deaths, so dead players are excluded). Deliver via `intel[pid]` (`views.js:47` shows it).

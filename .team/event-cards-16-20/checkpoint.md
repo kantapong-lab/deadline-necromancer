@@ -26,6 +26,7 @@ Constraints / acceptance:
 lane: feature · skipped 3d
 
 ## Status
-Setup done · baseline: green · base: main · pause:scope answered (plan, scope confirmed) · gates 2b/3c not passed · brain: E:/projects/deadline-necromancer/.team/brain
+Setup done · canvas: https://claude.ai/artifact/F3wSDVnyuTYMdQZ7iiecV3 · ux-review: skipped (text spec, no rendered screens) · baseline: green · base: main · pause:scope answered (plan, scope confirmed) · gates 2b/3c not passed · brain: E:/projects/deadline-necromancer/.team/brain
 next: 1 · researcher · L0 codebase-only brief (answers in the request)
 gate 2b passed · user: "อนุมัติ (Recommended)" · 2026-11-15
+gate 3c passed · user: "อนุมัติ (Recommended); Mod view: เห็นเสมอ" · 2026-11-15
