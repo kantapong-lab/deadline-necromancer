@@ -1,5 +1,6 @@
 // Deadline Necromancer — multiplayer server (Node + Socket.IO)
 // รัน: node src/server/index.js   →  ผู้เล่นเปิด http://<host>:3000/   Moderator เปิด http://<host>:3000/mod
+// Bootstrap only: build the HTTP server + Socket.IO, wire the per-socket handlers, listen. Requiring this file starts listening.
 const http = require('http');
 const { Server } = require('socket.io');
 const { handleRequest } = require('./http');
@@ -16,7 +17,6 @@ const pushState = createPushState(io);
 io.on('connection', socket => {
   const ctx = () => rooms.get(socket.data.code);
   const member = () => { const r = ctx(); return r && r.members.find(m => m.token === socket.data.token); };
-
   const deps = { io, rooms, ctx, member, pushState };
   registerSession(socket, deps);
   registerModerator(socket, deps);
