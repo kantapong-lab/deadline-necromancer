@@ -9,10 +9,12 @@ module.exports = function registerSession(socket, { rooms, ctx, member, pushStat
     socket.data = { code, mod: true };
     ack(cb, { ok: true, code, modToken }); pushState(rooms.get(code));
   });
-  socket.on('mod:join', ({ code, modToken } = {}, cb) => {
+  socket.on('mod:join', ({ code, modToken, full } = {}, cb) => {
     const r = rooms.get((code || '').toUpperCase());
     if (!r || r.modToken !== modToken) return ack(cb, { ok: false, error: 'ห้องหรือรหัส Moderator ไม่ถูกต้อง' });
     r.modSockets.add(socket.id); socket.data = { code: r.code, mod: true };
+    // `full` = the shared 3D spectator screen: it always shows roles and secret actions, independent of the Moderator's own Secrets toggle
+    if (full) (r.fullSockets || (r.fullSockets = new Set())).add(socket.id);
     ack(cb, { ok: true, code: r.code }); pushState(r);
   });
   socket.on('player:join', ({ code, name, token: tk } = {}, cb) => {
@@ -37,7 +39,7 @@ module.exports = function registerSession(socket, { rooms, ctx, member, pushStat
   });
   socket.on('disconnect', () => {
     const r = ctx(); if (!r) return;
-    if (socket.data.mod) r.modSockets.delete(socket.id);
+    if (socket.data.mod) { r.modSockets.delete(socket.id); if (r.fullSockets) r.fullSockets.delete(socket.id); }
     else { const m = member(); if (m) m.sockets.delete(socket.id); }
     pushState(r);
   });

@@ -9,6 +9,8 @@ module.exports = {
     const G = this, P = id => G.P(id), nm = id => G.nm(id), alive = () => G.alive(), er = p => G.er(p);
     const notes = {}, add = (pid, text) => (notes[pid] = notes[pid] || []).push({ text });
     const rep = [];
+    // fx helper: record a skill for the 3D screen (an intern that copied a skill carries `via`)
+    const fxs = (role, caster, extra) => G.emit('skill', { role, caster, ...extra, ...(P(caster).role === 'mystery_intern' ? { via: { source: G.players.findIndex(x => x.name === P(caster).copyFrom) } } : {}) });
     const A = [];
     alive().forEach(p => {
       const n = G.night[p.id] || { type: 'REST', targets: [] };
@@ -22,9 +24,10 @@ module.exports = {
     // Trap Card
     G.fixNotes = []; let placedNow = 0;
     A.filter(a => a.side && a.type === 'TRAP').forEach(a => {
-      if (G.trapCharges > 0 && a.trapId && G.trapHand.includes(a.trapId)) {
-        G.trapCharges--; placedNow++; G.trapHand = G.trapHand.filter(k => k !== a.trapId);
+      if (G.trapCharges > 0 && a.trapId && G.trapHand.includes(a.trapId) && !G.usedTraps.includes(a.trapId)) {
+        G.trapCharges--; placedNow++; G.trapHand = G.trapHand.filter(k => k !== a.trapId); G.usedTraps.push(a.trapId);
         G.traps.push({ kind: a.trapId, owner: a.p.id, target: a.targets[0], day: G.day, fresh: true, triggered: false });
+        G.emit('trapPlace', { trap: a.trapId, owner: a.p.id, target: a.targets[0] ?? null });
         add(a.p.id, `หมอบ Trap Card: ${TRAPS[a.trapId].n}${a.targets[0] != null ? ' ที่ ' + nm(a.targets[0]) : ''} (โควตา Trap เหลือ ${G.trapCharges})`);
       } else { a.type = 'FAKE'; add(a.p.id, 'โควตา Trap หมดแล้ว — กลายเป็นส่งงานหลอก'); }
     });
@@ -39,12 +42,14 @@ module.exports = {
       if (pool.length >= 2) {
         const [x, y] = shuffle(pool).slice(0, 2);
         [x.targets, y.targets] = [y.targets, x.targets];
+        G.emit('event', { key: 'hotdesk', targets: [x.p.id, y.p.id] });
         rep.push(`🪑 Hot Desking เฉลย: ระบบสลับเป้าหมายสกิลของ ${x.p.name} กับ ${y.p.name} เมื่อคืน${withT.length >= 2 ? '' : ' (ไม่ค่อยมีผล)'}`);
       }
     }
     // 1. Scope Creep
     skills('chaos_scrum').forEach(sc => {
       if (sc.targets.length !== 2) return;
+      fxs('chaos_scrum', sc.p.id, { targets: sc.targets.slice() });
       const x = act(sc.targets[0]), y = act(sc.targets[1]);
       if (x && y) { [x.targets, y.targets] = [y.targets || [], x.targets || []]; add(sc.p.id, `Scope Creep: สลับเป้าหมายของ ${nm(x.p.id)} กับ ${nm(y.p.id)} แล้ว`); }
     });
@@ -61,6 +66,10 @@ module.exports = {
       skills('coffee_admin').forEach(a => { if (a.targets[0] != null) heal[a.targets[0]] = a.p.id; });
     }
     skills('coffee_admin').forEach(a => { if (a.targets[0] != null && P(a.targets[0]).alive) { P(a.targets[0]).dblNext = true; add(a.p.id, `Espresso Elixir: ${nm(a.targets[0])} จะมีพลังโหวต x2 เช้าถัดไป`); } });
+    skills('chaos_devops').forEach(a => fxs('chaos_devops', a.p.id, {}));
+    skills('chrono_tech_lead').forEach(a => fxs('chrono_tech_lead', a.p.id, {}));
+    skills('coffee_admin').forEach(a => { if (a.targets[0] != null) fxs('coffee_admin', a.p.id, { targets: [a.targets[0]], result: { disabled: devops } }); });
+    if (devops) skills('oracle_pm').forEach(a => { if (a.targets[0] != null) fxs('oracle_pm', a.p.id, { targets: [a.targets[0]], result: { disabled: true } }); });
     const curseT = A.filter(a => a.type === 'CURSE' && a.targets[0] != null).map(a => a.targets[0]);
     const immune = {};
     skills('coffee_admin').forEach(a => { const t = a.targets[0]; if (t != null && (t in heal) && !curseT.includes(t)) { immune[t] = true; add(a.p.id, `Espresso Elixir: ${nm(t)} ไม่โดนสาป Burnout จึงได้ภูมิคุ้มกัน NDA Silence/PIP Curse คืนนี้`); } });
@@ -79,6 +88,7 @@ module.exports = {
         // ฝ่ายมืดจึงแยกไม่ได้ว่าเป้าหมายเป็น Freelancer หรือแค่ถูกป้องกัน
         const guarded = (t.id in shield) || (t.id in heal) || t.id === prodShield || (G.evIs('snack') && act(t.id)?.type === 'REST');
         const dodged = !guarded && t.faction === 'indie' && !t.dodgeUsed;
+        G.emit('curse', { caster: c.p.id, target: t.id, blocked: !!(guarded || dodged) });
         if (guarded || dodged) {
           if (dodged) { t.dodgeUsed = true; add(t.id, '🛡️ Freelance Dodge: เกราะของคุณรับคำสาป Burnout ไว้ — เกราะถูกทำลายแล้ว (ครั้งต่อไปจะไม่รอด)'); }   // แจ้ง Freelancer เจ้าของเกราะทุกกรณี (ฝ่ายมืดยังเห็นข้อความเดียวกับการถูกป้องกันทุกแบบ)
           blocked++; add(c.p.id, `คำสาปใส่ ${t.name} ไม่ทำงาน (ถูกสกัด — ไม่ทราบสาเหตุ)`); return;
@@ -102,11 +112,13 @@ module.exports = {
     } else rep.push('⏪ Hotfix Rollback: คำสาปและบั๊กทั้งหมดของเมื่อคืนถูกยกเลิก');
     if (blocked) rep.push(`🛡️ มีคำสาป Burnout ถูกสกัดไว้ ${blocked} ครั้ง`);
     Object.entries(shield).forEach(([tid, pmId]) => {
-      const t = P(+tid); if (t.faction !== 'dark') return;
+      const t = P(+tid); fxs('oracle_pm', pmId, { targets: [+tid], result: { barrierBroke: t.faction === 'dark' && !alibiOn(t.id) } });
+      if (t.faction !== 'dark') return;
       const al = alibiOn(t.id); if (al) { al.triggered = true; return; }
       P(pmId).lockedNext = true;
       add(pmId, `Stand-up Shield: เป้าหมาย ${t.name} มีออร่ามืด! 😈 บาเรียแตก — คุณใช้สกิลคืนถัดไปไม่ได้`);
     });
+    ['illusionist_sales', 'shadow_hr', 'shadow_legal'].forEach(r => skills(r).forEach(a => { if (a.targets[0] != null) fxs(r, a.p.id, { targets: [a.targets[0]], result: r === 'shadow_hr' ? { role: P(a.targets[0]).role } : {} }); }));
     skills('illusionist_sales').forEach(a => { if (a.targets[0] != null) { P(a.targets[0]).overpromised = true; add(a.p.id, `Overpromise: Log ของ ${nm(a.targets[0])} คืนนี้ดูเหมือนวางบั๊ก`); } });
     skills('shadow_hr').forEach(a => { if (a.targets[0] != null) { const t = P(a.targets[0]); if (immune[t.id]) { add(a.p.id, `PIP Curse: ${t.name} ดูเหมือนมีภูมิคุ้มกัน (ถูกต้านทาน)`); return; } t.zeroNext = true; add(a.p.id, `PIP Curse: ${t.name} เป็น ${ROLES[t.role].n} (${FNAME[t.faction]}) — พลังโหวตพรุ่งนี้เป็น 0`); } });
     skills('shadow_legal').forEach(a => { if (a.targets[0] != null) { const t = P(a.targets[0]); if (immune[t.id]) { add(a.p.id, `NDA Silence: ${t.name} ดูเหมือนมีภูมิคุ้มกัน (ถูกต้านทาน)`); return; } t.silencedNext = true; add(a.p.id, `NDA Silence: ปิดปาก ${t.name} แล้ว`); } });
@@ -150,6 +162,7 @@ module.exports = {
         if (hp) { sh = truth === 'bug' ? 'work' : 'bug'; hp.triggered = true; }
         const mk = x => `Code Review${tid !== a.targets[0] ? ' (ลูกค้าตรวจเพิ่ม)' : ''}: ${t.p.name} → ${sLabel(x)}`;
         add(a.p.id, mk(sh));
+        fxs('senior_dev', a.p.id, { targets: [tid], result: { bug: sh === 'bug', none: sh === 'none', extra: tid !== a.targets[0] } });
         if (sh !== truth) G.fixNotes.push({ pid: a.p.id, text: '(Debug Scanner แก้ข้อมูล) ' + mk(truth) });
       });
     });
@@ -161,8 +174,10 @@ module.exports = {
       const hp = a.targets.map(honeyOn).find(Boolean); if (hp) { hit = !hit; hp.triggered = true; }
       const mk = h => `Bug Bounties: ใน ${a.targets.map(nm).join(' และ ')} ${h ? 'มีฝ่ายมืดอย่างน้อย 1 คน 😈' : 'ไม่มีฝ่ายมืดเลย ✅'}`;
       add(a.p.id, mk(hit));
+      fxs('qa_hunter', a.p.id, { targets: a.targets.slice(), result: { hasDark: hit } });
       if (hit !== truth) G.fixNotes.push({ pid: a.p.id, text: '(Debug Scanner แก้ข้อมูล) ' + mk(truth) });
     });
+    if (!blackout) skills('data_oracle').forEach(a => fxs('data_oracle', a.p.id, { result: { real: lightsAlive.length, bugs: A.filter(x => x.type === 'SABOTAGE').length } }));
     intelSkills('data_oracle').forEach(a => add(a.p.id, `KPI Forecast: งานเสร็จจริง ${lightsAlive.length} ชิ้น vs บั๊กแฝง ${A.filter(x => x.type === 'SABOTAGE').length} ชิ้น`));
     intelSkills('rune_ux').forEach(a => {
       const tid = a.targets[0]; if (tid == null) return;
@@ -171,11 +186,13 @@ module.exports = {
       const who = (hp ? all.filter(p => p.faction !== 'dark') : all).map(p => p.name);
       const mk = list => `Wireframe Trap: คนที่ใช้สกิลใส่ ${nm(tid)} เมื่อคืน → ${list.length ? list.join(', ') : 'ไม่มีใครเลย'}`;
       add(a.p.id, mk(who));
+      fxs('rune_ux', a.p.id, { targets: [tid], result: { reveal: (hp ? all.filter(p => p.faction !== 'dark') : all).map(p => p.id) } });
       if (hp && who.length !== all.length) G.fixNotes.push({ pid: a.p.id, text: '(Debug Scanner แก้ข้อมูล) ' + mk(all.map(p => p.name)) });
     });
     skills('glory_thief').forEach(a => {
       const tid = a.targets[0]; if (tid == null) return;
       const ta = act(tid);
+      fxs('glory_thief', a.p.id, { targets: [tid], result: { stolen: !!(ta && ta.type === 'SKILL' && ta.p.faction === 'light' && !G.skillsBanned()) } });
       if (ta && ta.type === 'SKILL' && ta.p.faction === 'light' && !G.skillsBanned()) {
         G.credit[a.p.id]++;
         const stolen = notes[tid] || []; delete notes[tid];
@@ -185,9 +202,11 @@ module.exports = {
     });
     skills('soul_recruiter').forEach(a => {
       const tid = a.p.target;
+      { const push = !!(a.plus1 && !a.p.plus1Used); fxs('soul_recruiter', a.p.id, { targets: [tid], result: push ? { mode: 'push' } : { mode: 'peek', voters: Object.entries(G.lastVotes).filter(([, t]) => t === tid).map(([v]) => +v) } }); }
       if (a.plus1 && !a.p.plus1Used) { a.p.plus1Used = true; G.pendingBonus.push({ to: tid }); add(a.p.id, `Poach Offer: แอบยัดคะแนนโหวต +1 ใส่ ${nm(tid)} ในวันพรุ่งนี้ (ใช้สิทธิ์ 1 ครั้ง/เกมแล้ว)`); }
       else { const v = Object.entries(G.lastVotes).filter(([, t]) => t === tid).map(([v]) => nm(+v)); add(a.p.id, `Poach Offer: เป้าหมายของคุณคือ ${nm(tid)} — โหวตรอบล่าสุดโดน: ${v.length ? v.join(', ') : 'ยังไม่มีใครโหวต'}`); }
     });
+    skills('severance_seeker').forEach(a => fxs('severance_seeker', a.p.id, {}));
     skills('severance_seeker').forEach(a => { G.pendingBonus.push({ to: a.p.id }); add(a.p.id, 'Fake Bug Trace: ทิ้งรอยบั๊กปลอมใน Log ของคุณแล้ว และแอบเพิ่มคะแนนโหวต +1 ใส่ตัวเองในวันพรุ่งนี้'); });
     // Reply All
     const broadcast = [];
@@ -195,15 +214,17 @@ module.exports = {
       const victims = shuffle(Object.keys(notes).map(Number).filter(id => id !== a.p.id && notes[id].length));
       broadcast.push(victims.length ? `[Reply All] ${notes[victims[0]][0].text}` : '[Reply All] ไม่มีแจ้งเตือนให้ป่าวประกาศเลย');
     });
+    skills('chaos_intern').forEach((a, i) => fxs('chaos_intern', a.p.id, { result: { note: String(broadcast[i] || '').replace('[Reply All] ', '') } }));
     // ประกาศสาธารณะบอกแค่ชื่อ Trap ที่ทำงาน; รายละเอียด Alibi Mirror แจ้งเฉพาะเจ้าของ Trap
     G.traps.filter(t => t.fresh && t.triggered).forEach(t => {
       if (t.kind === 'alibi' && G.intel[t.owner]) G.intel[t.owner].push({ day: G.day, text: `🪤 Alibi Mirror (ส่วนตัว): ${nm(t.target)} ถูกสกิลฝ่ายแสงส่องเมื่อคืน แต่ผลดูเป็นฝ่ายแสงปกติ` });
       rep.push(`🪤 Trap Card ทำงาน: ${TRAPS[t.kind].n}`);
+      G.emit('trapTrigger', { trap: t.kind, owner: t.owner, target: t.target ?? null });
     });
     G.traps = G.traps.filter(t => !['honeypot', 'alibi', 'insurance'].includes(t.kind));
     G.traps.forEach(t => t.fresh = false);
     // deaths
-    deaths.forEach(id => { const t = P(id); t.alive = false; t.cause = 'burnout'; });
+    deaths.forEach(id => { const t = P(id); t.alive = false; t.cause = 'burnout'; G.emit('burnout', { pid: id }); });
     if (deaths.length) rep.unshift('💀 ' + deaths.map(id => nm(id)).join(', ') + ' ติดสถานะ Burnout! (บทบาทไม่ถูกเปิดเผยจนจบเกม)');
     else rep.unshift(G.day === 1 ? 'คืนแรกผ่านไปอย่างสงบ (Grace Period)' : '😮‍💨 เมื่อคืนไม่มีใคร Burnout');
     G.players.filter(p => p.role === 'soul_recruiter' && p.alive && !P(p.target).alive && !P(p.target).votedOut).forEach(p => {

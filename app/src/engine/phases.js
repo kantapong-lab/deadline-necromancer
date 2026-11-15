@@ -59,6 +59,7 @@ module.exports = {
       const pool = G.alive().filter(p => !p.silenced);
       if (pool.length) G.hijackVoter = rnd(pool).id;
       G.traps = G.traps.filter(t => t !== hj);
+      G.emit('trapTrigger', { trap: 'hijack', owner: hj.owner, target: null, victim: G.hijackVoter });
       const m = '🪤 Trap Card ทำงาน: Meeting Hijack';
       G.addNightLine(m, { sys: true });
       if (G.hijackVoter != null) G.intel[G.hijackVoter].push({ day: G.day, text: '🎤 ไมค์ของคุณถูกยึด (Meeting Hijack) — วันนี้คุณถูกบังคับให้โหวต Skip' });

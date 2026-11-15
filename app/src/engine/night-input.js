@@ -39,6 +39,7 @@ module.exports = {
         const others = Object.entries(G.night).filter(([id, n]) => +id !== pid && n.side === 'TRAP').length;
         if (G.trapCharges - others <= 0) return 'โควตา Trap หมดแล้ว';
         const tdef = TRAPS[a.trapId]; if (!tdef) return 'เลือก Trap Card';
+        if (G.usedTraps.includes(a.trapId)) return 'Trap ใบนี้ถูกใช้ไปแล้ว (ใช้ซ้ำในเกมเดียวไม่ได้)';
         if (!G.trapHand.includes(a.trapId)) return 'ทีมไม่ได้ถือ Trap ใบนี้';
         if (Object.entries(G.night).some(([id, n]) => +id !== pid && n.side === 'TRAP' && n.trapId === a.trapId)) return 'เพื่อนจอง Trap ใบนี้ไปแล้ว';
         if (tdef.need) {
@@ -62,7 +63,7 @@ module.exports = {
     if (!G.trapHand.length) return 'ไม่มี Trap เหลือให้สุ่ม';
     if (G.trapRerolled) return 'คืนนี้ทีมสุ่ม Trap ไปแล้ว';
     if (Object.values(G.night).some(n => n.side === 'TRAP')) return 'มีเพื่อนจองหมอบ Trap ไว้แล้ว — สุ่มไม่ได้';
-    const pool = shuffle(Object.keys(TRAPS).filter(k => !G.trapHand.includes(k)));
+    const pool = shuffle(Object.keys(TRAPS).filter(k => !G.trapHand.includes(k) && !G.usedTraps.includes(k)));   // a Trap that was already placed this game never comes back
     G.trapHand = pool.slice(0, G.trapHand.length); G.trapRerolled = true;
     G.log('ฝ่ายมืดสุ่ม Trap ใหม่', '');
     return null;

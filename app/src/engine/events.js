@@ -20,6 +20,7 @@ module.exports = {
     if (ev.id === 'prod' && !ev.accepted) this.mana = Math.max(0, this.mana - 2);   // รับ = +0, ปฏิเสธ = −2 + คำสาปสุ่มคืนนี้
     const msg = `ทีมโหวต ${e.yes} ${yes} / ${e.no} ${no} → ${ev.accepted ? e.yes : e.no}`;
     this.sys('📞 ' + msg); this.report.push('📞 ' + e.t + ': ' + msg);
+    this.emit('eventVote', { key: ev.id, accepted: ev.accepted, mana: this.mana, votes: Object.entries(ev.votes).filter(([pid]) => this.P(+pid).alive).map(([pid, v]) => ({ pid: +pid, yes: !!v })) });
     this.log('ปิดโหวตการ์ดเหตุการณ์', msg);
     this.checkEnd();
   },
@@ -37,7 +38,8 @@ module.exports = {
     const top = Object.entries(tally).sort((a, b) => b[1] - a[1]);
     const win = top[0], tie = top[1] && top[1][1] === win[1];
     const counts = keys.map(k => BOOSTERS[k].n + ' ' + tally[k]).join(' / ') + ' / ไม่เปิด ' + tally.NONE;
-    if (win[0] === 'NONE' || tie) { const m = `🚀 โหวต Sprint Booster: ไม่เปิดใช้ (${counts})`; this.sys(m); this.log('ปิดโหวต Sprint Booster', 'ไม่เปิดใช้ · ' + counts); return; }
+    const bvotes = this.alive().map(p => ({ pid: p.id, key: this.booster.votes[p.id] || 'NONE' }));
+    if (win[0] === 'NONE' || tie) { this.emit('booster', { key: null, votes: bvotes, counts }); const m = `🚀 โหวต Sprint Booster: ไม่เปิดใช้ (${counts})`; this.sys(m); this.log('ปิดโหวต Sprint Booster', 'ไม่เปิดใช้ · ' + counts); return; }
     const id = win[0]; this.boosterCharges--;
     let m = `🚀 Sprint Booster เปิดใช้: ${BOOSTERS[id].n} (เหลือโควตา ${this.boosterCharges})`;
     if (id === 'scanner') {
@@ -48,11 +50,13 @@ module.exports = {
     if (id === 'retro') this.retro = true;
     if (id === 'freeze') this.freeze = true;
     this.sys(m); this.report.push(m); this.log('Sprint Booster เปิดใช้', BOOSTERS[id].n + ' · ' + counts);
+    this.emit('booster', { key: id, votes: bvotes, counts, trapFound: !!this.lastTrapPlaced });
   },
   drawEvent() {
     this.event = null;
+    while (this.deck.length && this.eventsSeen.has(this.deck[this.deck.length - 1])) this.deck.pop();   // never draw a card twice in one game
     if (this.day < 2 || !this.deck.length) return;
-    const id = this.deck.pop(), e = EVENTS[id];
+    const id = this.deck.pop(), e = EVENTS[id]; this.eventsSeen.add(id);
     this.event = { id, accepted: null, pending: !!e.choice, votes: {} };
     this.sys('📞 Client Event: ' + e.t + ' — ' + e.d);
     this.log('เปิด Event Card #' + e.n, e.t + ' — ' + e.d);
@@ -61,6 +65,11 @@ module.exports = {
     if (id === 'purge') this.chatUsed = {};
     if (id === 'hands') this.pickExtraTeam();
     if (id === 'status') this.pickOnCall();
+    { const fp = { key: id, mana: this.mana, pending: !!e.choice };
+      if (id === 'hands') fp.targets = this.event.extra;
+      if (id === 'leak' && this.fxLeak) { fp.targets = [this.fxLeak.a, this.fxLeak.b]; fp.result = { same: this.fxLeak.same }; this.fxLeak = null; }
+      if (id === 'status') fp.onCall = this.event.onCall;
+      this.emit('event', fp); }
   },
   pickExtraTeam() {
     const alive = this.alive(), k = Math.max(1, Math.floor(alive.length / 4));
@@ -80,6 +89,7 @@ module.exports = {
     const pool = this.alive().filter(p => key(p));
     if (pool.length < 2) return;
     const [a, b] = shuffle(pool).slice(0, 2);
+    this.fxLeak = { a: a.id, b: b.id, same: key(a) === key(b) };
     const msg = `📧 Reply-All Leak: เมื่อคืน ${a.name} กับ ${b.name} ทำแอ็กชัน${key(a) === key(b) ? '"เหมือนกัน"' : '"ต่างกัน"'}`;
     this.sys(msg); this.report.push(msg);
   },

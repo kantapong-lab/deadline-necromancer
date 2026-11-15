@@ -12,6 +12,7 @@ const phases = require('./phases');
 const win = require('./win');
 const views = require('./views');
 const modViewPart = require('./mod-view');
+const fx = require('./fx');
 
 // Mixes the method groups of src/engine/*.js onto Game.prototype (non-enumerable, like class methods).
 // Throws if a name is already defined, so two parts can never silently shadow each other.
@@ -41,12 +42,14 @@ class Game {
     this.trapCharges = N <= 9 ? 1 : 2; this.boosterCharges = 1;   // โควตา Sprint Booster 1 ครั้ง/เกม ทุกขนาดห้อง
     // Trap ฝ่ายมืด: ระบบสุ่มแจกตามโควตาตอนเริ่มเกม (ทั้งทีมถือร่วมกัน) · ขอสุ่มเปลี่ยนใบที่ยังไม่ใช้ได้ 1 ครั้ง/คืน
     this.trapHand = shuffle(Object.keys(TRAPS)).slice(0, this.trapCharges); this.trapRerolled = false;
+    this.usedTraps = []; this.eventsSeen = new Set();   // no Trap and no Event card is ever used twice in one game
     this.pendingBonus = []; this.bonusVotes = []; this.traps = []; this.fixNotes = [];
     this.cleanSprint = false; this.retro = false; this.noPenalty = false; this.freeze = false;
     this.hijackVoter = null; this.blockIntel = null; this.lastTrapPlaced = false;
     this.deck = shuffle(Object.keys(EVENTS)); this.event = null;
     this.booster = { open: false, votes: {} };
     this.night = {}; this.votes = {}; this.voteResult = null; this.lastVotes = {};
+    this.fx = [];   // presentation events for the 3D Moderator screen (see fx.js) — never part of a view
     this.feed = []; this.darkChat = []; this.intel = {}; this.report = []; this.timeline = [];
     this.voteRound = 0; this.interim = null; this.nightStash = null; this.chatUsed = {};
     this.credit = {}; this.over = null; this.paused = false; this.timer = null;
@@ -97,6 +100,6 @@ class Game {
   }
 }
 
-mixin(Game, chat, events, vote, nightInput, nightResolve, phases, win, views, modViewPart);
+mixin(Game, chat, events, vote, nightInput, nightResolve, phases, win, views, modViewPart, fx);
 
 module.exports = { Game, COMP, MIN_PLAYERS, MAX_PLAYERS, EMOJIS };

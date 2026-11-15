@@ -67,6 +67,7 @@ module.exports = {
       if (bl) {   // ทำงานกับทุกฝ่ายรวม Severance Seeker (ขัดการชนะด้วยการถูกไล่ออก) เพื่อให้บลัฟได้
         // ประกาศสาธารณะบอกแค่ชื่อ Trap (ต่อท้ายผลโหวต); ชื่อเป้าหมายแจ้งเฉพาะเจ้าของ Trap
         if (G.intel[bl.owner]) G.intel[bl.owner].push({ day: G.day, text: `🪤 Blame Shifting (ส่วนตัว): ยกเลิกการไล่ออก ${nm(outcome)} (ผลโหวตกลายเป็น Skip)` });
+        G.emit('trapTrigger', { trap: 'blame', owner: bl.owner, target: outcome });
         outcome = null; G.traps = G.traps.filter(t => t !== bl); trapMsgs.push('🪤 Trap Card ทำงาน: Blame Shifting');
       }
     }
@@ -74,6 +75,7 @@ module.exports = {
       const ex = G.traps.find(t => t.kind === 'exit' && t.day === G.day - 1 && t.target === outcome);
       if (ex) {
         G.traps = G.traps.filter(t => t !== ex); G.mana = Math.max(0, G.mana - 1);
+        G.emit('trapTrigger', { trap: 'exit', owner: ex.owner, target: outcome, mana: G.mana });
         const lights = G.alive().filter(p => p.faction === 'light' && p.id !== outcome);
         if (lights.length) G.blockIntel = rnd(lights).id;
         trapMsgs.push('🪤 Trap Card ทำงาน: Exit Scam');
@@ -103,6 +105,7 @@ module.exports = {
     G.traps = G.traps.filter(t => t.day >= G.day);
     G.voteResult = { lines, text, tally: Object.entries(tally).map(([id, n]) => ({ name: nm(+id), n })).sort((a, b) => b.n - a.n), skip };
     G.phase = 'VOTE_RESULT'; G.voteRound = 0;
+    G.emit('voteOut', { out: outcome, cause: outcome !== null ? P(outcome).cause : null, mana: G.mana, skip });
     G.sys('ผลโหวต: ' + text); G.log('ปิดโหวต — ประกาศผล', text);
     if (G.evIs('uat')) G.uatAnnounce();
     G.checkEnd();
@@ -115,5 +118,6 @@ module.exports = {
     const dark = picked.some(p => p.faction === 'dark');
     const msg = `🧪 UAT Too Late: สุ่มทดสอบ ${picked.map(p => p.name).join(', ')} → ${dark ? 'มีฝ่ายมืดอย่างน้อย 1 คน' : 'ไม่มีฝ่ายมืด'}`;
     G.voteResult.lines.push(msg); G.sys(msg); G.report.push(msg); G.log('UAT Too Late', msg);
+    G.emit('event', { key: 'uat', targets: picked.map(p => p.id), result: { hasDark: dark } });
   },
 };

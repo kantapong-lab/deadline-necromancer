@@ -7,7 +7,7 @@
   "scripts": {
     "start": "node src/server/index.js",
     "balance": "node test/balance.js",
-    "test":"node test/golden/run.js && node test/http-parity.js && node test/mod-actions.js && node test/simulate.js && node test/events.js"
+    "test":"node test/golden/run.js && node test/http-parity.js && node test/mod-actions.js && node test/simulate.js && node test/events.js && node test/fx.js && node test/no-repeat-cards.js"
   },
   "dependencies": {
     "socket.io": "^4.7.5"
