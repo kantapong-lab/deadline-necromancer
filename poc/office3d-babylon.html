@@ -1,0 +1,228 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Deadline Necromancer — 3D Office (Babylon.js)</title>
+<style>
+  html,body{margin:0;height:100%;background:#0b0a12;overflow:hidden;font-family:system-ui,"Noto Sans Thai",sans-serif;color:#eee}
+  #c{position:fixed;inset:0;width:100%;height:100%;display:block;outline:none}
+  .hud{position:fixed;left:16px;right:16px;top:12px;display:flex;justify-content:space-between;align-items:flex-start;pointer-events:none}
+  .badge{background:#000a;border:1px solid #fff2;border-radius:10px;padding:8px 14px;backdrop-filter:blur(6px)}
+  .badge b{font-size:20px}
+  .bar{position:fixed;left:50%;bottom:14px;transform:translateX(-50%);display:flex;gap:8px;flex-wrap:wrap;justify-content:center;width:calc(100% - 32px)}
+  button{background:#1d1a2e;color:#eee;border:1px solid #fff3;border-radius:8px;padding:9px 14px;font:inherit;cursor:pointer}
+  button:hover{background:#2c2745} button.on{background:#6d4bd1;border-color:#b9a2ff}
+  #flash{position:fixed;inset:0;pointer-events:none;background:#000;opacity:0;transition:opacity .6s}
+  #msg{position:fixed;left:50%;top:42%;transform:translate(-50%,-50%);font-size:34px;font-weight:700;text-shadow:0 2px 12px #000;opacity:0;transition:opacity .5s;pointer-events:none;text-align:center}
+  .engine{position:fixed;left:16px;top:64px;font-size:12px;opacity:.7}
+</style>
+<script src="https://cdn.jsdelivr.net/npm/babylonjs@7.30.0/babylon.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/babylonjs-gui@7.30.0/babylon.gui.min.js"></script>
+</head>
+<body>
+<canvas id="c"></canvas>
+<div class="hud">
+  <div class="badge">วันที่ <b id="day">1</b> / 5 · <span id="phase">ประชุมเช้า</span></div>
+  <div class="badge">Deadline <b id="dl">5</b> วัน</div>
+</div>
+<div class="engine">engine: Babylon.js (GUI + ParticleSystem + ShadowGenerator)</div>
+<div id="msg"></div>
+<div id="flash"></div>
+<div class="bar">
+  <button data-p="MORNING" class="on">☀ ประชุมเช้า</button>
+  <button data-p="VOTE">🗳 โหวต</button>
+  <button data-p="NIGHT">🌙 กลางคืน</button>
+  <button id="kill">💀 ตัดผู้เล่นออก</button>
+  <button id="next">⏭ วันถัดไป</button>
+  <button id="orbit">🎥 กล้องหมุน: เปิด</button>
+</div>
+
+<script>
+const { Vector3, Color3, Color4, MeshBuilder, StandardMaterial, TransformNode } = BABYLON;
+const N = 9;
+const canvas = document.getElementById('c');
+const engine = new BABYLON.Engine(canvas, true);
+const scene = new BABYLON.Scene(engine);
+scene.useRightHandedSystem = true;                       // match the three.js / PlayCanvas coordinate system
+scene.fogMode = BABYLON.Scene.FOGMODE_LINEAR; scene.fogStart = 14; scene.fogEnd = 34;
+addEventListener('resize', () => engine.resize());
+
+const hex = h => Color3.FromHexString('#' + h.toString(16).padStart(6, '0'));
+
+// ---------- helpers ----------
+const casters = [];
+function lit(h, rough = .8) {
+  const m = new StandardMaterial('m', scene);
+  m.diffuseColor = hex(h); m.specularColor = new Color3(.08, .08, .08).scale(1 - rough + .2); m.specularPower = 32; return m;
+}
+function unlit(h) {
+  const m = new StandardMaterial('u', scene);
+  m.disableLighting = true; m.emissiveColor = hex(h); m.backFaceCulling = false; m.fogEnabled = false; return m;
+}
+function place(mesh, parent, pos, rot, shadow = true) {
+  if (parent) mesh.parent = parent;
+  if (pos) mesh.position.set(...pos);
+  if (rot) mesh.rotation.set(...rot);
+  mesh.receiveShadows = true; if (shadow) casters.push(mesh);
+  return mesh;
+}
+const box = (w, h, d, mat, parent, pos, rot) => { const m = MeshBuilder.CreateBox('b', { width: w, height: h, depth: d }, scene); m.material = mat; return place(m, parent, pos, rot); };
+const node = (parent, pos = [0,0,0], rot = [0,0,0]) => { const n = new TransformNode('g', scene); if (parent) n.parent = parent; n.position.set(...pos); n.rotation.set(...rot); return n; };
+
+// ---------- camera + lights ----------
+const camera = new BABYLON.UniversalCamera('cam', new Vector3(0, 7.5, 12), scene);
+camera.fov = 0.87; camera.minZ = .1; camera.maxZ = 80;
+
+const hemi = new BABYLON.HemisphericLight('hemi', new Vector3(0, 1, 0), scene);
+hemi.groundColor = hex(0x444466);
+const sun = new BABYLON.DirectionalLight('sun', new Vector3(.4, -1, -.6), scene);
+sun.position = new Vector3(-6, 12, 8); sun.autoCalcShadowZBounds = true;
+const lamp = new BABYLON.PointLight('lamp', new Vector3(0, 3.2, 0), scene);
+lamp.diffuse = hex(0xffd9a0); lamp.range = 9; lamp.intensity = 0;
+
+const shadow = new BABYLON.ShadowGenerator(2048, sun);
+shadow.usePercentageCloserFiltering = true; shadow.bias = .002; shadow.normalBias = .02;
+
+// ---------- room ----------
+function disc(d, h, y, mat) { const m = MeshBuilder.CreateCylinder('d', { diameter: d, height: h, tessellation: 64 }, scene); m.material = mat; m.position.y = y; m.receiveShadows = true; return m; }
+disc(30, .1, -.05, lit(0x3a3550, .95)); disc(8.4, .1, .01, lit(0x5b3fa8, 1));
+box(30, 8, .4, lit(0x4a4568), null, [0, 4, -12]);
+const skyMat = unlit(0x9fd4ff);
+for (let i = -2; i <= 2; i++) {
+  const w = MeshBuilder.CreatePlane('w', { width: 3.6, height: 4.2 }, scene); w.material = skyMat; w.position.set(i*5, 4.4, -11.78);
+  box(3.9, .15, .3, lit(0x222033), null, [i*5, 6.55, -11.8]);
+  box(3.9, .15, .3, lit(0x222033), null, [i*5, 2.25, -11.8]);
+}
+const cityMat = unlit(0x7da4c8);
+for (let i = 0; i < 30; i++) {
+  const h = 1 + Math.random()*4;
+  const b = MeshBuilder.CreateBox('c', { width: 1 + Math.random(), height: h, depth: .5 }, scene);
+  b.material = cityMat; b.position.set(-14 + i, 2.3 + h/2 - .1, -11.9);
+}
+
+// ---------- central table + deadline stacks ----------
+const table = node(null);
+box(2.6, .15, 2.6, lit(0x7a5a3a), table, [0, .9, 0]);
+box(.3, .9, .3, lit(0x3a2a1a), table, [0, .45, 0]);
+const paperMat = lit(0xf2efe6), stacks = [];
+for (let i = 0; i < 5; i++) {
+  const s = box(.38, 1, .5, paperMat, table, [-1 + i*.5, 1.23, 0]);
+  s.base = .98; s.h = .5; s.target = .5; stacks.push(s);
+}
+
+// ---------- desks (players) with Babylon GUI labels ----------
+const ui = BABYLON.GUI.AdvancedDynamicTexture.CreateFullscreenUI('ui', true, scene);
+const desks = [];
+for (let i = 0; i < N; i++) {
+  const a = i / N * Math.PI * 2, R = 6.2;
+  const g = node(null, [Math.sin(a)*R, 0, Math.cos(a)*R], [0, a + Math.PI, 0]);
+  box(2, .1, 1.1, lit(0xb9a07a), g, [0, .8, 0]);
+  for (const sx of [-.9, .9]) box(.1, .8, .9, lit(0x55483a), g, [sx, .4, 0]);
+  const mon = node(g, [0, 0, -.25], [0, Math.PI, 0]);
+  box(.9, .6, .06, lit(0x15141c), mon, [0, 1.3, 0]);
+  const scrMat = unlit(0x7fe3ff);
+  const scr = MeshBuilder.CreatePlane('s', { width: .8, height: .5 }, scene); scr.material = scrMat; scr.parent = mon; scr.position.set(0, 1.3, .04);
+  box(.08, .3, .08, lit(0x15141c), mon, [0, .98, 0]);
+  const chair = node(g, [0, 0, 1.05], [0, Math.PI, 0]);
+  const cm = lit(0x2d2a55);
+  box(.7, .1, .7, cm, chair, [0, .55, 0]); box(.7, .8, .1, cm, chair, [0, 1, .35]); box(.1, .5, .1, lit(0x111111), chair, [0, .27, 0]);
+  const worker = node(g, [0, 0, 1.0]);
+  const bm = lit(parseInt(Color3.FromHSV(i/N*360, .55, .85).toHexString().slice(1, 7), 16), .8);
+  const body = MeshBuilder.CreateCapsule('body', { radius: .26, height: .97, tessellation: 16 }, scene); body.material = bm; place(body, worker, [0, 1.15, 0]);
+  const head = MeshBuilder.CreateSphere('head', { diameter: .44, segments: 16 }, scene); head.material = lit(0xf1c9a5); place(head, worker, [0, 1.8, 0]);
+  const anchor = node(g, [0, 2.5, 1.0]);
+  const lab = new BABYLON.GUI.Rectangle(); lab.width = '46px'; lab.height = '24px'; lab.cornerRadius = 8; lab.thickness = 0; lab.background = '#000b';
+  const tb = new BABYLON.GUI.TextBlock(); tb.text = 'P' + (i + 1); tb.color = 'white'; tb.fontSize = 15; tb.fontWeight = '700'; lab.addControl(tb);
+  ui.addControl(lab); lab.linkWithMesh(anchor);
+  desks.push({ g, scrMat, worker, lab, alive: true, bob: Math.random()*6, dying: 0 });
+}
+casters.forEach(m => shadow.addShadowCaster(m));
+
+// ---------- ghost particles (built-in ParticleSystem) ----------
+const dot = new BABYLON.DynamicTexture('dot', 64, scene, false);
+{ const c = dot.getContext(), gr = c.createRadialGradient(32, 32, 0, 32, 32, 32);
+  gr.addColorStop(0, 'rgba(255,255,255,1)'); gr.addColorStop(1, 'rgba(255,255,255,0)'); c.fillStyle = gr; c.fillRect(0, 0, 64, 64); dot.update(); }
+const ps = new BABYLON.ParticleSystem('ghosts', 400, scene);
+ps.particleTexture = dot; ps.emitter = new Vector3(0, 0, 0);
+ps.minEmitBox = new Vector3(-10, 0, -10); ps.maxEmitBox = new Vector3(10, 0, 10);
+ps.direction1 = new Vector3(-.1, 1, -.1); ps.direction2 = new Vector3(.1, 1, .1);
+ps.minEmitPower = .2; ps.maxEmitPower = .6; ps.gravity = new Vector3(0, .1, 0);
+ps.minLifeTime = 6; ps.maxLifeTime = 10; ps.minSize = .15; ps.maxSize = .4;
+ps.color1 = new Color4(.7, .5, 1, .9); ps.color2 = new Color4(.5, .35, 1, .7); ps.colorDead = new Color4(.4, .2, 1, 0);
+ps.blendMode = BABYLON.ParticleSystem.BLENDMODE_ADD; ps.emitRate = 0; ps.start();
+
+// ---------- phase presets ----------
+const PRESET = {
+  MORNING: { sky:0x9fd4ff, fog:0x8fb4d8, hemi:.75, sun:1.1, sunC:0xfff1d6, lamp:0,   mon:0x7fe3ff, part:0,  r:13.5, h:7.5, label:'ประชุมเช้า' },
+  VOTE:    { sky:0xffc07a, fog:0xb88a60, hemi:.55, sun:.7,  sunC:0xffb070, lamp:.9,  mon:0xffd27f, part:0,  r:9.5,  h:5.2, label:'โหวต' },
+  NIGHT:   { sky:0x0a0820, fog:0x0a0820, hemi:.12, sun:.1,  sunC:0x7a6cff, lamp:.4,  mon:0x8a5bff, part:1,  r:12,   h:9.5, label:'กลางคืน' },
+};
+let phase = 'MORNING';
+const cur = { sky: hex(0x9fd4ff), fog: hex(0x8fb4d8), sunC: hex(0xfff1d6), mon: hex(0x7fe3ff), hemi: .75, sun: 1.1, lamp: 0, part: 0, r: 13.5, h: 7.5 };
+
+const msg = document.getElementById('msg'), fl = document.getElementById('flash');
+function say(t) { msg.textContent = t; msg.style.opacity = 1; clearTimeout(say.t); say.t = setTimeout(() => msg.style.opacity = 0, 1300); }
+function flash(a) { fl.style.opacity = a; setTimeout(() => fl.style.opacity = 0, 350); }
+function setPhase(p) {
+  phase = p;
+  document.getElementById('phase').textContent = PRESET[p].label;
+  document.querySelectorAll('[data-p]').forEach(b => b.classList.toggle('on', b.dataset.p === p));
+  say(PRESET[p].label); if (p === 'NIGHT') flash(.55);
+}
+document.querySelectorAll('[data-p]').forEach(b => b.onclick = () => setPhase(b.dataset.p));
+
+let day = 1;
+function setDay(d) {
+  day = d; document.getElementById('day').textContent = d; document.getElementById('dl').textContent = 6 - d;
+  stacks.forEach((s, i) => s.target = i < 6 - d ? .5 + (5 - i)*.08 : .05);
+}
+setDay(1);
+document.getElementById('next').onclick = () => { if (day < 5) { setDay(day + 1); setPhase('MORNING'); } else say('Deadline มาถึงแล้ว!'); };
+document.getElementById('kill').onclick = () => {
+  const alive = desks.filter(d => d.alive); if (alive.length <= 1) return;
+  const v = alive[Math.floor(Math.random()*alive.length)];
+  v.alive = false; v.lab.isVisible = false; say('มีคนหมดแรง…'); flash(.35);
+};
+let orbit = true;
+document.getElementById('orbit').onclick = e => { orbit = !orbit; e.target.textContent = '🎥 กล้องหมุน: ' + (orbit ? 'เปิด' : 'ปิด'); };
+
+// ---------- loop ----------
+let camAngle = .3, time = 0;
+const dead = hex(0x222222);
+scene.onBeforeRenderObservable.add(() => {
+  const dt = Math.min(engine.getDeltaTime()/1000, .05); time += dt;
+  const T = PRESET[phase], k = 1 - Math.pow(.02, dt);
+
+  Color3.LerpToRef(cur.sky, hex(T.sky), k, cur.sky); Color3.LerpToRef(cur.fog, hex(T.fog), k, cur.fog);
+  Color3.LerpToRef(cur.sunC, hex(T.sunC), k, cur.sunC); Color3.LerpToRef(cur.mon, hex(T.mon), k, cur.mon);
+  for (const key of ['hemi','sun','lamp','part','r','h']) cur[key] += (T[key] - cur[key]) * k;
+
+  scene.clearColor = new Color4(cur.sky.r, cur.sky.g, cur.sky.b, 1);
+  skyMat.emissiveColor = cur.sky; scene.fogColor = cur.fog;
+  hemi.intensity = cur.hemi; sun.intensity = cur.sun; sun.diffuse = cur.sunC; lamp.intensity = cur.lamp * 6;
+  cityMat.emissiveColor = phase === 'NIGHT' ? hex(0x070614) : hex(0x7da4c8);
+  ps.emitRate = cur.part * 40;
+
+  if (orbit) camAngle += dt * (phase === 'NIGHT' ? .05 : .08);
+  camera.position.set(Math.sin(camAngle)*cur.r*.55, cur.h, Math.cos(camAngle)*cur.r*.9 + 2);
+  camera.setTarget(new Vector3(0, 1.2, 0));
+
+  stacks.forEach(s => { s.h += (s.target - s.h) * k; s.scaling.y = Math.max(s.h, .02); s.position.y = s.base + s.h/2; });
+
+  desks.forEach(d => {
+    if (d.alive) {
+      d.worker.position.y = Math.sin(time*2 + d.bob)*.03;
+      d.worker.rotation.z = phase === 'NIGHT' ? Math.sin(time*3 + d.bob)*.08 : 0;
+      d.scrMat.emissiveColor = cur.mon;
+    } else {
+      d.dying = Math.min(1, d.dying + dt*1.2);
+      d.worker.position.y = -d.dying*.35; d.worker.rotation.x = -d.dying*1.2;
+      d.scrMat.emissiveColor = dead;
+    }
+  });
+});
+engine.runRenderLoop(() => scene.render());
+</script>
+</body>
+</html>

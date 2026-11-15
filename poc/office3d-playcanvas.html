@@ -1,0 +1,237 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Deadline Necromancer — 3D Office (PlayCanvas)</title>
+<style>
+  html,body{margin:0;height:100%;background:#0b0a12;overflow:hidden;font-family:system-ui,"Noto Sans Thai",sans-serif;color:#eee}
+  #c{position:fixed;inset:0;width:100%;height:100%;display:block}
+  .hud{position:fixed;left:16px;right:16px;top:12px;display:flex;justify-content:space-between;align-items:flex-start;pointer-events:none}
+  .badge{background:#000a;border:1px solid #fff2;border-radius:10px;padding:8px 14px;backdrop-filter:blur(6px)}
+  .badge b{font-size:20px}
+  .bar{position:fixed;left:50%;bottom:14px;transform:translateX(-50%);display:flex;gap:8px;flex-wrap:wrap;justify-content:center;width:calc(100% - 32px)}
+  button{background:#1d1a2e;color:#eee;border:1px solid #fff3;border-radius:8px;padding:9px 14px;font:inherit;cursor:pointer}
+  button:hover{background:#2c2745} button.on{background:#6d4bd1;border-color:#b9a2ff}
+  #flash{position:fixed;inset:0;pointer-events:none;background:#000;opacity:0;transition:opacity .6s}
+  #msg{position:fixed;left:50%;top:42%;transform:translate(-50%,-50%);font-size:34px;font-weight:700;text-shadow:0 2px 12px #000;opacity:0;transition:opacity .5s;pointer-events:none;text-align:center}
+  .tag{position:fixed;left:0;top:0;pointer-events:none;background:#000b;color:#fff;font-weight:700;font-size:15px;padding:2px 10px;border-radius:8px;transform:translate(-50%,-50%);white-space:nowrap}
+  .engine{position:fixed;left:16px;top:64px;font-size:12px;opacity:.7}
+</style>
+<script src="https://cdn.jsdelivr.net/npm/playcanvas@2.3.3/build/playcanvas.min.js"></script>
+</head>
+<body>
+<canvas id="c"></canvas>
+<div class="hud">
+  <div class="badge">วันที่ <b id="day">1</b> / 5 · <span id="phase">ประชุมเช้า</span></div>
+  <div class="badge">Deadline <b id="dl">5</b> วัน</div>
+</div>
+<div class="engine">engine: PlayCanvas</div>
+<div id="msg"></div>
+<div id="flash"></div>
+<div class="bar">
+  <button data-p="MORNING" class="on">☀ ประชุมเช้า</button>
+  <button data-p="VOTE">🗳 โหวต</button>
+  <button data-p="NIGHT">🌙 กลางคืน</button>
+  <button id="kill">💀 ตัดผู้เล่นออก</button>
+  <button id="next">⏭ วันถัดไป</button>
+  <button id="orbit">🎥 กล้องหมุน: เปิด</button>
+</div>
+
+<script>
+const N = 9;
+const canvas = document.getElementById('c');
+const app = new pc.Application(canvas, { graphicsDeviceOptions:{ antialias:true } });
+app.setCanvasFillMode(pc.FILLMODE_FILL_WINDOW);
+app.setCanvasResolution(pc.RESOLUTION_AUTO);
+addEventListener('resize', () => app.resizeCanvas());
+app.start();
+
+const hex = h => new pc.Color().fromString('#' + h.toString(16).padStart(6, '0'));
+const DEG = 180 / Math.PI;
+
+// ---------- helpers ----------
+function lit(h, rough = .8) {
+  const m = new pc.StandardMaterial();
+  m.diffuse = hex(h); m.useMetalness = true; m.metalness = 0; m.gloss = 1 - rough; m.update(); return m;
+}
+function unlit(h) {                                   // self-lit surface (screens, windows, particles)
+  const m = new pc.StandardMaterial();
+  m.diffuse = new pc.Color(0, 0, 0); m.specular = new pc.Color(0, 0, 0);
+  m.emissive = hex(h); m.cull = pc.CULLFACE_NONE; m.update(); return m;
+}
+function prim(type, mat, parent, { pos = [0,0,0], scale = [1,1,1], rot = [0,0,0], shadow = true } = {}) {
+  const e = new pc.Entity();
+  e.addComponent('render', { type, material: mat, castShadows: shadow, receiveShadows: true });
+  e.setLocalPosition(...pos); e.setLocalScale(...scale); e.setLocalEulerAngles(...rot);
+  (parent || app.root).addChild(e); return e;
+}
+const box = (w, h, d, mat, parent, pos, rot) => prim('box', mat, parent, { pos, scale: [w, h, d], rot });
+function group(parent, pos = [0,0,0], rot = [0,0,0]) {
+  const g = new pc.Entity(); g.setLocalPosition(...pos); g.setLocalEulerAngles(...rot); (parent || app.root).addChild(g); return g;
+}
+
+// ---------- camera + lights ----------
+const camE = new pc.Entity('camera');
+camE.addComponent('camera', { fov: 50, nearClip: .1, farClip: 80, clearColor: hex(0x9fd4ff) });
+app.root.addChild(camE);
+
+const sun = new pc.Entity('sun');
+sun.addComponent('light', { type: 'directional', castShadows: true, shadowResolution: 2048, shadowDistance: 40, shadowBias: .2, normalOffsetBias: .05 });
+sun.setPosition(-6, 12, 8); sun.lookAt(0, 0, 0); app.root.addChild(sun);
+
+const lamp = new pc.Entity('lamp');
+lamp.addComponent('light', { type: 'omni', color: hex(0xffd9a0), range: 9, intensity: 0, castShadows: false });
+lamp.setPosition(0, 3.2, 0); app.root.addChild(lamp);
+
+app.scene.fog.type = pc.FOG_LINEAR; app.scene.fog.start = 14; app.scene.fog.end = 34;
+
+// ---------- room ----------
+prim('cylinder', lit(0x3a3550, .95), null, { scale: [30, .1, 30], pos: [0, -.05, 0] });
+prim('cylinder', lit(0x5b3fa8, 1),  null, { scale: [8.4, .1, 8.4], pos: [0, .01, 0] });
+box(30, 8, .4, lit(0x4a4568), null, [0, 4, -12]);
+const skyMat = unlit(0x9fd4ff);
+for (let i = -2; i <= 2; i++) {
+  prim('plane', skyMat, null, { pos: [i*5, 4.4, -11.78], scale: [3.6, 1, 4.2], rot: [90, 0, 0], shadow: false });
+  box(3.9, .15, .3, lit(0x222033), null, [i*5, 6.55, -11.8]);
+  box(3.9, .15, .3, lit(0x222033), null, [i*5, 2.25, -11.8]);
+}
+const cityMat = unlit(0x7da4c8), city = [];
+for (let i = 0; i < 30; i++) {
+  const h = 1 + Math.random()*4;
+  prim('box', cityMat, null, { pos: [-14 + i, 2.3 + h/2 - .1, -11.9], scale: [1 + Math.random(), h, .5], shadow: false });
+}
+
+// ---------- central table + deadline stacks ----------
+const table = group(null);
+box(2.6, .15, 2.6, lit(0x7a5a3a), table, [0, .9, 0]);
+box(.3, .9, .3, lit(0x3a2a1a), table, [0, .45, 0]);
+const paperMat = lit(0xf2efe6), stacks = [];
+for (let i = 0; i < 5; i++) {
+  const s = box(.38, 1, .5, paperMat, table, [-1 + i*.5, .98 + .25, 0]);   // origin at centre, so lift by half-height each frame
+  s.base = .98; s.h = .5; s.target = .5; stacks.push(s);
+}
+
+// ---------- desks (players) ----------
+const desks = [];
+const labels = document.createElement('div'); document.body.appendChild(labels);
+for (let i = 0; i < N; i++) {
+  const a = i / N * Math.PI * 2, R = 6.2;
+  const g = group(null, [Math.sin(a)*R, 0, Math.cos(a)*R], [0, (a + Math.PI) * DEG, 0]);
+  box(2, .1, 1.1, lit(0xb9a07a), g, [0, .8, 0]);
+  for (const sx of [-.9, .9]) box(.1, .8, .9, lit(0x55483a), g, [sx, .4, 0]);
+  const mon = group(g, [0, 0, -.25], [0, 180, 0]);
+  box(.9, .6, .06, lit(0x15141c), mon, [0, 1.3, 0]);
+  const scrMat = unlit(0x7fe3ff);
+  prim('plane', scrMat, mon, { pos: [0, 1.3, .04], scale: [.8, 1, .5], rot: [90, 0, 0], shadow: false });
+  box(.08, .3, .08, lit(0x15141c), mon, [0, .98, 0]);
+  const chair = group(g, [0, 0, 1.05], [0, 180, 0]);
+  const cm = lit(0x2d2a55);
+  box(.7, .1, .7, cm, chair, [0, .55, 0]); box(.7, .8, .1, cm, chair, [0, 1, .35]); box(.1, .5, .1, lit(0x111111), chair, [0, .27, 0]);
+  const worker = group(g, [0, 0, 1.0]);
+  const col = new pc.Color(); col.fromString('#' + [0,1,2].map(k => Math.round(150 + 90*Math.sin(i/N*6.28 + k*2.1)).toString(16).padStart(2,'0')).join(''));
+  const bm = new pc.StandardMaterial(); bm.diffuse = col; bm.useMetalness = true; bm.metalness = 0; bm.gloss = .2; bm.update();
+  prim('capsule', bm, worker, { pos: [0, 1.15, 0], scale: [.52, .5, .52] });
+  prim('sphere', lit(0xf1c9a5), worker, { pos: [0, 1.8, 0], scale: [.44, .44, .44] });
+  const tagEl = document.createElement('div'); tagEl.className = 'tag'; tagEl.textContent = 'P' + (i + 1); labels.appendChild(tagEl);
+  const anchor = group(g, [0, 2.5, 1.0]);
+  desks.push({ g, scrMat, worker, anchor, tagEl, alive: true, bob: Math.random()*6, dying: 0 });
+}
+
+// ---------- ghost particles ----------
+const partMat = unlit(0xb48cff), parts = [];
+for (let i = 0; i < 120; i++) {
+  const e = prim('sphere', partMat, null, { scale: [.14,.14,.14], shadow: false });
+  e.setPosition((Math.random()-.5)*20, Math.random()*6, (Math.random()-.5)*20);
+  e.v = .2 + Math.random()*.5; e.enabled = false; parts.push(e);
+}
+
+// ---------- phase presets ----------
+const PRESET = {
+  MORNING: { sky:0x9fd4ff, fog:0x8fb4d8, amb:.75, sun:1.6, sunC:0xfff1d6, lamp:0,   mon:0x7fe3ff, part:0,  r:13.5, h:7.5, label:'ประชุมเช้า' },
+  VOTE:    { sky:0xffc07a, fog:0xb88a60, amb:.55, sun:.9,  sunC:0xffb070, lamp:1.2, mon:0xffd27f, part:0,  r:9.5,  h:5.2, label:'โหวต' },
+  NIGHT:   { sky:0x0a0820, fog:0x0a0820, amb:.14, sun:.12, sunC:0x7a6cff, lamp:.5,  mon:0x8a5bff, part:.9, r:12,   h:9.5, label:'กลางคืน' },
+};
+let phase = 'MORNING';
+const cur = { sky: hex(0x9fd4ff), fog: hex(0x8fb4d8), sunC: hex(0xfff1d6), mon: hex(0x7fe3ff), amb: .75, sun: 1.6, lamp: 0, part: 0, r: 13.5, h: 7.5 };
+
+const msg = document.getElementById('msg'), fl = document.getElementById('flash');
+function say(t) { msg.textContent = t; msg.style.opacity = 1; clearTimeout(say.t); say.t = setTimeout(() => msg.style.opacity = 0, 1300); }
+function flash(a) { fl.style.opacity = a; setTimeout(() => fl.style.opacity = 0, 350); }
+function setPhase(p) {
+  phase = p;
+  document.getElementById('phase').textContent = PRESET[p].label;
+  document.querySelectorAll('[data-p]').forEach(b => b.classList.toggle('on', b.dataset.p === p));
+  say(PRESET[p].label); if (p === 'NIGHT') flash(.55);
+}
+document.querySelectorAll('[data-p]').forEach(b => b.onclick = () => setPhase(b.dataset.p));
+
+let day = 1;
+function setDay(d) {
+  day = d; document.getElementById('day').textContent = d; document.getElementById('dl').textContent = 6 - d;
+  stacks.forEach((s, i) => s.target = i < 6 - d ? .5 + (5 - i)*.08 : .05);
+}
+setDay(1);
+document.getElementById('next').onclick = () => { if (day < 5) { setDay(day + 1); setPhase('MORNING'); } else say('Deadline มาถึงแล้ว!'); };
+document.getElementById('kill').onclick = () => {
+  const alive = desks.filter(d => d.alive); if (alive.length <= 1) return;
+  const v = alive[Math.floor(Math.random()*alive.length)];
+  v.alive = false; v.tagEl.style.display = 'none'; say('มีคนหมดแรง…'); flash(.35);
+};
+let orbit = true;
+document.getElementById('orbit').onclick = e => { orbit = !orbit; e.target.textContent = '🎥 กล้องหมุน: ' + (orbit ? 'เปิด' : 'ปิด'); };
+
+// ---------- loop ----------
+let camAngle = .3, time = 0;
+const scr = new pc.Vec3();
+app.on('update', dt => {
+  dt = Math.min(dt, .05); time += dt;
+  const T = PRESET[phase], k = 1 - Math.pow(.02, dt);
+
+  cur.sky.lerp(cur.sky, hex(T.sky), k); cur.fog.lerp(cur.fog, hex(T.fog), k);
+  cur.sunC.lerp(cur.sunC, hex(T.sunC), k); cur.mon.lerp(cur.mon, hex(T.mon), k);
+  for (const key of ['amb','sun','lamp','part','r','h']) cur[key] += (T[key] - cur[key]) * k;
+
+  camE.camera.clearColor = cur.sky;
+  skyMat.emissive = cur.sky; skyMat.update();
+  app.scene.fog.color = cur.fog;
+  app.scene.ambientLight = new pc.Color(cur.amb, cur.amb, cur.amb * 1.05);
+  sun.light.intensity = cur.sun; sun.light.color = cur.sunC; lamp.light.intensity = cur.lamp * 3;
+  cityMat.emissive = phase === 'NIGHT' ? hex(0x070614) : hex(0x7da4c8); cityMat.update();
+
+  if (orbit) camAngle += dt * (phase === 'NIGHT' ? .05 : .08);
+  camE.setPosition(Math.sin(camAngle)*cur.r*.55, cur.h, Math.cos(camAngle)*cur.r*.9 + 2);
+  camE.lookAt(0, 1.2, 0);
+
+  stacks.forEach(s => { s.h += (s.target - s.h) * k; s.setLocalScale(.38, Math.max(s.h, .02), .5); s.setLocalPosition(s.getLocalPosition().x, s.base + s.h/2, 0); });
+
+  const nm = hex(0x222222);
+  desks.forEach(d => {
+    if (d.alive) {
+      d.worker.setLocalPosition(0, Math.sin(time*2 + d.bob)*.03, 1.0);
+      d.worker.setLocalEulerAngles(0, 0, phase === 'NIGHT' ? Math.sin(time*3 + d.bob)*.08*DEG : 0);
+      d.scrMat.emissive = cur.mon;
+    } else {
+      d.dying = Math.min(1, d.dying + dt*1.2);
+      d.worker.setLocalPosition(0, -d.dying*.35, 1.0);
+      d.worker.setLocalEulerAngles(-d.dying*1.2*DEG, 0, 0);
+      d.scrMat.emissive = nm;
+    }
+    d.scrMat.update();
+    // DOM label follows the 3D anchor
+    camE.camera.worldToScreen(d.anchor.getPosition(), scr);
+    const show = d.alive && scr.z > 0;
+    d.tagEl.style.display = show ? '' : 'none';
+    if (show) d.tagEl.style.transform = `translate(${scr.x}px,${scr.y}px) translate(-50%,-50%)`;
+  });
+
+  parts.forEach(e => {
+    e.enabled = cur.part > .03;
+    const p = e.getPosition(); let y = p.y + e.v*dt; if (y > 7) y = 0;
+    e.setPosition(p.x + Math.sin(time + e.v*9)*dt*.2, y, p.z);
+    const s = .14 * Math.min(1, cur.part); e.setLocalScale(s, s, s);
+  });
+});
+</script>
+</body>
+</html>

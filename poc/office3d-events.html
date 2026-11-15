@@ -1,0 +1,614 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Deadline Necromancer — Arcane Agency (paper-doll cards)</title>
+<style>
+  :root{--bg:#0f0d1a;--panel:#181528;--panel2:#201c36;--line:#33294f;--txt:#ebe7f7;--mut:#9a92b8;
+        --light:#f5c451;--dark:#b05cff;--indie:#4ecdc4;--bad:#ff5c7a;--good:#5fe39a;
+        --team:#4fd0ff;--cult:#ff4d5e;--seek:#4ee07a}
+  *{box-sizing:border-box}
+  html,body{margin:0;height:100%;background:var(--bg);overflow:hidden;color:var(--txt);font-family:"Segoe UI","Noto Sans Thai",Tahoma,sans-serif}
+  #c{position:fixed;inset:0;width:100%;height:100%;display:block}
+  button{font:inherit;color:inherit;cursor:pointer}
+  .top{position:fixed;left:0;right:0;top:0;display:flex;align-items:center;gap:20px;padding:10px 20px;background:#120f20d9;border-bottom:1px solid var(--line);backdrop-filter:blur(6px);z-index:5}
+  .brand{font-weight:700;letter-spacing:.3px}
+  .days{display:flex;gap:4px}
+  .day{padding:3px 9px;border-radius:6px;background:var(--panel2);font-size:12px;color:var(--mut)}
+  .day.now{background:var(--dark);color:#fff} .day.past{opacity:.5}
+  .mana{flex:1;max-width:380px}
+  .mana .bar{height:12px;background:var(--panel2);border-radius:99px;overflow:hidden;border:1px solid var(--line)}
+  .mana .fill{height:100%;background:linear-gradient(90deg,#4f8cff,#9b6bff);transition:width .5s}
+  .mana small{color:var(--mut);font-size:12px}
+  .phase{margin-left:auto;font-weight:600;color:var(--light)}
+  .bar2{position:fixed;left:50%;bottom:14px;transform:translateX(-50%);display:flex;gap:8px;flex-wrap:wrap;justify-content:center;width:calc(100% - 32px);z-index:5}
+  .btn{background:var(--panel2);border:1px solid var(--line);padding:8px 14px;border-radius:8px;transition:.15s}
+  .btn:hover{border-color:var(--dark);background:#2a2447}
+  .btn.on{background:linear-gradient(135deg,#7c3aed,#b05cff);border:0;font-weight:600}
+  .sep{width:1px;background:var(--line);margin:0 4px}
+  #flash{position:fixed;inset:0;pointer-events:none;background:#000;opacity:0;transition:opacity .6s}
+  #msg{position:fixed;left:50%;top:40%;transform:translate(-50%,-50%);font-size:34px;font-weight:700;text-shadow:0 2px 14px #000;opacity:0;transition:opacity .5s;pointer-events:none;text-align:center;z-index:4}
+  .tag{position:fixed;left:0;top:0;pointer-events:none;background:#181528e6;border:1px solid var(--line);color:#fff;font-weight:600;font-size:13px;padding:2px 10px;border-radius:99px;white-space:nowrap;z-index:3}
+  .tag.light{border-color:var(--team);color:var(--team)} .tag.dark{border-color:var(--cult);color:var(--cult)} .tag.indie{border-color:var(--seek);color:var(--seek)}
+  .tag.out{border-color:#555;color:#999;text-decoration:line-through}
+  #cap{position:fixed;left:50%;top:60px;transform:translateX(-50%) translateY(-8px);width:min(560px,calc(100% - 32px));background:#120f20eb;border:1px solid var(--line);border-radius:14px;padding:10px 16px;z-index:6;opacity:0;pointer-events:none;transition:.35s;white-space:pre-line}
+  #cap.show{opacity:1;transform:translateX(-50%)}
+  #cap b{display:block;font-size:16px;margin-bottom:3px;color:var(--light)} #cap div{font-size:13px;color:var(--txt)}
+  #cap.trap b{color:var(--cult)} #cap.boost b{color:var(--light)} #cap.evt b{color:var(--team)}
+  #chips{position:fixed;right:14px;top:60px;display:flex;flex-direction:column;align-items:flex-end;gap:6px;z-index:5;max-width:360px}
+  .chip{background:#120f20e6;border:1px solid var(--line);border-radius:99px;padding:4px 12px;font-size:12px;animation:pop .4s}
+  .chip.evt{border-color:var(--team);color:var(--team)} .chip.trap{border-color:var(--cult);color:var(--cult)} .chip.boost{border-color:var(--light);color:var(--light)}
+  @keyframes pop{from{transform:scale(.6);opacity:0}to{transform:none;opacity:1}}
+  .bub{position:fixed;left:0;top:0;pointer-events:none;z-index:4;font-weight:800;font-size:14px;padding:2px 9px;border-radius:99px;border:2px solid;background:#120f20e6;white-space:nowrap}
+  .bub.y{border-color:var(--good);color:var(--good)} .bub.n{border-color:var(--bad);color:var(--bad)}
+  .legend{position:fixed;left:16px;top:58px;font-size:12px;color:var(--mut);z-index:4;display:none;background:#120f20d9;border:1px solid var(--line);border-radius:10px;padding:8px 12px}
+  .legend i{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:6px}
+</style>
+<script src="../app/src/shared/data.js"></script>
+<script type="importmap">
+{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+            "three/addons/":"https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"}}
+</script>
+</head>
+<body>
+<canvas id="c"></canvas>
+<div class="top">
+  <div class="brand">🧙 Deadline Necromancer</div>
+  <div class="days" id="days"></div>
+  <div class="mana"><div class="bar"><div class="fill" id="fill"></div></div><small id="manaTxt"></small></div>
+  <div class="phase" id="phase">ประชุมเช้า</div>
+</div>
+<div class="legend" id="legend"><div><i style="background:#4fd0ff"></i>Team Deliver (ฝ่ายแสง)</div><div><i style="background:#ff4d5e"></i>Cult of Burnout (ฝ่ายมืด)</div><div><i style="background:#4ee07a"></i>Severance Seekers (ฝ่ายอิสระ)</div></div>
+<div id="cap"><b id="capT"></b><div id="capD"></div></div><div id="chips"></div><div id="msg"></div><div id="flash"></div>
+<div class="bar2">
+  <button class="btn on" data-p="MORNING">☀ ประชุมเช้า</button>
+  <button class="btn" data-p="VOTE">🗳 โหวต</button>
+  <button class="btn" data-p="NIGHT">🌙 กลางคืน</button>
+  <span class="sep"></span>
+  <button class="btn" id="fire">📨 ไล่ออก (ซองขาว)</button>
+  <button class="btn" id="burn">🔥 Burnout</button>
+  <button class="btn" id="evt">🎴 Event Card</button>
+  <button class="btn" id="tplace">🪤 วาง Trap</button>
+  <button class="btn" id="ttrig">⚡ Trap ทำงาน</button>
+  <button class="btn" id="boost">🚀 Sprint Booster</button>
+  <button class="btn" id="mp">Mana +1</button>
+  <button class="btn" id="mm">Mana −1</button>
+  <span class="sep"></span>
+  <button class="btn" id="secret">👁 มุมมอง Moderator: ปิด</button>
+  <button class="btn" id="reroll">🎲 สุ่มบทบาทใหม่</button>
+  <button class="btn" id="next">⏭ วันถัดไป</button>
+  <button class="btn" id="focus">🔍 ดูตัวละคร</button>
+  <button class="btn" id="orbit">🎥 กล้องหมุน</button>
+</div>
+
+<script type="module">
+import * as THREE from 'three';
+import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
+import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
+import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js';
+import { OutputPass } from 'three/addons/postprocessing/OutputPass.js';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+
+// =====================================================================
+//  ROLES — keys / names / faction / card art mirror app/src/shared/data.js
+//  "look" describes the character the way the role card draws them.
+// =====================================================================
+const CARD_DIR = '../app/public/thumbs/roles/';
+const FCOL = { light:0x4fd0ff, dark:0xff4d5e, indie:0x4ee07a };           // card-frame colours (Team / Cult / Seekers)
+const FTH = { light:'Team Deliver', dark:'Cult of Burnout', indie:'Severance Seekers' };
+const ROLE = {
+  // ---- Team Deliver (blue / silver / cyan) ----
+  senior_dev:       { n:'Senior Dev', f:'light', img:'team_deliver/01_senior_dev.png',
+    look:{ hair:0x15151c, style:'messy', coat:0x1c2c5a, trim:0x4fd0ff, acc:['headphones','cat','can','hoodie'] } },
+  oracle_pm:        { n:'Oracle PM', f:'light', img:'team_deliver/02_oracle_pm.png',
+    look:{ hair:0x1c2f78, style:'bob', coat:0x1c3470, trim:0x4fd0ff, acc:['glasses','pen'] } },
+  qa_hunter:        { n:'QA Hunter', f:'light', img:'team_deliver/03_qa_hunter.png',
+    look:{ hair:0x15151c, style:'long', coat:0x6a4228, trim:0xd8b050, acc:['fedora','magnifier'] } },
+  rune_ux:          { n:'Rune UX/UI', f:'light', img:'team_deliver/04_rune_ux_ui.png',
+    look:{ hair:0xf0c888, style:'bob', coat:0x2ab5a8, trim:0xd8b050, acc:['roundglasses','elf','hairclip'] } },
+  data_oracle:      { n:'Data Oracle', f:'light', img:'team_deliver/05_data_oracle.png',
+    look:{ hair:0x1a2870, style:'hood', coat:0x1c2468, trim:0x4fd0ff, eye:0x8ff0ff, acc:['orb','galaxy'] } },
+  chrono_tech_lead: { n:'Chrono Tech Lead', f:'light', img:'team_deliver/06_chrono_tech_lead.png',
+    look:{ hair:0xd8dce6, style:'long', coat:0x1c2c5a, trim:0xd8b050, acc:['gear'] } },
+  coffee_admin:     { n:'Coffee Admin', f:'light', img:'team_deliver/07_coffee_admin.png',
+    look:{ hair:0x7a4a2a, style:'pony', coat:0xe9dfc8, trim:0x8a8a4a, acc:['apron','cup'] } },
+  // ---- Cult of Burnout (crimson / black / gold) ----
+  shadow_hr:        { n:'Shadow HR', f:'dark', img:'cult_of_burnout/01_shadow_hr.png',
+    look:{ hair:0x2a1038, style:'long', coat:0xa81830, trim:0x2a0a10, eye:0xff3355, acc:['mask:0xcc1122'] } },
+  mystery_intern:   { n:'Mystery Intern', f:'dark', img:'cult_of_burnout/02_mystery_intern.png',
+    look:{ hair:0xb9bcc4, style:'bobSide', coat:0x1a1a22, trim:0xb01c2c, acc:['hoodie','disc'] } },
+  illusionist_sales:{ n:'Illusionist Sales', f:'dark', img:'cult_of_burnout/03_illusionist_sales.png',
+    look:{ hair:0xe8c878, style:'swept', coat:0x9a1c2c, trim:0x2a2420, acc:['scarf'] } },
+  chaos_scrum:      { n:'Chaos Scrum', f:'dark', img:'cult_of_burnout/04_chaos_scrum.png',
+    look:{ hair:0x14141c, style:'short', coat:0x14141c, trim:0x8c1020, eye:0xff2040, acc:['highcollar','gloves','strings'] } },
+  shadow_legal:     { n:'Shadow Legal', f:'dark', img:'cult_of_burnout/05_shadow_legal.png',
+    look:{ hair:0xd8dce6, style:'long', coat:0x2a1018, trim:0xb01c2c, acc:['glasses','gavel'] } },
+  chaos_devops:     { n:'Chaos DevOps', f:'dark', img:'cult_of_burnout/06_chaos_devops.png',
+    look:{ hair:0xd8441c, style:'spiky', coat:0xa81830, trim:0x14141c, acc:['goggles'] } },
+  // ---- Severance Seekers (emerald / gold) ----
+  severance_seeker: { n:'Severance Seeker', f:'indie', img:'severance_seekers/01_severance_seeker.png',
+    look:{ hair:0x6a4228, style:'messy', coat:0x1c2c58, trim:0xffffff, acc:['tie','backpack'] } },
+  soul_recruiter:   { n:'Soul Recruiter', f:'indie', img:'severance_seekers/02_soul_recruiter.png',
+    look:{ hair:0x1e5a34, style:'short', coat:0x1f7a44, trim:0xd8b050, acc:['glasses','lantern'] } },
+  glory_thief:      { n:'Glory Thief', f:'indie', img:'severance_seekers/03_glory_thief.png',
+    look:{ hair:0x1a1a1a, style:'short', coat:0x1f7a44, trim:0xd8b050, acc:['mask:0x2ec060','gloves'] } },
+  chaos_intern:     { n:'Chaos Intern', f:'indie', img:'severance_seekers/04_chaos_intern.png',
+    look:{ hair:0xe8722c, style:'messy', coat:0x4aa6b4, trim:0xffffff, acc:['roundglasses','cape','lanyard'] } },
+};
+const byF = f => Object.keys(ROLE).filter(k => ROLE[k].f === f);
+const shuffle = a => a.map(v => [Math.random(), v]).sort((x, y) => x[0] - y[0]).map(x => x[1]);
+const N = 9, MANA_MAX = Math.floor(N / 2);
+const NAMES = ['มด','พี่เอก','น้องฟ้า','โอ๊ต','มิ้นท์','บอส','ฝน','ต้น','เจ'];
+const DAYS = ['จ','อ','พ','พฤ','ศ'], DAY_FULL = ['Monday','Tuesday','Wednesday','Thursday','Friday'];
+const lineup = shuffle([...shuffle(byF('light')).slice(0, 4), ...shuffle(byF('dark')).slice(0, 3), ...shuffle(byF('indie')).slice(0, 2)]);
+
+// ================= renderer / post =================
+const canvas = document.getElementById('c');
+const renderer = new THREE.WebGLRenderer({ canvas, antialias:true });
+renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+renderer.shadowMap.enabled = true; renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+renderer.toneMapping = THREE.ACESFilmicToneMapping; renderer.toneMappingExposure = 1.1;
+const scene = new THREE.Scene();
+scene.background = new THREE.Color(0x2a2250); scene.fog = new THREE.Fog(0x2a2250, 16, 42);
+const camera = new THREE.PerspectiveCamera(50, 1, .1, 90);
+const composer = new EffectComposer(renderer);
+composer.addPass(new RenderPass(scene, camera));
+const bloom = new UnrealBloomPass(new THREE.Vector2(1, 1), .7, .65, .8);
+composer.addPass(bloom); composer.addPass(new OutputPass());
+
+// ================= helpers =================
+const std = (c, o = {}) => new THREE.MeshStandardMaterial({ color:c, roughness:.75, metalness:.05, ...o });
+const gold = () => std(0xd8b050, { roughness:.3, metalness:.85 });
+const emi = (c, i = 2, o = {}) => new THREE.MeshStandardMaterial({ color:0x000000, emissive:c, emissiveIntensity:i, toneMapped:false, ...o });
+const add = (parent, geo, mat, x = 0, y = 0, z = 0, shadow = true) => { const m = new THREE.Mesh(geo, mat); m.position.set(x, y, z); m.castShadow = shadow; m.receiveShadow = true; parent.add(m); return m; };
+const box = (w, h, d) => new THREE.BoxGeometry(w, h, d);
+const cylG = (rt, rb, h, s = 20) => new THREE.CylinderGeometry(rt, rb, h, s);
+const sph = (r, ws = 18, hs = 14) => new THREE.SphereGeometry(r, ws, hs);
+const tor = (R, r, a = Math.PI*2) => new THREE.TorusGeometry(R, r, 8, 28, a);
+const cone = (r, h, s = 12) => new THREE.ConeGeometry(r, h, s);
+function tex(w, h, fn, repeat) { const c = document.createElement('canvas'); c.width = w; c.height = h; fn(c.getContext('2d'), w, h); const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace; t.anisotropy = 4; if (repeat) { t.wrapS = t.wrapT = THREE.RepeatWrapping; t.repeat.set(...repeat); } return t; }
+const rnd = (() => { let s = 11; return () => (s = (s * 16807) % 2147483647) / 2147483647; })();
+
+// ================= textures =================
+function skyline(night) {                                    // fantasy city: spires, castle, floating islands, moons
+  return tex(2048, 440, (x, w, h) => {
+    const g = x.createLinearGradient(0, 0, 0, h);
+    if (night) { g.addColorStop(0, '#05040e'); g.addColorStop(.55, '#1c1244'); g.addColorStop(1, '#3a1f66'); } else { g.addColorStop(0, '#8d9cff'); g.addColorStop(.55, '#e7b6ff'); g.addColorStop(1, '#ffd9c0'); }
+    x.fillStyle = g; x.fillRect(0, 0, w, h);
+    if (night) {                                                // stars, aurora, two moons
+      x.fillStyle = '#fff'; for (let i = 0; i < 160; i++) { x.globalAlpha = .4 + rnd()*.6; x.fillRect(rnd()*w, rnd()*h*.65, 2, 2); } x.globalAlpha = 1;
+      for (let i = 0; i < 3; i++) { const a = x.createLinearGradient(0, 40, 0, 220); a.addColorStop(0, 'rgba(80,255,200,0)'); a.addColorStop(.5, `rgba(${i ? 160 : 70},${i ? 90 : 255},${i ? 255 : 190},.22)`); a.addColorStop(1, 'rgba(80,255,200,0)'); x.fillStyle = a; x.beginPath(); x.moveTo(0, 130 + i*40); for (let px = 0; px <= w; px += 40) x.lineTo(px, 130 + i*40 + Math.sin(px/190 + i*2)*45); x.lineTo(w, 260); x.lineTo(0, 260); x.fill(); }
+      for (const [mx, my, mr, mc] of [[1480, 100, 82, '#f2eeff'], [1700, 190, 34, '#9fe9ff']]) { const m = x.createRadialGradient(mx, my, mr*.2, mx, my, mr*2.2); m.addColorStop(0, mc); m.addColorStop(.3, mc); m.addColorStop(.31, mc + '55'); m.addColorStop(1, mc + '00'); x.fillStyle = m; x.beginPath(); x.arc(mx, my, mr*2.2, 0, 7); x.fill(); }
+    } else {
+      const s = x.createRadialGradient(420, 110, 4, 420, 110, 160); s.addColorStop(0, '#fffbe0'); s.addColorStop(1, '#fffbe000'); x.fillStyle = s; x.beginPath(); x.arc(420, 110, 160, 0, 7); x.fill();
+      x.fillStyle = '#ffffffaa'; for (let i = 0; i < 9; i++) { const cx = rnd()*w, cy = 60 + rnd()*150; for (let k = 0; k < 4; k++) { x.beginPath(); x.ellipse(cx + k*34, cy + (k % 2)*8, 60, 20, 0, 0, 7); x.fill(); } }
+    }
+    const island = (ix, iy, s) => { x.fillStyle = night ? '#120a26' : '#8e88c8'; x.beginPath(); x.ellipse(ix, iy, 90*s, 18*s, 0, 0, 7); x.fill(); x.beginPath(); x.moveTo(ix - 80*s, iy); x.lineTo(ix, iy + 90*s); x.lineTo(ix + 80*s, iy); x.fill(); x.fillRect(ix - 14*s, iy - 56*s, 28*s, 50*s); x.beginPath(); x.moveTo(ix - 22*s, iy - 56*s); x.lineTo(ix, iy - 100*s); x.lineTo(ix + 22*s, iy - 56*s); x.fill(); if (night) { x.fillStyle = '#f5c451'; x.fillRect(ix - 4*s, iy - 38*s, 8*s, 12*s); } };
+    island(300, 200, 1.1); island(980, 150, .8); island(1860, 210, 1);
+    const tower = (tx, tw, th, c) => { x.fillStyle = c; x.fillRect(tx, h - th, tw, th); x.beginPath(); x.moveTo(tx - 5, h - th); x.lineTo(tx + tw/2, h - th - tw*1.2); x.lineTo(tx + tw + 5, h - th); x.fill(); if (night) { x.fillStyle = rnd() < .3 ? '#b05cff' : '#f5c451'; for (let wy = h - th + 14; wy < h - 14; wy += 22) if (rnd() < .6) x.fillRect(tx + tw/2 - 3, wy, 6, 10); } };
+    for (let layer = 0; layer < 2; layer++) { let tx = -10; while (tx < w) { const tw = 36 + rnd()*40, th = (layer ? 90 : 150) + rnd()*(layer ? 90 : 150); tower(tx, tw, th, night ? (layer ? '#150d2c' : '#0b0718') : (layer ? '#a79ad8' : '#7b6fb8')); tx += tw + 10 + rnd()*26; } }
+    x.fillStyle = night ? '#0b0718' : '#6a5fa8'; x.fillRect(900, h - 200, 280, 200); x.fillRect(880, h - 280, 60, 280); x.fillRect(1140, h - 300, 60, 300);   // castle
+    x.beginPath(); x.moveTo(870, h - 280); x.lineTo(910, h - 390); x.lineTo(950, h - 280); x.fill(); x.beginPath(); x.moveTo(1130, h - 300); x.lineTo(1170, h - 420); x.lineTo(1210, h - 300); x.fill();
+  });
+}
+const skyDay = skyline(false), skyNight = skyline(true);
+const stoneTex = tex(1024, 1024, (x, w, h) => { x.fillStyle = '#26203d'; x.fillRect(0, 0, w, h); const n = 8, s = w/n;
+  for (let i = 0; i < n; i++) for (let j = 0; j < n; j++) { const v = 30 + rnd()*22; x.fillStyle = `rgb(${v + 10},${v},${v + 36})`; x.fillRect(i*s + 3, j*s + 3, s - 6, s - 6);
+    x.strokeStyle = 'rgba(0,0,0,.35)'; x.lineWidth = 2; if (rnd() < .4) { x.beginPath(); x.moveTo(i*s + rnd()*s, j*s + 6); x.lineTo(i*s + rnd()*s, j*s + s - 6); x.stroke(); } }
+  x.strokeStyle = '#120e24'; x.lineWidth = 6; for (let i = 0; i <= n; i++) { x.beginPath(); x.moveTo(i*s, 0); x.lineTo(i*s, h); x.moveTo(0, i*s); x.lineTo(w, i*s); x.stroke(); } }, [7, 7]);
+const spineTex = tex(512, 256, (x, w, h) => { x.fillStyle = '#1a1226'; x.fillRect(0, 0, w, h); for (let row = 0; row < 4; row++) { let bx = 4; while (bx < w - 8) { const bw = 10 + rnd()*14, bh = 44 + rnd()*14; x.fillStyle = `hsl(${Math.floor(rnd()*360)},${35 + rnd()*30}%,${22 + rnd()*20}%)`; x.fillRect(bx, row*64 + 62 - bh, bw, bh); x.fillStyle = '#d8b050'; x.fillRect(bx + 2, row*64 + 62 - bh + 8, bw - 4, 2); bx += bw + 2; } x.fillStyle = '#3a2a1a'; x.fillRect(0, row*64 + 62, w, 4); } }, [2, 1]);
+function runeTex() {
+  return tex(1024, 1024, (x) => {
+    x.translate(512, 512); x.strokeStyle = x.fillStyle = '#fff'; x.textAlign = 'center'; x.textBaseline = 'middle';
+    const ring = (r, lw) => { x.lineWidth = lw; x.beginPath(); x.arc(0, 0, r, 0, 7); x.stroke(); };
+    ring(500, 8); ring(468, 3); ring(340, 4); ring(150, 5);
+    for (let i = 0; i < 72; i++) { const a = i/72*6.283, l = i % 6 ? 14 : 28; x.lineWidth = 3; x.beginPath(); x.moveTo(Math.cos(a)*468, Math.sin(a)*468); x.lineTo(Math.cos(a)*(468 + l), Math.sin(a)*(468 + l)); x.stroke(); }
+    const R = 'ᚠᚢᚦᚨᚱᚲᚷᚹᚺᚾᛁᛃᛇᛈᛉᛊᛏᛒᛖᛗᛚᛜᛞᛟ'; x.font = '56px "Segoe UI Historic","Segoe UI Symbol",serif';
+    for (let i = 0; i < 24; i++) { const a = i/24*6.283; x.save(); x.rotate(a + 1.5708); x.fillText(R[i], 0, -405); x.restore(); }
+    x.lineWidth = 5; x.beginPath(); for (let i = 0; i <= 5; i++) { const a = (i*2/5)*6.283 - 1.5708; const px = Math.cos(a)*335, py = Math.sin(a)*335; i ? x.lineTo(px, py) : x.moveTo(px, py); } x.stroke();
+    x.beginPath(); for (let i = 0; i <= 6; i++) { const a = (i/6)*6.283; i ? x.lineTo(Math.cos(a)*150, Math.sin(a)*150) : x.moveTo(150, 0); } x.stroke();
+  });
+}
+const runes = runeTex();
+const holoTex = tex(256, 160, (x, w, h) => { x.fillStyle = '#04122a'; x.fillRect(0, 0, w, h); x.strokeStyle = '#fff'; x.lineWidth = 3; x.strokeRect(5, 5, w - 10, h - 10); x.fillStyle = '#fff';
+  for (let i = 0; i < 8; i++) { x.globalAlpha = .4 + rnd()*.6; x.fillRect(16, 18 + i*16, 36 + rnd()*150, 5); } x.globalAlpha = .8; x.beginPath(); x.arc(w - 50, 50, 26, 0, 7); x.stroke(); x.beginPath(); x.arc(w - 50, 50, 14, 0, 7); x.stroke(); });
+const holoBurn = tex(256, 160, (x, w, h) => { x.fillStyle = '#2a0710'; x.fillRect(0, 0, w, h); x.fillStyle = '#ff5c7a'; x.font = '700 30px system-ui'; x.textAlign = 'center'; x.fillText('BURNOUT', w/2, 56); x.font = '60px system-ui'; x.fillText('🔥', w/2, h/2 + 50); });
+const dotTex = tex(64, 64, (x) => { const g = x.createRadialGradient(32, 32, 0, 32, 32, 32); g.addColorStop(0, '#fff'); g.addColorStop(1, '#fff0'); x.fillStyle = g; x.fillRect(0, 0, 64, 64); });
+const crestTex = tex(256, 640, (x, w, h) => { x.fillStyle = '#3a1566'; x.fillRect(0, 0, w, h); x.fillStyle = '#d8b050'; x.fillRect(0, 0, w, 14); x.fillRect(0, 0, 14, h); x.fillRect(w - 14, 0, 14, h);
+  x.beginPath(); x.moveTo(0, h); x.lineTo(w/2, h - 90); x.lineTo(w, h); x.lineTo(w, h + 4); x.lineTo(0, h + 4); x.fill(); x.fillStyle = '#f5c451'; x.font = '150px system-ui'; x.textAlign = 'center'; x.fillText('💀', w/2, 300); x.font = '700 34px serif'; x.fillText('DEADLINE', w/2, 400); x.fillText('NECROMANCER', w/2, 446); });
+
+// ================= room =================
+const floor = new THREE.Mesh(new THREE.CircleGeometry(17, 64), std(0xffffff, { map:stoneTex, roughness:.6, metalness:.15 })); floor.rotation.x = -Math.PI/2; floor.receiveShadow = true; scene.add(floor);
+const winMat = new THREE.MeshBasicMaterial({ map:skyDay, fog:false });
+add(scene, new THREE.PlaneGeometry(30, 4.4), winMat, 0, 4.4, -11.78, false);
+const stone = std(0x2c2547, { roughness:.9 });
+add(scene, box(31, .35, .6), stone, 0, 6.7, -11.7); add(scene, box(31, .35, .6), stone, 0, 2.15, -11.7);
+for (const mx of [-15, -10, -5, 0, 5, 10, 15]) add(scene, box(.35, 4.6, .5), stone, mx, 4.4, -11.7);
+add(scene, box(31, 11, .4), std(0x241d40), 0, 4.5, -12.1); add(scene, new THREE.PlaneGeometry(31, 2.2), std(0x241d40), 0, 1.05, -11.85, false);
+for (const sx of [-1, 1]) {                                   // bookshelves + banners
+  add(scene, box(6.5, 6.4, .7), std(0x3a2a1a), sx*11.6, 3.3, -11.35);
+  const sp = new THREE.Mesh(new THREE.PlaneGeometry(6.1, 6), new THREE.MeshStandardMaterial({ map:spineTex, roughness:.9 })); sp.position.set(sx*11.6, 3.3, -10.98); scene.add(sp);
+  const bn = new THREE.Mesh(new THREE.PlaneGeometry(1.3, 3.2), new THREE.MeshBasicMaterial({ map:crestTex, side:THREE.DoubleSide })); bn.position.set(sx*7.3, 5, -11.4); scene.add(bn);
+  add(scene, cylG(.04, .04, 1.5), gold(), sx*7.3, 6.65, -11.4).rotation.z = Math.PI/2;
+}
+const sign = new THREE.Mesh(new THREE.PlaneGeometry(13, 1.3), new THREE.MeshBasicMaterial({ map: tex(1600, 160, (x, w, h) => {
+  const g = x.createLinearGradient(0, 0, w, 0); g.addColorStop(0, '#f5c451'); g.addColorStop(.5, '#ffffff'); g.addColorStop(1, '#b05cff');
+  x.fillStyle = g; x.font = '800 92px "Segoe UI",system-ui'; x.textAlign = 'center'; x.textBaseline = 'middle'; x.fillText('DEADLINE NECROMANCER', w/2, h/2 - 8);
+  x.font = '30px "Noto Sans Thai",system-ui'; x.fillStyle = '#c9bff0'; x.fillText('ARCANE AGENCY  ·  ปั่นงานให้ทัน ก่อนวิญญาณจะหลุด', w/2, h - 22); }), transparent:true, toneMapped:false }));
+sign.position.set(0, 7.5, -11.45); scene.add(sign);
+
+const boardCv = document.createElement('canvas'); boardCv.width = 1024; boardCv.height = 560;
+const boardTex = new THREE.CanvasTexture(boardCv); boardTex.colorSpace = THREE.SRGBColorSpace;
+function drawBoard(day) {
+  const x = boardCv.getContext('2d'); const bg = x.createLinearGradient(0, 0, 0, 560); bg.addColorStop(0, '#2a1d3f'); bg.addColorStop(1, '#181528'); x.fillStyle = bg; x.fillRect(0, 0, 1024, 560);
+  x.strokeStyle = '#d8b050'; x.lineWidth = 8; x.strokeRect(6, 6, 1012, 548); x.strokeStyle = '#8a6a2a'; x.lineWidth = 2; x.strokeRect(20, 20, 984, 520);
+  x.fillStyle = '#d8b050'; x.font = '600 34px "Noto Sans Thai",serif'; x.textAlign = 'center'; x.fillText('✦  SPRINT  ·  5 WORKING DAYS  ✦', 512, 62);
+  for (let i = 0; i < 5; i++) {
+    const cx = 100 + i*206, now = i === day - 1, past = i < day - 1;
+    x.fillStyle = now ? '#6a35b8' : '#201c36'; x.beginPath(); x.roundRect(cx - 88, 100, 176, 380, 18); x.fill();
+    if (now) { x.strokeStyle = '#f5c451'; x.lineWidth = 6; x.stroke(); }
+    x.globalAlpha = past ? .35 : 1; x.fillStyle = '#fff'; x.font = '800 92px "Noto Sans Thai",system-ui'; x.fillText(DAYS[i], cx, 220);
+    x.font = '26px system-ui'; x.fillStyle = now ? '#fff' : '#9a92b8'; x.fillText(DAY_FULL[i], cx, 270);
+    if (i === 4) { x.fillStyle = '#ff5c7a'; x.font = '800 34px system-ui'; x.fillText('DEADLINE', cx, 420); x.font = '60px system-ui'; x.fillText('💀', cx, 360); }
+    if (past) { x.strokeStyle = '#ff5c7a'; x.lineWidth = 14; x.beginPath(); x.moveTo(cx - 60, 320); x.lineTo(cx + 60, 440); x.moveTo(cx + 60, 320); x.lineTo(cx - 60, 440); x.stroke(); }
+    x.globalAlpha = 1;
+  }
+  boardTex.needsUpdate = true;
+}
+add(scene, new THREE.PlaneGeometry(5.2, 2.84), new THREE.MeshBasicMaterial({ map:boardTex, toneMapped:false }), 0, 4.4, -11.55, false);
+add(scene, box(5.5, 3.14, .1), gold(), 0, 4.4, -11.62);
+
+// pillars + torches (warm point lights add fantasy mood)
+const flames = [], torchLights = [];
+for (let i = 0; i < 8; i++) {
+  const a = (i + .5)/8*Math.PI*2, R = 10.2, p = new THREE.Group(); p.position.set(Math.sin(a)*R, 0, Math.cos(a)*R); scene.add(p);
+  if (p.position.z < -9.5) { p.visible = false; continue; }
+  add(p, cylG(.42, .5, 5.2, 16), stone, 0, 2.6, 0); add(p, cylG(.58, .58, .3, 16), stone, 0, .15, 0); add(p, cylG(.58, .5, .35, 16), gold(), 0, 5.3, 0);
+  const fl = add(p, cone(.16, .46, 8), emi(0xff8a2a, 3), 0, 5.8, 0, false); flames.push(fl);
+  add(p, cylG(.1, .16, .2, 10), gold(), 0, 5.52, 0, false);
+  if (torchLights.length < 4) { const l = new THREE.PointLight(0xff9a40, 10, 11, 1.8); l.position.set(0, 5.8, 0); p.add(l); torchLights.push(l); }
+}
+
+// ================= rune circle =================
+const runeMat = (op) => new THREE.MeshBasicMaterial({ map:runes, color:0xf5c451, transparent:true, opacity:op, blending:THREE.AdditiveBlending, depthWrite:false, toneMapped:false });
+const runeA = new THREE.Mesh(new THREE.PlaneGeometry(11.6, 11.6), runeMat(.7)); runeA.rotation.x = -Math.PI/2; runeA.position.y = .03; scene.add(runeA);
+const runeB = new THREE.Mesh(new THREE.PlaneGeometry(6.2, 6.2), runeMat(.7)); runeB.rotation.x = -Math.PI/2; runeB.position.y = .04; scene.add(runeB);
+
+// ================= altar + Mana crystal =================
+add(scene, cylG(2.3, 2.5, .25, 40), stone, 0, .12, 0); add(scene, cylG(1.9, 2.1, .25, 40), stone, 0, .37, 0);
+add(scene, cylG(1.5, 1.7, .2, 40), std(0x3a2f5c, { metalness:.5, roughness:.35 }), 0, .6, 0); add(scene, cylG(.5, .9, .5, 24), gold(), 0, 1.0, 0);
+for (let i = 0; i < 4; i++) { const a = i/4*6.283 + .78; const sh = add(scene, new THREE.OctahedronGeometry(.22), emi(0x4fd0ff, 1.4), Math.cos(a)*1.55, .95, Math.sin(a)*1.55, false); sh.scale.y = 1.8; }
+const crystalMat = new THREE.MeshStandardMaterial({ color:0x9b6bff, emissive:0x9b6bff, emissiveIntensity:1.6, roughness:.15, metalness:.1, transparent:true, opacity:.9, flatShading:true });
+const crystal = new THREE.Mesh(new THREE.OctahedronGeometry(.62, 0), crystalMat); crystal.castShadow = true; scene.add(crystal);
+const gyro1 = new THREE.Mesh(tor(1.0, .025), emi(0xf5c451, 1.5)); const gyro2 = new THREE.Mesh(tor(1.25, .02), emi(0x9b6bff, 1.5)); scene.add(gyro1, gyro2);
+const crystalLight = new THREE.PointLight(0x9b6bff, 18, 12, 1.6); crystalLight.position.set(0, 2.5, 0); scene.add(crystalLight);
+const orbs = []; for (let i = 0; i < MANA_MAX; i++) { const o = new THREE.Mesh(sph(.15, 16, 12), new THREE.MeshStandardMaterial({ color:0x222233, emissive:0x4f8cff, emissiveIntensity:0 })); scene.add(o); orbs.push(o); }
+
+
+// =====================================================================
+//  PAPER-DOLL BUILDER — each player is a standing role card (real card art).
+//  Face-down (generic back) until revealed, so the big screen never spoils roles.
+// =====================================================================
+const texLoader = new THREE.TextureLoader();
+const CARD_W = 1.12, CARD_H = CARD_W*417/300;
+const backTex = tex(300, 417, (x, w, h) => {
+  const g = x.createLinearGradient(0, 0, 0, h); g.addColorStop(0, '#2a1450'); g.addColorStop(1, '#0f0a24'); x.fillStyle = g; x.fillRect(0, 0, w, h);
+  x.strokeStyle = '#d8b050'; x.lineWidth = 8; x.strokeRect(8, 8, w - 16, h - 16); x.lineWidth = 2; x.strokeRect(20, 20, w - 40, h - 40);
+  x.translate(w/2, h/2 - 10); x.strokeStyle = '#b05cff'; x.lineWidth = 3; for (const r of [96, 70]) { x.beginPath(); x.arc(0, 0, r, 0, 7); x.stroke(); }
+  x.beginPath(); for (let i = 0; i <= 5; i++) { const a = (i*2/5)*6.283 - 1.5708; const px = Math.cos(a)*96, py = Math.sin(a)*96; i ? x.lineTo(px, py) : x.moveTo(px, py); } x.stroke();
+  x.fillStyle = '#f5c451'; x.font = '70px system-ui'; x.textAlign = 'center'; x.textBaseline = 'middle'; x.fillText('💀', 0, 6);
+  x.setTransform(1, 0, 0, 1, 0, 0); x.fillStyle = '#d8b050'; x.font = '700 20px serif'; x.textAlign = 'center'; x.fillText('DEADLINE', w/2, h - 68); x.fillText('NECROMANCER', w/2, h - 42);
+});
+const cardCache = {};
+function cardTex(key) { if (!cardCache[key]) { const t = texLoader.load(CARD_DIR + ROLE[key].img); t.colorSpace = THREE.SRGBColorSpace; t.anisotropy = 8; cardCache[key] = t; } return cardCache[key]; }
+function buildStandee(root, roleKey) {
+  while (root.children.length) root.remove(root.children[0]);
+  add(root, cylG(.46, .54, .1, 28), gold(), 0, .05, 0); add(root, cylG(.38, .38, .05, 28), std(0x2a1d3f), 0, .12, 0);
+  const halo = new THREE.Mesh(new THREE.PlaneGeometry(CARD_W*1.9, CARD_H*1.6), new THREE.MeshBasicMaterial({ map:dotTex, color:FCOL[ROLE[roleKey].f], transparent:true, opacity:0, blending:THREE.AdditiveBlending, depthWrite:false, toneMapped:false }));
+  halo.position.set(0, .14 + CARD_H/2, -.12); root.add(halo);
+  const pivot = new THREE.Group(); pivot.position.y = .15 + CARD_H/2; root.add(pivot);
+  add(pivot, box(CARD_W + .05, CARD_H + .05, .04), gold());
+  const front = new THREE.Mesh(new THREE.PlaneGeometry(CARD_W, CARD_H), new THREE.MeshBasicMaterial({ map:cardTex(roleKey), toneMapped:false, transparent:true })); front.position.z = .025; pivot.add(front);
+  const back = new THREE.Mesh(new THREE.PlaneGeometry(CARD_W, CARD_H), new THREE.MeshBasicMaterial({ map:backTex, toneMapped:false })); back.rotation.y = Math.PI; back.position.z = -.025; pivot.add(back);
+  return { pivot, halo, flip:1 };
+}
+
+// =====================================================================
+//  DESKS + PLAYERS
+// =====================================================================
+const pageTex = tex(256, 340, (x, w2, h) => { const gr = x.createLinearGradient(0, 0, w2, 0); gr.addColorStop(0, '#fff6d8'); gr.addColorStop(1, '#ffe9a8'); x.fillStyle = gr; x.fillRect(0, 0, w2, h); x.fillStyle = '#7a4aff'; x.font = '24px "Segoe UI Historic","Segoe UI Symbol",serif'; const RS = 'ᚠᚢᚦᚨᚱᚲᚷᚹᚺᚾᛁᛃᛇᛈᛉᛊᛏᛒᛖᛗᛚᛜᛞᛟ'; for (let k = 0; k < 11; k++) x.fillText(RS.slice(k % 6, k % 6 + 9), 22, 40 + k*28); x.strokeStyle = '#7a4aff'; x.lineWidth = 3; x.strokeRect(8, 8, w2 - 16, h - 16); });
+const desks = [], labelsEl = document.body.appendChild(document.createElement('div'));
+const wood = std(0x4a3524, { roughness:.55 });
+for (let i = 0; i < N; i++) {
+  const a = i/N*Math.PI*2, R = 6.7, g = new THREE.Group();
+  g.position.set(Math.sin(a)*R, 0, Math.cos(a)*R); g.rotation.y = a + Math.PI; scene.add(g);        // local +z faces the altar
+  const dz = -.75, wd = std(0x3a2418, { roughness:.55 });
+  add(g, cylG(.38, .52, .15, 10), gold(), 0, .08, dz); add(g, cylG(.18, .25, .85, 10), wd, 0, .55, dz); add(g, cylG(.3, .22, .12, 10), gold(), 0, .98, dz);
+  add(g, box(1.7, .1, .9), wd, 0, 1.12, dz).rotation.x = .35; add(g, box(1.74, .04, .06), gold(), 0, 1.0, dz + .42, false);
+  for (const sx of [-1, 1]) { add(g, cylG(.05, .05, .24, 8), std(0xf3ead8), sx*.95, 1.15, dz + .15); flames.push(add(g, cone(.035, .1, 8), emi(0xffb050, 3), sx*.95, 1.32, dz + .15, false)); add(g, cylG(.08, .08, .03, 10), gold(), sx*.95, 1.02, dz + .15, false); }
+  // floating grimoire (replaces the monitor): pages tinted by phase, burnout swaps the page art
+  const hm = new THREE.MeshBasicMaterial({ map:pageTex, color:0x7fe3ff, side:THREE.DoubleSide, toneMapped:false });
+  const holo = new THREE.Group(); holo.position.set(0, 2.1, dz - .1); g.add(holo);
+  const pl = new THREE.Mesh(new THREE.PlaneGeometry(.55, .75), hm), pr = pl.clone(); pl.position.x = -.29; pr.position.x = .29; holo.add(pl, pr);
+  add(holo, box(1.3, .06, .8), std(0x5a1a2a), 0, -.4, 0, false).rotation.x = -.4;
+  const glowP = new THREE.Mesh(new THREE.PlaneGeometry(1.9, 1.5), new THREE.MeshBasicMaterial({ map:dotTex, color:0x9b6bff, transparent:true, opacity:.35, blending:THREE.AdditiveBlending, depthWrite:false, toneMapped:false })); glowP.position.z = -.1; holo.add(glowP);
+  const flying = []; for (let k = 0; k < 3; k++) { const p = new THREE.Mesh(new THREE.PlaneGeometry(.3, .4), hm); g.add(p); flying.push(p); }
+  const hf = []; for (const sx of [-1, 1]) hf.push(add(g, sph(.06, 10, 8), emi(0x7fe3ff, 2), sx*.85, 2.1, dz, false));
+  const bookAnim = (t, bob) => { pl.rotation.y = .3 + Math.sin(t*1.5 + bob)*.08; pr.rotation.y = -.3 - Math.sin(t*1.5 + bob)*.08;
+    flying.forEach((p, k) => { const a = t*.6 + k*2.09 + bob; p.position.set(Math.cos(a)*1.05, 2.0 + Math.sin(t + k)*.25, dz + Math.sin(a)*.5); p.rotation.set(Math.sin(t*2 + k)*.6, -a, Math.cos(t*1.5 + k)*.5); }); };
+  const worker = new THREE.Group(); worker.position.set(0, 0, .5); g.add(worker);
+  const dk = { i, g, worker, holo, hm, hf, anim:bookAnim, hairMats:[], state:'alive', t:0, bob:Math.random()*6, role:lineup[i], el:null };
+  const roleKey = lineup[i];
+  worker.rotation.order = 'YXZ'; Object.assign(dk, buildStandee(worker, roleKey));
+  const ringM = new THREE.MeshBasicMaterial({ color:FCOL[ROLE[roleKey].f], transparent:true, opacity:0, toneMapped:false });
+  dk.ring = new THREE.Mesh(tor(.5, .03), ringM); dk.ring.rotation.x = Math.PI/2; dk.ring.position.y = .2; worker.add(dk.ring);
+  dk.anchor = new THREE.Object3D(); dk.anchor.position.set(0, 2.15, .5); g.add(dk.anchor);
+  const el = document.createElement('div'); el.className = 'tag'; el.textContent = NAMES[i]; labelsEl.appendChild(el); dk.el = el;
+  worker.traverse(o => { if (o.material) { (Array.isArray(o.material) ? o.material : [o.material]).forEach(mt => { mt.userData.c0 = mt.color.clone(); mt.userData.e0 = mt.emissiveIntensity; }); } });
+  desks.push(dk);
+}
+const fx = [];
+function envelope() {
+  const e = new THREE.Group(), mt = new THREE.MeshStandardMaterial({ color:0xffffff, emissive:0xffffff, emissiveIntensity:.35, roughness:.9 });
+  add(e, box(.5, .03, .34), mt); const fl = add(e, cone(.28, .16, 3), mt, 0, .03, -.06); fl.rotation.set(Math.PI/2, 0, Math.PI); fl.scale.set(1, 1.15, .2);
+  add(e, cylG(.05, .05, .02, 12), std(0xff5c7a), 0, .04, .02); return e;
+}
+
+// ================= vote spotlight =================
+const spot = new THREE.SpotLight(0xffe2b0, 0, 18, .32, .5, 1); spot.position.set(0, 10, 0); scene.add(spot, spot.target);
+const beam = new THREE.Mesh(new THREE.ConeGeometry(1.5, 9, 28, 1, true), new THREE.MeshBasicMaterial({ color:0xffe2b0, transparent:true, opacity:0, blending:THREE.AdditiveBlending, depthWrite:false, side:THREE.DoubleSide, toneMapped:false })); beam.visible = false; scene.add(beam);
+let candidate = null;
+
+// ================= lights =================
+const hemi = new THREE.HemisphereLight(0xffffff, 0x3a2a66, 1); scene.add(hemi);
+const sun = new THREE.DirectionalLight(0xffffff, 1.5); sun.position.set(-7, 12, 8); sun.castShadow = true;
+sun.shadow.mapSize.set(2048, 2048); Object.assign(sun.shadow.camera, { left:-12, right:12, top:12, bottom:-12 }); sun.shadow.bias = -.0006; scene.add(sun);
+
+// ambient particles
+const P = 260, pg = new THREE.BufferGeometry(), pp = new Float32Array(P*3), pv = [];
+for (let i = 0; i < P; i++) { pp[i*3] = (Math.random()-.5)*22; pp[i*3+1] = Math.random()*7; pp[i*3+2] = (Math.random()-.5)*22; pv.push(.15 + Math.random()*.5); }
+pg.setAttribute('position', new THREE.BufferAttribute(pp, 3));
+const pm = new THREE.PointsMaterial({ map:dotTex, size:.3, transparent:true, opacity:.3, depthWrite:false, blending:THREE.AdditiveBlending, color:0xf5c451, toneMapped:false });
+scene.add(new THREE.Points(pg, pm));
+
+// ================= phases / state =================
+const hexC = h => new THREE.Color(h);
+const PRESET = {
+  MORNING:{ bg:0x2a2250, hemi:1.0, hemiG:0x4a3a80, sun:2.0, sunC:0xfff1d6, rune:0xf5c451, runeOp:.6, mon:0x7fe3ff, part:.25, partC:0xf5c451, sky:skyDay, spot:0, torch:.35, r:13.5, h:7.5, label:'ประชุมเช้า' },
+  VOTE:   { bg:0x3a1f2a, hemi:.6, hemiG:0x502030, sun:.7,  sunC:0xffa860, rune:0xff9a4d, runeOp:.9, mon:0xffd27f, part:.2,  partC:0xff9a4d, sky:skyDay, spot:1, torch:.8, r:9.5,  h:5.4, label:'โหวตไล่ออก' },
+  NIGHT:  { bg:0x07050f, hemi:.3, hemiG:0x241450, sun:.6, sunC:0x8a9cff, rune:0xb05cff, runeOp:1,  mon:0xb05cff, part:.9,  partC:0xb48cff, sky:skyNight, spot:0, torch:1, r:12.5, h:9.5, label:'กลางคืน — ลัทธิอู้งานออกล่า' },
+};
+let phase = 'MORNING', day = 1, mana = 1, orbit = true, secrets = false, camAngle = .3;
+const cur = { bg:hexC(0x2a2250), hemiG:hexC(0x4a3a80), sunC:hexC(0xfff1d6), rune:hexC(0xf5c451), mon:hexC(0x7fe3ff), partC:hexC(0xf5c451), hemi:1, sun:2, runeOp:.6, part:.25, spot:0, torch:.35, r:13.5, h:7.5, tgt:new THREE.Vector3(0, 1.5, 0), cry:hexC(0x9b6bff) };
+
+const msg = document.getElementById('msg'), fl = document.getElementById('flash');
+function say(t) { msg.textContent = t; msg.style.opacity = 1; clearTimeout(say.t); say.t = setTimeout(() => msg.style.opacity = 0, 1700); }
+function flash(a, c = '#000') { fl.style.background = c; fl.style.opacity = a; setTimeout(() => fl.style.opacity = 0, 350); }
+function setPhase(p) {
+  phase = p; document.getElementById('phase').textContent = PRESET[p].label;
+  document.querySelectorAll('[data-p]').forEach(b => b.classList.toggle('on', b.dataset.p === p));
+  say(PRESET[p].label); if (p === 'NIGHT') flash(.55);
+  if (p === 'VOTE') { const al = desks.filter(d => d.state === 'alive'); candidate = al[Math.floor(Math.random()*al.length)] || null; if (candidate) say('ผู้ถูกโหวตสูงสุด: ' + NAMES[candidate.i]); } else candidate = null;
+}
+document.querySelectorAll('[data-p]').forEach(b => b.onclick = () => setPhase(b.dataset.p));
+function renderHud() {
+  document.getElementById('days').innerHTML = DAYS.map((d, i) => `<span class="day ${i === day-1 ? 'now' : i < day-1 ? 'past' : ''}">${d}</span>`).join('');
+  document.getElementById('fill').style.width = (mana/MANA_MAX*100) + '%';
+  document.getElementById('manaTxt').textContent = `Mana Task ${mana}/${MANA_MAX}`;
+  drawBoard(day);
+}
+renderHud();
+const setMana = v => { mana = Math.max(0, Math.min(MANA_MAX, v)); renderHud(); };
+const f2c = { light:'light', dark:'dark', indie:'indie' };
+function refreshLabel(d) {
+  const R = ROLE[d.role];
+  if (d.state === 'fired') { d.el.className = 'tag ' + R.f; d.el.textContent = NAMES[d.i] + ' · ' + R.n; }
+  else if (d.state === 'burnout') { d.el.className = 'tag out'; d.el.textContent = NAMES[d.i] + (secrets ? ' · ' + R.n : ''); }
+  else if (secrets) { d.el.className = 'tag ' + R.f; d.el.textContent = NAMES[d.i] + ' · ' + R.n; }
+  else { d.el.className = 'tag'; d.el.textContent = NAMES[d.i]; }
+}
+document.getElementById('mp').onclick = () => { setMana(mana + 1); say(mana === MANA_MAX ? 'Mana เต็ม! ฝ่ายแสงใกล้ชนะ' : 'Mana +1'); };
+document.getElementById('mm').onclick = () => { setMana(mana - 1); flash(.3, '#3a0010'); say('Mana −1  (บั๊กโผล่!)'); };
+document.getElementById('next').onclick = () => { if (day < 5) { day++; clearChips(); expireTrap(); renderHud(); setPhase('MORNING'); } else say('วันศุกร์หมดแล้ว — Deadline มาถึง!'); };
+// mouse / touch camera: drag = rotate, wheel/pinch = zoom, right-drag = pan. First drag switches off the scripted camera.
+const controls = new OrbitControls(camera, canvas);
+controls.enableDamping = true; controls.dampingFactor = .08; controls.minDistance = 3; controls.maxDistance = 24; controls.maxPolarAngle = Math.PI*.49; controls.screenSpacePanning = true;
+let manual = false;
+const orbitBtn = document.getElementById('orbit');
+const setOrbitLabel = () => orbitBtn.textContent = manual ? '🎥 กลับกล้องอัตโนมัติ' : orbit ? '🎥 กล้องหมุน: เปิด' : '🎥 กล้องหมุน: ปิด';
+controls.addEventListener('start', () => { if (!manual) { manual = true; controls.target.set(cur.tgt.x, cur.tgt.y + 1.5, cur.tgt.z); controls.update(); setOrbitLabel(); } });
+orbitBtn.onclick = () => { if (manual) { manual = false; orbit = true; camAngle = Math.atan2(camera.position.x, camera.position.z); } else orbit = !orbit; setOrbitLabel(); };
+canvas.title = 'ลากเมาส์ = หมุนกล้อง · ล้อเมาส์ = ซูม · คลิกขวาลาก = เลื่อน';
+setOrbitLabel();
+document.getElementById('reroll').onclick = () => location.reload();
+document.getElementById('secret').onclick = e => { secrets = !secrets; e.target.textContent = '👁 มุมมอง Moderator: ' + (secrets ? 'เปิด' : 'ปิด'); document.getElementById('legend').style.display = secrets ? 'block' : 'none'; desks.forEach(refreshLabel); };
+const pickAlive = () => { const al = desks.filter(d => d.state === 'alive'); return al.length > 1 ? (candidate && candidate.state === 'alive' ? candidate : al[Math.floor(Math.random()*al.length)]) : null; };
+document.getElementById('fire').onclick = () => {                 // voted out → role + faction revealed with the real role card
+  const d = pickAlive(); if (!d) return; d.state = 'fired'; d.t = 0; candidate = null;
+  d.env = envelope(); d.env.position.set(0, 4, 1.4); d.g.add(d.env); refreshLabel(d);
+  say(NAMES[d.i] + ' ถูกไล่ออก — ' + ROLE[d.role].n + ' (' + FTH[ROLE[d.role].f] + ')'); flash(.25, '#fff');
+};
+function burnDesk(d) {                                            // night burnout → name only
+  d.state = 'burnout'; d.t = 0; refreshLabel(d);
+  d.hm.map = holoBurn; d.hm.color.set(0xff5c7a); d.hm.needsUpdate = true;
+  d.smoke = []; for (let k = 0; k < 3; k++) { const s = new THREE.Mesh(sph(.25, 10, 8), new THREE.MeshBasicMaterial({ color:0x888899, transparent:true, opacity:.3, depthWrite:false })); d.g.add(s); d.smoke.push({ s, p:k/3 }); }
+  say(NAMES[d.i] + ' ติด Burnout'); flash(.35, '#3a0010');
+}
+document.getElementById('burn').onclick = () => { const d = pickAlive(); if (d) burnDesk(d); };
+
+// =====================================================================
+//  EVENT / TRAP / BOOSTER simulation — data (names, text, card art) comes straight from app/src/shared/data.js
+// =====================================================================
+const extras = [], THUMB = '../app/public/thumbs/', wait = ms => new Promise(r => setTimeout(r, ms));
+const pick = a => a[Math.floor(Math.random()*a.length)], aliveDesks = () => desks.filter(d => d.state === 'alive');
+const capEl = document.getElementById('cap'), chipsEl = document.getElementById('chips'); let capTimer;
+function caption(title, desc, ms = 7000, cls = '') { document.getElementById('capT').textContent = title; document.getElementById('capD').textContent = desc; capEl.className = 'show ' + cls; clearTimeout(capTimer); capTimer = setTimeout(() => capEl.classList.remove('show'), ms); }
+function chip(text, kind, tip) { const c = document.createElement('div'); c.className = 'chip ' + kind; c.textContent = text; if (tip) c.title = tip; chipsEl.appendChild(c); }
+function clearChips() { chipsEl.innerHTML = ''; }
+// big announcement card (drops from above, faces camera; face-down = back shown)
+const bigTex = {}; const bigLoad = url => bigTex[url] || (bigTex[url] = (() => { const t = texLoader.load(url); t.colorSpace = THREE.SRGBColorSpace; t.anisotropy = 8; return t; })());
+const BW = 1.5, BH = BW*407/300, big = new THREE.Group(), bigPivot = new THREE.Group(); big.visible = false; big.add(bigPivot); scene.add(big);
+add(bigPivot, box(BW + .07, BH + .07, .05), gold(), 0, 0, 0, false);
+const bigFront = new THREE.Mesh(new THREE.PlaneGeometry(BW, BH), new THREE.MeshBasicMaterial({ toneMapped:false, transparent:true })); bigFront.position.z = .03; bigPivot.add(bigFront);
+const bigBack = new THREE.Mesh(new THREE.PlaneGeometry(BW, BH), new THREE.MeshBasicMaterial({ map:backTex, toneMapped:false })); bigBack.rotation.y = Math.PI; bigBack.position.z = -.03; bigPivot.add(bigBack);
+const bigHalo = new THREE.Mesh(new THREE.PlaneGeometry(BW*2.4, BH*1.8), new THREE.MeshBasicMaterial({ map:dotTex, transparent:true, opacity:0, blending:THREE.AdditiveBlending, depthWrite:false, toneMapped:false })); bigHalo.position.z = -.2; big.add(bigHalo);
+let bigS = null;
+function showBig(url, { face = true, color = 0xf5c451, hold = 6 } = {}) { bigFront.material.map = bigLoad(url); bigFront.material.needsUpdate = true; bigHalo.material.color.set(color); bigS = { t:0, hold, face }; big.visible = true; }
+extras.push((dt, t) => { if (!bigS) return; bigS.t += dt; const dr = Math.min(1, bigS.t/.9), e = 1 - Math.pow(1 - dr, 3), lv = Math.max(0, (bigS.t - bigS.hold)/.5);
+  big.position.set(0, 4.6 + (1 - e)*5 + Math.sin(t*1.6)*.07, 0); big.scale.setScalar(Math.max(.001, (.4 + .6*e)*(1 - lv))); big.rotation.y = Math.atan2(camera.position.x, camera.position.z);
+  bigPivot.rotation.y = (bigS.face ? 0 : Math.PI) + (1 - e)*Math.PI*2; bigHalo.material.opacity = .6*e*(1 - lv); if (lv >= 1) { big.visible = false; bigS = null; } });
+// player vote bubbles (✓ / ✗ / icons) tracked above each standee
+const bubs = [], bv = new THREE.Vector3();
+function bubble(d, text, cls, ms = 3600) { const el = document.createElement('div'); el.className = 'bub ' + cls; el.textContent = text; document.body.appendChild(el); bubs.push({ el, d, until:performance.now() + ms }); }
+extras.push(() => { const now = performance.now(); for (let i = bubs.length - 1; i >= 0; i--) { const b = bubs[i]; if (now > b.until) { b.el.remove(); bubs.splice(i, 1); continue; }
+  b.d.anchor.getWorldPosition(bv); bv.project(camera); b.el.style.display = bv.z < 1 ? '' : 'none'; b.el.style.transform = `translate(${(bv.x*.5 + .5)*innerWidth}px,${(-bv.y*.5 + .5)*innerHeight - 30}px) translate(-50%,-100%)`; } });
+async function voteSim(group, pYes) { let yes = 0, no = 0; for (const d of group) { const y = Math.random() < pYes; y ? yes++ : no++; bubble(d, y ? '✓' : '✗', y ? 'y' : 'n'); await wait(170); } return { yes, no }; }
+// expanding shockwave ring on the floor
+function pulse(x, z, color) { const m = new THREE.Mesh(new THREE.RingGeometry(.9, 1, 48), new THREE.MeshBasicMaterial({ color, transparent:true, opacity:.9, blending:THREE.AdditiveBlending, depthWrite:false, side:THREE.DoubleSide, toneMapped:false })); m.rotation.x = -Math.PI/2; m.position.set(x, .12, z); scene.add(m);
+  let u = 0; const fn = (dt) => { u += dt; m.scale.setScalar(.5 + u*6); m.material.opacity = Math.max(0, .9 - u*.75); if (u > 1.2) { scene.remove(m); extras.splice(extras.indexOf(fn), 1); } }; extras.push(fn); }
+let busy = false; const guarded = fn => async () => { if (busy) return; busy = true; try { await fn(); } finally { busy = false; } };
+const shuffled = () => [...aliveDesks()].sort(() => Math.random() - .5);
+
+// ---------- 🎴 Client Event (one per morning, Tue–Fri) ----------
+document.getElementById('evt').onclick = guarded(async () => {
+  const key = pick(Object.keys(EVENTS)), e = EVENTS[key]; if (phase !== 'MORNING') setPhase('MORNING');
+  showBig(THUMB + 'events/' + e.img, { color:0x4fd0ff, hold:7 });
+  caption(`🎴 Event Card #${e.n} · ${e.t}`, e.d + (day === 1 ? '\n(หมายเหตุ: ในเกมจริง Event เริ่มวันอังคาร)' : ''), 11000, 'evt'); await wait(2300);
+  if (e.now) { setMana(mana + e.now); flash(e.now > 0 ? .2 : .3, e.now > 0 ? '#fff4c0' : '#3a0010'); pulse(0, 0, e.now > 0 ? 0xf5c451 : 0xff5c7a); say(`Mana ${e.now > 0 ? '+' : '−'}${Math.abs(e.now)}`); chip(e.t, 'evt', e.d); }
+  else if (e.choice) {
+    say(`ทีมโหวต: ${e.yes} / ${e.no}`); const { yes, no } = await voteSim(aliveDesks(), .5), ok = yes > no; await wait(700);
+    caption(`🗳 ผลโหวต: ${ok ? e.yes : e.no}`, `${e.yes} ${yes} เสียง · ${e.no} ${no} เสียง\n${e.d}`, 8000, 'evt');
+    if (ok) { if (key === 'ot') { setMana(mana + 1); pulse(0, 0, 0xf5c451); } chip(`${e.t} · ${e.yes}`, 'evt', e.d); }
+    else if (key === 'prod') { setMana(mana - 2); flash(.35, '#3a0010'); chip(`${e.t} · ปฏิเสธ: Mana −2 + คืนนี้ถูกสาป 1 คน`, 'evt', e.d); }
+    else chip(`${e.t} · ปฏิเสธ`, 'evt', e.d);
+  } else if (key === 'leak') { const two = shuffled().slice(0, 2); two.forEach(d => bubble(d, '📧', 'y', 6000)); const same = Math.random() < .5; say(`ทั้งคู่ทำแอ็กชัน "${same ? 'เหมือนกัน' : 'ต่างกัน'}"`); chip(`${e.t} · ${NAMES[two[0].i]} & ${NAMES[two[1].i]}: ${same ? 'เหมือนกัน' : 'ต่างกัน'}`, 'evt', e.d); }
+  else if (key === 'uat') { const three = shuffled().slice(0, 3); three.forEach(d => bubble(d, '🔎', 'y', 6000)); const dk = three.some(d => ROLE[d.role].f === 'dark'); say(dk ? 'ตรวจ 3 คน: มีฝ่ายมืดอย่างน้อย 1 คน' : 'ตรวจ 3 คน: ไม่มีฝ่ายมืด'); chip(`${e.t} · ${dk ? 'พบฝ่ายมืด' : 'ไม่พบฝ่ายมืด'}`, 'evt', e.d); }
+  else if (key === 'hands') { const hs = shuffled().slice(0, 3); hs.forEach(d => bubble(d, 'ทีมเสริม · โหวต 0', 'n', 7000)); chip(`${e.t} · ${hs.map(d => NAMES[d.i]).join(', ')}`, 'evt', e.d); }
+  else { say(e.t); chip(e.t, 'evt', e.d); }
+});
+
+// ---------- 🪤 Trap (dark team sets it secretly at night; only the NAME is announced when it fires) ----------
+let placed = null;
+function expireTrap() { if (!placed) return; placed.sigil.parent.remove(placed.sigil); placed = null; }
+const sigilMat = () => new THREE.MeshBasicMaterial({ map:runes, color:0xff4d5e, transparent:true, opacity:0, blending:THREE.AdditiveBlending, depthWrite:false, toneMapped:false });
+document.getElementById('tplace').onclick = () => {
+  if (placed) { say('คืนนี้ฝ่ายมืดหมอบ Trap ไปแล้ว'); return; } if (phase !== 'NIGHT') setPhase('NIGHT');
+  const al = aliveDesks(), ok = k => { const n = TRAPS[k].need; return !n || n === 'any' || (n === 'dark' ? al.some(d => ROLE[d.role].f === 'dark') : al.some(d => ROLE[d.role].f !== 'dark')); };
+  const key = pick(Object.keys(TRAPS).filter(ok)), T = TRAPS[key];
+  const pool = T.need === 'dark' ? al.filter(d => ROLE[d.role].f === 'dark') : T.need === 'nondark' ? al.filter(d => ROLE[d.role].f !== 'dark') : T.need === 'any' ? al : [];
+  const target = pool.length ? pick(pool) : null;
+  const sigil = new THREE.Group(); const gl = new THREE.Mesh(new THREE.PlaneGeometry(target ? 1.5 : 5.6, target ? 1.5 : 5.6), sigilMat()); gl.rotation.x = -Math.PI/2; gl.position.y = .08; sigil.add(gl);
+  const mini = new THREE.Mesh(new THREE.PlaneGeometry(.55, .75), new THREE.MeshBasicMaterial({ map:bigLoad(THUMB + 'traps/' + T.img), transparent:true, side:THREE.DoubleSide, toneMapped:false })); mini.visible = false; sigil.add(mini);
+  if (target) { target.g.add(sigil); sigil.position.set(0, 0, .5); mini.position.set(0, 2.55, 0); } else { scene.add(sigil); mini.position.set(0, 3.3, 3.2); }
+  placed = { key, T, target, sigil, gl, mini };
+  if (secrets) caption(`🪤 [Moderator] ฝ่ายมืดหมอบ Trap: ${T.n}`, `${T.d}\nเป้าหมาย: ${target ? NAMES[target.i] + ' · ' + ROLE[target.role].n : 'ไม่ต้องเลือกเป้า (ทำงานส่วนกลาง)'}`, 8000, 'trap'); else say('ฝ่ายมืดเลือกแอ็กชันแล้ว…');
+};
+extras.push((dt, t) => { if (!placed) return; placed.gl.material.opacity += ((secrets ? .75 + Math.sin(t*4)*.15 : 0) - placed.gl.material.opacity)*.15; placed.gl.rotation.z += dt*.8; placed.mini.visible = secrets;
+  placed.mini.rotation.y = Math.atan2(camera.position.x, camera.position.z) - (placed.target ? placed.target.g.rotation.y : 0); });
+document.getElementById('ttrig').onclick = guarded(async () => {
+  if (!placed) { say('ยังไม่มี Trap ที่หมอบไว้ (กด "วาง Trap" ก่อน)'); return; } const p = placed; placed = null;
+  showBig(THUMB + 'traps/' + p.T.img, { face:secrets, color:0xb05cff, hold:5 }); flash(.35, '#2a0b3d');
+  caption(`🪤 Trap ทำงาน: ${p.T.n}`, secrets ? `${p.T.d}${p.target ? '\n[Moderator] เป้าหมาย: ' + NAMES[p.target.i] : ''}` : 'ระบบประกาศเฉพาะชื่อ Trap — รายละเอียดแจ้งเจ้าของแบบลับ', 8000, 'trap');
+  if (p.target) { const w = new THREE.Vector3(); p.target.g.getWorldPosition(w); pulse(w.x, w.z, 0xff4d5e); if (secrets) bubble(p.target, '🪤', 'n', 5000); } else pulse(0, 0, 0xff4d5e);
+  chip('Trap: ' + p.T.n, 'trap', 'ประกาศเฉพาะชื่อ'); await wait(900); p.sigil.parent.remove(p.sigil);
+});
+
+// ---------- 🚀 Sprint Booster (public vote in the morning, once per game) ----------
+let boosterUsed = false;
+document.getElementById('boost').onclick = guarded(async () => {
+  if (boosterUsed) { say('Sprint Booster ใช้ไปแล้ว (1 ครั้ง/เกม)'); return; } if (phase !== 'MORNING') setPhase('MORNING');
+  caption('🚀 โหวตเปิด Sprint Booster', 'ทุกคนโหวตสาธารณะ · ต้องได้เสียงข้างมาก (เสมอ = ไม่เปิดใช้) · ใช้ได้ 1 ครั้ง/เกม', 6500, 'boost');
+  const { yes, no } = await voteSim(aliveDesks(), .6); await wait(900); const ok = yes > no;
+  if (!ok) { caption('🚀 Sprint Booster ไม่ผ่าน', `ผลโหวต ${yes}–${no} — ยังไม่เปิดใช้ (ลองใหม่ได้)`, 5000, 'boost'); return; }
+  boosterUsed = true; const k = pick(Object.keys(BOOSTERS)), b = BOOSTERS[k]; document.getElementById('boost').textContent = '🚀 Booster (ใช้แล้ว)';
+  showBig(THUMB + 'boosters/' + b.img, { color:0xf5c451, hold:7 }); flash(.25, '#fff4c0'); pulse(0, 0, 0xf5c451);
+  caption(`🚀 Sprint Booster: ${b.n}`, `ผลโหวต ${yes}–${no} ผ่าน\n${b.d}`, 9000, 'boost'); chip('Booster: ' + b.n, 'boost', b.d);
+});
+desks.forEach(refreshLabel);
+
+// ================= loop =================
+function resize() { const w = innerWidth, h = innerHeight; renderer.setSize(w, h, false); composer.setSize(w, h); bloom.setSize(w, h); camera.aspect = w/h; camera.updateProjectionMatrix(); }
+addEventListener('resize', resize); resize();
+const clock = new THREE.Clock(), v = new THREE.Vector3();
+const fw2 = new THREE.Vector3(); let focus = null; const fw = new THREE.Vector3(), fpos = new THREE.Vector3(), focusLook = new THREE.Vector3(), flook = new THREE.Vector3(0, 1.5, 0);
+document.getElementById('focus').onclick = e => { focus = focus === null ? 0 : focus + 1 >= N ? null : focus + 1; if (focus === null && manual) { controls.target.copy(flook); controls.update(); } e.target.textContent = focus === null ? '🔍 ดูตัวละคร' : `🔍 ${NAMES[focus]} · ${ROLE[desks[focus].role].n} (ถัดไป)`; };
+const lowC = hexC(0xff5c7a), midC = hexC(0x9b6bff), hiC = hexC(0x6fd0ff), tmpC = new THREE.Color();
+function tint(d, k) { d.worker.traverse(o => { if (!o.material || o === d.ring) return; (Array.isArray(o.material) ? o.material : [o.material]).forEach(mt => { if (mt.userData.c0 && mt.color) { mt.color.copy(mt.userData.c0).multiplyScalar(1 - .65*k).lerp(tmpC.set(0x555566), .5*k); if ('emissiveIntensity' in mt) mt.emissiveIntensity = (mt.userData.e0 || 0)*(1 - k); } }); }); }
+
+function frame() {
+  const dt = Math.min(clock.getDelta(), .05), t = clock.elapsedTime, k = 1 - Math.pow(.02, dt), T = PRESET[phase];
+  for (const [key, h] of [['bg', T.bg], ['hemiG', T.hemiG], ['sunC', T.sunC], ['rune', T.rune], ['mon', T.mon], ['partC', T.partC]]) cur[key].lerp(tmpC.set(h), k);
+  for (const key of ['hemi', 'sun', 'runeOp', 'part', 'spot', 'torch', 'r', 'h']) cur[key] += (T[key] - cur[key]) * k;
+  scene.background.copy(cur.bg); scene.fog.color.copy(cur.bg);
+  hemi.intensity = cur.hemi; hemi.groundColor.copy(cur.hemiG); sun.intensity = cur.sun; sun.color.copy(cur.sunC);
+  torchLights.forEach((l, i) => l.intensity = (6 + cur.torch*14) * (.9 + Math.sin(t*9 + i*2)*.1));
+  runeA.material.color.copy(cur.rune); runeB.material.color.copy(cur.rune); runeA.material.opacity = runeB.material.opacity = cur.runeOp * (.85 + .15*Math.sin(t*2));
+  runeA.rotation.z += dt*.08; runeB.rotation.z -= dt*.15;
+  if (winMat.map !== T.sky) { winMat.map = T.sky; winMat.needsUpdate = true; }
+  pm.color.copy(cur.partC); pm.opacity = cur.part * .8;
+  flames.forEach((f, i) => { f.scale.set(1, .85 + Math.sin(t*10 + i*1.7)*.2, 1); });
+
+  const f = mana/MANA_MAX; (f < .5 ? cur.cry.copy(lowC).lerp(midC, f*2) : cur.cry.copy(midC).lerp(hiC, (f - .5)*2));
+  crystalMat.color.copy(cur.cry); crystalMat.emissive.copy(cur.cry); crystalMat.emissiveIntensity = .6 + f*2.2 + Math.sin(t*3)*.15;
+  crystalLight.color.copy(cur.cry); crystalLight.intensity = (phase === 'NIGHT' ? 22 : 12) * (.4 + f*.9);
+  crystal.rotation.y = t*.8; crystal.position.set(0, 2.5 + Math.sin(t*1.5)*.12, 0); crystal.scale.set(.8 + f*.4, (.8 + f*.4)*1.5, .8 + f*.4);
+  gyro1.position.copy(crystal.position); gyro2.position.copy(crystal.position); gyro1.rotation.set(t*.7, t*.4, 0); gyro2.rotation.set(t*-.5, 0, t*.6);
+  orbs.forEach((o, i) => { const a = t*.9 + i/MANA_MAX*6.283; o.position.set(Math.cos(a)*1.55, 2.5 + Math.sin(t*2 + i)*.12, Math.sin(a)*1.55); const on = i < mana; o.material.emissiveIntensity = on ? 2.2 : 0; o.material.color.set(on ? 0x4f8cff : 0x222233); });
+
+  extras.forEach(fn => fn(dt, t));
+
+  const tgt = candidate && phase === 'VOTE' ? candidate.g.getWorldPosition(v).multiplyScalar(.55) : v.set(0, 1.6, 0);
+  tgt.y = 1.6; cur.tgt.lerp(tgt, k);
+  if (candidate && phase === 'VOTE') { candidate.worker.getWorldPosition(spot.target.position); spot.position.set(spot.target.position.x, 10, spot.target.position.z); beam.position.set(spot.target.position.x, 5, spot.target.position.z); }
+  spot.intensity = cur.spot * 260; beam.visible = cur.spot > .05; beam.material.opacity = cur.spot * .1;
+
+  if (orbit) camAngle += dt*(phase === 'NIGHT' ? .05 : .08);
+  controls.enabled = focus === null;
+  if (focus !== null) {                                              // character close-up: stand in front of them
+    const d = desks[focus]; d.worker.getWorldPosition(fw); const dir = v.set(-fw.x, 0, -fw.z).normalize();
+    fpos.set(fw.x + dir.x*3.1, 1.75, fw.z + dir.z*3.1); focusLook.set(fw.x, 1.25, fw.z);
+    camera.position.lerp(fpos, 1 - Math.pow(.003, dt)); flook.lerp(focusLook, 1 - Math.pow(.003, dt)); camera.lookAt(flook);
+  } else if (manual) {
+    controls.update(); flook.copy(controls.target);
+  } else {
+    camera.position.set(Math.sin(camAngle)*cur.r*.55, cur.h, Math.cos(camAngle)*cur.r*.9 + 2); camera.lookAt(cur.tgt.x, cur.tgt.y + (phase === 'VOTE' ? .4 : 1.5), cur.tgt.z); flook.set(cur.tgt.x, cur.tgt.y + 1.5, cur.tgt.z);
+  }
+
+  for (const d of desks) {
+    d.t += dt;
+    const showAura = secrets && d.state !== 'fired' && false;
+    d.worker.getWorldPosition(fw2); let loc = Math.atan2(camera.position.x - fw2.x, camera.position.z - fw2.z) - d.g.rotation.y; loc = Math.atan2(Math.sin(loc), Math.cos(loc));
+    const faceUp = d.state === 'fired' || (secrets && d.state === 'alive') || focus === d.i;       // flip card to show the role art
+    d.flip += ((faceUp ? 0 : 1) - d.flip)*(1 - Math.pow(.0015, dt)); d.pivot.rotation.y = d.flip*Math.PI;
+    if (d.state === 'alive') {
+      d.worker.rotation.y += (THREE.MathUtils.clamp(loc, -.9, .9) - d.worker.rotation.y)*(1 - Math.pow(.02, dt));
+      d.pivot.position.y = .15 + CARD_H/2 + .06 + Math.sin(t*1.8 + d.bob)*.04 + Math.sin(d.flip*Math.PI)*.18;             // hover + lift while flipping
+      d.pivot.rotation.z = Math.sin(t*1.1 + d.bob)*.02 + (phase === 'NIGHT' ? Math.sin(t*3 + d.bob)*.03 : 0);
+      d.hm.color.copy(cur.mon); d.ring.material.opacity += ((showAura ? .7 : 0) - d.ring.material.opacity)*k; d.halo.material.opacity += ((faceUp ? .35 : 0) - d.halo.material.opacity)*k;
+    } else if (d.state === 'burnout') {
+      const u = Math.min(1, d.t*1.2); d.worker.rotation.x = u*1.35; d.worker.position.y = u*.1; tint(d, u);
+      d.smoke.forEach(sm => { const p = (sm.p + d.t*.25) % 1; sm.s.position.set(0, .8 + p*1.6, .5); sm.s.scale.setScalar(.5 + p*1.6); sm.s.material.opacity = .32*(1 - p); });
+      d.ring.material.opacity += ((showAura ? .7 : 0) - d.ring.material.opacity)*k; d.halo.material.opacity = 0;
+    } else if (d.state === 'fired') {
+      d.worker.rotation.y += (THREE.MathUtils.clamp(loc, -.9, .9) - d.worker.rotation.y)*(1 - Math.pow(.02, dt));
+      d.pivot.position.y = .15 + CARD_H/2 + .12 + Math.sin(t*1.8 + d.bob)*.05; d.halo.material.opacity = .55 + Math.sin(t*3)*.15; d.ring.material.opacity = 0;
+      d.hm.color.set(0x222222);
+      const e = Math.min(1, d.t/1.4); d.env.position.y = 4 - e*3.0 + (e < 1 ? Math.sin(t*5)*.05 : 0); d.env.rotation.y = (1 - e)*Math.PI*3 + .3; d.env.rotation.x = (1 - e)*.6;
+    }
+    if (showAura) d.ring.rotation.z += dt;
+    d.hf.forEach(b => b.material.emissive.copy(d.state === 'alive' ? cur.mon : tmpC.set(d.state === 'burnout' ? 0xff5c7a : 0x222222)));
+    d.holo.position.y = 2.1 + Math.sin(t*1.2 + d.bob)*.05; d.anim(t, d.bob);
+    d.anchor.getWorldPosition(v); v.project(camera);
+    d.el.style.display = v.z < 1 ? '' : 'none';
+    d.el.style.transform = `translate(${(v.x*.5 + .5)*innerWidth}px,${(-v.y*.5 + .5)*innerHeight}px) translate(-50%,-50%)`;
+  }
+  for (const c of fx) { c.t += dt; const u = Math.min(1, c.t/1.2); c.card.position.y = 1.2 + u*1.5 + Math.sin(t*1.5)*.04; c.card.scale.setScalar(.2 + u*.8); c.card.rotation.y = (1 - u)*Math.PI*2 + Math.sin(t*.8)*.1; }
+  const a = pg.attributes.position; for (let i = 0; i < P; i++) { let y = a.getY(i) + pv[i]*dt; if (y > 7) y = 0; a.setY(i, y); a.setX(i, a.getX(i) + Math.sin(t + i)*dt*.2); } a.needsUpdate = true;
+  composer.render();
+  requestAnimationFrame(frame);
+}
+frame();
+</script>
+</body>
+</html>

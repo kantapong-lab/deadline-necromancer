@@ -1,0 +1,385 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Deadline Necromancer — Agency HQ (3D theme)</title>
+<style>
+  :root{--bg:#0f0d1a;--panel:#181528;--panel2:#201c36;--line:#33294f;--txt:#ebe7f7;--mut:#9a92b8;
+        --light:#f5c451;--dark:#b05cff;--indie:#4ecdc4;--bad:#ff5c7a;--good:#5fe39a}
+  *{box-sizing:border-box}
+  html,body{margin:0;height:100%;background:var(--bg);overflow:hidden;color:var(--txt);font-family:"Segoe UI","Noto Sans Thai",Tahoma,sans-serif}
+  #c{position:fixed;inset:0;width:100%;height:100%;display:block}
+  button{font:inherit;color:inherit;cursor:pointer}
+  .top{position:fixed;left:0;right:0;top:0;display:flex;align-items:center;gap:20px;padding:10px 20px;background:#120f20d9;border-bottom:1px solid var(--line);backdrop-filter:blur(6px);z-index:5}
+  .brand{font-weight:700;letter-spacing:.3px}
+  .days{display:flex;gap:4px}
+  .day{padding:3px 9px;border-radius:6px;background:var(--panel2);font-size:12px;color:var(--mut)}
+  .day.now{background:var(--dark);color:#fff} .day.past{opacity:.5}
+  .mana{flex:1;max-width:380px}
+  .mana .bar{height:12px;background:var(--panel2);border-radius:99px;overflow:hidden;border:1px solid var(--line)}
+  .mana .fill{height:100%;background:linear-gradient(90deg,#4f8cff,#9b6bff);transition:width .5s}
+  .mana small{color:var(--mut);font-size:12px}
+  .phase{margin-left:auto;font-weight:600;color:var(--light)}
+  .bar2{position:fixed;left:50%;bottom:14px;transform:translateX(-50%);display:flex;gap:8px;flex-wrap:wrap;justify-content:center;width:calc(100% - 32px);z-index:5}
+  .btn{background:var(--panel2);border:1px solid var(--line);padding:8px 14px;border-radius:8px;transition:.15s}
+  .btn:hover{border-color:var(--dark);background:#2a2447}
+  .btn.on{background:linear-gradient(135deg,#7c3aed,#b05cff);border:0;font-weight:600}
+  .btn.sel{border-color:var(--light);box-shadow:0 0 0 1px var(--light) inset}
+  .sep{width:1px;background:var(--line);margin:0 4px}
+  #flash{position:fixed;inset:0;pointer-events:none;background:#000;opacity:0;transition:opacity .6s}
+  #msg{position:fixed;left:50%;top:40%;transform:translate(-50%,-50%);font-size:34px;font-weight:700;text-shadow:0 2px 14px #000;opacity:0;transition:opacity .5s;pointer-events:none;text-align:center;z-index:4}
+  .tag{position:fixed;left:0;top:0;pointer-events:none;background:#181528e6;border:1px solid var(--line);color:#fff;font-weight:600;font-size:13px;padding:2px 10px;border-radius:99px;white-space:nowrap;z-index:3}
+  .tag.light{border-color:var(--light);color:var(--light)} .tag.dark{border-color:var(--dark);color:var(--dark)} .tag.indie{border-color:var(--indie);color:var(--indie)}
+  .tag.out{border-color:#555;color:#999;text-decoration:line-through}
+</style>
+<script type="importmap">
+{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+            "three/addons/":"https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"}}
+</script>
+</head>
+<body>
+<canvas id="c"></canvas>
+<div class="top">
+  <div class="brand">🧙 Deadline Necromancer</div>
+  <div class="days" id="days"></div>
+  <div class="mana"><div class="bar"><div class="fill" id="fill"></div></div><small id="manaTxt"></small></div>
+  <div class="phase" id="phase">ประชุมเช้า</div>
+</div>
+<div id="msg"></div><div id="flash"></div>
+<div class="bar2">
+  <button class="btn on" data-p="MORNING">☀ ประชุมเช้า</button>
+  <button class="btn" data-p="VOTE">🗳 โหวต</button>
+  <button class="btn" data-p="NIGHT">🌙 กลางคืน</button>
+  <span class="sep"></span>
+  <button class="btn" id="fire">📨 ไล่ออก (ซองขาว)</button>
+  <button class="btn" id="burn">🔥 Burnout</button>
+  <button class="btn" id="trap">🪤 Trap</button>
+  <button class="btn" id="mp">Mana +1</button>
+  <button class="btn" id="mm">Mana −1</button>
+  <span class="sep"></span>
+  <button class="btn" id="secret">👁 มุมมอง Moderator: ปิด</button>
+  <button class="btn" id="next">⏭ วันถัดไป</button>
+  <button class="btn" id="orbit">🎥 กล้องหมุน</button>
+</div>
+
+<script type="module">
+import * as THREE from 'three';
+import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
+import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
+import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js';
+import { OutputPass } from 'three/addons/postprocessing/OutputPass.js';
+
+// ================= game-facing data (mirrors the real game) =================
+const N = 9, MANA_MAX = Math.floor(N / 2);
+const FACTION = { light:{c:0xf5c451, th:'ฝ่ายแสง'}, dark:{c:0xb05cff, th:'ฝ่ายมืด'}, indie:{c:0x4ecdc4, th:'ฝ่ายอิสระ'} };
+const NAMES = ['มด','พี่เอก','น้องฟ้า','โอ๊ต','มิ้นท์','บอส','ฝน','ต้น','เจ'];
+const DAYS = ['จ','อ','พ','พฤ','ศ'], DAY_FULL = ['Monday','Tuesday','Wednesday','Thursday','Friday'];
+const TRAPS = ['Blame Shifting','NDA Silence','PIP Curse'];
+const factions = ['light','light','light','light','dark','dark','dark','indie','indie'].sort(() => Math.random() - .5);
+
+// ================= renderer / post =================
+const canvas = document.getElementById('c');
+const renderer = new THREE.WebGLRenderer({ canvas, antialias:true });
+renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+renderer.shadowMap.enabled = true; renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+renderer.toneMapping = THREE.ACESFilmicToneMapping; renderer.toneMappingExposure = 1.05;
+const scene = new THREE.Scene();
+scene.background = new THREE.Color(0x2a2250); scene.fog = new THREE.Fog(0x2a2250, 16, 40);
+const camera = new THREE.PerspectiveCamera(50, 1, .1, 90);
+const composer = new EffectComposer(renderer);
+composer.addPass(new RenderPass(scene, camera));
+const bloom = new UnrealBloomPass(new THREE.Vector2(1, 1), .65, .6, .82);
+composer.addPass(bloom); composer.addPass(new OutputPass());
+
+// ================= helpers =================
+const std = (c, o = {}) => new THREE.MeshStandardMaterial({ color:c, roughness:.8, metalness:.05, ...o });
+const glow = (c, i = 1.5, o = {}) => new THREE.MeshStandardMaterial({ color:0x000000, emissive:c, emissiveIntensity:i, ...o });
+const box = (w, h, d, m, p, x = 0, y = 0, z = 0) => { const o = new THREE.Mesh(new THREE.BoxGeometry(w, h, d), m); o.position.set(x, y, z); o.castShadow = o.receiveShadow = true; p?.add(o); return o; };
+const cyl = (rt, rb, h, m, p, x = 0, y = 0, z = 0, seg = 20) => { const o = new THREE.Mesh(new THREE.CylinderGeometry(rt, rb, h, seg), m); o.position.set(x, y, z); o.castShadow = o.receiveShadow = true; p?.add(o); return o; };
+function tex(w, h, fn) { const c = document.createElement('canvas'); c.width = w; c.height = h; fn(c.getContext('2d'), w, h); const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace; t.anisotropy = 4; return t; }
+const rnd = (() => { let s = 7; return () => (s = (s * 16807) % 2147483647) / 2147483647; })();
+
+// ================= textures =================
+function cityTex(night) {
+  return tex(2048, 440, (x, w, h) => {
+    const g = x.createLinearGradient(0, 0, 0, h);
+    if (night) { g.addColorStop(0, '#07050f'); g.addColorStop(1, '#2a1650'); } else { g.addColorStop(0, '#8fb4e8'); g.addColorStop(1, '#e6d6ff'); }
+    x.fillStyle = g; x.fillRect(0, 0, w, h);
+    if (night) { x.fillStyle = '#fff'; for (let i = 0; i < 120; i++) x.fillRect(rnd()*w, rnd()*h*.6, 2, 2);
+      const m = x.createRadialGradient(1500, 90, 6, 1500, 90, 90); m.addColorStop(0, '#fff'); m.addColorStop(.25, '#e9e4ff'); m.addColorStop(1, '#e9e4ff00'); x.fillStyle = m; x.beginPath(); x.arc(1500, 90, 90, 0, 7); x.fill(); }
+    else { const s = x.createRadialGradient(400, 110, 4, 400, 110, 130); s.addColorStop(0, '#fff8d0'); s.addColorStop(1, '#fff8d000'); x.fillStyle = s; x.beginPath(); x.arc(400, 110, 130, 0, 7); x.fill(); }
+    for (let layer = 0; layer < 2; layer++) {
+      let bx = -20;
+      while (bx < w) {
+        const bw = 60 + rnd()*90, bh = (layer ? 120 : 190) + rnd()*(layer ? 120 : 170);
+        x.fillStyle = night ? (layer ? '#150d2b' : '#0c0818') : (layer ? '#9aa8d6' : '#7d8cc4'); x.fillRect(bx, h - bh, bw, bh);
+        if (night) for (let wy = h - bh + 12; wy < h - 10; wy += 16) for (let wx = bx + 8; wx < bx + bw - 10; wx += 14)
+          if (rnd() < .35) { x.fillStyle = rnd() < .2 ? '#b05cff' : '#f5c451'; x.fillRect(wx, wy, 6, 8); }
+        bx += bw + 6 + rnd()*14;
+      }
+    }
+  });
+}
+const cityDay = cityTex(false), cityNight = cityTex(true);
+
+function runeTex() {
+  return tex(1024, 1024, (x) => {
+    x.translate(512, 512); x.strokeStyle = x.fillStyle = '#fff'; x.textAlign = 'center'; x.textBaseline = 'middle';
+    const ring = (r, lw) => { x.lineWidth = lw; x.beginPath(); x.arc(0, 0, r, 0, 7); x.stroke(); };
+    ring(500, 8); ring(468, 3); ring(340, 4); ring(150, 5);
+    for (let i = 0; i < 72; i++) { const a = i/72*6.283, l = i % 6 ? 14 : 28; x.lineWidth = 3; x.beginPath(); x.moveTo(Math.cos(a)*468, Math.sin(a)*468); x.lineTo(Math.cos(a)*(468 + l), Math.sin(a)*(468 + l)); x.stroke(); }
+    const R = 'ᚠᚢᚦᚨᚱᚲᚷᚹᚺᚾᛁᛃᛇᛈᛉᛊᛏᛒᛖᛗᛚᛜᛞᛟ'; x.font = '56px "Segoe UI Historic","Segoe UI Symbol",serif';
+    for (let i = 0; i < 24; i++) { const a = i/24*6.283; x.save(); x.rotate(a + 1.5708); x.fillText(R[i], 0, -405); x.restore(); }
+    x.lineWidth = 5; x.beginPath(); for (let i = 0; i <= 5; i++) { const a = (i*2/5)*6.283 - 1.5708; const px = Math.cos(a)*335, py = Math.sin(a)*335; i ? x.lineTo(px, py) : x.moveTo(px, py); } x.stroke();
+    x.beginPath(); for (let i = 0; i <= 6; i++) { const a = (i/6)*6.283; i ? x.lineTo(Math.cos(a)*150, Math.sin(a)*150) : x.moveTo(150, 0); } x.stroke();
+  });
+}
+const runes = runeTex();
+const screenCode = tex(256, 160, (x, w, h) => { x.fillStyle = '#10142a'; x.fillRect(0, 0, w, h); x.fillStyle = '#fff';
+  for (let i = 0; i < 10; i++) { x.globalAlpha = .45 + rnd()*.5; x.fillRect(14 + (i % 3)*10, 12 + i*14, 40 + rnd()*150, 6); } });
+const screenBurn = tex(256, 160, (x, w, h) => { x.fillStyle = '#2a0710'; x.fillRect(0, 0, w, h); x.fillStyle = '#ff5c7a'; x.font = '700 30px system-ui'; x.textAlign = 'center'; x.fillText('BURNOUT', w/2, h/2); x.font = '60px system-ui'; x.fillText('🔥', w/2, h/2 + 52); });
+const dotTex = tex(64, 64, (x) => { const g = x.createRadialGradient(32, 32, 0, 32, 32, 32); g.addColorStop(0, '#fff'); g.addColorStop(1, '#fff0'); x.fillStyle = g; x.fillRect(0, 0, 64, 64); });
+
+// ================= room =================
+const floor = new THREE.Mesh(new THREE.CircleGeometry(16, 64), std(0x17132a, { roughness:.55, metalness:.2 })); floor.rotation.x = -Math.PI/2; floor.receiveShadow = true; scene.add(floor);
+const winMat = new THREE.MeshBasicMaterial({ map:cityDay, fog:false });
+const win = new THREE.Mesh(new THREE.PlaneGeometry(30, 4.4), winMat); win.position.set(0, 4.4, -11.78); scene.add(win);
+const frameM = std(0x1d1833);
+box(31, .3, .5, frameM, scene, 0, 6.65, -11.7); box(31, .3, .5, frameM, scene, 0, 2.15, -11.7);
+for (const mx of [-15, -10, -5, 0, 5, 10, 15]) box(.3, 4.4, .4, frameM, scene, mx, 4.4, -11.7);
+box(31, 9, .4, std(0x241d40), scene, 0, 3.9, -12.1).scale.y = 1.2;
+const wallFill = new THREE.Mesh(new THREE.PlaneGeometry(31, 2.2), std(0x241d40)); wallFill.position.set(0, 1.05, -11.85); scene.add(wallFill);
+
+// agency sign (neon)
+const sign = new THREE.Mesh(new THREE.PlaneGeometry(13, 1.3), new THREE.MeshBasicMaterial({ map: tex(1600, 160, (x, w, h) => {
+  const g = x.createLinearGradient(0, 0, w, 0); g.addColorStop(0, '#f5c451'); g.addColorStop(.5, '#ffffff'); g.addColorStop(1, '#b05cff');
+  x.fillStyle = g; x.font = '800 92px "Segoe UI",system-ui'; x.textAlign = 'center'; x.textBaseline = 'middle'; x.fillText('DEADLINE NECROMANCER', w/2, h/2 - 8);
+  x.font = '30px "Noto Sans Thai",system-ui'; x.fillStyle = '#c9bff0'; x.fillText('MAGIC AGENCY  ·  ปั่นงานให้ทัน ก่อนวิญญาณจะหลุด', w/2, h - 22); }), transparent:true, toneMapped:false }));
+sign.position.set(0, 7.35, -11.45); scene.add(sign);
+
+// weekday board (redrawn each day)
+const boardCv = document.createElement('canvas'); boardCv.width = 1024; boardCv.height = 560;
+const boardTex = new THREE.CanvasTexture(boardCv); boardTex.colorSpace = THREE.SRGBColorSpace;
+function drawBoard(day) {
+  const x = boardCv.getContext('2d'); x.fillStyle = '#181528'; x.fillRect(0, 0, 1024, 560); x.strokeStyle = '#33294f'; x.lineWidth = 8; x.strokeRect(4, 4, 1016, 552);
+  x.fillStyle = '#9a92b8'; x.font = '600 34px "Noto Sans Thai",system-ui'; x.textAlign = 'center'; x.fillText('SPRINT  ·  5 WORKING DAYS', 512, 58);
+  for (let i = 0; i < 5; i++) {
+    const cx = 100 + i*206, now = i === day - 1, past = i < day - 1;
+    x.fillStyle = now ? '#b05cff' : '#201c36'; x.beginPath(); x.roundRect(cx - 88, 100, 176, 380, 18); x.fill();
+    if (now) { x.strokeStyle = '#f5c451'; x.lineWidth = 6; x.stroke(); }
+    x.globalAlpha = past ? .35 : 1; x.fillStyle = '#fff'; x.font = '800 92px "Noto Sans Thai",system-ui'; x.fillText(DAYS[i], cx, 220);
+    x.font = '26px system-ui'; x.fillStyle = now ? '#fff' : '#9a92b8'; x.fillText(DAY_FULL[i], cx, 270);
+    if (i === 4) { x.fillStyle = '#ff5c7a'; x.font = '800 34px system-ui'; x.fillText('DEADLINE', cx, 420); x.font = '60px system-ui'; x.fillText('💀', cx, 360); }
+    if (past) { x.strokeStyle = '#ff5c7a'; x.lineWidth = 14; x.beginPath(); x.moveTo(cx - 60, 320); x.lineTo(cx + 60, 440); x.moveTo(cx + 60, 320); x.lineTo(cx - 60, 440); x.stroke(); }
+    x.globalAlpha = 1;
+  }
+  boardTex.needsUpdate = true;
+}
+const board = new THREE.Mesh(new THREE.PlaneGeometry(5.2, 2.84), new THREE.MeshBasicMaterial({ map:boardTex, toneMapped:false })); board.position.set(0, 4.4, -11.55); scene.add(board);
+box(5.4, 3.04, .1, frameM, scene, 0, 4.4, -11.62);
+
+// ================= rune circle (floor) =================
+const runeMat = (op) => new THREE.MeshBasicMaterial({ map:runes, color:0xf5c451, transparent:true, opacity:op, blending:THREE.AdditiveBlending, depthWrite:false, toneMapped:false });
+const runeA = new THREE.Mesh(new THREE.PlaneGeometry(11.6, 11.6), runeMat(.7)); runeA.rotation.x = -Math.PI/2; runeA.position.y = .03; scene.add(runeA);
+const runeB = new THREE.Mesh(new THREE.PlaneGeometry(6.2, 6.2), runeMat(.7)); runeB.rotation.x = -Math.PI/2; runeB.position.y = .04; scene.add(runeB);
+
+// ================= centre: meeting table + Mana Task crystal =================
+const dais = new THREE.Group(); scene.add(dais);
+cyl(1.7, 1.9, .2, std(0x2a2147, { metalness:.4, roughness:.35 }), dais, 0, .9, 0, 40);
+cyl(.35, .6, .85, std(0x1d1833), dais, 0, .42, 0);
+const crystalMat = new THREE.MeshStandardMaterial({ color:0x9b6bff, emissive:0x9b6bff, emissiveIntensity:1.6, roughness:.15, metalness:.1, transparent:true, opacity:.9, flatShading:true });
+const crystal = new THREE.Mesh(new THREE.OctahedronGeometry(.62, 0), crystalMat); crystal.scale.y = 1.5; crystal.position.y = 2.5; crystal.castShadow = true; scene.add(crystal);
+const crystalLight = new THREE.PointLight(0x9b6bff, 18, 12, 1.6); crystalLight.position.set(0, 2.5, 0); scene.add(crystalLight);
+const orbs = []; for (let i = 0; i < MANA_MAX; i++) { const o = new THREE.Mesh(new THREE.SphereGeometry(.15, 16, 12), new THREE.MeshStandardMaterial({ color:0x222233, emissive:0x4f8cff, emissiveIntensity:0 })); scene.add(o); orbs.push(o); }
+// trap card (name only is announced)
+const trapCv = document.createElement('canvas'); trapCv.width = 512; trapCv.height = 720; const trapTex = new THREE.CanvasTexture(trapCv); trapTex.colorSpace = THREE.SRGBColorSpace;
+const trapCard = new THREE.Mesh(new THREE.PlaneGeometry(1.5, 2.1), new THREE.MeshBasicMaterial({ map:trapTex, side:THREE.DoubleSide, toneMapped:false })); trapCard.visible = false; trapCard.position.set(0, 3.9, 0); scene.add(trapCard);
+let trapT = -1;
+function showTrap(name) {
+  const x = trapCv.getContext('2d'); const g = x.createLinearGradient(0, 0, 0, 720); g.addColorStop(0, '#2a0b3d'); g.addColorStop(1, '#10061a'); x.fillStyle = g; x.fillRect(0, 0, 512, 720);
+  x.strokeStyle = '#b05cff'; x.lineWidth = 14; x.strokeRect(10, 10, 492, 700); x.fillStyle = '#b05cff'; x.textAlign = 'center';
+  x.font = '800 40px system-ui'; x.fillText('TRAP CARD', 256, 90); x.font = '170px system-ui'; x.fillText('🪤', 256, 330);
+  x.fillStyle = '#fff'; x.font = '800 54px system-ui'; x.fillText(name, 256, 520); x.fillStyle = '#9a92b8'; x.font = '28px "Noto Sans Thai",system-ui'; x.fillText('ทำงานแล้ว', 256, 600);
+  trapTex.needsUpdate = true; trapT = 0; trapCard.visible = true;
+}
+
+// ================= desks / players =================
+const desks = [], labelsEl = document.body.appendChild(document.createElement('div'));
+const deskWood = std(0x6b5440, { roughness:.6 });
+for (let i = 0; i < N; i++) {
+  const a = i/N*Math.PI*2, R = 6.2, g = new THREE.Group();
+  g.position.set(Math.sin(a)*R, 0, Math.cos(a)*R); g.rotation.y = a + Math.PI; scene.add(g);
+  box(2, .1, 1.1, deskWood, g, 0, .8, 0); for (const sx of [-.9, .9]) box(.1, .8, .9, std(0x3b2f26), g, sx, .4, 0);
+  // monitor
+  const mon = new THREE.Group(); mon.position.z = -.25; mon.rotation.y = Math.PI; g.add(mon);
+  box(.9, .6, .06, std(0x0c0b14), mon, 0, 1.3, 0); box(.08, .3, .08, std(0x0c0b14), mon, 0, .98, 0);
+  const sm = new THREE.MeshBasicMaterial({ map:screenCode, color:0x7fe3ff, toneMapped:false });
+  const scr = new THREE.Mesh(new THREE.PlaneGeometry(.8, .5), sm); scr.position.set(0, 1.3, .04); mon.add(scr);
+  // desk props: mug + sticky notes
+  cyl(.07, .06, .12, std(0xf0eaff), g, .62, .91, .22, 14); box(.12, .012, .12, std(0xffe066), g, -.72, .86, .15).rotation.y = .4; box(.12, .012, .12, std(0xff8fb1), g, -.55, .86, .3).rotation.y = -.3;
+  // chair
+  const chair = new THREE.Group(); chair.position.z = 1.05; chair.rotation.y = Math.PI; g.add(chair);
+  const cm = std(0x2d2a55); box(.7, .1, .7, cm, chair, 0, .55, 0); box(.7, .8, .1, cm, chair, 0, 1, .35); box(.1, .5, .1, std(0x111111), chair, 0, .27, 0);
+  // wizard-office worker
+  const worker = new THREE.Group(); worker.position.z = 1.0; g.add(worker);
+  const robeMat = std(new THREE.Color().setHSL(i/N, .45, .5));
+  const robe = cyl(.2, .34, .9, robeMat, worker, 0, 1.05, 0, 18);
+  const head = new THREE.Mesh(new THREE.SphereGeometry(.22, 18, 14), std(0xf1c9a5)); head.position.y = 1.72; head.castShadow = true; worker.add(head);
+  const hatM = std(0x2a1f4d); const hat = new THREE.Mesh(new THREE.ConeGeometry(.2, .42, 14), hatM); hat.position.set(0, 2.1, 0); hat.rotation.z = .12; hat.castShadow = true; worker.add(hat);
+  cyl(.3, .3, .03, hatM, worker, 0, 1.9, 0, 20);
+  const badge = new THREE.Mesh(new THREE.PlaneGeometry(.14, .18), new THREE.MeshBasicMaterial({ color:0xffffff })); badge.position.set(0, 1.2, .25); badge.rotation.x = -.15; worker.add(badge);
+  // hidden faction aura
+  const ring = new THREE.Mesh(new THREE.TorusGeometry(.3, .025, 10, 40), new THREE.MeshBasicMaterial({ color:FACTION[factions[i]].c, transparent:true, opacity:0, toneMapped:false })); ring.rotation.x = Math.PI/2; ring.position.y = 2.5; worker.add(ring);
+  const anchor = new THREE.Object3D(); anchor.position.set(0, 2.95, 1.0); g.add(anchor);
+  const el = document.createElement('div'); el.className = 'tag'; el.textContent = NAMES[i]; labelsEl.appendChild(el);
+  desks.push({ i, g, worker, robe, robeMat, hat, head, ring, scr, sm, anchor, el, faction:factions[i], state:'alive', t:0, bob:Math.random()*6, smoke:[], env:null });
+}
+
+// ================= white envelope (severance) =================
+function makeEnvelope() {
+  const e = new THREE.Group(), m = new THREE.MeshStandardMaterial({ color:0xffffff, emissive:0xffffff, emissiveIntensity:.35, roughness:.9 });
+  box(.5, .03, .34, m, e); const flap = new THREE.Mesh(new THREE.ConeGeometry(.28, .16, 3), m); flap.rotation.set(Math.PI/2, 0, Math.PI); flap.scale.set(1, 1.15, .2); flap.position.set(0, .03, -.06); flap.rotation.y = 0; e.add(flap);
+  const seal = new THREE.Mesh(new THREE.CylinderGeometry(.05, .05, .02, 12), std(0xff5c7a)); seal.position.set(0, .04, .02); e.add(seal); return e;
+}
+
+// ================= spotlight for vote =================
+const spot = new THREE.SpotLight(0xffe2b0, 0, 18, .32, .5, 1); spot.position.set(0, 10, 0); scene.add(spot, spot.target);
+const beam = new THREE.Mesh(new THREE.ConeGeometry(1.5, 9, 28, 1, true), new THREE.MeshBasicMaterial({ color:0xffe2b0, transparent:true, opacity:0, blending:THREE.AdditiveBlending, depthWrite:false, side:THREE.DoubleSide, toneMapped:false })); beam.visible = false; scene.add(beam);
+let candidate = null;
+
+// ================= lights =================
+const hemi = new THREE.HemisphereLight(0xffffff, 0x3a2a66, 1); scene.add(hemi);
+const sun = new THREE.DirectionalLight(0xffffff, 1.5); sun.position.set(-7, 12, 8); sun.castShadow = true;
+sun.shadow.mapSize.set(2048, 2048); Object.assign(sun.shadow.camera, { left:-12, right:12, top:12, bottom:-12 }); sun.shadow.bias = -.0006; scene.add(sun);
+
+// ================= ambient particles (dust by day, spirits by night) =================
+const P = 260, pg = new THREE.BufferGeometry(), pp = new Float32Array(P*3), pv = [];
+for (let i = 0; i < P; i++) { pp[i*3] = (Math.random()-.5)*22; pp[i*3+1] = Math.random()*7; pp[i*3+2] = (Math.random()-.5)*22; pv.push(.15 + Math.random()*.5); }
+pg.setAttribute('position', new THREE.BufferAttribute(pp, 3));
+const pm = new THREE.PointsMaterial({ map:dotTex, size:.3, transparent:true, opacity:.3, depthWrite:false, blending:THREE.AdditiveBlending, color:0xf5c451, toneMapped:false });
+scene.add(new THREE.Points(pg, pm));
+
+// ================= phases =================
+const hexC = h => new THREE.Color(h);
+const PRESET = {
+  MORNING:{ bg:0x2a2250, hemi:.95, hemiG:0x4a3a80, sun:2.0, sunC:0xfff1d6, rune:0xf5c451, runeOp:.6, mon:0x7fe3ff, part:.25, partC:0xf5c451, city:cityDay, spot:0, r:13.5, h:7.5, label:'ประชุมเช้า' },
+  VOTE:   { bg:0x3a1f2a, hemi:.55, hemiG:0x502030, sun:.7,  sunC:0xffa860, rune:0xff9a4d, runeOp:.9, mon:0xffd27f, part:.2,  partC:0xff9a4d, city:cityDay, spot:1, r:9.5,  h:5.4, label:'โหวตไล่ออก' },
+  NIGHT:  { bg:0x07050f, hemi:.22, hemiG:0x241450, sun:.55, sunC:0x8a9cff, rune:0xb05cff, runeOp:1,  mon:0xb05cff, part:.9,  partC:0xb48cff, city:cityNight, spot:0, r:12.5, h:9.5, label:'กลางคืน — ลัทธิอู้งานออกล่า' },
+};
+let phase = 'MORNING', day = 1, mana = 1, orbit = true, secrets = false, camAngle = .3;
+const cur = { bg:hexC(0x2a2250), hemiG:hexC(0x4a3a80), sunC:hexC(0xfff1d6), rune:hexC(0xf5c451), mon:hexC(0x7fe3ff), partC:hexC(0xf5c451), hemi:.95, sun:2, runeOp:.6, part:.25, spot:0, r:13.5, h:7.5, tgt:new THREE.Vector3(0, 1.5, 0), cry:hexC(0x9b6bff) };
+
+const msg = document.getElementById('msg'), fl = document.getElementById('flash');
+function say(t) { msg.textContent = t; msg.style.opacity = 1; clearTimeout(say.t); say.t = setTimeout(() => msg.style.opacity = 0, 1500); }
+function flash(a, c = '#000') { fl.style.background = c; fl.style.opacity = a; setTimeout(() => fl.style.opacity = 0, 350); }
+function setPhase(p) {
+  phase = p; document.getElementById('phase').textContent = PRESET[p].label;
+  document.querySelectorAll('[data-p]').forEach(b => b.classList.toggle('on', b.dataset.p === p));
+  say(PRESET[p].label); if (p === 'NIGHT') flash(.55);
+  if (p === 'VOTE') { const al = desks.filter(d => d.state === 'alive'); candidate = al[Math.floor(Math.random()*al.length)] || null; if (candidate) say('ผู้ถูกโหวตสูงสุด: ' + NAMES[candidate.i]); } else candidate = null;
+}
+document.querySelectorAll('[data-p]').forEach(b => b.onclick = () => setPhase(b.dataset.p));
+
+function renderHud() {
+  document.getElementById('days').innerHTML = DAYS.map((d, i) => `<span class="day ${i === day-1 ? 'now' : i < day-1 ? 'past' : ''}">${d}</span>`).join('');
+  document.getElementById('fill').style.width = (mana/MANA_MAX*100) + '%';
+  document.getElementById('manaTxt').textContent = `Mana Task ${mana}/${MANA_MAX}`;
+  drawBoard(day);
+}
+renderHud();
+const setMana = v => { mana = Math.max(0, Math.min(MANA_MAX, v)); renderHud(); };
+document.getElementById('mp').onclick = () => { setMana(mana + 1); say(mana === MANA_MAX ? 'Mana เต็ม! ฝ่ายแสงใกล้ชนะ' : 'Mana +1'); };
+document.getElementById('mm').onclick = () => { setMana(mana - 1); flash(.3, '#3a0010'); say('Mana −1  (บั๊กโผล่!)'); };
+document.getElementById('next').onclick = () => { if (day < 5) { day++; renderHud(); setPhase('MORNING'); } else say('วันศุกร์หมดแล้ว — Deadline มาถึง!'); };
+document.getElementById('trap').onclick = () => showTrap(TRAPS[Math.floor(Math.random()*TRAPS.length)]);
+document.getElementById('orbit').onclick = () => orbit = !orbit;
+document.getElementById('secret').onclick = e => { secrets = !secrets; e.target.textContent = '👁 มุมมอง Moderator: ' + (secrets ? 'เปิด' : 'ปิด'); };
+
+const pickAlive = () => { const al = desks.filter(d => d.state === 'alive'); return al.length > 1 ? (candidate && candidate.state === 'alive' ? candidate : al[Math.floor(Math.random()*al.length)]) : null; };
+document.getElementById('fire').onclick = () => {                          // voted out: role + faction revealed, white envelope
+  const d = pickAlive(); if (!d) return; d.state = 'fired'; d.t = 0; candidate = null;
+  d.env = makeEnvelope(); d.env.position.set(0, 4, 1.0); d.g.add(d.env);
+  d.el.className = 'tag ' + d.faction; d.el.textContent = NAMES[d.i] + ' · ' + FACTION[d.faction].th;
+  say(NAMES[d.i] + ' ถูกไล่ออก — ' + FACTION[d.faction].th); flash(.25, '#fff');
+};
+document.getElementById('burn').onclick = () => {                          // night burnout: name only, faction stays hidden
+  const d = pickAlive(); if (!d) return; d.state = 'burnout'; d.t = 0;
+  d.el.className = 'tag out'; d.sm.map = screenBurn; d.sm.color.set(0xff5c7a); d.sm.needsUpdate = true;
+  for (let k = 0; k < 3; k++) { const s = new THREE.Mesh(new THREE.SphereGeometry(.25, 10, 8), new THREE.MeshBasicMaterial({ color:0x888899, transparent:true, opacity:.3, depthWrite:false })); d.g.add(s); d.smoke.push({ s, p:k/3 }); }
+  say(NAMES[d.i] + ' ติด Burnout'); flash(.35, '#3a0010');
+};
+
+// ================= loop =================
+function resize() { const w = innerWidth, h = innerHeight; renderer.setSize(w, h, false); composer.setSize(w, h); bloom.setSize(w, h); camera.aspect = w/h; camera.updateProjectionMatrix(); }
+addEventListener('resize', resize); resize();
+const clock = new THREE.Clock(), v = new THREE.Vector3();
+const lowC = hexC(0xff5c7a), midC = hexC(0x9b6bff), hiC = hexC(0x6fd0ff), tmpC = new THREE.Color();
+
+function frame() {
+  const dt = Math.min(clock.getDelta(), .05), t = clock.elapsedTime, k = 1 - Math.pow(.02, dt), T = PRESET[phase];
+  // lighting & colours tween
+  for (const [key, h] of [['bg', T.bg], ['hemiG', T.hemiG], ['sunC', T.sunC], ['rune', T.rune], ['mon', T.mon], ['partC', T.partC]]) cur[key].lerp(tmpC.set(h), k);
+  for (const key of ['hemi', 'sun', 'runeOp', 'part', 'spot', 'r', 'h']) cur[key] += (T[key] - cur[key]) * k;
+  scene.background.copy(cur.bg); scene.fog.color.copy(cur.bg);
+  hemi.intensity = cur.hemi; hemi.groundColor.copy(cur.hemiG); sun.intensity = cur.sun; sun.color.copy(cur.sunC);
+  runeA.material.color.copy(cur.rune); runeB.material.color.copy(cur.rune); runeA.material.opacity = runeB.material.opacity = cur.runeOp * (.85 + .15*Math.sin(t*2));
+  runeA.rotation.z += dt*.08; runeB.rotation.z -= dt*.15;
+  if (winMat.map !== T.city) { winMat.map = T.city; winMat.needsUpdate = true; }
+  pm.color.copy(cur.partC); pm.opacity = cur.part * .8;
+
+  // Mana crystal: colour/intensity follow the Mana Task bar
+  const f = mana/MANA_MAX; (f < .5 ? cur.cry.copy(lowC).lerp(midC, f*2) : cur.cry.copy(midC).lerp(hiC, (f - .5)*2));
+  crystalMat.color.copy(cur.cry); crystalMat.emissive.copy(cur.cry); crystalMat.emissiveIntensity = .6 + f*2.2 + Math.sin(t*3)*.15;
+  crystalLight.color.copy(cur.cry); crystalLight.intensity = (phase === 'NIGHT' ? 22 : 12) * (.4 + f*.9);
+  crystal.rotation.y = t*.8; crystal.position.y = 2.5 + Math.sin(t*1.5)*.12; crystal.scale.setScalar(.8 + f*.4); crystal.scale.y *= 1.5;
+  orbs.forEach((o, i) => { const a = t*.9 + i/MANA_MAX*6.283; o.position.set(Math.cos(a)*1.15, 2.5 + Math.sin(t*2 + i)*.12, Math.sin(a)*1.15); const on = i < mana; o.material.emissiveIntensity = on ? 2.2 : 0; o.material.color.set(on ? 0x4f8cff : 0x222233); });
+
+  // trap card flip
+  if (trapT >= 0) { trapT += dt; const u = trapT; trapCard.rotation.y = Math.min(u, 1.2) / 1.2 * Math.PI*4; trapCard.scale.setScalar(u < 1.2 ? u/1.2 : u > 3.2 ? Math.max(0, 1 - (u - 3.2)*2) : 1); trapCard.position.y = 3.9 + Math.sin(t*2)*.08; if (u > 3.8) { trapT = -1; trapCard.visible = false; } }
+
+  // vote spotlight + camera target
+  const tgt = candidate && phase === 'VOTE' ? candidate.g.getWorldPosition(v).multiplyScalar(.55) : v.set(0, 1.6, 0);
+  tgt.y = 1.6; cur.tgt.lerp(tgt, k);
+  if (candidate && phase === 'VOTE') { candidate.g.getWorldPosition(spot.target.position); spot.position.set(spot.target.position.x, 10, spot.target.position.z); beam.position.set(spot.target.position.x, 5, spot.target.position.z + 1); }
+  spot.intensity = cur.spot * 260; beam.visible = cur.spot > .05; beam.material.opacity = cur.spot * .1;
+
+  // camera
+  if (orbit) camAngle += dt*(phase === 'NIGHT' ? .05 : .08);
+  camera.position.set(Math.sin(camAngle)*cur.r*.55, cur.h, Math.cos(camAngle)*cur.r*.9 + 2); camera.lookAt(cur.tgt.x, cur.tgt.y + (phase === 'VOTE' ? .4 : 1.5), cur.tgt.z);
+
+  // players
+  for (const d of desks) {
+    d.t += dt;
+    if (d.state === 'alive') {
+      d.worker.position.y = Math.sin(t*2 + d.bob)*.03; d.worker.rotation.z = phase === 'NIGHT' ? Math.sin(t*3 + d.bob)*.08 : 0;
+      d.sm.color.copy(cur.mon);
+      d.ring.material.opacity += ((secrets ? .55 : 0) - d.ring.material.opacity)*k;
+    } else if (d.state === 'burnout') {
+      const u = Math.min(1, d.t*1.2); d.worker.rotation.x = -u*1.2; d.worker.position.y = -u*.35;
+      d.robeMat.color.lerp(tmpC.set(0x3a3a44), k); d.hat.material.color.lerp(tmpC.set(0x1a1a22), k);
+      d.smoke.forEach(sm => { const p = (sm.p + d.t*.25) % 1; sm.s.position.set(0, 1.6 + p*1.6, 1.0); sm.s.scale.setScalar(.5 + p*1.6); sm.s.material.opacity = .32*(1 - p); });
+      d.ring.material.opacity += ((secrets ? .55 : 0) - d.ring.material.opacity)*k;
+    } else if (d.state === 'fired') {
+      const u = Math.min(1, d.t*1.5); d.worker.scale.setScalar(Math.max(.001, 1 - u)); d.worker.position.y = u*.8;   // poof out of the chair
+      d.ring.material.opacity = 1; d.ring.position.y = 2.5 + (1 - Math.min(1, d.t))*0; d.ring.rotation.z += dt*2;
+      d.sm.color.set(0x222222);
+      const e = Math.min(1, d.t/1.4); d.env.position.y = 4 - e*3.1 + (e < 1 ? Math.sin(t*5)*.05 : 0); d.env.rotation.y = (1 - e)*Math.PI*3 + .3; d.env.rotation.x = (1 - e)*.6;
+    }
+    // faction hue on Moderator's view
+    if (d.state === 'fired' || secrets) d.ring.rotation.z += dt;
+    // DOM label
+    d.anchor.getWorldPosition(v); v.project(camera); const on = v.z < 1 && d.state !== 'burnout' || d.state === 'burnout';
+    d.el.style.display = v.z < 1 ? '' : 'none';
+    d.el.style.transform = `translate(${(v.x*.5 + .5)*innerWidth}px,${(-v.y*.5 + .5)*innerHeight}px) translate(-50%,-50%)`;
+  }
+  // ambient particles rise
+  const a = pg.attributes.position; for (let i = 0; i < P; i++) { let y = a.getY(i) + pv[i]*dt; if (y > 7) y = 0; a.setY(i, y); a.setX(i, a.getX(i) + Math.sin(t + i)*dt*.2); } a.needsUpdate = true;
+
+  composer.render();
+  requestAnimationFrame(frame);
+}
+frame();
+</script>
+</body>
+</html>
