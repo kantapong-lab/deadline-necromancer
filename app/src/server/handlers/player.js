@@ -13,6 +13,7 @@ module.exports = function registerPlayer(socket, { ctx, member, pushState }) {
   socket.on('p:dark', playerAct((g, pid, d) => g.darkSay(pid, d.text)));
   socket.on('p:vote', playerAct((g, pid, d) => g.castVote(pid, d.target === 'SKIP' ? 'SKIP' : Number(d.target))));
   socket.on('p:night', playerAct((g, pid, d) => g.submitNight(pid, d)));
+  socket.on('p:traproll', playerAct((g, pid) => g.rerollTraps(pid)));
   socket.on('p:event', playerAct((g, pid, d) => g.castEventChoice(pid, d.accept)));
   socket.on('p:booster', playerAct((g, pid, d) => g.castBooster(pid, d.key)));
 };

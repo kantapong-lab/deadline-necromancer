@@ -55,12 +55,12 @@ async function playGame(N, verbose) {
           const lights = p.v.dark.lights; const r = Math.random();
           if (r < .25) { a.side = 'FAKE'; } else if (r < .5) a.side = 'SABOTAGE';
           else if (r < .75 && !p.v.dark.curseBlocked) { a.side = 'CURSE'; a.sideTargets = [rnd(lights)]; }
-          else if (p.v.dark.trapCharges > 0) { const k = rnd(Object.keys(p.v.dark.trapNeed)); const need = p.v.dark.trapNeed[k];
+          else if (p.v.dark.trapCharges > 0 && p.v.dark.trapHand.length) { const k = rnd(p.v.dark.trapHand); const need = p.v.dark.trapNeed[k];
             a.side = 'TRAP'; a.trapId = k; if (need) { const pool = p.v.players.filter(x => x.alive && (need === 'any' || (need === 'dark' ? x.mate || x.me : !(x.mate || x.me)))); a.sideTargets = [rnd(pool).id]; } }
           else a.side = 'FAKE';
         }
         let r = await emit(p.s, 'p:night', a);
-        if (!r.ok && /โควตา Trap/.test(r.error)) { a.side = 'FAKE'; delete a.trapId; a.sideTargets = []; r = await emit(p.s, 'p:night', a); }   // อีกคนหมอบ Trap ใบสุดท้ายไปก่อน
+        if (!r.ok && /โควตา Trap|เพื่อนจอง Trap/.test(r.error)) { a.side = 'FAKE'; delete a.trapId; a.sideTargets = []; r = await emit(p.s, 'p:night', a); }   // อีกคนหมอบ Trap ใบสุดท้ายไปก่อน
         if (!r.ok) errs.push(`night ${me.roleName}: ${r.error} ${JSON.stringify(a)}`);
         await emit(p.s, 'p:dark', { text: 'plan' });
       }

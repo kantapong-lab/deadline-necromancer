@@ -17,7 +17,7 @@ module.exports = {
   },
   toNight() {
     if (this.phase !== 'VOTE_RESULT') return 'เปลี่ยนเฟสไม่ได้ในตอนนี้';
-    this.phase = 'NIGHT'; this.night = {}; this.darkChat = [];
+    this.phase = 'NIGHT'; this.night = {}; this.darkChat = []; this.trapRerolled = false;
     this.setCopies();
     this.log('เริ่มกลางคืน', 'ผู้เล่นเลือกแอ็กชันลับพร้อมกัน');
     this.sys('🌙 เข้าสู่กลางคืน — ทุกคนเลือกแอ็กชันลับ');

@@ -59,6 +59,7 @@ const pname = id => S.players.find(p => p.id === id)?.name || '?';
 const chooseAction = t => { UI.choice = t; UI.sel = []; render(); };
 const chooseSide = t => { UI.side = t; UI.sideSel = []; UI.trapId = null; render(); };
 const chooseTrap = k => { UI.trapId = k; UI.sideSel = []; render(); };
+const rerollTraps = () => { UI.trapId = null; UI.sideSel = []; act('p:traproll', {}); };
 const chooseMode = b => { UI.plus1 = b; render(); };
 function toggleT(id) { const need = Math.max(me().spec?.t || 0, 0), i = UI.sel.indexOf(id); if (i >= 0) UI.sel.splice(i, 1); else { if (UI.sel.length >= need) UI.sel.shift(); UI.sel.push(id); } render(); }
 function toggleS(id) { UI.sideSel = [id]; render(); }
@@ -241,9 +242,11 @@ function nightHTML() {
     const cursed = dk.curseBlocked ? (S.day === 1 ? ' (ห้ามคืนแรก)' : ' (ลูกค้าเฝ้าอยู่)') : '';
     const sideBtns = Object.entries(SIDE_INFO).map(([k, v]) => opt(UI.side === k, (k === 'CURSE' && dk.curseBlocked) || (k === 'TRAP' && dk.trapFree <= 0), `chooseSide('${k}')`,
       `${v.ic} ${v.n}${k === 'CURSE' ? cursed : ''}${k === 'TRAP' ? ` (โควตา ${dk.trapCharges}${dk.trapFree < dk.trapCharges ? ` · เพื่อนจองแล้ว ${dk.trapCharges - dk.trapFree}` : ''})` : ''}`, v.d)).join('');
-    const trapPick = UI.side === 'TRAP' ? `<p class="hint">เลือก Trap Card 1 ใบ</p>
+    if (UI.trapId && !dk.trapHand.includes(UI.trapId)) UI.trapId = null;
+    const trapPick = UI.side === 'TRAP' ? `<p class="hint">Trap ที่ทีมถืออยู่ (ระบบสุ่มให้) — เลือกหมอบ 1 ใบ</p>
       ${UI.trapId ? `<div class="trap-prev"><img src="${TRAPTHUMB + TRAPS[UI.trapId].img}" alt="${esc(TRAPS[UI.trapId].n)}" onclick="window.open(TRAPIMG + TRAPS['${UI.trapId}'].img)"><div><b>${esc(TRAPS[UI.trapId].n)}</b><div class="hint">${esc(TRAPS[UI.trapId].d)}</div><div class="hint">แตะรูปเพื่อดูภาพเต็ม</div></div></div>` : ''}
-      <div class="opts">${Object.entries(TRAPS).map(([k, t]) => optImg(UI.trapId === k, `chooseTrap('${k}')`, t.n, esc(t.d), TRAPTHUMB + t.img)).join('')}</div>` : '';
+      <div class="opts">${dk.trapHand.map(k => [k, TRAPS[k]]).map(([k, t]) => optImg(UI.trapId === k, `chooseTrap('${k}')`, t.n, esc(t.d), TRAPTHUMB + t.img)).join('')}</div>
+      <button class="btn" ${dk.canReroll ? '' : 'disabled'} onclick="rerollTraps()">🎲 ขอสุ่มเปลี่ยน Trap ${dk.canReroll ? '(1 ครั้ง/คืน)' : '(ใช้ไม่ได้ตอนนี้)'}</button>` : '';
     const needTxt = UI.side === 'CURSE' ? 'เลือกเหยื่อ 1 คน' : need2 === 'dark' ? 'เลือกฝ่ายมืด 1 คนที่จะวางกระจก' : need2 === 'nondark' ? 'เลือกเป้าหมายที่ไม่ใช่ฝ่ายมืด 1 คน' : need2 === 'any' ? 'เลือกผู้เล่น 1 คน' : '';
     side = `<h3 class="step-h">② แอ็กชันก่อกวน <small>(เลือก 1)</small></h3><div class="opts">${sideBtns}</div>${trapPick}
       ${tl.length ? `<p class="hint">${needTxt}</p><div class="targets">${tl.map(p => `<button class="btn ${UI.sideSel.includes(p.id) ? 'sel' : ''}" onclick="toggleS(${p.id})">${esc(p.name)}${p.me ? ' (ตัวเอง)' : ''}</button>`).join('')}</div>` : ''}`;

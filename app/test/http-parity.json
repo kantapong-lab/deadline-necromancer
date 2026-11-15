@@ -3,13 +3,13 @@
   "status": 200,
   "type": "text/html; charset=utf-8",
   "cache": "no-cache",
-  "sha256": "3880ac490378b3610c8cc8d7f05a99b88560e78edd47f03716a524408c207f2b"
+  "sha256": "4d8492494cb734f156a86c36f203009c5013c18a7cbf418a5236639ac9e64338"
  },
  "/?room=ABCD": {
   "status": 200,
   "type": "text/html; charset=utf-8",
   "cache": "no-cache",
-  "sha256": "3880ac490378b3610c8cc8d7f05a99b88560e78edd47f03716a524408c207f2b"
+  "sha256": "4d8492494cb734f156a86c36f203009c5013c18a7cbf418a5236639ac9e64338"
  },
  "/mod": {
   "status": 200,
@@ -51,7 +51,7 @@
   "status": 200,
   "type": "text/html; charset=utf-8",
   "cache": "no-cache",
-  "sha256": "3880ac490378b3610c8cc8d7f05a99b88560e78edd47f03716a524408c207f2b"
+  "sha256": "4d8492494cb734f156a86c36f203009c5013c18a7cbf418a5236639ac9e64338"
  },
  "/mod.html": {
   "status": 200,

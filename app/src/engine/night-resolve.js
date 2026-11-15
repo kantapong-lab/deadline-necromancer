@@ -22,8 +22,8 @@ module.exports = {
     // Trap Card
     G.fixNotes = []; let placedNow = 0;
     A.filter(a => a.side && a.type === 'TRAP').forEach(a => {
-      if (G.trapCharges > 0 && a.trapId) {
-        G.trapCharges--; placedNow++;
+      if (G.trapCharges > 0 && a.trapId && G.trapHand.includes(a.trapId)) {
+        G.trapCharges--; placedNow++; G.trapHand = G.trapHand.filter(k => k !== a.trapId);
         G.traps.push({ kind: a.trapId, owner: a.p.id, target: a.targets[0], day: G.day, fresh: true, triggered: false });
         add(a.p.id, `หมอบ Trap Card: ${TRAPS[a.trapId].n}${a.targets[0] != null ? ' ที่ ' + nm(a.targets[0]) : ''} (โควตา Trap เหลือ ${G.trapCharges})`);
       } else { a.type = 'FAKE'; add(a.p.id, 'โควตา Trap หมดแล้ว — กลายเป็นส่งงานหลอก'); }

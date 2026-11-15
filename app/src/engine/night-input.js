@@ -1,6 +1,7 @@
 'use strict';
 // Night action validation and the Mystery Intern copy.
 const { ROLES, TRAPS } = require('../shared/data');
+const { shuffle } = require('./random');
 
 // Night actions
 module.exports = {
@@ -33,6 +34,8 @@ module.exports = {
         const others = Object.entries(G.night).filter(([id, n]) => +id !== pid && n.side === 'TRAP').length;
         if (G.trapCharges - others <= 0) return 'โควตา Trap หมดแล้ว';
         const tdef = TRAPS[a.trapId]; if (!tdef) return 'เลือก Trap Card';
+        if (!G.trapHand.includes(a.trapId)) return 'ทีมไม่ได้ถือ Trap ใบนี้';
+        if (Object.entries(G.night).some(([id, n]) => +id !== pid && n.side === 'TRAP' && n.trapId === a.trapId)) return 'เพื่อนจอง Trap ใบนี้ไปแล้ว';
         if (tdef.need) {
           const t = G.P(st[0]); if (st.length !== 1 || !t?.alive) return 'เลือกเป้าหมาย Trap';
           if (tdef.need === 'dark' && t.faction !== 'dark') return 'Trap นี้หมอบได้เฉพาะที่ฝ่ายมืด';
@@ -43,6 +46,19 @@ module.exports = {
       }
     }
     G.night[pid] = out; return null;
+  },
+  // ฝ่ายมืดขอสุ่มเปลี่ยน Trap ที่ยังไม่ใช้ — 1 ครั้ง/คืน (ทั้งทีม) · ได้ใบใหม่ที่ไม่ซ้ำกับที่ถืออยู่
+  rerollTraps(pid) {
+    const G = this, p = G.P(pid);
+    if (!p?.alive || p.faction !== 'dark') return 'ไม่มีสิทธิ์สุ่ม Trap';
+    if (G.phase !== 'NIGHT') return 'สุ่ม Trap ได้เฉพาะช่วงกลางคืน';
+    if (!G.trapHand.length) return 'ไม่มี Trap เหลือให้สุ่ม';
+    if (G.trapRerolled) return 'คืนนี้ทีมสุ่ม Trap ไปแล้ว';
+    if (Object.values(G.night).some(n => n.side === 'TRAP')) return 'มีเพื่อนจองหมอบ Trap ไว้แล้ว — สุ่มไม่ได้';
+    const pool = shuffle(Object.keys(TRAPS).filter(k => !G.trapHand.includes(k)));
+    G.trapHand = pool.slice(0, G.trapHand.length); G.trapRerolled = true;
+    G.log('ฝ่ายมืดสุ่ม Trap ใหม่', '');
+    return null;
   },
   setCopies() {
     this.players.forEach(p => {

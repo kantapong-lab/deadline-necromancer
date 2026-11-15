@@ -88,8 +88,10 @@ function playGame(Game, N, seed, cov, onStep) {
           } else a = { type: 'REST' };
           if (me.faction === 'dark') {
             const r = Math.random();
-            if (r < bias.trap && dk.trapFree > 0) {
-              const k = rnd(Object.keys(dk.trapNeed)), need = dk.trapNeed[k];
+            if (r < bias.trap && dk.trapFree > 0 && dk.trapHand.length) {
+              if (!dk.trapHand.includes("exit") ? Math.random() < 0.9 : Math.random() < 0.1) g.rerollTraps(p.id);   // ขอสุ่ม Trap ใหม่ (อาจถูกปฏิเสธ — ไม่เป็นไร)
+              const hand = g.viewFor(p.id).dark.trapHand;
+              const k = rnd(hand), need = dk.trapNeed[k];
               a.side = 'TRAP'; a.trapId = k;
               if (need) {
                 const pool = g.viewFor(p.id).players.filter(x => x.alive && (need === 'any' || (need === 'dark' ? (x.mate || x.me) : !(x.mate || x.me))));

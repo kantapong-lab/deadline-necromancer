@@ -55,7 +55,7 @@ module.exports = {
         ...(this.evIs('purge') ? { chatLeft: Math.max(0, PURGE_MSGS - (this.chatUsed[pid] || 0)) } : {}),
       },
       dark: p.faction === 'dark' ? {
-        trapCharges: this.trapCharges, chat: this.darkChat, curseBlocked: this.curseBlocked(),
+        trapCharges: this.trapCharges, trapHand: this.trapHand, canReroll: this.phase === 'NIGHT' && this.trapHand.length > 0 && !this.trapRerolled && !Object.values(this.night).some(n => n.side === 'TRAP'), chat: this.darkChat, curseBlocked: this.curseBlocked(),
         // โควตา Trap ที่ยังว่างจริง ๆ คืนนี้ (หักใบที่เพื่อนร่วมลัทธิจองไว้แล้ว)
         trapFree: this.phase === 'NIGHT' ? this.trapCharges - Object.entries(this.night).filter(([id, n]) => +id !== pid && n.side === 'TRAP').length : this.trapCharges,
         mates: this.players.filter(x => x.faction === 'dark' && x.id !== pid).map(x => ({ id: x.id, name: x.name, alive: x.alive })),
