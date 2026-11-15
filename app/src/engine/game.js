@@ -3,6 +3,19 @@
 const { ROLES, EVENTS, TRAPS, BOOSTERS, FNAME, DAYS, LIGHT, DARK, INDIE } = require('../shared/data');
 const { shuffle, rnd } = require('./random');
 const { COMP, MIN_PLAYERS, MAX_PLAYERS, EMOJIS } = require('./constants');
+const views = require('./views');
+const modViewPart = require('./mod-view');
+
+// Mixes the method groups of src/engine/*.js onto Game.prototype (non-enumerable, like class methods).
+// Throws if a name is already defined, so two parts can never silently shadow each other.
+function mixin(target, ...parts) {
+  for (const part of parts) {
+    for (const key of Reflect.ownKeys(part)) {
+      if (Object.prototype.hasOwnProperty.call(target.prototype, key)) throw new Error('Game mixin: duplicate method ' + String(key));
+      Object.defineProperty(target.prototype, key, { ...Object.getOwnPropertyDescriptor(part, key), enumerable: false });
+    }
+  }
+}
 
 class Game {
   constructor(names) {
@@ -562,110 +575,8 @@ class Game {
     this.sys('🏁 จบเกม: ' + why); this.log('จบเกม', why);
     return true;
   }
-
-  // ---------- Views ----------
-  revealed(p, viewer, god) {
-    return god || this.phase === 'OVER' || p.id === viewer?.id || (!p.alive && p.cause !== 'burnout') || (viewer?.faction === 'dark' && p.faction === 'dark');
-  }
-  pubPlayers(viewer, god) {
-    return this.players.map(p => {
-      const rv = this.revealed(p, viewer, god);
-      return {
-        id: p.id, name: p.name, alive: p.alive, cause: p.alive ? null : p.cause, silenced: p.alive && p.silenced,
-        role: rv ? p.role : null, faction: rv ? p.faction : null,
-        me: p.id === viewer?.id, mate: !!viewer && viewer.faction === 'dark' && p.faction === 'dark' && p.id !== viewer.id,
-      };
-    });
-  }
-  common() {
-    const ev = this.event, e = ev ? EVENTS[ev.id] : null;
-    return {
-      day: this.day, dayName: DAYS[this.day - 1], phase: this.phase, mana: this.mana, manaMax: this.manaMax, skipStreak: this.skipStreak,
-      boosterCharges: this.boosterCharges, boosterOpen: this.booster.open, paused: this.paused, timer: this.timer,
-      report: this.report, feed: this.feed.slice(-80),
-      event: ev ? { id: ev.id, n: e.n, t: e.t, d: e.d, img: e.img, choice: !!e.choice, yes: e.yes, no: e.no, pending: ev.pending, accepted: ev.accepted } : null,
-      voteResult: this.voteResult, over: this.over && { ...this.over, roles: this.players.map(p => ({ id: p.id, name: p.name, role: p.role, faction: p.faction })) },
-      marathon: this.evIs('marathon'),
-    };
-  }
-  viewFor(pid) {
-    const p = this.P(pid), s = this.spec(p), r = ROLES[p.role];
-    const night = this.night[pid];
-    const base = this.common();
-    const goal = p.faction === 'light' ? 'ปั่น Mana ให้เต็ม หรือไล่ฝ่ายมืดให้หมด' : p.faction === 'dark' ? 'ยื้อถึงวันศุกร์ หรือให้ฝ่ายมืด ≥ ฝ่ายแสง' : r.win;
-    return {
-      ...base, role: 'player', youId: pid, players: this.pubPlayers(p, false),
-      me: {
-        id: pid, name: p.name, role: p.role, roleName: r.n, sub: r.sub, faction: p.faction, factionName: FNAME[p.faction], img: r.img,
-        skill: r.skill, desc: r.d, goal, alive: p.alive, silenced: p.silenced, dbl: p.dbl, zero: p.zero, locked: p.locked,
-        once: !!r.once, used: p.used, plus1Used: p.plus1Used, dodgeUsed: p.dodgeUsed, credit: this.credit[pid],
-        target: p.role === 'soul_recruiter' ? p.target : null, targetName: p.role === 'soul_recruiter' ? this.nm(p.target) : null,
-        copy: p.copy, copyFrom: p.copyFrom, copyName: p.copy ? ROLES[p.copy].n : null,
-        spec: s ? { skill: s.skill, t: s.t, d: s.d, pool: s.pool } : null,
-        skillOK: this.hasSkill(p), canRest: this.canRest(p), skillsBanned: this.skillsBanned(), snack: this.evIs('snack'),
-        candidates: this.phase === 'NIGHT' && p.alive ? this.candidates(p).map(x => x.id) : [],
-        intel: this.intel[pid],
-        night, submitted: !!night,
-        voted: this.votes[pid], hijacked: this.hijackVoter === pid,
-        eventVote: this.event?.votes?.[pid], boosterVote: this.booster.votes[pid],
-      },
-      dark: p.faction === 'dark' ? {
-        trapCharges: this.trapCharges, chat: this.darkChat, curseBlocked: this.curseBlocked(),
-        // โควตา Trap ที่ยังว่างจริง ๆ คืนนี้ (หักใบที่เพื่อนร่วมลัทธิจองไว้แล้ว)
-        trapFree: this.phase === 'NIGHT' ? this.trapCharges - Object.entries(this.night).filter(([id, n]) => +id !== pid && n.side === 'TRAP').length : this.trapCharges,
-        mates: this.players.filter(x => x.faction === 'dark' && x.id !== pid).map(x => ({ id: x.id, name: x.name, alive: x.alive })),
-        lights: this.alive().filter(x => x.faction !== 'dark').map(x => x.id),
-        trapNeed: Object.fromEntries(Object.entries(TRAPS).map(([k, t]) => [k, t.need])),
-      } : null,
-      voteCandidates: this.phase === 'VOTE' ? this.alive().filter(x => x.id !== pid).map(x => x.id) : [],
-    };
-  }
-  pending() {
-    const G = this, al = G.alive();
-    const list = (arr) => arr.map(p => p.name);
-    if (G.phase === 'MORNING') {
-      const out = {};
-      if (G.event?.pending) out.event = { done: al.filter(p => G.event.votes[p.id] !== undefined).length, total: al.length, waiting: list(al.filter(p => G.event.votes[p.id] === undefined)) };
-      if (G.booster.open) out.booster = { done: al.filter(p => G.booster.votes[p.id] !== undefined).length, total: al.length, waiting: list(al.filter(p => G.booster.votes[p.id] === undefined)) };
-      return out;
-    }
-    if (G.phase === 'VOTE') { const need = al.filter(p => !p.silenced && p.id !== G.hijackVoter); return { vote: { done: need.filter(p => G.votes[p.id] !== undefined).length, total: need.length, waiting: list(need.filter(p => G.votes[p.id] === undefined)) } }; }
-    if (G.phase === 'NIGHT') return { night: { done: al.filter(p => G.night[p.id]).length, total: al.length, waiting: list(al.filter(p => !G.night[p.id])) } };
-    return {};
-  }
-  guidance() {
-    const G = this, pd = G.pending();
-    switch (G.phase) {
-      case 'MORNING': {
-        const steps = [`ประกาศผลเมื่อคืนและหลอด Mana (${G.mana}/${G.manaMax}) ให้ทุกคนฟัง`];
-        if (G.event) steps.push(`อ่านการ์ด Event #${EVENTS[G.event.id].n} "${EVENTS[G.event.id].t}"${G.event.pending ? ' แล้วให้ทุกคนโหวตรับ/ปฏิเสธ' : ''}`);
-        if (G.booster.open) steps.push(`เปิดโหวต Sprint Booster (เหลือโควตา ${G.boosterCharges}) — ผู้เล่นโหวตแบบไม่ระบุตัวตน`);
-        steps.push('เปิดห้องประชุมให้ถกเถียง' + (G.evIs('marathon') ? ' (ประชุมมาราธอน: เวลาครึ่งเดียว)' : G.hijackVoter != null ? ' (Meeting Hijack: ลดเวลา 30%)' : ''));
-        return { title: 'ช่วงเช้า / ห้องประชุม', steps, next: 'เมื่อหมดเวลาคุย กด "ไปเฟสโหวตไล่ออก"' + (pd.event || pd.booster ? ' (ระบบจะปิดโหวตที่ค้างให้อัตโนมัติ)' : '') };
-      }
-      case 'VOTE': return { title: 'เฟสโหวตไล่ออก', steps: ['บอกให้ทุกคนโหวตเลือกคนที่จะไล่ออกหรือ Skip', G.evIs('marathon') ? 'วันนี้ห้าม Skip' : 'ใครไม่โหวตจะถูกนับเป็น Skip'], next: 'เมื่อโหวตครบ หรือหมดเวลา กด "ปิดโหวตและประกาศผล"' };
-      case 'VOTE_RESULT': return { title: 'ประกาศผลโหวต', steps: ['อ่านผลโหวตให้ทุกคนฟัง: ' + (G.voteResult?.text || '')], next: 'กด "เข้าสู่กลางคืน" เมื่อพร้อม' };
-      case 'NIGHT': return { title: 'กลางคืน — แอ็กชันลับ', steps: ['บอกให้ทุกคนหลับตา/ดูหน้าจอตัวเอง แล้วเลือกแอ็กชันลับ', 'ฝ่ายมืดคุยกันในห้องแชทลับได้'], next: 'เมื่อทุกคนส่งแล้ว (หรือหมดเวลา) กด "ปิดกลางคืนและประมวลผล" — ผู้ที่ไม่ส่งจะถูกตั้งค่าเริ่มต้น' };
-      case 'OVER': return { title: 'จบเกม', steps: ['ประกาศผู้ชนะและเปิดบทบาททุกคน'], next: 'กด "เริ่มห้องใหม่" เพื่อเล่นรอบใหม่ด้วยผู้เล่นชุดเดิม' };
-      default: return { title: '', steps: [], next: '' };
-    }
-  }
-  modView(secrets) {
-    const G = this, base = G.common();
-    return {
-      ...base, role: 'moderator', secrets: !!secrets,
-      players: G.players.map(p => {
-        const rv = secrets || G.phase === 'OVER' || (!p.alive && p.cause !== 'burnout');
-        const o = { id: p.id, name: p.name, alive: p.alive, cause: p.alive ? null : p.cause, silenced: p.alive && p.silenced, role: rv ? p.role : null, faction: rv ? p.faction : null };
-        if (secrets) Object.assign(o, { zero: p.zero, dbl: p.dbl, locked: p.locked, credit: G.credit[p.id], target: p.target });
-        return o;
-      }),
-      pending: G.pending(), guidance: G.guidance(), timeline: G.timeline.slice(-200),
-      traps: secrets ? G.traps.map(t => ({ kind: t.kind, target: t.target, day: t.day })) : G.traps.length,
-      trapCharges: G.trapCharges, hijackSet: G.hijackVoter != null,
-      nightActions: secrets && G.phase !== 'MORNING' ? G.night : null,
-    };
-  }
 }
+
+mixin(Game, views, modViewPart);
 
 module.exports = { Game, COMP, MIN_PLAYERS, MAX_PLAYERS, EMOJIS };
