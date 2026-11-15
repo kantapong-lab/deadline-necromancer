@@ -4,7 +4,7 @@ const http = require('http');
 const fs = require('fs');
 const path = require('path');
 const { Server } = require('socket.io');
-const { Game, MIN_PLAYERS, MAX_PLAYERS } = require('../engine/game');
+const { Game, MIN_PLAYERS, MAX_PLAYERS } = require('../engine');
 
 const PORT = process.env.PORT || 3000;
 const APP_ROOT = path.resolve(__dirname, '..', '..');
