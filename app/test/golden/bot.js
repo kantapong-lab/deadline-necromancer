@@ -116,6 +116,10 @@ function playGame(Game, N, seed, cov, onStep) {
 function observe(g, cov) {
   const add = (k, c = true) => cov.add(k, c);
   if (g.event) { add('event:' + g.event.id); if (g.event.accepted === true) add('event:' + g.event.id + ':accept'); if (g.event.accepted === false) add('event:' + g.event.id + ':reject'); }
+  if (g.phase === 'VOTE_INTERIM') add('interim');
+  if (g.event?.extra?.length) add('extraTeam');
+  if (g.feed.some(f => f.text.includes('UAT Too Late'))) add('uatLine');
+  if (Object.values(g.intel || {}).some(a => (a || []).some(e => e.text && e.text.startsWith('📟 สรุปเมื่อคืน')))) add('onCall');
   if (g.hijackVoter != null) add('hijack');
   g.players.forEach(p => {
     if (p.alive && p.silenced) add('silence');
@@ -147,7 +151,7 @@ class Coverage {
     Object.keys(BOOSTERS).forEach(k => req.push('booster:' + k));
     Object.keys(TRAPS).forEach(k => req.push('trapPlaced:' + k, 'trapTriggered:' + k));
     Object.keys(ROLES).forEach(k => req.push('skill:' + k));
-    req.push('hijack', 'silence', 'zeroVote', 'dblVote', 'freelanceDodge', 'chronoRollback','burnoutDeath', 'chaosInternDouble',
+    req.push('interim', 'extraTeam', 'uatLine', 'onCall', 'hijack','silence', 'zeroVote', 'dblVote', 'freelanceDodge', 'chronoRollback','burnoutDeath', 'chaosInternDouble',
       'over:light:mana', 'over:light:purge', 'over:dark:majority', 'over:dark:timeout',
       'indieWin:severance_seeker', 'indieWin:soul_recruiter', 'indieWin:glory_thief', 'indieWin:chaos_intern');
     return req;
