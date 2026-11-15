@@ -24,7 +24,7 @@ module.exports = {
       boosterCharges: this.boosterCharges, boosterOpen: this.booster.open, paused: this.paused, timer: this.timer,
       report: this.report, feed: this.feed.slice(-80),
       event: ev ? { id: ev.id, n: e.n, t: e.t, d: e.d, img: e.img, choice: !!e.choice, yes: e.yes, no: e.no, pending: ev.pending, accepted: ev.accepted } : null,
-      voteResult: this.voteResult, over: this.over && { ...this.over, roles: this.players.map(p => ({ id: p.id, name: p.name, role: p.role, faction: p.faction })) },
+      voteResult: this.phase === 'VOTE_INTERIM' ? null : this.voteResult, over: this.over && { ...this.over, roles: this.players.map(p => ({ id: p.id, name: p.name, role: p.role, faction: p.faction })) },
       marathon: this.evIs('marathon'),
     };
   },

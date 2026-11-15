@@ -6,7 +6,7 @@ const { EMOJIS } = require('./constants');
 module.exports = {
   chat(pid, text) {
     const p = this.P(pid); if (!p || !p.alive) return 'ผู้เล่นที่ออกจากเกมแล้วพิมพ์ไม่ได้';
-    if (this.phase !== 'MORNING') return 'พิมพ์แชทได้เฉพาะช่วงประชุมเช้า';
+    if (this.phase !== 'MORNING' && this.phase !== 'VOTE_INTERIM') return 'พิมพ์แชทได้เฉพาะช่วงประชุมเช้า';
     text = String(text || '').trim().slice(0, 200); if (!text) return 'ข้อความว่าง';
     if (p.silenced && !EMOJIS.includes(text)) return 'คุณถูก NDA Silence — ส่งได้แค่อีโมจิ';
     this.feed.push({ kind: 'chat', who: pid, name: p.name, text, ts: Date.now() });
