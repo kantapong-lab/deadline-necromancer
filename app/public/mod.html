@@ -10,6 +10,7 @@
 <div id="app"></div>
 <script src="/socket.io/socket.io.js"></script>
 <script src="/data.js"></script>
+<script src="/audio.js"></script>
 <script src="/common.js"></script>
 <script>
 const socket = io();
@@ -21,7 +22,7 @@ socket.on('connect', async () => {
   if (s) { const r = await emit(socket, 'mod:join', s); if (r.ok) session = s; else localStorage.removeItem('dn-mod'); }
   render();
 });
-socket.on('state', st => { S = st; setTimerFrom(st); render(); });
+socket.on('state', st => { S = st; setTimerFrom(st); render(); DNAudio.onState(st); });
 
 async function createRoom() {
   const r = await emit(socket, 'mod:create');
@@ -36,7 +37,13 @@ async function doAct(action, payload) {
 const joinUrl = () => location.origin + '/?room=' + session.code;
 function announce(e) { e.preventDefault(); const i = $('#annIn'); const t = i.value.trim(); if (!t) return; i.value = ''; doAct('announce', { text: t }); }
 const copyUrl = () => navigator.clipboard?.writeText(joinUrl());
-const confirmDo = (msg, a, p) => { if (confirm(msg)) doAct(a, p); };
+// ยืนยันแบบกดซ้ำในหน้า (ไม่ใช้ confirm() เพราะเบราว์เซอร์ฝังบางตัว เช่น Browser pane ของ Claude, บล็อก dialog แล้วปุ่มจะไม่ทำงานเลย)
+let armed = null;
+const confirmDo = (msg, a, p, btn) => {
+  if (armed === a) { armed = null; return doAct(a, p); }
+  armed = a; const old = btn.textContent; btn.textContent = '⚠️ กดอีกครั้งเพื่อยืนยัน — ' + msg;
+  setTimeout(() => { if (armed === a) { armed = null; btn.textContent = old; } }, 4000);
+};
 
 function render() {
   const app = $('#app');
@@ -125,7 +132,7 @@ function gameHTML() {
   const timers = [60, 120, 180, 300].map(t => `<button class="btn" onclick="doAct('timer',{sec:${t}})">${t >= 60 ? t / 60 + ' นาที' : t + ' วิ'}</button>`).join('');
   const tl = S.timeline.slice().reverse().map((t, i) => `<div class="tl ${i === 0 ? 'cur' : ''}"><small>วัน${DAYS[t.day - 1] || ''} · ${new Date(t.ts).toLocaleTimeString('th-TH', { hour: '2-digit', minute: '2-digit', second: '2-digit' })}</small><br><b>${esc(t.title)}</b>${t.text ? `<br><span class="mut">${esc(t.text)}</span>` : ''}</div>`).join('');
   const extraTags = p => S.secrets ? [p.credit ? `<span class="tag">⭐${p.credit}</span>` : '', p.zero ? '<span class="tag">📉0</span>' : '', p.locked ? '<span class="tag">🔒</span>' : ''].filter(Boolean) : [];
-  const mainBtn = a ? `<button class="btn primary bigbtn" onclick="${a.act === 'reset' ? "confirmDo('เริ่มห้องใหม่? จะกลับไปล็อบบี้ด้วยผู้เล่นชุดเดิม','reset')" : `doAct('${a.act}')`}">${a.label}</button>` : '';
+  const mainBtn = a ? `<button class="btn primary bigbtn" onclick="${a.act === 'reset' ? "confirmDo('จะกลับไปล็อบบี้ด้วยผู้เล่นชุดเดิม','reset',undefined,this)" : `doAct('${a.act}')`}">${a.label}</button>` : '';
   const side = [];
   if (S.event?.pending) side.push(`<button class="btn" onclick="doAct('closeEvent')">ปิดโหวตการ์ดเหตุการณ์</button>`);
   if (S.boosterOpen && S.phase === 'MORNING') side.push(`<button class="btn" onclick="doAct('closeBooster')">ปิดโหวต Sprint Booster</button>`);

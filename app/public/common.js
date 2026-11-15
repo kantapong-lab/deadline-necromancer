@@ -12,7 +12,7 @@ function topbar(s, extra = '') {
     <div class="days">${DAYS.map((d, i) => `<span class="day ${i + 1 === s.day ? 'now' : i + 1 < s.day ? 'past' : ''}">${d.slice(0, 3)}</span>`).join('')}</div>
     <div class="mana"><small>Mana Task ${s.mana}/${s.manaMax}${s.skipStreak ? ` · Skip ติดกัน ${s.skipStreak}` : ''}</small><div class="bar"><div class="fill" style="width:${pct}%"></div></div></div>
     <div class="phase">${PHASES[s.phase] || ''} ${s.paused ? '⏸️' : ''}</div>
-    <div class="timer" id="timer"></div>${extra}
+    <div class="timer" id="timer"></div>${typeof DNAudio !== 'undefined' ? DNAudio.controlHTML() : ''}${extra}
   </div>`;
 }
 

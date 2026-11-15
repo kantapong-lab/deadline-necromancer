@@ -10,6 +10,7 @@
 <div id="app"></div>
 <script src="/socket.io/socket.io.js"></script>
 <script src="/data.js"></script>
+<script src="/audio.js"></script>
 <script src="/common.js"></script>
 <script>
 const socket = io();
@@ -40,6 +41,7 @@ socket.on('state', st => {
     if (st.me) { tab = 'game'; if (st.me.alive && (st.phase === 'VOTE' || st.phase === 'NIGHT')) navigator.vibrate?.(120); }
   }
   setTimerFrom(st); render();
+  if (st.me || st.phase === 'LOBBY') DNAudio.onState(st);
 });
 socket.on('kicked', () => { sessionStorage.removeItem('dn-session'); session = null; S = null; error = 'คุณถูกเชิญออกจากห้อง'; render(); });
 
