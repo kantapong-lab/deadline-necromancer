@@ -50,6 +50,8 @@ module.exports = {
       traps: secrets ? G.traps.map(t => ({ kind: t.kind, target: t.target, day: t.day })) : G.traps.length,
       trapCharges: G.trapCharges, hijackSet: G.hijackVoter != null,
       nightActions: secrets && G.phase !== 'MORNING' ? G.night : null,
+      ...(G.evIs('status') && G.event.fullReport ? { statusReport: G.event.fullReport } : {}),
+      ...(G.evIs('status') && secrets ? { onCall: G.event.onCall ?? null } : {}),
     };
   },
 };

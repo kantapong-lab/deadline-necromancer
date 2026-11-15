@@ -1,7 +1,7 @@
 'use strict';
 // Day vote: casting and closing (tally, outcome, traps).
 const { ROLES, FNAME } = require('../shared/data');
-const { rnd } = require('./random');
+const { rnd, shuffle } = require('./random');
 
 // Day vote
 module.exports = {
@@ -100,6 +100,16 @@ module.exports = {
     G.voteResult = { lines, text, tally: Object.entries(tally).map(([id, n]) => ({ name: nm(+id), n })).sort((a, b) => b.n - a.n), skip };
     G.phase = 'VOTE_RESULT'; G.voteRound = 0;
     G.sys('ผลโหวต: ' + text); G.log('ปิดโหวต — ประกาศผล', text);
+    if (G.evIs('uat')) G.uatAnnounce();
     G.checkEnd();
+  },
+  // UAT Too Late: 3 random alive players (after the ejection), truthful dark / no-dark verdict.
+  uatAnnounce() {
+    const G = this, pool = G.alive();
+    if (!pool.length) return;
+    const picked = shuffle(pool).slice(0, 3);
+    const dark = picked.some(p => p.faction === 'dark');
+    const msg = `🧪 UAT Too Late: สุ่มทดสอบ ${picked.map(p => p.name).join(', ')} → ${dark ? 'มีฝ่ายมืดอย่างน้อย 1 คน' : 'ไม่มีฝ่ายมืด'}`;
+    G.voteResult.lines.push(msg); G.sys(msg); G.report.push(msg); G.log('UAT Too Late', msg);
   },
 };

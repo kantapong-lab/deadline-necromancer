@@ -1,7 +1,7 @@
 'use strict';
 // Event-card vote, Sprint Booster vote, event draw and the Reply-All leak.
 const { EVENTS, BOOSTERS } = require('../shared/data');
-const { shuffle } = require('./random');
+const { shuffle, rnd } = require('./random');
 
 // Choice event + booster votes (MORNING), event draw
 module.exports = {
@@ -58,6 +58,22 @@ module.exports = {
     this.log('เปิด Event Card #' + e.n, e.t + ' — ' + e.d);
     if (e.now) this.mana = Math.max(0, Math.min(this.manaMax, this.mana + e.now));
     if (id === 'leak') this.replyAllLeak();
+    if (id === 'purge') this.chatUsed = {};
+    if (id === 'hands') this.pickExtraTeam();
+    if (id === 'status') this.pickOnCall();
+  },
+  pickExtraTeam() {
+    const alive = this.alive(), k = Math.max(1, Math.floor(alive.length / 4));
+    const picked = shuffle(alive).slice(0, k);
+    picked.forEach(p => { p.zero = true; });
+    this.event.extra = picked.map(p => p.id);
+    const msg = `👥 More Hands on Deck: ทีมเสริมวันนี้ ${picked.map(p => p.name).join(', ')} — พลังโหวตวันนี้เป็น 0`;
+    this.sys(msg); this.report.push(msg);
+  },
+  pickOnCall() {
+    this.event.onCall = rnd(this.alive()).id;
+    const msg = '📟 มีวิศวกรเวร 1 คนได้รับสรุปเมื่อคืน (ไม่บอกชื่อ)';
+    this.sys(msg); this.report.push(msg);
   },
   replyAllLeak() {
     const key = p => { const n = this.night[p.id]; return n ? n.type + '/' + (n.side || '') : null; };

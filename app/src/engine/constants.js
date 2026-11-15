@@ -3,4 +3,6 @@ const COMP = { 6: [4, 2, 0], 7: [4, 2, 1], 8: [5, 2, 1], 9: [5, 2, 2], 10: [6, 2
 const MIN_PLAYERS = 6, MAX_PLAYERS = 12;
 const EMOJIS = ['👍', '🤔', '😡', '😂', '🙏'];
 
-module.exports = { COMP, MIN_PLAYERS, MAX_PLAYERS, EMOJIS };
+const PURGE_MSGS = 3, PURGE_LEN = 30;   // Meeting Purge: messages per player and code points per message
+
+module.exports = { COMP, MIN_PLAYERS, MAX_PLAYERS, EMOJIS, PURGE_MSGS, PURGE_LEN };

@@ -1,6 +1,7 @@
 'use strict';
 // Per-player views (what each seat is allowed to see).
 const { ROLES, EVENTS, TRAPS, FNAME, DAYS } = require('../shared/data');
+const { PURGE_MSGS, PURGE_LEN } = require('./constants');
 
 // Views
 module.exports = {
@@ -23,9 +24,12 @@ module.exports = {
       day: this.day, dayName: DAYS[this.day - 1], phase: this.phase, mana: this.mana, manaMax: this.manaMax, skipStreak: this.skipStreak,
       boosterCharges: this.boosterCharges, boosterOpen: this.booster.open, paused: this.paused, timer: this.timer,
       report: this.report, feed: this.feed.slice(-80),
-      event: ev ? { id: ev.id, n: e.n, t: e.t, d: e.d, img: e.img, choice: !!e.choice, yes: e.yes, no: e.no, pending: ev.pending, accepted: ev.accepted } : null,
+      event: ev ? { id: ev.id, n: e.n, t: e.t, d: e.d, img: e.img, choice: !!e.choice, yes: e.yes, no: e.no, pending: ev.pending, accepted: ev.accepted, ...(ev.id === 'hands' && ev.extra ? { extra: ev.extra } : {}) } : null,
       voteResult: this.phase === 'VOTE_INTERIM' ? null : this.voteResult, over: this.over && { ...this.over, roles: this.players.map(p => ({ id: p.id, name: p.name, role: p.role, faction: p.faction })) },
       marathon: this.evIs('marathon'),
+      ...(this.evIs('redesign') && (this.phase === 'VOTE' || this.phase === 'VOTE_INTERIM') ? { voteRound: this.voteRound } : {}),
+      ...(this.phase === 'VOTE_INTERIM' && this.interim ? { interim: this.interim } : {}),
+      ...(this.evIs('purge') ? { chatLimit: { msgs: PURGE_MSGS, len: PURGE_LEN } } : {}),
     };
   },
   viewFor(pid) {
@@ -48,6 +52,7 @@ module.exports = {
         night, submitted: !!night,
         voted: this.votes[pid], hijacked: this.hijackVoter === pid,
         eventVote: this.event?.votes?.[pid], boosterVote: this.booster.votes[pid],
+        ...(this.evIs('purge') ? { chatLeft: Math.max(0, PURGE_MSGS - (this.chatUsed[pid] || 0)) } : {}),
       },
       dark: p.faction === 'dark' ? {
         trapCharges: this.trapCharges, chat: this.darkChat, curseBlocked: this.curseBlocked(),
