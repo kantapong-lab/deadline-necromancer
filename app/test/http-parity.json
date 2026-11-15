@@ -15,7 +15,7 @@
   "status": 200,
   "type": "text/html; charset=utf-8",
   "cache": "no-cache",
-  "sha256": "91393da4302071eba472a102759d6e78b720eb7d318769f55ea04ceadb372354"
+  "sha256": "9d539c0a740d1d3a7580e731c214a4f7313087cf57b9951aa525bd2b2669d044"
  },
  "/gallery": {
   "status": 200,
@@ -33,7 +33,7 @@
   "status": 200,
   "type": "text/css; charset=utf-8",
   "cache": "no-cache",
-  "sha256": "0fbf36f7e79e5a2366b30713f040349011996729615f9f5431c2130b6a96c691"
+  "sha256": "054b4cf26064967359a51291aae67d2c0a8528c3785070e136b3cd801f3e4135"
  },
  "/common.js": {
   "status": 200,
@@ -57,7 +57,7 @@
   "status": 200,
   "type": "text/html; charset=utf-8",
   "cache": "no-cache",
-  "sha256": "91393da4302071eba472a102759d6e78b720eb7d318769f55ea04ceadb372354"
+  "sha256": "9d539c0a740d1d3a7580e731c214a4f7313087cf57b9951aa525bd2b2669d044"
  },
  "/gallery.html": {
   "status": 200,

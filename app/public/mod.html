@@ -41,10 +41,13 @@ const confirmDo = (msg, a, p) => { if (confirm(msg)) doAct(a, p); };
 function render() {
   const app = $('#app');
   const focus = document.activeElement?.id, val = document.activeElement?.value;
+  const oc = $('#modchat'), keepBottom = !oc || oc.scrollHeight - oc.scrollTop - oc.clientHeight < 40, oldTop = oc?.scrollTop;
   if (!session || !S) app.innerHTML = startHTML();
   else if (S.phase === 'LOBBY') app.innerHTML = lobbyHTML();
   else app.innerHTML = gameHTML();
+  const nc = $('#modchat'); if (nc) nc.scrollTop = keepBottom ? nc.scrollHeight : oldTop;
   if (focus && $('#' + focus) && val !== undefined) { const el = $('#' + focus); el.value = val; el.focus(); }
+  const tb = $('.top'); if (tb) document.documentElement.style.setProperty('--topH', tb.getBoundingClientRect().height + 'px');
   tickTimer();
 }
 function startHTML() {
@@ -76,6 +79,41 @@ function progress(p, label) {
   const pct = p.total ? Math.round(p.done / p.total * 100) : 100;
   return `<div style="margin:8px 0"><b>${label}</b> ${p.done}/${p.total}<div class="progress"><div style="width:${pct}%"></div></div>${p.waiting.length ? `<div class="hint">ยังไม่ส่ง: ${p.waiting.map(esc).join(', ')}</div>` : '<div class="ok hint">ครบแล้ว ✅</div>'}</div>`;
 }
+// ---------- tabs ----------
+const TABS = [['match', '🏆 การแข่งขัน'], ['players', '👥 ผู้เล่นในเกม'], ['chat', '💬 Chat']];
+const lsGet = (k, d) => { try { return localStorage.getItem(k) ?? d; } catch { return d; } };
+const lsSet = (k, v) => { try { localStorage.setItem(k, v); } catch { /* private mode */ } };
+let TAB = lsGet('dn-mod-tab', 'match'); if (!TABS.some(t => t[0] === TAB)) TAB = 'match';
+const setTab = t => { TAB = t; lsSet('dn-mod-tab', t); render(); };
+const chatMsgs = () => (S.feed || []).filter(m => m.kind === 'chat');   // เฉพาะข้อความผู้เล่น (แชทลับทีมมืดไม่อยู่ใน feed)
+const seenKey = () => 'dn-mod-seen-' + (session?.code || '');
+function unreadChat() {
+  const n = chatMsgs().length;
+  if (TAB === 'chat') { lsSet(seenKey(), String(n)); return 0; }
+  const seen = Number(lsGet(seenKey(), '0'));
+  if (n < seen) { lsSet(seenKey(), String(n)); return 0; }
+  return n - seen;
+}
+function manaHTML() {
+  const pct = S.manaMax ? Math.min(100, Math.round(S.mana / S.manaMax * 100)) : 0;
+  return `<div class="card"><h3>Mana Task</h3><div class="manabig"><b>${S.mana}</b><span>/ ${S.manaMax}</span></div>
+    <div class="progress"><div style="width:${pct}%"></div></div>
+    <div class="hint" style="margin-top:8px">Skip ติดกัน ${S.skipStreak} · โควตา Booster ${S.boosterCharges}${S.hijackSet ? ' · Meeting Hijack ทำงาน' : ''}</div></div>`;
+}
+function playerCardsHTML() {
+  return `<div class="pcards">${S.players.map(p => {
+    const r = p.role && ROLES[p.role];
+    const art = r ? `<img src="${ROLETHUMB_MD + r.img}" alt="${esc(r.n)}" loading="lazy" onclick="window.open(IMG + '${r.img}')">` : `<div class="cardback"><span>?</span></div>`;
+    const st = p.alive ? '' : `<span class="tag">${CAUSE[p.cause] || 'ออกจากเกม'}</span>`;
+    return `<div class="pcard ${p.faction || ''} ${p.alive ? '' : 'out'}">${art}<div class="pname">${esc(p.name)}</div>
+      <div class="psub">${r ? `<span class="tag ${p.faction}">${esc(r.n)}</span>` : ''}${st}${p.alive && p.silenced ? '<span class="tag">🤐 ปิดปาก</span>' : ''}</div></div>`;
+  }).join('')}</div>`;
+}
+function chatTabHTML() {
+  const rows = (S.feed || []).map(m => m.kind === 'sys' ? `<div class="msg sys">${esc(m.text)}</div>`
+    : m.kind === 'chat' ? `<div class="msg"><b>${esc(m.name)}:</b> ${esc(m.text)} <small class="mut">${new Date(m.ts).toLocaleTimeString('th-TH', { hour: '2-digit', minute: '2-digit' })}</small></div>` : '').join('');
+  return `<div class="card"><h3>แชทผู้เล่นทั้งหมด (ไม่รวมแชทลับทีมมืด)</h3><div class="chat modchat" id="modchat">${rows || '<div class="hint">ยังไม่มีข้อความ</div>'}</div></div>`;
+}
 function gameHTML() {
   const interim = S.phase === 'VOTE_INTERIM';
   const g0 = S.guidance || {};
@@ -94,27 +132,28 @@ function gameHTML() {
   const secretInfo = S.secrets ? `<div class="card"><h3>🔒 ข้อมูลลับ</h3><div class="hint">Trap ที่หมอบอยู่: ${S.traps.length ? S.traps.map(t => (TRAPS[t.kind]?.n || t.kind) + (t.target != null ? ' → ' + esc(S.players[t.target]?.name) : '')).join(', ') : 'ไม่มี'} · โควตา Trap ${S.trapCharges}</div>
     ${S.nightActions ? `<div class="intel">${S.players.filter(p => S.nightActions[p.id]).map(p => { const n = S.nightActions[p.id]; return `<div><b>${esc(p.name)}</b> ${esc(ROLES[p.role]?.n || '')}: ${n.type}${n.targets?.length ? ' → ' + n.targets.map(t => esc(S.players[t]?.name)).join(',') : ''}${n.side ? ' + ' + n.side + (n.trapId ? ':' + n.trapId : '') + (n.sideTargets?.length ? ' → ' + n.sideTargets.map(t => esc(S.players[t]?.name)).join(',') : '') : ''}</div>`; }).join('')}</div>` : ''}</div>` : '';
   const evInfo = S.event ? eventCardHTML(S.event, S.event.pending ? `<p class="hint">รอโหวต: ${pd.event ? pd.event.done + '/' + pd.event.total : ''}</p>` : (S.event.choice ? `<p class="hint">ผลโหวต: <b>${esc(S.event.accepted ? S.event.yes : S.event.no)}</b></p>` : '')) : '';
-  return topbar(S, `<button class="btn" onclick="leaveRoom()">ออก</button>`) + `<div class="modwrap">
-    <aside class="card"><h3>ลำดับเหตุการณ์ (ล่าสุดอยู่บน)</h3><div class="timeline">${tl}</div></aside>
-    <section class="center-col">
-      ${error ? `<div class="banner warn">${esc(error)}</div>` : ''}
-      ${S.over ? overHTML(S) : ''}
-      <div class="card stage"><h3>ตอนนี้</h3><h2>${esc(g.title)}</h2>
-        <div class="hint">สิ่งที่ต้องแจ้งผู้เล่น:</div><ol class="steps">${g.steps.map(x => `<li>${esc(x)}</li>`).join('')}</ol>
-        ${evInfo}${statusRep}${interimBox}
-        ${progress(pd.event, 'โหวตการ์ดเหตุการณ์')}${progress(pd.booster, 'โหวต Sprint Booster')}${progress(pd.vote, voteLabel)}${progress(pd.night, 'ส่งแอ็กชันกลางคืน')}
-        <div class="next">👉 <b>ขั้นตอนถัดไป:</b> ${esc(g.next)}</div>
-        <div class="row stickybar" style="margin-top:14px">${mainBtn}${side.join('')}</div></div>
-      <div class="card"><h3>ควบคุมห้อง</h3>
+  const unread = unreadChat();
+  const tabBar = `<div class="mtabs">${TABS.map(([k, l]) => `<button class="mtab ${TAB === k ? 'on' : ''}" onclick="setTab('${k}')">${l}${k === 'chat' && unread ? `<span class="mtab-badge">${unread}</span>` : ''}</button>`).join('')}<span class="mtab-sp"></span>${mainBtn}</div>`;
+  const matchTab = `<div class="modgrid">
+      <div class="center-col">${manaHTML()}${evInfo ? `<div class="card"><h3>Event Card วันนี้</h3>${evInfo}</div>` : ''}<div class="card"><h3>ลำดับเหตุการณ์ (ล่าสุดอยู่บน)</h3><div class="timeline">${tl}</div></div></div>
+      <div class="center-col"><div class="card"><h3>ควบคุมห้อง</h3>
         <div class="row"><span class="mut">ตั้งเวลา (ผู้เล่นเห็นนับถอยหลัง ไม่เปลี่ยนเฟสอัตโนมัติ):</span>${timers}<button class="btn" onclick="doAct('timer',{sec:0})">ยกเลิกเวลา</button></div>
         <div class="row" style="margin-top:10px"><button class="btn" onclick="doAct('pause',{on:${!S.paused}})">${S.paused ? '▶️ เล่นต่อ' : '⏸️ พักเกม'}</button>
           <button class="btn" onclick="doAct('secrets',{on:${!S.secrets}})">${S.secrets ? '🙈 ซ่อนข้อมูลลับ' : '👁️ แสดงข้อมูลลับ (บทบาททุกคน)'}</button></div>
         <form class="chatbar" onsubmit="announce(event)"><input id="annIn" placeholder="ประกาศข้อความถึงทุกคน…" autocomplete="off"><button class="btn" type="submit">📣 ประกาศ</button></form></div>
-      ${secretInfo}
-      <div class="card"><h3>ฟีดสาธารณะ</h3><div class="chat">${feedHTML(S.feed)}</div></div>
-    </section>
-    <aside class="center-col"><div class="card"><h3>พนักงาน (${S.players.filter(p => p.alive).length}/${S.players.length}) · ห้อง ${esc(session.code)}</h3>${playersListHTML(S.players, { extra: extraTags })}</div>
-      <div class="card"><h3>สรุป</h3><div class="hint">Mana ${S.mana}/${S.manaMax} · Skip ติดกัน ${S.skipStreak} · โควตา Booster ${S.boosterCharges}${S.hijackSet ? ' · Meeting Hijack ทำงาน' : ''}</div></div></aside></div>`;
+        ${secretInfo}</div></div>`;
+  const body = TAB === 'players' ? `<div class="card"><h3>พนักงาน (${S.players.filter(p => p.alive).length}/${S.players.length}) · ห้อง ${esc(session.code)}${S.secrets ? '' : ' · บทบาทซ่อนอยู่'}</h3>${playerCardsHTML()}</div>` : TAB === 'chat' ? chatTabHTML() : matchTab;
+  return topbar(S, `<button class="btn" onclick="leaveRoom()">ออก</button>`) + `<div class="modpage">
+    ${error ? `<div class="banner warn">${esc(error)}</div>` : ''}
+    ${S.over ? overHTML(S) : ''}
+    <div class="card stage"><h3>ตอนนี้</h3><h2>${esc(g.title)}</h2>
+      <div class="hint">สิ่งที่ต้องแจ้งผู้เล่น:</div><ol class="steps">${g.steps.map(x => `<li>${esc(x)}</li>`).join('')}</ol>
+      ${statusRep}${interimBox}
+      ${progress(pd.event, 'โหวตการ์ดเหตุการณ์')}${progress(pd.booster, 'โหวต Sprint Booster')}${progress(pd.vote, voteLabel)}${progress(pd.night, 'ส่งแอ็กชันกลางคืน')}
+      <div class="next">👉 <b>ขั้นตอนถัดไป:</b> ${esc(g.next)}</div>
+      ${side.length ? `<div class="row" style="margin-top:10px">${side.join('')}</div>` : ''}</div>
+    ${tabBar}
+    <div class="modbody">${body}</div></div>`;
 }
 render();
 </script>

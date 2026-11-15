@@ -180,3 +180,36 @@ main{display:grid;grid-template-columns:250px 1fr 300px;gap:16px;padding:16px 20
 .trap-prev{display:flex;gap:12px;align-items:flex-start;background:#1a1330;border:1px solid var(--dark);border-radius:10px;padding:10px;margin:8px 0}
 .trap-prev img{width:130px;border-radius:8px;flex:none;cursor:zoom-in;border:1px solid var(--line)}
 @media(max-width:420px){.trap-prev img{width:104px}}
+
+/* moderator tabs — แท็บเอกสาร: แท็บที่เลือกต่อติดกรอบเนื้อหา */
+.modpage{display:flex;flex-direction:column;gap:14px;padding:16px 20px;max-width:1400px;margin:0 auto}
+.mtabs{display:flex;align-items:flex-end;gap:4px;position:sticky;top:var(--topH,57px);z-index:4;background:var(--bg);padding:8px 0 0;margin-bottom:-14px;border-bottom:1px solid var(--line)}
+.mtab{background:#120f20;border:1px solid var(--line);border-bottom:none;color:var(--mut);padding:10px 20px;border-radius:10px 10px 0 0;font:inherit;cursor:pointer;position:relative;margin-bottom:-1px}
+.mtab:hover{color:var(--txt);background:var(--panel2)}
+.mtab.on{background:var(--panel);color:var(--txt);font-weight:700;border-top:2px solid var(--light);padding-bottom:11px}
+.mtab-sp{flex:1}
+.mtabs .bigbtn{padding:8px 16px;font-size:15px;margin-bottom:6px}
+.mtab-badge{display:inline-block;margin-left:8px;min-width:20px;padding:1px 6px;border-radius:99px;background:var(--bad);color:#fff;font-size:12px;font-weight:700;text-align:center}
+.modbody{background:var(--panel);border:1px solid var(--line);border-top:none;border-radius:0 0 12px 12px;padding:16px}
+.modbody .card{background:var(--panel2)}
+.modgrid{display:grid;grid-template-columns:1fr 1fr;gap:16px;align-items:start}
+.manabig{font-size:34px;line-height:1.1;margin-bottom:8px}.manabig span{font-size:18px;color:var(--mut);margin-left:6px}
+.modchat{height:60vh}
+.pcards{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:14px}
+.pcard{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:8px;text-align:center}
+.pcard.light{border-color:var(--light)} .pcard.dark{border-color:var(--dark)} .pcard.indie{border-color:var(--indie)}
+.pcard img{width:100%;aspect-ratio:2/3;object-fit:cover;border-radius:8px;display:block;cursor:zoom-in}
+.pcard.out{opacity:.55;filter:grayscale(.6)}
+.pname{margin-top:8px;font-weight:700;overflow-wrap:anywhere}
+.psub{display:flex;gap:4px;flex-wrap:wrap;justify-content:center;margin-top:4px}
+.cardback{width:100%;aspect-ratio:2/3;border-radius:8px;display:grid;place-items:center;border:1px solid var(--line);background:repeating-linear-gradient(45deg,#1d1838 0 8px,#251e47 8px 16px)}
+.cardback span{font-size:44px;color:var(--mut);width:64px;height:64px;display:grid;place-items:center;border-radius:50%;background:var(--panel);border:1px solid var(--line)}
+@media(max-width:1000px){
+  .modgrid{grid-template-columns:1fr}
+  .modpage{padding:12px 12px 84px}
+  .mtab{flex:1;padding:10px 4px;font-size:13px;text-align:center;white-space:nowrap}
+  .mtab-sp{display:none}
+  .mtabs .bigbtn{position:fixed;left:12px;right:12px;bottom:12px;z-index:6;margin:0;padding:14px;box-shadow:0 4px 18px #000a}
+  .pcards{grid-template-columns:repeat(2,1fr)}
+  .modchat{height:55vh}
+}
