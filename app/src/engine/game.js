@@ -1,14 +1,8 @@
 // Game engine (server-authoritative) — พอร์ตกติกาจาก poc/index.html เป็นโมดูลไม่มี UI/บอท
 // Moderator เป็นคนสั่งเปลี่ยนเฟส ผู้เล่นส่งแอ็กชันของตัวเองผ่าน method ด้านล่าง
 const { ROLES, EVENTS, TRAPS, BOOSTERS, FNAME, DAYS, LIGHT, DARK, INDIE } = require('../shared/data');
-
-const shuffle = a => { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
-const rnd = a => a[Math.floor(Math.random() * a.length)];
-
-// สัดส่วนฝั่งตามจำนวนผู้เล่น [แสง, มืด, อิสระ] (ตาม player_rules)
-const COMP = { 6: [4, 1, 1], 7: [4, 2, 1], 8: [5, 2, 1], 9: [6, 2, 1], 10: [6, 3, 1], 11: [7, 3, 1], 12: [7, 3, 2] };
-const MIN_PLAYERS = 6, MAX_PLAYERS = 12;
-const EMOJIS = ['👍', '🤔', '😡', '😂', '🙏'];
+const { shuffle, rnd } = require('./random');
+const { COMP, MIN_PLAYERS, MAX_PLAYERS, EMOJIS } = require('./constants');
 
 class Game {
   constructor(names) {
