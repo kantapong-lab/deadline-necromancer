@@ -5,7 +5,7 @@ const { shuffle, rnd } = require('./random');
 
 // Night resolution
 module.exports = {
-  resolveNight() {
+  resolveNight(opts) {
     const G = this, P = id => G.P(id), nm = id => G.nm(id), alive = () => G.alive(), er = p => G.er(p);
     const notes = {}, add = (pid, text) => (notes[pid] = notes[pid] || []).push({ text });
     const rep = [];
@@ -209,11 +209,48 @@ module.exports = {
     G.players.forEach(p => {
       (notes[p.id] || []).forEach(n => { if (G.blockIntel === p.id) return; G.intel[p.id].push({ day: G.day, text: n.text }); });
     });
-    G.report = rep;
-    broadcast.forEach(t => G.feed.push({ kind: 'anon', who: -1, name: 'ไม่ระบุชื่อ', text: t, ts: Date.now() }));
-    rep.forEach(r => G.sys(r));
+    if (opts?.defer) {
+      // Deferred: same Date.now order, but the lines wait in G.nightStash until publishNight.
+      G.report = [];
+      broadcast.forEach(t => G.feed.push({ kind: 'anon', who: -1, name: 'ไม่ระบุชื่อ', text: t, ts: Date.now() }));
+      const feedMark = G.feed.length;
+      // rep[0] is the Burnout headline (public); every other line is status
+      const lines = rep.map((text, i) => ({ text, kind: i === 0 ? 'public' : 'status', entry: { kind: 'sys', text, ts: Date.now() }, at: null }));
+      G.nightStash = { day: G.day, feedMark, lines };
+    } else {
+      G.report = rep;
+      broadcast.forEach(t => G.feed.push({ kind: 'anon', who: -1, name: 'ไม่ระบุชื่อ', text: t, ts: Date.now() }));
+      rep.forEach(r => G.sys(r));
+    }
     G.blockIntel = null;
     G.players.forEach(p => p.overpromised = false);
     G.log('ประมวลผลกลางคืน', rep.join(' | '));
+  },
+  // A status line written after resolveNight (NDA, Meeting Hijack). Deferred: joins the stash in code order.
+  addNightLine(text, opts) {
+    const G = this, st = G.nightStash;
+    if (!st) { G.report.push(text); if (opts?.sys) G.sys(text); return; }
+    const line = { text, kind: 'status', entry: null, at: null };
+    if (opts?.sys) { line.entry = { kind: 'sys', text, ts: Date.now() }; line.at = G.feed.length; }
+    st.lines.push(line);
+  },
+  // Releases the stashed night report. gated: only the public headline is shown, the rest goes to the on-call player.
+  publishNight(opts) {
+    const G = this, st = G.nightStash;
+    if (!st) return;
+    G.nightStash = null;
+    const gated = !!opts?.gated;
+    const shown = gated ? st.lines.filter(l => l.kind === 'public') : st.lines;
+    G.report.unshift(...shown.map(l => l.text));
+    // splice highest index first so earlier indices hold
+    const ins = [];
+    st.lines.forEach(l => { if (l.entry && l.at != null && shown.includes(l)) ins.push({ at: l.at, entry: l.entry }); });
+    ins.sort((a, b) => b.at - a.at).forEach(x => G.feed.splice(x.at, 0, x.entry));
+    G.feed.splice(st.feedMark, 0, ...st.lines.filter(l => l.entry && l.at == null && shown.includes(l)).map(l => l.entry));
+    if (gated) {
+      G.event.fullReport = st.lines.map(l => l.text);
+      const to = G.event.onCall;
+      if (to != null && G.intel[to]) st.lines.forEach(l => G.intel[to].push({ day: st.day, text: '📟 สรุปเมื่อคืน (วิศวกรเวร): ' + l.text }));
+    }
   },
 };

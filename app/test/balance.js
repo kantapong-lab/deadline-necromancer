@@ -37,6 +37,7 @@ function play(N, o) {
         G.castVote(p.id, t);
       }
       G.closeVote();
+      if (G.phase === 'VOTE_INTERIM') { G.openRound2(); G.closeVote(); }
       if (G.phase === 'OVER') break;
     }
     if (G.phase === 'VOTE_RESULT') G.toNight();

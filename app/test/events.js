@@ -151,6 +151,166 @@ const cases = {
     const no = voteCard(table({ mana: 2 }), 'bonus', 0); assert.strictEqual(no.event.accepted, false);
     assert.strictEqual(night(no, { [HR]: bug }).mana, 2, 'rejected: +1 −1');
   },
+  purge() {     // ✂️ 3 messages of <= 30 code points each, emoji exempt, dark chat unlimited
+    const G = setEvent(table(), 'purge'); G.phase = 'MORNING'; G.chatUsed = {};
+    const chatsOf = id => G.feed.filter(f => f.kind === 'chat' && f.who === id).length;
+    assert.strictEqual(G.chat(0, 'a'.repeat(30)), null, '30 code points is allowed');
+    assert.strictEqual(G.viewFor(0).me.chatLeft, 2);
+    assert.match(G.chat(0, 'a'.repeat(31)), /ยาวเกิน 30/, '31 is rejected, not truncated');
+    assert.strictEqual(chatsOf(0), 1, 'nothing posted for the rejected message');
+    assert.strictEqual(G.viewFor(0).me.chatLeft, 2, 'reject did not use quota');
+    assert.strictEqual(G.chat(0, 'b'), null); assert.strictEqual(G.chat(0, 'c'), null);
+    assert.match(G.chat(0, 'd'), /โควตาแชทวันนี้หมด/, '4th message rejected');
+    assert.strictEqual(G.viewFor(0).me.chatLeft, 0);
+    assert.strictEqual(G.chat(0, '👍'), null, 'emoji does not need quota'); assert.strictEqual(G.chat(0, '🙏'), null);
+    assert.strictEqual(G.viewFor(0).me.chatLeft, 0, 'emoji never counted');
+    assert.strictEqual(G.chat(1, 'x'.repeat(30) + '👍👍👍'), null, 'EMOJIS entries do not count toward 30');
+    assert.strictEqual(G.viewFor(1).me.chatLeft, 2, 'mixed text uses 1');
+    // Thai combining marks count as code points
+    assert.strictEqual(Array.from('ที่').length, 3);
+    assert.match(G.chat(2, 'ที่'.repeat(11)), /ยาวเกิน 30/, '33 code points');
+    assert.strictEqual(G.chat(2, 'ที่'.repeat(10)), null, '30 code points');
+    assert.deepStrictEqual(G.common().chatLimit, { msgs: 3, len: 30 });
+    // dark chat is unlimited and untouched
+    G.phase = 'NIGHT'; for (let i = 0; i < 6; i++) assert.strictEqual(G.darkSay(HR, 'z'.repeat(100)), null);
+    // NDA Silence still limits to emoji
+    G.phase = 'MORNING'; G.P(3).silenced = true;
+    assert.match(G.chat(3, 'hi'), /NDA Silence/); assert.strictEqual(G.chat(3, '😂'), null);
+    // control: no purge, no limits and no view fields
+    const C = table(); C.phase = 'MORNING';
+    assert.strictEqual(C.chat(0, 'a'.repeat(50)), null); assert.strictEqual(C.viewFor(0).me.chatLeft, undefined); assert.strictEqual(C.common().chatLimit, undefined);
+    // a new draw resets the quota
+    assert.strictEqual(draw(table(), 'purge').viewFor(0).me.chatLeft, 3);
+  },
+  hands() {     // 🧑‍🤝‍🧑 k = max(1, floor(alive/4)) alive players get weight 0, names announced
+    const G = draw(table(), 'hands');
+    assert.strictEqual(G.event.extra.length, 3, '12 alive -> 3');
+    assert.strictEqual(new Set(G.event.extra).size, 3);
+    G.event.extra.forEach(id => { assert(G.P(id).zero); assert.strictEqual(G.P(id).zeroNext, false, 'zeroNext never set'); assert(report(G).includes(G.P(id).name), 'name announced'); });
+    assert.strictEqual(G.players.filter(p => p.zero).length, 3);
+    assert(G.feed.some(f => f.kind === 'sys' && /More Hands on Deck/.test(f.text)));
+    assert.deepStrictEqual(G.common().event.extra, G.event.extra);
+    // weight 0 in the tally, but still can vote and be voted for
+    const ex = G.event.extra[0], free = G.alive().filter(p => !p.zero).map(p => p.id);
+    G.phase = 'VOTE'; G.votes = {};
+    assert.strictEqual(G.castVote(ex, free[0]), null);
+    assert.strictEqual(G.castVote(free[1], ex), null);
+    const t = G.tallyVotes(); assert.strictEqual(t.tally[free[0]] || 0, 0, 'zero-weight vote adds nothing'); assert.strictEqual(t.tally[ex], 1, 'extra can be targeted');
+    // alive=3 -> k=1
+    const S = table(); S.players.slice(3).forEach(p => { p.alive = false; }); draw(S, 'hands');
+    assert.strictEqual(S.event.extra.length, 1, 'k floors at 1');
+    // reset by the existing shift at night end
+    const R = draw(table(), 'hands'); R.phase = 'NIGHT'; R.night = {}; R.deck = ['approve']; R.closeNight();
+    assert.strictEqual(R.players.filter(p => p.zero).length, 0, 'zero reset next morning');
+    assert.strictEqual(draw(table(), 'approve').common().event.extra, undefined);
+  },
+  uat() {       // 🔎 after the tally 3 distinct alive players, truthful, before checkEnd
+    for (let i = 0; i < 60; i++) {
+      const G = setEvent(table(), 'uat'); G.phase = 'VOTE'; G.votes = { 0: HR, 1: HR, 2: HR }; G.voteRound = 0;
+      G.closeVote();
+      const line = G.voteResult.lines[G.voteResult.lines.length - 1];
+      assert.match(line, /UAT Too Late: สุ่มทดสอบ P\d+, P\d+, P\d+ → (มีฝ่ายมืดอย่างน้อย 1 คน|ไม่มีฝ่ายมืด)/);
+      const ids = [...line.split('→')[0].matchAll(/P(\d+)/g)].map(m => +m[1]);
+      assert.strictEqual(new Set(ids).size, 3, 'distinct'); ids.forEach(id => assert(G.P(id).alive, 'pool = alive after ejection'));
+      assert.strictEqual(/→ มีฝ่ายมืด/.test(line), ids.some(id => G.P(id).faction === 'dark'), 'truthful');
+      assert(G.feed.some(f => f.text === line) && G.report.includes(line));
+    }
+    // ejection really happens: every alive player votes HR, so HR is out before the UAT pool is drawn
+    for (let i = 0; i < 60; i++) {
+      const G = setEvent(table(), 'uat'); G.phase = 'VOTE'; G.votes = {}; G.voteRound = 0;
+      G.alive().forEach(p => { G.votes[p.id] = HR; });
+      G.closeVote();
+      assert.strictEqual(G.P(HR).alive, false, 'HR ejected');
+      const line = G.voteResult.lines[G.voteResult.lines.length - 1];
+      assert.match(line, /UAT Too Late: สุ่มทดสอบ P\d+, P\d+, P\d+ → /);
+      const picks = line.split('→')[0];
+      const ids = [...picks.matchAll(/P(\d+)/g)].map(m => +m[1]);
+      assert.strictEqual(new Set(ids).size, 3, 'distinct');
+      assert(!ids.includes(HR) && !picks.includes(G.P(HR).name), 'ejected name never in the UAT line');
+      ids.forEach(id => assert(G.P(id).alive, 'every named player is alive'));
+    }
+    // ignores Honeypot, Alibi, Overpromise: only seat 7 (dark) + 0 + 1 alive, so it is always picked
+    const H = setEvent(table(), 'uat'); H.players.forEach(p => { if (p.id !== HR && p.id !== 0 && p.id !== 1) p.alive = false; });
+    H.P(0).overpromised = true; H.traps = [{ kind: 'honeypot', target: HR, day: H.day }, { kind: 'alibi', target: HR, day: H.day }];
+    H.phase = 'VOTE'; H.votes = {}; H.closeVote();
+    assert(/มีฝ่ายมืดอย่างน้อย 1 คน/.test(H.voteResult.lines.pop()), 'dark is still dark');
+    // fewer than 3 alive uses all, no error
+    const F = setEvent(table(), 'uat'); F.players.forEach(p => { if (p.id > 1) p.alive = false; });
+    F.phase = 'VOTE'; F.votes = {}; F.closeVote();
+    assert.match(F.voteResult.lines.pop(), /สุ่มทดสอบ P[01], P[01] → /);
+    // announced before the game can end
+    const E = setEvent(table(), 'uat'); E.players.forEach(p => { if (p.faction === 'dark' && p.id !== HR) p.alive = false; });
+    E.phase = 'VOTE'; E.votes = {}; E.alive().forEach(p => { E.votes[p.id] = HR; }); E.closeVote();
+    assert(E.over, 'game ended after the vote'); assert(E.feed.findIndex(f => /UAT Too Late/.test(f.text)) >= 0, 'announced before checkEnd');
+    assert(E.feed.findIndex(f => /UAT Too Late/.test(f.text)) < E.feed.length - 1, 'game-over line comes after');
+    // inactive: no Math.random in the final close and no UAT line
+    const C = table(); C.phase = 'VOTE'; C.votes = { 0: HR }; const orig = Math.random; let calls = 0; Math.random = () => { calls++; return orig(); };
+    try { C.closeVote(); } finally { Math.random = orig; }
+    assert.strictEqual(calls, 0); assert(!C.voteResult.lines.some(l => /UAT/.test(l)));
+  },
+  redesign() {  // 🗳️ two rounds: interim counts only, round 1 has no effects, round 2 decides
+    const G = setEvent(table(), 'redesign'); G.phase = 'MORNING';
+    assert.strictEqual(G.toVote(), null); assert.strictEqual(G.voteRound, 1);
+    assert.strictEqual(G.viewFor(0).voteRound, 1);
+    G.castVote(0, HR); G.castVote(1, HR); G.castVote(2, 'SKIP');
+    G.bonusVotes = [{ to: 3 }]; G.traps = [{ kind: 'blame', day: G.day - 1 }]; G.skipStreak = 0; G.mana = 3; const lv = G.lastVotes;
+    const snap = JSON.stringify([G.traps, G.bonusVotes, G.skipStreak, G.mana, G.voteResult]);
+    G.timer = { end: 1 };
+    G.closeVote();
+    assert.strictEqual(G.phase, 'VOTE_INTERIM'); assert.strictEqual(G.timer, null);
+    assert(G.P(HR).alive, 'nobody ejected');
+    assert.strictEqual(JSON.stringify([G.traps, G.bonusVotes, G.skipStreak, G.mana, G.voteResult]), snap, 'no round-1 side effects');
+    assert.strictEqual(G.lastVotes, lv);
+    const v = G.viewFor(5); assert.strictEqual(v.interim.tally[0].name, 'P7'); assert.strictEqual(v.interim.tally[0].n, 2);
+    assert(v.interim.skip >= 1); assert.strictEqual(v.voteResult, null);
+    assert(!/→/.test(JSON.stringify(v.interim) + G.feed.filter(f => /รอบแรก/.test(f.text)).map(f => f.text).join('')), 'no voter-to-target pairs');
+    assert.strictEqual(G.modView(true).interim.skip, v.interim.skip);
+    assert.strictEqual(G.chat(5, 'คุยกัน'), null, 'public chat allowed in interim');
+    assert.match(G.castVote(5, HR), /ยังไม่ถึงเฟสโหวต/);
+    assert.match(G.toNight(), /เปลี่ยนเฟสไม่ได้/, 'cannot skip to night'); assert.strictEqual(G.phase, 'VOTE_INTERIM');
+    assert.strictEqual(G.openRound2(), null); assert.strictEqual(G.phase, 'VOTE'); assert.strictEqual(G.voteRound, 2);
+    assert.match(G.openRound2(), /เปลี่ยนเฟสไม่ได้/, 'only from VOTE_INTERIM');
+    assert.strictEqual(G.votes[0], HR, 'round-1 vote kept');
+    assert.strictEqual(G.castVote(0, 3), null); assert.strictEqual(G.votes[0], 3, 're-vote replaces');
+    G.closeVote();
+    assert.strictEqual(G.phase, 'VOTE_RESULT'); assert.strictEqual(G.voteRound, 0);
+    assert.strictEqual(G.lastVotes[0], 3, 'final uses round-2 vote'); assert.strictEqual(G.lastVotes[1], HR, 'kept round-1 vote');
+    assert.strictEqual(G.toNight(), null);
+    // Skip penalty only after round 2
+    const S = setEvent(table({ mana: 1 }), 'redesign'); S.phase = 'MORNING'; S.toVote(); S.closeVote(); assert.strictEqual(S.skipStreak, 0); S.openRound2(); S.closeVote(); assert.strictEqual(S.skipStreak, 1);
+    // control: non-#19 day goes straight to VOTE_RESULT
+    const C = table(); C.phase = 'MORNING'; C.toVote(); assert.strictEqual(C.voteRound, 0); C.closeVote(); assert.strictEqual(C.phase, 'VOTE_RESULT'); assert.strictEqual(C.common().voteRound, undefined);
+  },
+  status() {     // 🛠️ night report withheld: public sees Burnout names, one on-call gets the full report
+    const mk = () => { const G = table({ mana: 2 }); G.phase = 'NIGHT'; G.night = { [HR]: curse(0) }; G.deck = [...G.deck.filter(x => x !== 'status'), 'status']; return G; };
+    const G = mk(); G.closeNight();
+    assert.strictEqual(G.phase, 'MORNING'); assert(G.evIs('status'));
+    assert.strictEqual(G.report.length, 2, 'headline + announcement only');
+    assert(G.report[0].includes('P0'), 'Burnout name public'); assert(/วิศวกรเวร 1 คน/.test(G.report[1]));
+    const onCall = G.event.onCall; assert(G.P(onCall).alive);
+    const holders = G.players.filter(p => G.intel[p.id].some(i => /สรุปเมื่อคืน \(วิศวกรเวร\)/.test(i.text)));
+    assert.deepStrictEqual(holders.map(p => p.id), [onCall], 'exactly one on-call receives it');
+    assert(G.intel[onCall].some(i => /Mana/.test(i.text)), 'full report incl. Mana line');
+    const other = onCall === 5 ? 4 : 5;
+    assert(!JSON.stringify(G.viewFor(other)).includes('onCall') && !JSON.stringify(G.viewFor(other)).includes('fullReport'));
+    assert.strictEqual(G.modView(false).onCall, undefined); assert.strictEqual(G.modView(true).onCall, onCall);
+    assert(G.modView(false).statusReport.length > 1 && G.modView(false).statusReport.some(l => /Mana/.test(l)), 'moderator keeps the full report');
+    assert.strictEqual(G.common().mana, G.mana); assert.strictEqual(G.common().manaMax, 6);
+    assert(!JSON.stringify(G.common()).includes('onCall') && !JSON.stringify(G.pubPlayers(G.P(5), false)).includes('onCall'));
+    // Meeting Hijack trap + NDA-silenced player: both status lines withheld from public, both in on-call intel and moderator statusReport
+    const T = mk(); T.traps = [{ kind: 'hijack', target: null, day: T.day, fresh: false, triggered: false }]; T.P(5).silencedNext = true;
+    T.closeNight();
+    const pub = [...T.common().report, ...T.common().feed.map(f => f.text)].join('\n');
+    assert.doesNotMatch(pub, /Meeting Hijack/, 'hijack line not public'); assert.doesNotMatch(pub, /NDA Silence/, 'NDA line not public');
+    const onT = T.event.onCall; assert(T.P(onT).alive);
+    assert.match(intel(T, onT), /Meeting Hijack/, 'on-call gets hijack line'); assert.match(intel(T, onT), /NDA Silence/, 'on-call gets NDA line');
+    const sr = T.modView(false).statusReport.join('\n');
+    assert.match(sr, /Meeting Hijack/); assert.match(sr, /NDA Silence/);
+    // control: another card publishes the full report as before
+    const C = mk(); C.deck = ['approve']; C.closeNight(); assert(C.report.some(l => /Mana/.test(l)), 'full report public'); assert.strictEqual(C.modView(false).statusReport, undefined);
+    // Chaos Intern + #20 in one night: no crash
+    const X = mk(); X.P(5).role = 'chaos_intern'; X.P(5).faction = ROLES.chaos_intern.f; assert.doesNotThrow(() => X.closeNight());
+  },
 };
 
 let failed = 0;

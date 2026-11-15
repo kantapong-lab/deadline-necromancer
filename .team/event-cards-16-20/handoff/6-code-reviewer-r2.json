@@ -1,0 +1,1 @@
+{"role":"code-reviewer","task":"event-cards-16-20","step":"6","round":2,"status":"done","verdict":"Approve","paths_written":[],"blockers":[],"quality_checks":{"passed":true,"failed":[]},"summary":"Approve: B-1 closed (real ejection test, fails if pool built pre-ejection); S-1 hijack+NDA gating test non-trivial; S-2/S-4 skips acceptable."}

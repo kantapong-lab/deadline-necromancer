@@ -1,7 +1,7 @@
 'use strict';
 // Day vote: casting and closing (tally, outcome, traps).
 const { ROLES, FNAME } = require('../shared/data');
-const { rnd } = require('./random');
+const { rnd, shuffle } = require('./random');
 
 // Day vote
 module.exports = {
@@ -14,8 +14,9 @@ module.exports = {
     else if (!this.P(target)?.alive || target === pid) return 'เป้าหมายไม่ถูกต้อง';
     this.votes[pid] = target; return null;
   },
-  closeVote() {
-    const G = this, P = id => G.P(id), nm = id => G.nm(id);
+  // Pure: who voted what and the weighted tally (no writes, no bonusVotes).
+  tallyVotes() {
+    const G = this, P = id => G.P(id);
     const votes = {};
     G.alive().forEach(p => {
       if (p.silenced) return;
@@ -29,6 +30,31 @@ module.exports = {
       const v = P(+vid), w = (v.zero ? 0 : v.dbl ? 2 : 1) * (v.role === 'chaos_intern' && G.day >= 4 ? 2 : 1);
       if (t === 'SKIP') skip += w; else tally[t] = (tally[t] || 0) + w;
     });
+    return { votes, tally, skip };
+  },
+  // Redesign round 1 only: publish counts, keep every other vote effect for the final close.
+  closeRound1() {
+    const G = this;
+    const { tally, skip } = G.tallyVotes();
+    const rows = Object.entries(tally).map(([id, n]) => ({ name: G.nm(+id), n })).sort((a, b) => b.n - a.n);
+    G.interim = { tally: rows, skip };
+    G.phase = 'VOTE_INTERIM'; G.timer = null;
+    const txt = rows.map(r => `${r.name} ${r.n}`).join(', ') + (rows.length ? ', ' : '') + `Skip ${skip}`;
+    G.sys('🗳️ ผลโหวตรอบแรก (ยังไม่ตัดสิน): ' + txt); G.log('ปิดโหวตรอบแรก', txt);
+    return null;
+  },
+  openRound2() {
+    const G = this;
+    if (G.phase !== 'VOTE_INTERIM') return 'เปลี่ยนเฟสไม่ได้ในตอนนี้';
+    G.phase = 'VOTE'; G.voteRound = 2; G.interim = null; G.timer = null;
+    G.log('เปิดโหวตรอบสอง', 'โหวตใหม่ได้ ใครไม่โหวตใหม่ใช้คะแนนรอบแรก');
+    G.sys('🗳️ เปิดโหวตรอบสอง — โหวตใหม่ได้');
+    return null;
+  },
+  closeVote() {
+    const G = this, P = id => G.P(id), nm = id => G.nm(id);
+    if (G.evIs('redesign') && G.voteRound === 1) return G.closeRound1();
+    const { votes, tally, skip } = G.tallyVotes();
     G.bonusVotes.forEach(b => { if (P(b.to).alive) tally[b.to] = (tally[b.to] || 0) + 1; });
     const bonusUsed = G.bonusVotes.length; G.bonusVotes = [];
     G.lastVotes = votes;
@@ -72,8 +98,18 @@ module.exports = {
     if (trapMsgs.length) text += ' · ' + trapMsgs.join(' · ');
     G.traps = G.traps.filter(t => t.day >= G.day);
     G.voteResult = { lines, text, tally: Object.entries(tally).map(([id, n]) => ({ name: nm(+id), n })).sort((a, b) => b.n - a.n), skip };
-    G.phase = 'VOTE_RESULT';
+    G.phase = 'VOTE_RESULT'; G.voteRound = 0;
     G.sys('ผลโหวต: ' + text); G.log('ปิดโหวต — ประกาศผล', text);
+    if (G.evIs('uat')) G.uatAnnounce();
     G.checkEnd();
+  },
+  // UAT Too Late: 3 random alive players (after the ejection), truthful dark / no-dark verdict.
+  uatAnnounce() {
+    const G = this, pool = G.alive();
+    if (!pool.length) return;
+    const picked = shuffle(pool).slice(0, 3);
+    const dark = picked.some(p => p.faction === 'dark');
+    const msg = `🧪 UAT Too Late: สุ่มทดสอบ ${picked.map(p => p.name).join(', ')} → ${dark ? 'มีฝ่ายมืดอย่างน้อย 1 คน' : 'ไม่มีฝ่ายมืด'}`;
+    G.voteResult.lines.push(msg); G.sys(msg); G.report.push(msg); G.log('UAT Too Late', msg);
   },
 };

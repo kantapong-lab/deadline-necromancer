@@ -3,31 +3,31 @@
   "status": 200,
   "type": "text/html; charset=utf-8",
   "cache": "no-cache",
-  "sha256": "819ebf239ff01f404f95a38863bcd702097de432ee98112ba9ebbc6ec35bb0b1"
+  "sha256": "3880ac490378b3610c8cc8d7f05a99b88560e78edd47f03716a524408c207f2b"
  },
  "/?room=ABCD": {
   "status": 200,
   "type": "text/html; charset=utf-8",
   "cache": "no-cache",
-  "sha256": "819ebf239ff01f404f95a38863bcd702097de432ee98112ba9ebbc6ec35bb0b1"
+  "sha256": "3880ac490378b3610c8cc8d7f05a99b88560e78edd47f03716a524408c207f2b"
  },
  "/mod": {
   "status": 200,
   "type": "text/html; charset=utf-8",
   "cache": "no-cache",
-  "sha256": "1e9da033bc17ff5f28dbdd9f47736c26aba9615d9bb1fbe535d9fb14e61e9cff"
+  "sha256": "91393da4302071eba472a102759d6e78b720eb7d318769f55ea04ceadb372354"
  },
  "/gallery": {
   "status": 200,
   "type": "text/html; charset=utf-8",
   "cache": "no-cache",
-  "sha256": "203caac680cc2e139a0fc67c0925a97959ae8af8f550bcbb08f527557e8123c2"
+  "sha256": "b9af7420715a6f6d3975e990dfff7a50dbfbf5da37526840bec44a5f6b446d98"
  },
  "/data.js": {
   "status": 200,
   "type": "text/javascript; charset=utf-8",
   "cache": "no-cache",
-  "sha256": "c15ba698c6d47c284df5ea842c94d7c28b3e19667221c06340998defc901dcef"
+  "sha256": "30a087cd81376b5a940105ba9e654a12538c6b19d41656b1788203456d032b67"
  },
  "/style.css": {
   "status": 200,
@@ -39,31 +39,31 @@
   "status": 200,
   "type": "text/javascript; charset=utf-8",
   "cache": "no-cache",
-  "sha256": "c9ae20880ed2395c169d4b71152e20ce49c909a4df6bdc60fbf9ed8d3a776adf"
+  "sha256": "d5793b77c20f97606a05fef2107d425325625b639d48269744063b78897f4a92"
  },
  "/card-info.js": {
   "status": 200,
   "type": "text/javascript; charset=utf-8",
   "cache": "no-cache",
-  "sha256": "9c887c62746600230540910defe0cdfae99cddc973b5d12e9e45495bf1603487"
+  "sha256": "9f6258aec09f369397380fb52ff4b8457bd01fe01e08da61fcf9ef938b859c82"
  },
  "/index.html": {
   "status": 200,
   "type": "text/html; charset=utf-8",
   "cache": "no-cache",
-  "sha256": "819ebf239ff01f404f95a38863bcd702097de432ee98112ba9ebbc6ec35bb0b1"
+  "sha256": "3880ac490378b3610c8cc8d7f05a99b88560e78edd47f03716a524408c207f2b"
  },
  "/mod.html": {
   "status": 200,
   "type": "text/html; charset=utf-8",
   "cache": "no-cache",
-  "sha256": "1e9da033bc17ff5f28dbdd9f47736c26aba9615d9bb1fbe535d9fb14e61e9cff"
+  "sha256": "91393da4302071eba472a102759d6e78b720eb7d318769f55ea04ceadb372354"
  },
  "/gallery.html": {
   "status": 200,
   "type": "text/html; charset=utf-8",
   "cache": "no-cache",
-  "sha256": "203caac680cc2e139a0fc67c0925a97959ae8af8f550bcbb08f527557e8123c2"
+  "sha256": "b9af7420715a6f6d3975e990dfff7a50dbfbf5da37526840bec44a5f6b446d98"
  },
  "/socket.io/socket.io.js": {
   "status": 200,

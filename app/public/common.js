@@ -2,7 +2,7 @@
 const $ = s => document.querySelector(s);
 const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 const emit = (socket, ev, data) => new Promise(res => socket.emit(ev, data, res));
-const PHASES = { LOBBY: '🪑 ล็อบบี้', MORNING: '☀️ ห้องประชุมเช้า', VOTE: '🗳️ โหวตไล่ออก (PIP)', VOTE_RESULT: '📋 ผลโหวต', NIGHT: '🌙 ทำงานลับกลางคืน', OVER: '🏁 จบเกม' };
+const PHASES = { LOBBY: '🪑 ล็อบบี้', MORNING: '☀️ ห้องประชุมเช้า', VOTE: '🗳️ โหวตไล่ออก (PIP)', VOTE_INTERIM: '🗳️ พักรอบโหวต', VOTE_RESULT: '📋 ผลโหวต', NIGHT: '🌙 ทำงานลับกลางคืน', OVER: '🏁 จบเกม' };
 const CAUSE = { burnout: '💀 Burnout', fired: '🔥 ถูกไล่ออก', seeker: '💰 ชิ่งออก' };
 
 function topbar(s, extra = '') {
@@ -31,6 +31,14 @@ setInterval(tickTimer, 500);
 function feedHTML(feed, scrollKeep) {
   return feed.map(m => m.kind === 'sys' ? `<div class="msg sys">${esc(m.text)}</div>`
     : `<div class="msg ${m.kind === 'anon' ? 'anon' : m.mine ? 'you' : ''}"><b>${esc(m.name)}:</b> ${esc(m.text)}</div>`).join('');
+}
+// คะแนนรวมรอบแรก (#19) — มีเฉพาะจำนวน ไม่มีชื่อผู้โหวต
+function interimVotesHTML(s) {
+  const it = s.interim || { tally: [], skip: 0 };
+  const rows = (it.tally || []).filter(t => t.n > 0).map(t => `${esc(t.name)} — ${t.n} คะแนน`);
+  if (!rows.length) rows.push('ยังไม่มีใครโหวต');
+  rows.push(`⏭️ Skip — ${it.skip || 0}`);
+  return `<div class="votes">${rows.join('<br>')}</div>`;
 }
 function keepScroll(sel, render) {
   const el = $(sel), atBottom = !el || el.scrollHeight - el.scrollTop - el.clientHeight < 40, old = el?.scrollTop;

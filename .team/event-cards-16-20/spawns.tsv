@@ -1,0 +1,16 @@
+1	researcher	haiku	low	1	pass	0	L0 brief tok:121616
+2	product-manager	sonnet	low	1	pass	0	tok:30009
+2	product-manager	sonnet	low	2	pass	0	traceability rows tok:49124
+2	product-manager	sonnet	low	3	pass	0	split ac.md tok:86772
+3	designer	sonnet	medium	1	pass	0	tok:52301
+3	architect	sonnet	high	1	pass	0	tok:192624
+3	devops	sonnet	high	1	pass	0	mode 1 tok:32732
+4	backend-dev	sonnet	medium	1	pass	0	stage A tok:60766
+4	frontend-dev	sonnet	medium	1	pass	0	tok:66864
+4	backend-dev	sonnet	medium	2	pass	0	stage B cards tok:145094
+4	backend-dev	sonnet	medium	3	pass	0	golden balance tok:173180
+6	code-reviewer	sonnet	high	1	fail	0	tok:136178
+4	backend-dev	haiku	medium	4	fail	0	fix B-1 test tok:240199
+6	code-reviewer	sonnet	high	2	pass	0	tok:167330
+7	qa-tester	sonnet	medium	1	fail	0	tok:61358
+11	docs-writer	sonnet	low	1	pass	0	tok:88055
