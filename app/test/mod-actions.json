@@ -1,0 +1,2275 @@
+[
+ {
+  "step": "mod:create",
+  "ack": {
+   "ok": true,
+   "code": "<code0>",
+   "modToken": "<mtok1>"
+  },
+  "mod": {
+   "phase": "LOBBY",
+   "role": "moderator",
+   "secrets": false,
+   "canStart": false,
+   "players": [],
+   "hash": "e6a9cc2df3aad05b"
+  },
+  "who": null
+ },
+ {
+  "step": "mod:do from socket with no room",
+  "ack": {
+   "ok": false,
+   "error": "ไม่ใช่ Moderator"
+  },
+  "mod": {
+   "phase": "LOBBY",
+   "role": "moderator",
+   "secrets": false,
+   "canStart": false,
+   "players": [],
+   "hash": "e6a9cc2df3aad05b"
+  },
+  "who": null
+ },
+ {
+  "step": "join unknown room",
+  "ack": {
+   "ok": false,
+   "error": "ไม่พบห้องนี้"
+  },
+  "mod": {
+   "phase": "LOBBY",
+   "role": "moderator",
+   "secrets": false,
+   "canStart": false,
+   "players": [],
+   "hash": "e6a9cc2df3aad05b"
+  },
+  "who": null
+ },
+ {
+  "step": "join empty name",
+  "ack": {
+   "ok": false,
+   "error": "กรุณาใส่ชื่อ"
+  },
+  "mod": {
+   "phase": "LOBBY",
+   "role": "moderator",
+   "secrets": false,
+   "canStart": false,
+   "players": [],
+   "hash": "e6a9cc2df3aad05b"
+  },
+  "who": null
+ },
+ {
+  "step": "join A",
+  "ack": {
+   "ok": true,
+   "token": "<tok2>",
+   "code": "<code0>",
+   "name": "A"
+  },
+  "mod": {
+   "phase": "LOBBY",
+   "role": "moderator",
+   "secrets": false,
+   "canStart": false,
+   "players": [
+    "A+"
+   ],
+   "hash": "a753624f53968493"
+  },
+  "who": {
+   "phase": "LOBBY",
+   "role": "player",
+   "hash": "6e0bb4e37d2b9993"
+  }
+ },
+ {
+  "step": "join B",
+  "ack": {
+   "ok": true,
+   "token": "<tok3>",
+   "code": "<code0>",
+   "name": "B"
+  },
+  "mod": {
+   "phase": "LOBBY",
+   "role": "moderator",
+   "secrets": false,
+   "canStart": false,
+   "players": [
+    "A+",
+    "B+"
+   ],
+   "hash": "fd769e6e7f32c764"
+  },
+  "who": {
+   "phase": "LOBBY",
+   "role": "player",
+   "hash": "e92df1b3872bf560"
+  }
+ },
+ {
+  "step": "join C",
+  "ack": {
+   "ok": true,
+   "token": "<tok4>",
+   "code": "<code0>",
+   "name": "C"
+  },
+  "mod": {
+   "phase": "LOBBY",
+   "role": "moderator",
+   "secrets": false,
+   "canStart": false,
+   "players": [
+    "A+",
+    "B+",
+    "C+"
+   ],
+   "hash": "55dafa31c953357b"
+  },
+  "who": {
+   "phase": "LOBBY",
+   "role": "player",
+   "hash": "edd1b8d373c3371a"
+  }
+ },
+ {
+  "step": "join D",
+  "ack": {
+   "ok": true,
+   "token": "<tok5>",
+   "code": "<code0>",
+   "name": "D"
+  },
+  "mod": {
+   "phase": "LOBBY",
+   "role": "moderator",
+   "secrets": false,
+   "canStart": false,
+   "players": [
+    "A+",
+    "B+",
+    "C+",
+    "D+"
+   ],
+   "hash": "eafe1a1a22ddc634"
+  },
+  "who": {
+   "phase": "LOBBY",
+   "role": "player",
+   "hash": "f841f8bc6fef0e91"
+  }
+ },
+ {
+  "step": "join E",
+  "ack": {
+   "ok": true,
+   "token": "<tok6>",
+   "code": "<code0>",
+   "name": "E"
+  },
+  "mod": {
+   "phase": "LOBBY",
+   "role": "moderator",
+   "secrets": false,
+   "canStart": false,
+   "players": [
+    "A+",
+    "B+",
+    "C+",
+    "D+",
+    "E+"
+   ],
+   "hash": "bab577f0c7b97f97"
+  },
+  "who": {
+   "phase": "LOBBY",
+   "role": "player",
+   "hash": "8b74c99c36a71f7d"
+  }
+ },
+ {
+  "step": "join F",
+  "ack": {
+   "ok": true,
+   "token": "<tok7>",
+   "code": "<code0>",
+   "name": "F"
+  },
+  "mod": {
+   "phase": "LOBBY",
+   "role": "moderator",
+   "secrets": false,
+   "canStart": true,
+   "players": [
+    "A+",
+    "B+",
+    "C+",
+    "D+",
+    "E+",
+    "F+"
+   ],
+   "hash": "379aeeb7ec6aaa83"
+  },
+  "who": {
+   "phase": "LOBBY",
+   "role": "player",
+   "hash": "390e7ee6572cd63d"
+  }
+ },
+ {
+  "step": "join G",
+  "ack": {
+   "ok": true,
+   "token": "<tok8>",
+   "code": "<code0>",
+   "name": "G"
+  },
+  "mod": {
+   "phase": "LOBBY",
+   "role": "moderator",
+   "secrets": false,
+   "canStart": true,
+   "players": [
+    "A+",
+    "B+",
+    "C+",
+    "D+",
+    "E+",
+    "F+",
+    "G+"
+   ],
+   "hash": "a1ff073083cae327"
+  },
+  "who": {
+   "phase": "LOBBY",
+   "role": "player",
+   "hash": "2ff217537a39850e"
+  }
+ },
+ {
+  "step": "join duplicate name",
+  "ack": {
+   "ok": false,
+   "error": "ชื่อนี้ถูกใช้แล้ว"
+  },
+  "mod": {
+   "phase": "LOBBY",
+   "role": "moderator",
+   "secrets": false,
+   "canStart": true,
+   "players": [
+    "A+",
+    "B+",
+    "C+",
+    "D+",
+    "E+",
+    "F+",
+    "G+"
+   ],
+   "hash": "a1ff073083cae327"
+  },
+  "who": null
+ },
+ {
+  "step": "mod:do by player",
+  "ack": {
+   "ok": false,
+   "error": "ไม่ใช่ Moderator"
+  },
+  "mod": {
+   "phase": "LOBBY",
+   "role": "moderator",
+   "secrets": false,
+   "canStart": true,
+   "players": [
+    "A+",
+    "B+",
+    "C+",
+    "D+",
+    "E+",
+    "F+",
+    "G+"
+   ],
+   "hash": "a1ff073083cae327"
+  },
+  "who": {
+   "phase": "LOBBY",
+   "role": "player",
+   "hash": "fb3756f3448e41ca"
+  }
+ },
+ {
+  "step": "kick by name G",
+  "ack": {
+   "ok": true
+  },
+  "mod": {
+   "phase": "LOBBY",
+   "role": "moderator",
+   "secrets": false,
+   "canStart": true,
+   "players": [
+    "A+",
+    "B+",
+    "C+",
+    "D+",
+    "E+",
+    "F+"
+   ],
+   "hash": "379aeeb7ec6aaa83"
+  },
+  "who": null
+ },
+ {
+  "step": "G received kicked",
+  "value": true
+ },
+ {
+  "step": "kick by token F",
+  "ack": {
+   "ok": true
+  },
+  "mod": {
+   "phase": "LOBBY",
+   "role": "moderator",
+   "secrets": false,
+   "canStart": false,
+   "players": [
+    "A+",
+    "B+",
+    "C+",
+    "D+",
+    "E+"
+   ],
+   "hash": "bab577f0c7b97f97"
+  },
+  "who": null
+ },
+ {
+  "step": "F received kicked",
+  "value": true
+ },
+ {
+  "step": "kick unknown",
+  "ack": {
+   "ok": true
+  },
+  "mod": {
+   "phase": "LOBBY",
+   "role": "moderator",
+   "secrets": false,
+   "canStart": false,
+   "players": [
+    "A+",
+    "B+",
+    "C+",
+    "D+",
+    "E+"
+   ],
+   "hash": "bab577f0c7b97f97"
+  },
+  "who": null
+ },
+ {
+  "step": "closeVote before start",
+  "ack": {
+   "ok": false,
+   "error": "ยังไม่ได้เริ่มเกม"
+  },
+  "mod": {
+   "phase": "LOBBY",
+   "role": "moderator",
+   "secrets": false,
+   "canStart": false,
+   "players": [
+    "A+",
+    "B+",
+    "C+",
+    "D+",
+    "E+"
+   ],
+   "hash": "bab577f0c7b97f97"
+  },
+  "who": null
+ },
+ {
+  "step": "bogus before start",
+  "ack": {
+   "ok": false,
+   "error": "ยังไม่ได้เริ่มเกม"
+  },
+  "mod": {
+   "phase": "LOBBY",
+   "role": "moderator",
+   "secrets": false,
+   "canStart": false,
+   "players": [
+    "A+",
+    "B+",
+    "C+",
+    "D+",
+    "E+"
+   ],
+   "hash": "bab577f0c7b97f97"
+  },
+  "who": null
+ },
+ {
+  "step": "start with 5",
+  "ack": {
+   "ok": false,
+   "error": "ต้องมีผู้เล่น 6–12 คน (ตอนนี้ 5)"
+  },
+  "mod": {
+   "phase": "LOBBY",
+   "role": "moderator",
+   "secrets": false,
+   "canStart": false,
+   "players": [
+    "A+",
+    "B+",
+    "C+",
+    "D+",
+    "E+"
+   ],
+   "hash": "bab577f0c7b97f97"
+  },
+  "who": null
+ },
+ {
+  "step": "p:chat in lobby",
+  "ack": {
+   "ok": false,
+   "error": "ยังไม่ได้เริ่มเกม"
+  },
+  "mod": {
+   "phase": "LOBBY",
+   "role": "moderator",
+   "secrets": false,
+   "canStart": false,
+   "players": [
+    "A+",
+    "B+",
+    "C+",
+    "D+",
+    "E+"
+   ],
+   "hash": "bab577f0c7b97f97"
+  },
+  "who": {
+   "phase": "LOBBY",
+   "role": "player",
+   "hash": "b53f8b18952c839e"
+  }
+ },
+ {
+  "step": "secrets on (lobby)",
+  "ack": {
+   "ok": true
+  },
+  "mod": {
+   "phase": "LOBBY",
+   "role": "moderator",
+   "secrets": true,
+   "canStart": false,
+   "players": [
+    "A+",
+    "B+",
+    "C+",
+    "D+",
+    "E+"
+   ],
+   "hash": "c800d6d7db598d29"
+  },
+  "who": {
+   "phase": "LOBBY",
+   "role": "player",
+   "hash": "b53f8b18952c839e"
+  }
+ },
+ {
+  "step": "secrets off (lobby)",
+  "ack": {
+   "ok": true
+  },
+  "mod": {
+   "phase": "LOBBY",
+   "role": "moderator",
+   "secrets": false,
+   "canStart": false,
+   "players": [
+    "A+",
+    "B+",
+    "C+",
+    "D+",
+    "E+"
+   ],
+   "hash": "bab577f0c7b97f97"
+  },
+  "who": {
+   "phase": "LOBBY",
+   "role": "player",
+   "hash": "b53f8b18952c839e"
+  }
+ },
+ {
+  "step": "rejoin kicked name F (new member)",
+  "ack": {
+   "ok": true,
+   "token": "<tok9>",
+   "code": "<code0>",
+   "name": "F"
+  },
+  "mod": {
+   "phase": "LOBBY",
+   "role": "moderator",
+   "secrets": false,
+   "canStart": true,
+   "players": [
+    "A+",
+    "B+",
+    "C+",
+    "D+",
+    "E+",
+    "F+"
+   ],
+   "hash": "379aeeb7ec6aaa83"
+  },
+  "who": {
+   "phase": "LOBBY",
+   "role": "player",
+   "hash": "390e7ee6572cd63d"
+  }
+ },
+ {
+  "step": "start",
+  "ack": {
+   "ok": true
+  },
+  "mod": {
+   "phase": "MORNING",
+   "role": "moderator",
+   "secrets": false,
+   "paused": false,
+   "timer": null,
+   "players": [
+    "A",
+    "B",
+    "D",
+    "E",
+    "F",
+    "C"
+   ],
+   "pending": {
+    "booster": {
+     "done": 0,
+     "total": 6,
+     "waiting": [
+      "A",
+      "B",
+      "D",
+      "E",
+      "F",
+      "C"
+     ]
+    }
+   },
+   "hash": "92dec9d526e4fc36"
+  },
+  "who": {
+   "phase": "MORNING",
+   "role": "player",
+   "paused": false,
+   "hash": "6608f79372540f24"
+  }
+ },
+ {
+  "step": "start twice",
+  "ack": {
+   "ok": false,
+   "error": "เกมเริ่มแล้ว"
+  },
+  "mod": {
+   "phase": "MORNING",
+   "role": "moderator",
+   "secrets": false,
+   "paused": false,
+   "timer": null,
+   "players": [
+    "A",
+    "B",
+    "D",
+    "E",
+    "F",
+    "C"
+   ],
+   "pending": {
+    "booster": {
+     "done": 0,
+     "total": 6,
+     "waiting": [
+      "A",
+      "B",
+      "D",
+      "E",
+      "F",
+      "C"
+     ]
+    }
+   },
+   "hash": "92dec9d526e4fc36"
+  },
+  "who": {
+   "phase": "MORNING",
+   "role": "player",
+   "paused": false,
+   "hash": "6608f79372540f24"
+  }
+ },
+ {
+  "step": "join after start (new name)",
+  "ack": {
+   "ok": false,
+   "error": "เกมเริ่มไปแล้ว"
+  },
+  "mod": {
+   "phase": "MORNING",
+   "role": "moderator",
+   "secrets": false,
+   "paused": false,
+   "timer": null,
+   "players": [
+    "A",
+    "B",
+    "D",
+    "E",
+    "F",
+    "C"
+   ],
+   "pending": {
+    "booster": {
+     "done": 0,
+     "total": 6,
+     "waiting": [
+      "A",
+      "B",
+      "D",
+      "E",
+      "F",
+      "C"
+     ]
+    }
+   },
+   "hash": "92dec9d526e4fc36"
+  },
+  "who": null
+ },
+ {
+  "step": "kick in game",
+  "ack": {
+   "ok": false,
+   "error": "เตะผู้เล่นได้เฉพาะตอนอยู่ในล็อบบี้"
+  },
+  "mod": {
+   "phase": "MORNING",
+   "role": "moderator",
+   "secrets": false,
+   "paused": false,
+   "timer": null,
+   "players": [
+    "A",
+    "B",
+    "D",
+    "E",
+    "F",
+    "C"
+   ],
+   "pending": {
+    "booster": {
+     "done": 0,
+     "total": 6,
+     "waiting": [
+      "A",
+      "B",
+      "D",
+      "E",
+      "F",
+      "C"
+     ]
+    }
+   },
+   "hash": "92dec9d526e4fc36"
+  },
+  "who": null
+ },
+ {
+  "step": "secrets on (game)",
+  "ack": {
+   "ok": true
+  },
+  "mod": {
+   "phase": "MORNING",
+   "role": "moderator",
+   "secrets": true,
+   "paused": false,
+   "timer": null,
+   "players": [
+    "A=senior_dev",
+    "B=rune_ux",
+    "D=shadow_legal",
+    "E=soul_recruiter",
+    "F=chrono_tech_lead",
+    "C=qa_hunter"
+   ],
+   "pending": {
+    "booster": {
+     "done": 0,
+     "total": 6,
+     "waiting": [
+      "A",
+      "B",
+      "D",
+      "E",
+      "F",
+      "C"
+     ]
+    }
+   },
+   "hash": "6721c6112ce8a8c8"
+  },
+  "who": {
+   "phase": "MORNING",
+   "role": "player",
+   "paused": false,
+   "hash": "6608f79372540f24"
+  }
+ },
+ {
+  "step": "secrets off (game)",
+  "ack": {
+   "ok": true
+  },
+  "mod": {
+   "phase": "MORNING",
+   "role": "moderator",
+   "secrets": false,
+   "paused": false,
+   "timer": null,
+   "players": [
+    "A",
+    "B",
+    "D",
+    "E",
+    "F",
+    "C"
+   ],
+   "pending": {
+    "booster": {
+     "done": 0,
+     "total": 6,
+     "waiting": [
+      "A",
+      "B",
+      "D",
+      "E",
+      "F",
+      "C"
+     ]
+    }
+   },
+   "hash": "92dec9d526e4fc36"
+  },
+  "who": {
+   "phase": "MORNING",
+   "role": "player",
+   "paused": false,
+   "hash": "6608f79372540f24"
+  }
+ },
+ {
+  "step": "pause on",
+  "ack": {
+   "ok": true
+  },
+  "mod": {
+   "phase": "MORNING",
+   "role": "moderator",
+   "secrets": false,
+   "paused": true,
+   "timer": null,
+   "players": [
+    "A",
+    "B",
+    "D",
+    "E",
+    "F",
+    "C"
+   ],
+   "pending": {
+    "booster": {
+     "done": 0,
+     "total": 6,
+     "waiting": [
+      "A",
+      "B",
+      "D",
+      "E",
+      "F",
+      "C"
+     ]
+    }
+   },
+   "hash": "cca971b9f415061b"
+  },
+  "who": {
+   "phase": "MORNING",
+   "role": "player",
+   "paused": true,
+   "hash": "9cb821f63f89e1a4"
+  }
+ },
+ {
+  "step": "p:chat while paused",
+  "ack": {
+   "ok": false,
+   "error": "Moderator พักเกมอยู่"
+  },
+  "mod": {
+   "phase": "MORNING",
+   "role": "moderator",
+   "secrets": false,
+   "paused": true,
+   "timer": null,
+   "players": [
+    "A",
+    "B",
+    "D",
+    "E",
+    "F",
+    "C"
+   ],
+   "pending": {
+    "booster": {
+     "done": 0,
+     "total": 6,
+     "waiting": [
+      "A",
+      "B",
+      "D",
+      "E",
+      "F",
+      "C"
+     ]
+    }
+   },
+   "hash": "cca971b9f415061b"
+  },
+  "who": {
+   "phase": "MORNING",
+   "role": "player",
+   "paused": true,
+   "hash": "9cb821f63f89e1a4"
+  }
+ },
+ {
+  "step": "p:vote while paused",
+  "ack": {
+   "ok": false,
+   "error": "Moderator พักเกมอยู่"
+  },
+  "mod": {
+   "phase": "MORNING",
+   "role": "moderator",
+   "secrets": false,
+   "paused": true,
+   "timer": null,
+   "players": [
+    "A",
+    "B",
+    "D",
+    "E",
+    "F",
+    "C"
+   ],
+   "pending": {
+    "booster": {
+     "done": 0,
+     "total": 6,
+     "waiting": [
+      "A",
+      "B",
+      "D",
+      "E",
+      "F",
+      "C"
+     ]
+    }
+   },
+   "hash": "cca971b9f415061b"
+  },
+  "who": {
+   "phase": "MORNING",
+   "role": "player",
+   "paused": true,
+   "hash": "be9c5355b4ec5937"
+  }
+ },
+ {
+  "step": "pause off",
+  "ack": {
+   "ok": true
+  },
+  "mod": {
+   "phase": "MORNING",
+   "role": "moderator",
+   "secrets": false,
+   "paused": false,
+   "timer": null,
+   "players": [
+    "A",
+    "B",
+    "D",
+    "E",
+    "F",
+    "C"
+   ],
+   "pending": {
+    "booster": {
+     "done": 0,
+     "total": 6,
+     "waiting": [
+      "A",
+      "B",
+      "D",
+      "E",
+      "F",
+      "C"
+     ]
+    }
+   },
+   "hash": "5f1f0584bf0ed2d7"
+  },
+  "who": {
+   "phase": "MORNING",
+   "role": "player",
+   "paused": false,
+   "hash": "6c34ab8ac0383ebd"
+  }
+ },
+ {
+  "step": "p:chat after pause",
+  "ack": {
+   "ok": true
+  },
+  "mod": {
+   "phase": "MORNING",
+   "role": "moderator",
+   "secrets": false,
+   "paused": false,
+   "timer": null,
+   "players": [
+    "A",
+    "B",
+    "D",
+    "E",
+    "F",
+    "C"
+   ],
+   "pending": {
+    "booster": {
+     "done": 0,
+     "total": 6,
+     "waiting": [
+      "A",
+      "B",
+      "D",
+      "E",
+      "F",
+      "C"
+     ]
+    }
+   },
+   "hash": "ba58c459bbbd7519"
+  },
+  "who": {
+   "phase": "MORNING",
+   "role": "player",
+   "paused": false,
+   "hash": "a0689c6af7c81d44"
+  }
+ },
+ {
+  "step": "timer 45",
+  "ack": {
+   "ok": true
+  },
+  "mod": {
+   "phase": "MORNING",
+   "role": "moderator",
+   "secrets": false,
+   "paused": false,
+   "timer": {
+    "sec": 45,
+    "phase": "MORNING"
+   },
+   "players": [
+    "A",
+    "B",
+    "D",
+    "E",
+    "F",
+    "C"
+   ],
+   "pending": {
+    "booster": {
+     "done": 0,
+     "total": 6,
+     "waiting": [
+      "A",
+      "B",
+      "D",
+      "E",
+      "F",
+      "C"
+     ]
+    }
+   },
+   "hash": "05a15930e2e2e8ec"
+  },
+  "who": {
+   "phase": "MORNING",
+   "role": "player",
+   "paused": false,
+   "hash": "486b17649a7472b4"
+  }
+ },
+ {
+  "step": "timer clear",
+  "ack": {
+   "ok": true
+  },
+  "mod": {
+   "phase": "MORNING",
+   "role": "moderator",
+   "secrets": false,
+   "paused": false,
+   "timer": null,
+   "players": [
+    "A",
+    "B",
+    "D",
+    "E",
+    "F",
+    "C"
+   ],
+   "pending": {
+    "booster": {
+     "done": 0,
+     "total": 6,
+     "waiting": [
+      "A",
+      "B",
+      "D",
+      "E",
+      "F",
+      "C"
+     ]
+    }
+   },
+   "hash": "15debdcac0a0554f"
+  },
+  "who": {
+   "phase": "MORNING",
+   "role": "player",
+   "paused": false,
+   "hash": "a0689c6af7c81d44"
+  }
+ },
+ {
+  "step": "timer garbage",
+  "ack": {
+   "ok": true
+  },
+  "mod": {
+   "phase": "MORNING",
+   "role": "moderator",
+   "secrets": false,
+   "paused": false,
+   "timer": null,
+   "players": [
+    "A",
+    "B",
+    "D",
+    "E",
+    "F",
+    "C"
+   ],
+   "pending": {
+    "booster": {
+     "done": 0,
+     "total": 6,
+     "waiting": [
+      "A",
+      "B",
+      "D",
+      "E",
+      "F",
+      "C"
+     ]
+    }
+   },
+   "hash": "9577a8ef9a784ddb"
+  },
+  "who": {
+   "phase": "MORNING",
+   "role": "player",
+   "paused": false,
+   "hash": "a0689c6af7c81d44"
+  }
+ },
+ {
+  "step": "announce",
+  "ack": {
+   "ok": true
+  },
+  "mod": {
+   "phase": "MORNING",
+   "role": "moderator",
+   "secrets": false,
+   "paused": false,
+   "timer": null,
+   "players": [
+    "A",
+    "B",
+    "D",
+    "E",
+    "F",
+    "C"
+   ],
+   "pending": {
+    "booster": {
+     "done": 0,
+     "total": 6,
+     "waiting": [
+      "A",
+      "B",
+      "D",
+      "E",
+      "F",
+      "C"
+     ]
+    }
+   },
+   "hash": "cc7e62a70d8c819e"
+  },
+  "who": {
+   "phase": "MORNING",
+   "role": "player",
+   "paused": false,
+   "hash": "081118af18aa084f"
+  }
+ },
+ {
+  "step": "announce empty",
+  "ack": {
+   "ok": true
+  },
+  "mod": {
+   "phase": "MORNING",
+   "role": "moderator",
+   "secrets": false,
+   "paused": false,
+   "timer": null,
+   "players": [
+    "A",
+    "B",
+    "D",
+    "E",
+    "F",
+    "C"
+   ],
+   "pending": {
+    "booster": {
+     "done": 0,
+     "total": 6,
+     "waiting": [
+      "A",
+      "B",
+      "D",
+      "E",
+      "F",
+      "C"
+     ]
+    }
+   },
+   "hash": "cc7e62a70d8c819e"
+  },
+  "who": {
+   "phase": "MORNING",
+   "role": "player",
+   "paused": false,
+   "hash": "081118af18aa084f"
+  }
+ },
+ {
+  "step": "announce long (cut at 200)",
+  "ack": {
+   "ok": true
+  },
+  "mod": {
+   "phase": "MORNING",
+   "role": "moderator",
+   "secrets": false,
+   "paused": false,
+   "timer": null,
+   "players": [
+    "A",
+    "B",
+    "D",
+    "E",
+    "F",
+    "C"
+   ],
+   "pending": {
+    "booster": {
+     "done": 0,
+     "total": 6,
+     "waiting": [
+      "A",
+      "B",
+      "D",
+      "E",
+      "F",
+      "C"
+     ]
+    }
+   },
+   "hash": "f0d83e77cf2c80d9"
+  },
+  "who": {
+   "phase": "MORNING",
+   "role": "player",
+   "paused": false,
+   "hash": "bcbe4fa93248dedb"
+  }
+ },
+ {
+  "step": "closeEvent none pending",
+  "ack": {
+   "ok": false,
+   "error": "ไม่มีการโหวตการ์ดที่ค้างอยู่"
+  },
+  "mod": {
+   "phase": "MORNING",
+   "role": "moderator",
+   "secrets": false,
+   "paused": false,
+   "timer": null,
+   "players": [
+    "A",
+    "B",
+    "D",
+    "E",
+    "F",
+    "C"
+   ],
+   "pending": {
+    "booster": {
+     "done": 0,
+     "total": 6,
+     "waiting": [
+      "A",
+      "B",
+      "D",
+      "E",
+      "F",
+      "C"
+     ]
+    }
+   },
+   "hash": "f0d83e77cf2c80d9"
+  },
+  "who": {
+   "phase": "MORNING",
+   "role": "player",
+   "paused": false,
+   "hash": "bcbe4fa93248dedb"
+  }
+ },
+ {
+  "step": "closeVote in MORNING",
+  "ack": {
+   "ok": false,
+   "error": "ไม่ได้อยู่ในเฟสโหวต"
+  },
+  "mod": {
+   "phase": "MORNING",
+   "role": "moderator",
+   "secrets": false,
+   "paused": false,
+   "timer": null,
+   "players": [
+    "A",
+    "B",
+    "D",
+    "E",
+    "F",
+    "C"
+   ],
+   "pending": {
+    "booster": {
+     "done": 0,
+     "total": 6,
+     "waiting": [
+      "A",
+      "B",
+      "D",
+      "E",
+      "F",
+      "C"
+     ]
+    }
+   },
+   "hash": "f0d83e77cf2c80d9"
+  },
+  "who": {
+   "phase": "MORNING",
+   "role": "player",
+   "paused": false,
+   "hash": "bcbe4fa93248dedb"
+  }
+ },
+ {
+  "step": "toNight in MORNING",
+  "ack": {
+   "ok": false,
+   "error": "เปลี่ยนเฟสไม่ได้ในตอนนี้"
+  },
+  "mod": {
+   "phase": "MORNING",
+   "role": "moderator",
+   "secrets": false,
+   "paused": false,
+   "timer": null,
+   "players": [
+    "A",
+    "B",
+    "D",
+    "E",
+    "F",
+    "C"
+   ],
+   "pending": {
+    "booster": {
+     "done": 0,
+     "total": 6,
+     "waiting": [
+      "A",
+      "B",
+      "D",
+      "E",
+      "F",
+      "C"
+     ]
+    }
+   },
+   "hash": "f0d83e77cf2c80d9"
+  },
+  "who": {
+   "phase": "MORNING",
+   "role": "player",
+   "paused": false,
+   "hash": "bcbe4fa93248dedb"
+  }
+ },
+ {
+  "step": "closeNight in MORNING",
+  "ack": {
+   "ok": false,
+   "error": "เปลี่ยนเฟสไม่ได้ในตอนนี้"
+  },
+  "mod": {
+   "phase": "MORNING",
+   "role": "moderator",
+   "secrets": false,
+   "paused": false,
+   "timer": null,
+   "players": [
+    "A",
+    "B",
+    "D",
+    "E",
+    "F",
+    "C"
+   ],
+   "pending": {
+    "booster": {
+     "done": 0,
+     "total": 6,
+     "waiting": [
+      "A",
+      "B",
+      "D",
+      "E",
+      "F",
+      "C"
+     ]
+    }
+   },
+   "hash": "f0d83e77cf2c80d9"
+  },
+  "who": {
+   "phase": "MORNING",
+   "role": "player",
+   "paused": false,
+   "hash": "bcbe4fa93248dedb"
+  }
+ },
+ {
+  "step": "bogus action",
+  "ack": {
+   "ok": false,
+   "error": "คำสั่งไม่ถูกต้อง"
+  },
+  "mod": {
+   "phase": "MORNING",
+   "role": "moderator",
+   "secrets": false,
+   "paused": false,
+   "timer": null,
+   "players": [
+    "A",
+    "B",
+    "D",
+    "E",
+    "F",
+    "C"
+   ],
+   "pending": {
+    "booster": {
+     "done": 0,
+     "total": 6,
+     "waiting": [
+      "A",
+      "B",
+      "D",
+      "E",
+      "F",
+      "C"
+     ]
+    }
+   },
+   "hash": "f0d83e77cf2c80d9"
+  },
+  "who": {
+   "phase": "MORNING",
+   "role": "player",
+   "paused": false,
+   "hash": "bcbe4fa93248dedb"
+  }
+ },
+ {
+  "step": "p:night in MORNING",
+  "ack": {
+   "ok": false,
+   "error": "ยังไม่ถึงกลางคืน"
+  },
+  "mod": {
+   "phase": "MORNING",
+   "role": "moderator",
+   "secrets": false,
+   "paused": false,
+   "timer": null,
+   "players": [
+    "A",
+    "B",
+    "D",
+    "E",
+    "F",
+    "C"
+   ],
+   "pending": {
+    "booster": {
+     "done": 0,
+     "total": 6,
+     "waiting": [
+      "A",
+      "B",
+      "D",
+      "E",
+      "F",
+      "C"
+     ]
+    }
+   },
+   "hash": "f0d83e77cf2c80d9"
+  },
+  "who": {
+   "phase": "MORNING",
+   "role": "player",
+   "paused": false,
+   "hash": "bcbe4fa93248dedb"
+  }
+ },
+ {
+  "step": "p:event none",
+  "ack": {
+   "ok": false,
+   "error": "ตอนนี้ไม่มีการ์ดให้โหวต"
+  },
+  "mod": {
+   "phase": "MORNING",
+   "role": "moderator",
+   "secrets": false,
+   "paused": false,
+   "timer": null,
+   "players": [
+    "A",
+    "B",
+    "D",
+    "E",
+    "F",
+    "C"
+   ],
+   "pending": {
+    "booster": {
+     "done": 0,
+     "total": 6,
+     "waiting": [
+      "A",
+      "B",
+      "D",
+      "E",
+      "F",
+      "C"
+     ]
+    }
+   },
+   "hash": "f0d83e77cf2c80d9"
+  },
+  "who": {
+   "phase": "MORNING",
+   "role": "player",
+   "paused": false,
+   "hash": "bcbe4fa93248dedb"
+  }
+ },
+ {
+  "step": "p:booster vote",
+  "ack": {
+   "ok": true
+  },
+  "mod": {
+   "phase": "MORNING",
+   "role": "moderator",
+   "secrets": false,
+   "paused": false,
+   "timer": null,
+   "players": [
+    "A",
+    "B",
+    "D",
+    "E",
+    "F",
+    "C"
+   ],
+   "pending": {
+    "booster": {
+     "done": 1,
+     "total": 6,
+     "waiting": [
+      "B",
+      "D",
+      "E",
+      "F",
+      "C"
+     ]
+    }
+   },
+   "hash": "f9c1b868f0f00000"
+  },
+  "who": {
+   "phase": "MORNING",
+   "role": "player",
+   "paused": false,
+   "hash": "e10bd21fd3deebdc"
+  }
+ },
+ {
+  "step": "closeBooster",
+  "ack": {
+   "ok": true
+  },
+  "mod": {
+   "phase": "MORNING",
+   "role": "moderator",
+   "secrets": false,
+   "paused": false,
+   "timer": null,
+   "players": [
+    "A",
+    "B",
+    "D",
+    "E",
+    "F",
+    "C"
+   ],
+   "pending": {},
+   "hash": "626ac3dfdedc8b84"
+  },
+  "who": {
+   "phase": "MORNING",
+   "role": "player",
+   "paused": false,
+   "hash": "bb62461531f2caa2"
+  }
+ },
+ {
+  "step": "closeBooster again",
+  "ack": {
+   "ok": false,
+   "error": "ไม่มีการโหวต Booster ที่ค้างอยู่"
+  },
+  "mod": {
+   "phase": "MORNING",
+   "role": "moderator",
+   "secrets": false,
+   "paused": false,
+   "timer": null,
+   "players": [
+    "A",
+    "B",
+    "D",
+    "E",
+    "F",
+    "C"
+   ],
+   "pending": {},
+   "hash": "626ac3dfdedc8b84"
+  },
+  "who": {
+   "phase": "MORNING",
+   "role": "player",
+   "paused": false,
+   "hash": "bb62461531f2caa2"
+  }
+ },
+ {
+  "step": "p:dark by anyone in day",
+  "ack": {
+   "ok": false,
+   "error": "ไม่มีสิทธิ์"
+  },
+  "mod": {
+   "phase": "MORNING",
+   "role": "moderator",
+   "secrets": false,
+   "paused": false,
+   "timer": null,
+   "players": [
+    "A",
+    "B",
+    "D",
+    "E",
+    "F",
+    "C"
+   ],
+   "pending": {},
+   "hash": "626ac3dfdedc8b84"
+  },
+  "who": {
+   "phase": "MORNING",
+   "role": "player",
+   "paused": false,
+   "hash": "bb62461531f2caa2"
+  }
+ },
+ {
+  "step": "B disconnected",
+  "ack": {
+   "ok": true
+  },
+  "mod": {
+   "phase": "MORNING",
+   "role": "moderator",
+   "secrets": false,
+   "paused": false,
+   "timer": null,
+   "players": [
+    "A",
+    "B",
+    "D",
+    "E",
+    "F",
+    "C"
+   ],
+   "pending": {},
+   "hash": "626ac3dfdedc8b84"
+  },
+  "who": {
+   "phase": "MORNING",
+   "role": "player",
+   "paused": false,
+   "hash": "bb62461531f2caa2"
+  }
+ },
+ {
+  "step": "rejoin by token",
+  "ack": {
+   "ok": true,
+   "token": "<tok3>",
+   "code": "<code0>",
+   "name": "B"
+  },
+  "mod": {
+   "phase": "MORNING",
+   "role": "moderator",
+   "secrets": false,
+   "paused": false,
+   "timer": null,
+   "players": [
+    "A",
+    "B",
+    "D",
+    "E",
+    "F",
+    "C"
+   ],
+   "pending": {},
+   "hash": "626ac3dfdedc8b84"
+  },
+  "who": {
+   "phase": "MORNING",
+   "role": "player",
+   "paused": false,
+   "hash": "69acd76250dab205"
+  }
+ },
+ {
+  "step": "rejoin by offline name",
+  "ack": {
+   "ok": true,
+   "token": "<tok3>",
+   "code": "<code0>",
+   "name": "B"
+  },
+  "mod": {
+   "phase": "MORNING",
+   "role": "moderator",
+   "secrets": false,
+   "paused": false,
+   "timer": null,
+   "players": [
+    "A",
+    "B",
+    "D",
+    "E",
+    "F",
+    "C"
+   ],
+   "pending": {},
+   "hash": "626ac3dfdedc8b84"
+  },
+  "who": {
+   "phase": "MORNING",
+   "role": "player",
+   "paused": false,
+   "hash": "69acd76250dab205"
+  }
+ },
+ {
+  "step": "join with online name",
+  "ack": {
+   "ok": false,
+   "error": "เกมเริ่มไปแล้ว"
+  },
+  "mod": {
+   "phase": "MORNING",
+   "role": "moderator",
+   "secrets": false,
+   "paused": false,
+   "timer": null,
+   "players": [
+    "A",
+    "B",
+    "D",
+    "E",
+    "F",
+    "C"
+   ],
+   "pending": {},
+   "hash": "626ac3dfdedc8b84"
+  },
+  "who": null
+ },
+ {
+  "step": "mod:join wrong token",
+  "ack": {
+   "ok": false,
+   "error": "ห้องหรือรหัส Moderator ไม่ถูกต้อง"
+  },
+  "mod": {
+   "phase": "MORNING",
+   "role": "moderator",
+   "secrets": false,
+   "paused": false,
+   "timer": null,
+   "players": [
+    "A",
+    "B",
+    "D",
+    "E",
+    "F",
+    "C"
+   ],
+   "pending": {},
+   "hash": "626ac3dfdedc8b84"
+  },
+  "who": null
+ },
+ {
+  "step": "mod:join wrong room",
+  "ack": {
+   "ok": false,
+   "error": "ห้องหรือรหัส Moderator ไม่ถูกต้อง"
+  },
+  "mod": {
+   "phase": "MORNING",
+   "role": "moderator",
+   "secrets": false,
+   "paused": false,
+   "timer": null,
+   "players": [
+    "A",
+    "B",
+    "D",
+    "E",
+    "F",
+    "C"
+   ],
+   "pending": {},
+   "hash": "626ac3dfdedc8b84"
+  },
+  "who": null
+ },
+ {
+  "step": "mod:join ok (lowercase code)",
+  "ack": {
+   "ok": true,
+   "code": "<code0>"
+  },
+  "mod": {
+   "phase": "MORNING",
+   "role": "moderator",
+   "secrets": false,
+   "paused": false,
+   "timer": null,
+   "players": [
+    "A",
+    "B",
+    "D",
+    "E",
+    "F",
+    "C"
+   ],
+   "pending": {},
+   "hash": "626ac3dfdedc8b84"
+  },
+  "who": null
+ },
+ {
+  "step": "toVote",
+  "ack": {
+   "ok": true
+  },
+  "mod": {
+   "phase": "VOTE",
+   "role": "moderator",
+   "secrets": false,
+   "paused": false,
+   "timer": null,
+   "players": [
+    "A",
+    "B",
+    "D",
+    "E",
+    "F",
+    "C"
+   ],
+   "pending": {
+    "vote": {
+     "done": 0,
+     "total": 6,
+     "waiting": [
+      "A",
+      "B",
+      "D",
+      "E",
+      "F",
+      "C"
+     ]
+    }
+   },
+   "hash": "16901fb5cd8d5b17"
+  },
+  "who": {
+   "phase": "VOTE",
+   "role": "player",
+   "paused": false,
+   "hash": "1a26128f84516bc7"
+  }
+ },
+ {
+  "step": "toVote again",
+  "ack": {
+   "ok": false,
+   "error": "เปลี่ยนเฟสไม่ได้ในตอนนี้"
+  },
+  "mod": {
+   "phase": "VOTE",
+   "role": "moderator",
+   "secrets": false,
+   "paused": false,
+   "timer": null,
+   "players": [
+    "A",
+    "B",
+    "D",
+    "E",
+    "F",
+    "C"
+   ],
+   "pending": {
+    "vote": {
+     "done": 0,
+     "total": 6,
+     "waiting": [
+      "A",
+      "B",
+      "D",
+      "E",
+      "F",
+      "C"
+     ]
+    }
+   },
+   "hash": "16901fb5cd8d5b17"
+  },
+  "who": {
+   "phase": "VOTE",
+   "role": "player",
+   "paused": false,
+   "hash": "1a26128f84516bc7"
+  }
+ },
+ {
+  "step": "closeVote",
+  "ack": {
+   "ok": true
+  },
+  "mod": {
+   "phase": "VOTE_RESULT",
+   "role": "moderator",
+   "secrets": false,
+   "paused": false,
+   "timer": null,
+   "players": [
+    "A",
+    "B",
+    "D",
+    "E",
+    "F",
+    "C"
+   ],
+   "pending": {},
+   "hash": "a1c6934c928bc207"
+  },
+  "who": {
+   "phase": "VOTE_RESULT",
+   "role": "player",
+   "paused": false,
+   "hash": "06da810ccede34b3"
+  }
+ },
+ {
+  "step": "toNight",
+  "ack": {
+   "ok": true
+  },
+  "mod": {
+   "phase": "NIGHT",
+   "role": "moderator",
+   "secrets": false,
+   "paused": false,
+   "timer": null,
+   "players": [
+    "A",
+    "B",
+    "D",
+    "E",
+    "F",
+    "C"
+   ],
+   "pending": {
+    "night": {
+     "done": 0,
+     "total": 6,
+     "waiting": [
+      "A",
+      "B",
+      "D",
+      "E",
+      "F",
+      "C"
+     ]
+    }
+   },
+   "hash": "2ec7317de79959ca"
+  },
+  "who": {
+   "phase": "NIGHT",
+   "role": "player",
+   "paused": false,
+   "hash": "3ba23759ae8edb77"
+  }
+ },
+ {
+  "step": "closeNight",
+  "ack": {
+   "ok": true
+  },
+  "mod": {
+   "phase": "MORNING",
+   "role": "moderator",
+   "secrets": false,
+   "paused": false,
+   "timer": null,
+   "players": [
+    "A",
+    "B",
+    "D",
+    "E",
+    "F",
+    "C"
+   ],
+   "pending": {
+    "booster": {
+     "done": 0,
+     "total": 6,
+     "waiting": [
+      "A",
+      "B",
+      "D",
+      "E",
+      "F",
+      "C"
+     ]
+    }
+   },
+   "hash": "1d911ed1d4d43d39"
+  },
+  "who": {
+   "phase": "MORNING",
+   "role": "player",
+   "paused": false,
+   "hash": "0bc1cfafec5c7756"
+  }
+ },
+ {
+  "step": "reset",
+  "ack": {
+   "ok": true
+  },
+  "mod": {
+   "phase": "LOBBY",
+   "role": "moderator",
+   "secrets": false,
+   "canStart": true,
+   "players": [
+    "A+",
+    "B+",
+    "C+",
+    "D+",
+    "E+",
+    "F+"
+   ],
+   "hash": "379aeeb7ec6aaa83"
+  },
+  "who": {
+   "phase": "LOBBY",
+   "role": "player",
+   "hash": "759fa93b1f300a24"
+  }
+ },
+ {
+  "step": "p:chat after reset",
+  "ack": {
+   "ok": false,
+   "error": "ยังไม่ได้เริ่มเกม"
+  },
+  "mod": {
+   "phase": "LOBBY",
+   "role": "moderator",
+   "secrets": false,
+   "canStart": true,
+   "players": [
+    "A+",
+    "B+",
+    "C+",
+    "D+",
+    "E+",
+    "F+"
+   ],
+   "hash": "379aeeb7ec6aaa83"
+  },
+  "who": {
+   "phase": "LOBBY",
+   "role": "player",
+   "hash": "759fa93b1f300a24"
+  }
+ },
+ {
+  "step": "closeVote after reset",
+  "ack": {
+   "ok": false,
+   "error": "ยังไม่ได้เริ่มเกม"
+  },
+  "mod": {
+   "phase": "LOBBY",
+   "role": "moderator",
+   "secrets": false,
+   "canStart": true,
+   "players": [
+    "A+",
+    "B+",
+    "C+",
+    "D+",
+    "E+",
+    "F+"
+   ],
+   "hash": "379aeeb7ec6aaa83"
+  },
+  "who": {
+   "phase": "LOBBY",
+   "role": "player",
+   "hash": "759fa93b1f300a24"
+  }
+ },
+ {
+  "step": "start after reset",
+  "ack": {
+   "ok": true
+  },
+  "mod": {
+   "phase": "MORNING",
+   "role": "moderator",
+   "secrets": false,
+   "paused": false,
+   "timer": null,
+   "players": [
+    "B",
+    "E",
+    "F",
+    "C",
+    "A",
+    "D"
+   ],
+   "pending": {
+    "booster": {
+     "done": 0,
+     "total": 6,
+     "waiting": [
+      "B",
+      "E",
+      "F",
+      "C",
+      "A",
+      "D"
+     ]
+    }
+   },
+   "hash": "90dd8aa491976f0e"
+  },
+  "who": {
+   "phase": "MORNING",
+   "role": "player",
+   "paused": false,
+   "hash": "c73f52d61dc8b098"
+  }
+ },
+ {
+  "step": "pause with game then reset",
+  "ack": {
+   "ok": true
+  },
+  "mod": {
+   "phase": "MORNING",
+   "role": "moderator",
+   "secrets": false,
+   "paused": true,
+   "timer": null,
+   "players": [
+    "B",
+    "E",
+    "F",
+    "C",
+    "A",
+    "D"
+   ],
+   "pending": {
+    "booster": {
+     "done": 0,
+     "total": 6,
+     "waiting": [
+      "B",
+      "E",
+      "F",
+      "C",
+      "A",
+      "D"
+     ]
+    }
+   },
+   "hash": "cf77e105e5fab7f4"
+  },
+  "who": {
+   "phase": "MORNING",
+   "role": "player",
+   "paused": true,
+   "hash": "e70eef24a61c32ac"
+  }
+ },
+ {
+  "step": "reset 2",
+  "ack": {
+   "ok": true
+  },
+  "mod": {
+   "phase": "LOBBY",
+   "role": "moderator",
+   "secrets": false,
+   "canStart": true,
+   "players": [
+    "A+",
+    "B+",
+    "C+",
+    "D+",
+    "E+",
+    "F+"
+   ],
+   "hash": "379aeeb7ec6aaa83"
+  },
+  "who": {
+   "phase": "LOBBY",
+   "role": "player",
+   "hash": "759fa93b1f300a24"
+  }
+ }
+]

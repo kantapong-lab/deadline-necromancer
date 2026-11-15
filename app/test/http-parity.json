@@ -1,0 +1,128 @@
+{
+ "/": {
+  "status": 200,
+  "type": "text/html; charset=utf-8",
+  "cache": "no-cache",
+  "sha256": "65a3a1d5ef34a85055d497c08b63296baf4fd77ac4c80a1f502d8a81de85f1f2"
+ },
+ "/?room=ABCD": {
+  "status": 200,
+  "type": "text/html; charset=utf-8",
+  "cache": "no-cache",
+  "sha256": "65a3a1d5ef34a85055d497c08b63296baf4fd77ac4c80a1f502d8a81de85f1f2"
+ },
+ "/mod": {
+  "status": 200,
+  "type": "text/html; charset=utf-8",
+  "cache": "no-cache",
+  "sha256": "1f84bce3c02caa4a42d84f4c012fff673ba42e5cab0430392a0fd9cb7063d9cf"
+ },
+ "/gallery": {
+  "status": 200,
+  "type": "text/html; charset=utf-8",
+  "cache": "no-cache",
+  "sha256": "0aec4bebefdddc3f10f33bf3d1435f57102d842a55f877a51d7e2dbdb6f8d3b2"
+ },
+ "/data.js": {
+  "status": 200,
+  "type": "text/javascript; charset=utf-8",
+  "cache": "no-cache",
+  "sha256": "a3c0dc3fdae72d81fac876613e793cbfb3375f849d602ad2427ac77c1474611e"
+ },
+ "/style.css": {
+  "status": 200,
+  "type": "text/css; charset=utf-8",
+  "cache": "no-cache",
+  "sha256": "b5a3f5fcd737c27041c637ec73394f7ca1cb1788964550ec7b6cef0218a96fe2"
+ },
+ "/common.js": {
+  "status": 200,
+  "type": "text/javascript; charset=utf-8",
+  "cache": "no-cache",
+  "sha256": "d0b8fbf8db2a1bb871129bd4d6e284ef6cb5db6229acd0ae66e60ba2fba3d63d"
+ },
+ "/card-info.js": {
+  "status": 200,
+  "type": "text/javascript; charset=utf-8",
+  "cache": "no-cache",
+  "sha256": "c64525750506a20929607760a2ccab41f5a1bbfa8cfcd2c3e0acc600930f16b2"
+ },
+ "/index.html": {
+  "status": 200,
+  "type": "text/html; charset=utf-8",
+  "cache": "no-cache",
+  "sha256": "65a3a1d5ef34a85055d497c08b63296baf4fd77ac4c80a1f502d8a81de85f1f2"
+ },
+ "/mod.html": {
+  "status": 200,
+  "type": "text/html; charset=utf-8",
+  "cache": "no-cache",
+  "sha256": "1f84bce3c02caa4a42d84f4c012fff673ba42e5cab0430392a0fd9cb7063d9cf"
+ },
+ "/gallery.html": {
+  "status": 200,
+  "type": "text/html; charset=utf-8",
+  "cache": "no-cache",
+  "sha256": "0aec4bebefdddc3f10f33bf3d1435f57102d842a55f877a51d7e2dbdb6f8d3b2"
+ },
+ "/socket.io/socket.io.js": {
+  "status": 200,
+  "type": "application/javascript; charset=utf-8",
+  "cache": "public, max-age=0",
+  "sha256": null
+ },
+ "/thumbs/roles-md/team_deliver/01_senior_dev.jpg": {
+  "status": 200,
+  "type": "image/jpeg",
+  "cache": "no-cache",
+  "sha256": "ae82dfb9a5d00c64e4059efcbb0de47e33d50897a55c6bbb41c2a78ebd1eb201"
+ },
+ "/docs/event_cards/01_fast_approval.jpg": {
+  "status": 200,
+  "type": "image/jpeg",
+  "cache": "no-cache",
+  "sha256": "bd33bf5ccc89bb89ea98d585c590f056b5fcf0003ed51dede9da44796bc8edff"
+ },
+ "/docs/deadline_necromancer_design.md": {
+  "status": 403,
+  "type": null,
+  "cache": null,
+  "sha256": "43ed5c457b799abe72e15e5ce574960937404f72402c5c15837044c1fc1a3a4a"
+ },
+ "/docs/..%2f..%2fx.jpg": {
+  "status": 403,
+  "type": null,
+  "cache": null,
+  "sha256": "43ed5c457b799abe72e15e5ce574960937404f72402c5c15837044c1fc1a3a4a"
+ },
+ "/docs/event_cards/": {
+  "status": 403,
+  "type": null,
+  "cache": null,
+  "sha256": "43ed5c457b799abe72e15e5ce574960937404f72402c5c15837044c1fc1a3a4a"
+ },
+ "/..%2fserver.js": {
+  "status": 403,
+  "type": null,
+  "cache": null,
+  "sha256": "43ed5c457b799abe72e15e5ce574960937404f72402c5c15837044c1fc1a3a4a"
+ },
+ "/nope": {
+  "status": 404,
+  "type": null,
+  "cache": null,
+  "sha256": "907ba78b4545338d3539683e63ecb51cf51c10adc9dabd86e92bd52339f298b9"
+ },
+ "/thumbs/none.jpg": {
+  "status": 404,
+  "type": null,
+  "cache": null,
+  "sha256": "907ba78b4545338d3539683e63ecb51cf51c10adc9dabd86e92bd52339f298b9"
+ },
+ "/thumbs": {
+  "status": 404,
+  "type": null,
+  "cache": null,
+  "sha256": "907ba78b4545338d3539683e63ecb51cf51c10adc9dabd86e92bd52339f298b9"
+ }
+}
