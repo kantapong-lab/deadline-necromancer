@@ -12,7 +12,7 @@ const BASE = 'http://localhost:' + process.env.PORT;
 const URLS = [
   '/', '/?room=ABCD', '/mod', '/gallery', '/data.js', '/style.css', '/common.js', '/card-info.js', '/index.html', '/mod.html', '/gallery.html',
   '/socket.io/socket.io.js',
-  '/thumbs/roles-md/team_deliver/01_senior_dev.jpg', '/docs/event_cards/01_fast_approval.jpg',
+  '/thumbs/roles-md/team_deliver/01_senior_dev.png', '/docs/event_cards/01_fast_approval.png',
   '/docs/deadline_necromancer_design.md', '/docs/..%2f..%2fx.jpg', '/docs/event_cards/', '/..%2fserver.js',
   '/nope', '/thumbs/none.jpg', '/thumbs',
 ];

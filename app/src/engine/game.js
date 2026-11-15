@@ -34,7 +34,7 @@ class Game {
       id, name, role: roles[id], faction: ROLES[roles[id]].f, alive: true, used: false, copy: null, copyFrom: null,
       silenced: false, zero: false, dbl: false, silencedNext: false, zeroNext: false, dblNext: false,
       overpromised: false, dodgeUsed: false, plus1Used: false, locked: false, lockedNext: false,
-      votedOut: false, soloWon: false, cause: null, target: null,
+      votedOut: false, soloWon: false, cause: null, target: null, prevTargets: [], prevSide: [],
     }));
     this.day = 1; this.phase = 'MORNING';
     this.mana = 1; this.manaMax = Math.floor(N / 2); this.skipStreak = 0;
@@ -71,7 +71,13 @@ class Game {
   curseBlocked() { return this.day === 1 || this.event?.id === 'watch'; }
   sys(text) { this.feed.push({ kind: 'sys', text, ts: Date.now() }); }
   log(title, text) { this.timeline.push({ ts: Date.now(), day: this.day, phase: this.phase, title, text: text || '' }); }
-  candidates(p) {
+  // กฎห้ามเป้าเดิมติดกัน: ตัดคนที่เลือกเมื่อคืนก่อนออก — ถ้าเหลือน้อยกว่า need ให้ยกเว้นกฎคืนนั้น
+  avoidRepeat(list, prev, need) {
+    if (!prev?.length) return list;
+    const f = list.filter(x => !prev.includes(x.id));
+    return f.length >= Math.max(need, 1) ? f : list;
+  }
+  candidatesRaw(p) {
     const s = this.spec(p); if (!s) return [];
     return this.alive().filter(x => {
       if (s.pool === 'any') return true;
@@ -80,6 +86,12 @@ class Game {
       return true;
     });
   }
+  candidates(p) {
+    const s = this.spec(p); if (!s) return [];
+    return this.avoidRepeat(this.candidatesRaw(p), p.prevTargets, Math.max(s.t, 0));
+  }
+  // เป้าของแอ็กชันก่อกวนฝ่ายมืด (CURSE / TRAP ที่ต้องมีเป้า) หลังตัดเป้าคืนก่อน
+  sideTargets(p, pool) { return this.avoidRepeat(pool, p.prevSide, 1); }
   canRest(p) {
     return !this.hasSkill(p) || !!ROLES[p.role].once || this.skillsBanned() || this.evIs('snack');
   }

@@ -229,7 +229,7 @@ function nightHTML() {
   const banned = m.skillsBanned, snack = m.snack, skillOK = m.skillOK;
   const skillLabel = `✨ ใช้สกิล: ${esc(s ? s.skill : '—')}${m.role === 'mystery_intern' && m.copy ? ` (ก๊อปจาก ${esc(m.copyFrom)} → ${esc(m.copyName)})` : ''}${m.once && m.used ? ' (ใช้แล้ว)' : ''}`;
   const restLabel = snack ? '🍩 พักกินขนม (คุ้มกันจากคำสาป)' : banned ? '🚨 แก้บั๊ก Production ร่วมกัน (ห้ามใช้สกิล)' : '😴 ' + (skillOK ? 'เก็บสกิลไว้' : (m.locked ? 'บาเรียแตก — ใช้สกิลไม่ได้คืนนี้' : 'ไม่มีสกิลให้ใช้'));
-  const tpick = UI.choice === 'SKILL' && need > 0 ? `<p class="hint">เลือกเป้าหมาย ${need} คน (เลือกแล้ว ${UI.sel.length}/${need})</p><div class="targets">${m.candidates.map(id => `<button class="btn ${UI.sel.includes(id) ? 'sel' : ''}" onclick="toggleT(${id})">${esc(pname(id))}${id === m.id ? ' (ตัวเอง)' : ''}</button>`).join('')}</div>` : '';
+  const tpick = UI.choice === 'SKILL' && need > 0 ? `<p class="hint">เลือกเป้าหมาย ${need} คน (เลือกแล้ว ${UI.sel.length}/${need})</p><div class="targets">${m.candidates.map(id => `<button class="btn ${UI.sel.includes(id) ? 'sel' : ''}" onclick="toggleT(${id})">${esc(pname(id))}${id === m.id ? ' (ตัวเอง)' : ''}</button>`).join('')}${(m.repeatBlocked || []).map(id => `<button class="btn" disabled title="ห้ามเป้าเดิมติดกัน">${esc(pname(id))} (ซ้ำเมื่อคืน)</button>`).join('')}</div>` : '';
   const recruiter = UI.choice === 'SKILL' && m.role === 'soul_recruiter' ? `<div class="opts">${opt(!UI.plus1, false, 'chooseMode(false)', '👁️ ส่องเป้าหมายลับ', `ดูว่า ${esc(m.targetName)} โดนใครโหวตในรอบล่าสุด`)}${opt(UI.plus1, m.plus1Used, 'chooseMode(true)', '🎯 ยัดคะแนน +1 ใส่เป้าหมายลับ', m.plus1Used ? 'ใช้สิทธิ์แล้ว' : `ใส่ ${esc(m.targetName)} ในรอบโหวตพรุ่งนี้ (1 ครั้ง/เกม)`)}</div>` : '';
 
   let side = '', sideOK = true, sideSum = '';
@@ -238,6 +238,8 @@ function nightHTML() {
     const alive = S.players.filter(p => p.alive);
     const tl = UI.side === 'CURSE' ? alive.filter(p => dk.lights.includes(p.id))
       : need2 === 'dark' ? alive.filter(p => p.me || p.mate) : need2 === 'nondark' ? alive.filter(p => !(p.me || p.mate)) : need2 === 'any' ? alive : [];
+    // กฎห้ามเป้าเดิมติดกัน: disable เป้าคืนก่อน ยกเว้นไม่เหลือทางเลือกอื่น (ตรงกับ server)
+    const sideBlock = tl.some(p => !dk.prevSide.includes(p.id)) ? dk.prevSide : [];
     sideOK = !!UI.side && (UI.side === 'CURSE' ? UI.sideSel.length === 1 : UI.side === 'TRAP' ? (!!UI.trapId && (!need2 || UI.sideSel.length === 1)) : true);
     const cursed = dk.curseBlocked ? (S.day === 1 ? ' (ห้ามคืนแรก)' : ' (ลูกค้าเฝ้าอยู่)') : '';
     const sideBtns = Object.entries(SIDE_INFO).map(([k, v]) => opt(UI.side === k, (k === 'CURSE' && dk.curseBlocked) || (k === 'TRAP' && dk.trapFree <= 0), `chooseSide('${k}')`,
@@ -249,7 +251,7 @@ function nightHTML() {
       <button class="btn" ${dk.canReroll ? '' : 'disabled'} onclick="rerollTraps()">🎲 ขอสุ่มเปลี่ยน Trap ${dk.canReroll ? '(1 ครั้ง/คืน)' : '(ใช้ไม่ได้ตอนนี้)'}</button>` : '';
     const needTxt = UI.side === 'CURSE' ? 'เลือกเหยื่อ 1 คน' : need2 === 'dark' ? 'เลือกฝ่ายมืด 1 คนที่จะวางกระจก' : need2 === 'nondark' ? 'เลือกเป้าหมายที่ไม่ใช่ฝ่ายมืด 1 คน' : need2 === 'any' ? 'เลือกผู้เล่น 1 คน' : '';
     side = `<h3 class="step-h">② แอ็กชันก่อกวน <small>(เลือก 1)</small></h3><div class="opts">${sideBtns}</div>${trapPick}
-      ${tl.length ? `<p class="hint">${needTxt}</p><div class="targets">${tl.map(p => `<button class="btn ${UI.sideSel.includes(p.id) ? 'sel' : ''}" onclick="toggleS(${p.id})">${esc(p.name)}${p.me ? ' (ตัวเอง)' : ''}</button>`).join('')}</div>` : ''}`;
+      ${tl.length ? `<p class="hint">${needTxt}</p><div class="targets">${tl.map(p => `<button class="btn ${UI.sideSel.includes(p.id) ? 'sel' : ''}" ${sideBlock.includes(p.id) ? 'disabled title="ห้ามเป้าเดิมติดกัน"' : ''} onclick="toggleS(${p.id})">${esc(p.name)}${p.me ? ' (ตัวเอง)' : ''}${sideBlock.includes(p.id) ? ' (ซ้ำเมื่อคืน)' : ''}</button>`).join('')}</div>` : ''}`;
     if (UI.side) sideSum = SIDE_INFO[UI.side].n + (UI.side === 'TRAP' && UI.trapId ? ` (${TRAPS[UI.trapId].n})` : '') + (UI.sideSel.length ? ' → ' + nameList(UI.sideSel) : '');
   }
   const skillOKsel = UI.choice && UI.sel.length === (UI.choice === 'SKILL' ? need : 0);

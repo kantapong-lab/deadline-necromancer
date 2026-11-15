@@ -17,6 +17,12 @@ module.exports = {
   },
   toNight() {
     if (this.phase !== 'VOTE_RESULT') return 'เปลี่ยนเฟสไม่ได้ในตอนนี้';
+    // จำเป้าที่เลือกจริงเมื่อคืนก่อน (ห้ามซ้ำติดกัน) — พัก/ถูกห้ามใช้สกิล/ไม่ส่งแอ็กชัน = ว่าง = รีเซ็ต
+    this.players.forEach(p => {
+      const n = this.night[p.id];
+      p.prevTargets = n?.type === 'SKILL' ? [...n.targets] : [];
+      p.prevSide = n && (n.side === 'CURSE' || n.side === 'TRAP') ? [...(n.sideTargets || [])] : [];
+    });
     this.phase = 'NIGHT'; this.night = {}; this.darkChat = []; this.trapRerolled = false;
     this.setCopies();
     this.log('เริ่มกลางคืน', 'ผู้เล่นเลือกแอ็กชันลับพร้อมกัน');

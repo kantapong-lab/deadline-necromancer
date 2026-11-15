@@ -52,7 +52,7 @@ function play(N, o) {
         if (p.faction === 'dark') {
           // first dark sabotages, the rest curse (sabotage when curse is blocked)
           a.side = darks[0].id === p.id || G.curseBlocked() ? 'SABOTAGE' : 'CURSE';
-          if (a.side === 'CURSE') a.sideTargets = [rnd(G.alive().filter(x => x.faction !== 'dark')).id];
+          if (a.side === 'CURSE') a.sideTargets = [rnd(G.sideTargets(p, G.alive().filter(x => x.faction !== 'dark'))).id];
         }
         if (G.submitNight(p.id, a)) G.submitNight(p.id, p.faction === 'dark' ? { type: 'REST', targets: [], side: 'FAKE' } : { type: 'REST', targets: [] });
       }

@@ -53,10 +53,11 @@ async function playGame(N, verbose) {
         } else a = { type: 'REST' };
         if (me.faction === 'dark') {
           const lights = p.v.dark.lights; const r = Math.random();
+          const prev = p.v.dark.prevSide, avoid = ids => { const f = ids.filter(i => !prev.includes(i)); return f.length ? f : ids; };   // กฎห้ามเป้าเดิมติดกัน
           if (r < .25) { a.side = 'FAKE'; } else if (r < .5) a.side = 'SABOTAGE';
-          else if (r < .75 && !p.v.dark.curseBlocked) { a.side = 'CURSE'; a.sideTargets = [rnd(lights)]; }
+          else if (r < .75 && !p.v.dark.curseBlocked) { a.side = 'CURSE'; a.sideTargets = [rnd(avoid(lights))]; }
           else if (p.v.dark.trapCharges > 0 && p.v.dark.trapHand.length) { const k = rnd(p.v.dark.trapHand); const need = p.v.dark.trapNeed[k];
-            a.side = 'TRAP'; a.trapId = k; if (need) { const pool = p.v.players.filter(x => x.alive && (need === 'any' || (need === 'dark' ? x.mate || x.me : !(x.mate || x.me)))); a.sideTargets = [rnd(pool).id]; } }
+            a.side = 'TRAP'; a.trapId = k; if (need) { const pool = p.v.players.filter(x => x.alive && (need === 'any' || (need === 'dark' ? x.mate || x.me : !(x.mate || x.me)))); a.sideTargets = [rnd(avoid(pool.map(x => x.id)))]; } }
           else a.side = 'FAKE';
         }
         let r = await emit(p.s, 'p:night', a);

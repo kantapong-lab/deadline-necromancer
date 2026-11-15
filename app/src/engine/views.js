@@ -48,6 +48,8 @@ module.exports = {
         spec: s ? { skill: s.skill, t: s.t, d: s.d, pool: s.pool } : null,
         skillOK: this.hasSkill(p), canRest: this.canRest(p), skillsBanned: this.skillsBanned(), snack: this.evIs('snack'),
         candidates: this.phase === 'NIGHT' && p.alive ? this.candidates(p).map(x => x.id) : [],
+        // เป้าที่ถูกห้ามเพราะซ้ำคืนก่อน (แสดงเป็นปุ่ม disabled) — ว่างถ้ากฎถูกยกเว้น
+        repeatBlocked: this.phase === 'NIGHT' && p.alive ? (() => { const ok = this.candidates(p).map(x => x.id); return this.candidatesRaw(p).map(x => x.id).filter(id => !ok.includes(id)); })() : [],
         intel: this.intel[pid],
         night, submitted: !!night,
         voted: this.votes[pid], hijacked: this.hijackVoter === pid,
@@ -60,6 +62,7 @@ module.exports = {
         trapFree: this.phase === 'NIGHT' ? this.trapCharges - Object.entries(this.night).filter(([id, n]) => +id !== pid && n.side === 'TRAP').length : this.trapCharges,
         mates: this.players.filter(x => x.faction === 'dark' && x.id !== pid).map(x => ({ id: x.id, name: x.name, alive: x.alive })),
         lights: this.alive().filter(x => x.faction !== 'dark').map(x => x.id),
+        prevSide: p.prevSide,   // เป้าแอ็กชันก่อกวนคืนก่อน — UI ใช้ disable (ยกเว้นเมื่อไม่เหลือทางเลือก)
         trapNeed: Object.fromEntries(Object.entries(TRAPS).map(([k, t]) => [k, t.need])),
       } : null,
       voteCandidates: this.phase === 'VOTE' ? this.alive().filter(x => x.id !== pid).map(x => x.id) : [],

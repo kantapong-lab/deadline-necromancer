@@ -3,6 +3,8 @@
 const { ROLES, TRAPS } = require('../shared/data');
 const { shuffle } = require('./random');
 
+const REPEAT_MSG = 'ห้ามเลือกเป้าหมายเดิมที่ใช้เมื่อคืนติดกัน — เลือกคนอื่น';
+
 // Night actions
 module.exports = {
   // action: { type:'SKILL'|'REST', targets:[], plus1?, side?:'FAKE'|'SABOTAGE'|'CURSE'|'TRAP', sideTargets?:[], trapId? }
@@ -15,7 +17,9 @@ module.exports = {
     if (out.type === 'SKILL') {
       if (!G.hasSkill(p) || G.skillsBanned()) return 'คืนนี้คุณใช้สกิลไม่ได้';
       const s = G.spec(p), need = Math.max(s.t, 0), cand = G.candidates(p).map(x => x.id);
-      if (out.targets.length !== need || new Set(out.targets).size !== need || out.targets.some(t => !cand.includes(t))) return 'เป้าหมายสกิลไม่ถูกต้อง';
+      const raw = G.candidatesRaw(p).map(x => x.id);
+      if (out.targets.length !== need || new Set(out.targets).size !== need || out.targets.some(t => !raw.includes(t))) return 'เป้าหมายสกิลไม่ถูกต้อง';
+      if (out.targets.some(t => !cand.includes(t))) return REPEAT_MSG;
       if (a.plus1) { if (p.role !== 'soul_recruiter' || p.plus1Used) return 'ใช้ตัวเลือก +1 ไม่ได้'; out.plus1 = true; }
     } else if (out.type === 'REST') {
       if (!G.canRest(p)) return 'ทุกคนต้องใช้สกิลประจำตัวคืนนี้ (เว้นสกิลครั้งเดียว/สกิลที่ใช้ไม่ได้/การ์ดอนุญาต)';
@@ -28,6 +32,7 @@ module.exports = {
       if (side === 'CURSE') {
         if (G.curseBlocked()) return 'คืนนี้สาป Burnout ไม่ได้';
         const t = G.P(st[0]); if (st.length !== 1 || !t?.alive || t.faction === 'dark') return 'เป้าหมายสาปไม่ถูกต้อง';
+        if (!G.sideTargets(p, G.alive().filter(x => x.faction !== 'dark')).some(x => x.id === t.id)) return REPEAT_MSG;
         out.sideTargets = st;
       }
       if (side === 'TRAP') {
@@ -40,6 +45,8 @@ module.exports = {
           const t = G.P(st[0]); if (st.length !== 1 || !t?.alive) return 'เลือกเป้าหมาย Trap';
           if (tdef.need === 'dark' && t.faction !== 'dark') return 'Trap นี้หมอบได้เฉพาะที่ฝ่ายมืด';
           if (tdef.need === 'nondark' && t.faction === 'dark') return 'Trap นี้หมอบที่ฝ่ายมืดไม่ได้';
+          const pool = G.alive().filter(x => tdef.need === 'any' || (tdef.need === 'dark' ? x.faction === 'dark' : x.faction !== 'dark'));
+          if (!G.sideTargets(p, pool).some(x => x.id === t.id)) return REPEAT_MSG;
           out.sideTargets = st;
         }
         out.trapId = a.trapId;

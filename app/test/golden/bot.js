@@ -95,9 +95,9 @@ function playGame(Game, N, seed, cov, onStep) {
               a.side = 'TRAP'; a.trapId = k;
               if (need) {
                 const pool = g.viewFor(p.id).players.filter(x => x.alive && (need === 'any' || (need === 'dark' ? (x.mate || x.me) : !(x.mate || x.me))));
-                a.sideTargets = [rnd(pool).id];
+                a.sideTargets = [rnd(g.sideTargets(p, pool)).id];   // กฎห้ามเป้าเดิมติดกัน
               }
-            } else if (r < bias.trap + 0.15 && !dk.curseBlocked && !(bias.smart > 0.8)) { a.side = 'CURSE'; a.sideTargets = [rnd(dk.lights)]; }
+            } else if (r < bias.trap + 0.15 && !dk.curseBlocked && !(bias.smart > 0.8)) { a.side = 'CURSE'; a.sideTargets = [rnd(g.sideTargets(p, g.alive().filter(x => dk.lights.includes(x.id))).map(x => x.id))]; }
             else a.side = Math.random() < (bias.smart > 0.8 ? 0.9 : 0.5) ? 'SABOTAGE' : 'FAKE';
           }
           let ret = call('night:' + p.id, () => g.submitNight(p.id, a));

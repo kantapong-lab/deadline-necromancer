@@ -337,5 +337,37 @@ console.log(failed ? `\n${failed} event test(s) failed` : `\nall ${Object.keys(E
   console.log('  ok   Blame Shifting any faction, Seeker included');
 }
 
+// No-repeat targeting: a targeted skill / curse / trap target cannot be the same player as last night's chosen target
+{
+  const REPEAT = /ห้ามเลือกเป้าหมายเดิม/;
+  const nextNight = G => { G.phase = 'VOTE_RESULT'; G.toNight(); return G; };
+  const firstNight = () => { const G = table(); G.phase = 'NIGHT'; G.night = {}; return G; };
+  // (a) skill target repeat rejected, a different target accepted
+  let G = firstNight();
+  assert.strictEqual(G.submitNight(1, skill(0)), null);
+  nextNight(G);
+  assert.match(G.submitNight(1, skill(0)), REPEAT, 'same skill target two nights in a row');
+  assert(!G.candidates(G.P(1)).some(x => x.id === 0), 'candidates hide last night target');
+  assert.deepStrictEqual(G.viewFor(1).me.repeatBlocked, [0], 'view reports the blocked target');
+  assert.strictEqual(G.submitNight(1, skill(2)), null);
+  // (b) a night without a targeted skill resets the restriction
+  G = firstNight(); G.submitNight(1, skill(0)); nextNight(G);
+  setEvent(G, 'snack'); assert.strictEqual(G.submitNight(1, { type: 'REST' }), null);
+  nextNight(G); assert.strictEqual(G.submitNight(1, skill(0)), null, 'REST night resets the rule');
+  // (c) dark CURSE target repeat rejected
+  G = firstNight();
+  assert.strictEqual(G.submitNight(HR, { type: 'SKILL', targets: [0], side: 'CURSE', sideTargets: [3] }), null);
+  nextNight(G);
+  assert.match(G.submitNight(HR, { type: 'SKILL', targets: [1], side: 'CURSE', sideTargets: [3] }), REPEAT, 'same curse target');
+  assert.strictEqual(G.submitNight(HR, { type: 'SKILL', targets: [1], side: 'CURSE', sideTargets: [4] }), null);
+  // (d) not enough other choices -> rule waived (QA Hunter needs 2 targets, only 3 players left)
+  G = firstNight(); G.players.forEach(p => { if (![0, 1, 2].includes(p.id)) p.alive = false; });
+  assert.strictEqual(G.submitNight(2, skill(0, 1)), null);
+  nextNight(G);
+  assert.strictEqual(G.submitNight(2, skill(0, 1)), null, 'waived when fewer than 2 other choices remain');
+  assert.deepStrictEqual(G.viewFor(2).me.repeatBlocked, [], 'nothing shown as blocked when waived');
+  console.log('  ok   No-repeat targeting (skill / curse, reset, waiver)');
+}
+
 process.exit(failed ? 1 : 0);
 
