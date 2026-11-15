@@ -4,31 +4,12 @@ const http = require('http');
 const { Server } = require('socket.io');
 const { Game, MIN_PLAYERS, MAX_PLAYERS } = require('../engine');
 const { handleRequest } = require('./http');
+const { rooms, token, newCode, createPushState, ack } = require('./rooms');
 
 const PORT = process.env.PORT || 3000;
 const httpServer = http.createServer(handleRequest);
 const io = new Server(httpServer);
-
-// ---------------- rooms ----------------
-const rooms = new Map();
-const token = () => Math.random().toString(36).slice(2) + Math.random().toString(36).slice(2);
-function newCode() { const L = 'ABCDEFGHJKMNPQRSTUVWXYZ'; let c; do { c = Array.from({ length: 4 }, () => L[Math.floor(Math.random() * L.length)]).join(''); } while (rooms.has(c)); return c; }
-
-function lobbyView(room, extra) {
-  return { phase: 'LOBBY', code: room.code, min: MIN_PLAYERS, max: MAX_PLAYERS, ...extra,
-    players: room.members.map((m, i) => ({ idx: i, name: m.name, connected: m.sockets.size > 0 })) };
-}
-function pushState(room) {
-  const g = room.game;
-  for (const m of room.members) {
-    if (!m.sockets.size) continue;
-    const view = g ? g.viewFor(m.pid) : lobbyView(room, { role: 'player', youName: m.name });
-    for (const sid of m.sockets) io.to(sid).emit('state', view);
-  }
-  const modView = g ? g.modView(room.secrets) : lobbyView(room, { role: 'moderator', secrets: room.secrets, canStart: room.members.length >= MIN_PLAYERS && room.members.length <= MAX_PLAYERS });
-  for (const sid of room.modSockets) io.to(sid).emit('state', modView);
-}
-const ack = (cb, v) => { if (typeof cb === 'function') cb(v); };
+const pushState = createPushState(io);
 
 io.on('connection', socket => {
   const ctx = () => rooms.get(socket.data.code);
