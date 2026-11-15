@@ -23,7 +23,9 @@ const NO_BODY_HASH = new Set(['/socket.io/socket.io.js']);   // body depends on 
   const got = {};
   for (const u of URLS) {
     const res = await fetch(BASE + u);
-    const body = Buffer.from(await res.arrayBuffer());
+    let body = Buffer.from(await res.arrayBuffer());
+    // checkout line endings (core.autocrlf) must not change the hash of text files
+    if (/^(text\/|application\/javascript)/.test(res.headers.get('content-type') || '')) body = Buffer.from(body.toString('utf8').replace(/\r\n/g, '\n'));
     got[u] = { status: res.status, type: res.headers.get('content-type'), cache: res.headers.get('cache-control'), sha256: NO_BODY_HASH.has(u) ? null : crypto.createHash('sha256').update(body).digest('hex') };
   }
   if (process.argv.includes('--record')) { fs.writeFileSync(EXPECT, JSON.stringify(got, null, 1) + '\n'); console.log('http-parity recorded: ' + URLS.length + ' urls'); }
