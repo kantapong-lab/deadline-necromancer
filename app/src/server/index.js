@@ -1,40 +1,12 @@
 // Deadline Necromancer — multiplayer server (Node + Socket.IO)
 // รัน: node src/server/index.js   →  ผู้เล่นเปิด http://<host>:3000/   Moderator เปิด http://<host>:3000/mod
 const http = require('http');
-const fs = require('fs');
-const path = require('path');
 const { Server } = require('socket.io');
 const { Game, MIN_PLAYERS, MAX_PLAYERS } = require('../engine');
+const { handleRequest } = require('./http');
 
 const PORT = process.env.PORT || 3000;
-const APP_ROOT = path.resolve(__dirname, '..', '..');
-const PUBLIC = path.join(APP_ROOT, 'public');
-const DOCS = path.join(APP_ROOT, '..', 'docs');
-const SHARED = path.join(APP_ROOT, 'src', 'shared');
-const MIME = { '.html': 'text/html; charset=utf-8', '.js': 'text/javascript; charset=utf-8', '.css': 'text/css; charset=utf-8', '.jpg': 'image/jpeg', '.png': 'image/png', '.svg': 'image/svg+xml', '.json': 'application/json' };
-
-function serveFile(res, base, rel) {
-  const file = path.normalize(path.join(base, rel));
-  if (!file.startsWith(base)) { res.writeHead(403); return res.end('forbidden'); }
-  fs.readFile(file, (err, data) => {
-    if (err) { res.writeHead(404); return res.end('not found'); }
-    res.writeHead(200, { 'Content-Type': MIME[path.extname(file)] || 'application/octet-stream', 'Cache-Control': 'no-cache' });
-    res.end(data);
-  });
-}
-const httpServer = http.createServer((req, res) => {
-  const url = decodeURIComponent(req.url.split('?')[0]);
-  if (url === '/') return serveFile(res, PUBLIC, 'index.html');
-  if (url === '/mod') return serveFile(res, PUBLIC, 'mod.html');
-  if (url === '/gallery') return serveFile(res, PUBLIC, 'gallery.html');   // แกลเลอรีรูปการ์ดทั้งหมด
-  if (url === '/data.js') return serveFile(res, SHARED, 'data.js');   // ข้อมูลบทบาท/การ์ดใช้ร่วมกับฝั่ง client
-  if (url.startsWith('/docs/')) {
-    // เสิร์ฟเฉพาะรูปการ์ดจาก docs (ไม่เปิดไฟล์เอกสารอื่น)
-    if (!/\.(jpg|png)$/i.test(url)) { res.writeHead(403); return res.end('forbidden'); }
-    return serveFile(res, DOCS, url.slice(6));
-  }
-  serveFile(res, PUBLIC, url.slice(1));
-});
+const httpServer = http.createServer(handleRequest);
 const io = new Server(httpServer);
 
 // ---------------- rooms ----------------
