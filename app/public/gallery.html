@@ -60,7 +60,7 @@ const GROUPS = [
     return { src: TRAPIMG + t.img, th: TRAPTHUMB + t.img, t: t.n, s: i.one || t.d, what: i.what, when: i.when, tip: i.tip, tag: 'Trap Card' }; }) },
   { id: 'booster', title: 'Sprint Booster (โหวตสาธารณะ · 3 แบบ)', cls: 'booster', note: CARD_INFO.boosterGeneral, items: Object.entries(BOOSTERS).map(([k, b]) => { const i = CARD_INFO.boosters[k] || {};
     return { src: BOOSTERIMG + b.img, th: BOOSTERTHUMB + b.img, t: b.n, s: i.one || b.d, what: i.what, when: i.when, tip: i.tip, tag: 'Sprint Booster' }; }) },
-  { id: 'event', title: 'Event Card (15 ใบ)', cls: 'event', note: 'สุ่มเปิดวันละ 1 ใบ ตั้งแต่เช้าวันอังคารถึงศุกร์ การ์ดแบบ "โหวต" ทุกคนต้องโหวตรับ/ปฏิเสธก่อนเข้าเฟสโหวตไล่ออก', items: Object.entries(EVENTS).sort((a, b) => a[1].n - b[1].n).map(([k, e]) => { const i = CARD_INFO.events[k] || {};
+  { id: 'event', title: 'Event Card (20 ใบ)', cls: 'event', note: 'สุ่มเปิดวันละ 1 ใบ ตั้งแต่เช้าวันอังคารถึงศุกร์ การ์ดแบบ "โหวต" ทุกคนต้องโหวตรับ/ปฏิเสธก่อนเข้าเฟสโหวตไล่ออก', items: Object.entries(EVENTS).sort((a, b) => a[1].n - b[1].n).map(([k, e]) => { const i = CARD_INFO.events[k] || {};
     return { src: EVIMG + e.img, th: EVTHUMB + e.img, t: '#' + String(e.n).padStart(2, '0') + ' ' + e.t, sub: e.choice ? 'โหวตรับ / ปฏิเสธ' : e.now ? 'ผลทันที' : 'กติกาพิเศษ', s: i.one || e.d, what: i.what, when: i.when, tip: i.tip, tag: 'Event Card' }; }) },
 ];
 let flat = [], cur = 0, filter = 'all';
