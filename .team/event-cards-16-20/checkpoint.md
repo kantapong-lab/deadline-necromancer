@@ -28,3 +28,4 @@ lane: feature · skipped 3d
 ## Status
 Setup done · baseline: green · base: main · pause:scope answered (plan, scope confirmed) · gates 2b/3c not passed · brain: E:/projects/deadline-necromancer/.team/brain
 next: 1 · researcher · L0 codebase-only brief (answers in the request)
+gate 2b passed · user: "อนุมัติ (Recommended)" · 2026-11-15
