@@ -140,7 +140,7 @@
 
 * **Event Card #13 (Production Crisis):** รับ = คืนนั้นทุกคนห้ามใช้สกิล, Mana +0, ฝ่ายแสง 1 คน (สุ่ม) ได้คุ้มกันจากคำสาป Burnout · ปฏิเสธ = Mana −2 ทันที และคืนนั้นมีผู้เล่น 1 คน (สุ่มจากฝ่ายแสงหรือฝ่ายอิสระ ไม่รวมฝ่ายมืด) ถูกสาป Burnout ผ่านบาเรีย/ฮีล/Dodge ตามปกติ
 
-* **Event Card:** เปิดวันอังคาร–ศุกร์วันละ 1 ใบ เพิ่มความไม่แน่นอนแบบเปิดเผย (ทุกคนเห็นพร้อมกัน) ไม่ซ่อนอยู่ในตัวเลข เพื่อไม่ทำลายการสืบสวน ดู `deadline_necromancer_event_cards.md`
+* **Event Card (สำรับ 20 ใบ):** เปิดวันอังคาร–ศุกร์วันละ 1 ใบ (4 ใบต่อเกม) · Daily Rule 5 ใบใหม่ (#16–#20: Meeting Purge, More Hands on Deck, UAT Too Late, Client Redesign, Status Page Down) ทำให้สัดส่วน Daily Rule ในสำรับเป็น 7/20 เพิ่มความไม่แน่นอนแบบเปิดเผย (ทุกคนเห็นพร้อมกัน) ไม่ซ่อนอยู่ในตัวเลข เพื่อไม่ทำลายการสืบสวน ดู `deadline_necromancer_event_cards.md`
 
 ## 5. สถาปัตยกรรม Web Game (ตามที่สร้างจริงในโฟลเดอร์ `app/`)
 
@@ -165,12 +165,13 @@
 | `app/src/server/index.js` | จุดเริ่มระบบ: สร้าง HTTP + Socket.IO, ต่อ handler, listen |
 | `app/src/server/{paths,http,rooms}.js` | path จาก `APP_ROOT` ที่เดียว · เสิร์ฟ static และรูปการ์ดจาก `docs/` (เฉพาะ `.jpg/.png`) · ที่เก็บห้อง (รหัส 4 ตัวอักษร, token, `pushState`) |
 | `app/src/server/handlers/{session,moderator,player}.js` | socket handler: สร้าง/เข้าห้อง + reconnect ด้วย token · `mod:do` · `p:*` |
-| `app/src/shared/data.js` | ตารางบทบาท / Event / Trap / Booster |
+| `app/src/shared/data.js` | ตารางบทบาท / Event (20 ใบ) / Trap / Booster |
 | `app/public/index.html` | หน้าผู้เล่น (รองรับมือถือ): เข้าห้อง, ล็อบบี้, ห้องประชุม, โหวต, แอ็กชันกลางคืน, ห้องแชทลับฝ่ายมืด |
 | `app/public/mod.html` | หน้า Moderator: สร้างห้อง, ล็อบบี้, ลำดับเหตุการณ์, คำแนะนำขั้นตอน, ปุ่มคุมเฟส |
 | `app/public/gallery.html` · `card-info.js` | แกลเลอรีการ์ด (บทบาท, Trap, Booster, Event) พร้อมคำอธิบาย |
 | `app/public/style.css` · `common.js` | สไตล์ (รวมกฎมือถือ ≤900px) และฟังก์ชันร่วมของทุกหน้า |
-| `app/test/` | `golden/` (golden-master ของ engine), `http-parity.js`, `mod-actions.js`, `simulate.js` (end-to-end) |
+| `app/src/engine/events.js` | ตรรกะเปิด Event Card ทั้ง 20 ใบ (รวม #17 สุ่มทีมเสริม, #20 สุ่มวิศวกรเวร) |
+| `app/test/` | `golden/` (golden-master ของ engine, 40 seed ต่อขนาดห้อง `GOLDEN_SEEDS`), `events.js` (เคสของการ์ดรวม #16–#20), `qa/qa-cards.js` (ทดสอบผ่าน Socket/HTTP จริง บังคับเปิดการ์ดด้วยการใส่ key ลงสำรับ), `http-parity.js`, `mod-actions.js`, `simulate.js` (end-to-end) · สคริปต์จำลองสมดุล `npm run balance` (`test/balance.js`) |
 
 > URL สาธารณะ (`/`, `/mod`, `/gallery`, `/data.js`, `/docs/*.jpg|png`) คงเดิมหลังจัดโครงสร้างใหม่ — ตรวจด้วย `test/http-parity.js` · โครงสร้างโฟลเดอร์เป็นการย้ายโค้ดล้วน ไม่เปลี่ยนกติกา (ยืนยันด้วย golden-master)
 
@@ -188,6 +189,8 @@ Moderator ไม่มีบทบาท ไม่โหวต ไม่เห�
 
 ```
 LOBBY → MORNING → VOTE → VOTE_RESULT → NIGHT → (ประมวลผล) → MORNING (วันถัดไป) … → OVER
+                    ↓ ↑  (เฉพาะวันที่เปิดการ์ด #19)
+                VOTE_INTERIM
 ```
 
 | การเปลี่ยนเฟส | ใครสั่ง | เงื่อนไข / สิ่งที่เกิดขึ้น |
@@ -195,6 +198,8 @@ LOBBY → MORNING → VOTE → VOTE_RESULT → NIGHT → (ประมวลผ�
 | `LOBBY → MORNING` | Moderator `start` | ผู้เล่น 6–12 คน สุ่มบทบาทและที่นั่ง |
 | `MORNING → VOTE` | Moderator `toVote` | ปิดโหวตการ์ด Choice และ Booster ที่ค้างอยู่ให้อัตโนมัติ |
 | `VOTE → VOTE_RESULT` | Moderator `closeVote` | นับคะแนน, Trigger Trap ในรอบโหวต, ตรวจเงื่อนไขชนะ |
+| `VOTE → VOTE_INTERIM` | Moderator `closeVote` (เฉพาะวันที่เปิดการ์ด #19 และเป็นรอบแรก) | เก็บคะแนนรวมรายคนกับ Skip เพื่อแสดง (ไม่มีชื่อผู้โหวต) ไม่ไล่ใคร ไม่แตะ Skip Penalty / Trap / Mana / ผลโหวต / ตรวจเงื่อนไขชนะ และเคลียร์ตัวจับเวลา |
+| `VOTE_INTERIM → VOTE` | Moderator `openRound2` | เริ่มรอบสอง เก็บโหวตรอบแรกไว้ (แก้ได้) · `closeVote` ครั้งถัดไปคือผลจริง · ไปเฟสอื่นนอกจากนี้ไม่ได้ (`toNight` ถูกปฏิเสธ) |
 | `VOTE_RESULT → NIGHT` | Moderator `toNight` | กำหนดสกิลที่ Mystery Intern ก๊อป |
 | `NIGHT → MORNING` | Moderator `closeNight` | เติมค่าเริ่มต้นให้ผู้ที่ไม่ส่ง, ประมวลผลตาม Priority Queue, เปลี่ยนวัน, เปิด Event Card ใหม่ (วันอังคาร–ศุกร์) |
 | `* → OVER` | ระบบ | เงื่อนไขชนะครบ หรือหมดวันศุกร์ |
@@ -209,8 +214,8 @@ LOBBY → MORNING → VOTE → VOTE_RESULT → NIGHT → (ประมวลผ�
 | `mod:create` | Moderator → Server | สร้างห้อง ตอบกลับ `{ code, modToken }` |
 | `mod:join` | Moderator → Server | `{ code, modToken }` กลับเข้าห้องเดิม |
 | `player:join` | Player → Server | `{ code, name, token? }` เข้าห้อง (ล็อบบี้เท่านั้น) หรือ reconnect ด้วย `token` |
-| `mod:do` | Moderator → Server | `{ action, payload }` โดย `action` คือ `start`, `toVote`, `closeVote`, `toNight`, `closeNight`, `closeEvent`, `closeBooster`, `announce`, `pause`, `timer`, `secrets`, `kick`, `reset` |
-| `p:chat` | Player → Server | `{ text }` แชทกลางช่วง `MORNING` (ผู้ติด NDA Silence ส่งได้เฉพาะอีโมจิ) |
+| `mod:do` | Moderator → Server | `{ action, payload }` โดย `action` คือ `start`, `toVote`, `closeVote`, `openRound2`, `toNight`, `closeNight`, `closeEvent`, `closeBooster`, `announce`, `pause`, `timer`, `secrets`, `kick`, `reset` |
+| `p:chat` | Player → Server | `{ text }` แชทกลางช่วง `MORNING` และ `VOTE_INTERIM` (วันที่เปิดการ์ด #16 จำกัด 3 ข้อความ ข้อความละไม่เกิน 30 ตัวอักษร ยาวเกินถูกปฏิเสธไม่ตัด) (ผู้ติด NDA Silence ส่งได้เฉพาะอีโมจิ) |
 | `p:dark` | Player (ฝ่ายมืด) → Server | `{ text }` ห้องแชทลับช่วง `NIGHT` |
 | `p:event` | Player → Server | `{ accept }` โหวตรับ/ปฏิเสธ Event Card แบบ Choice |
 | `p:booster` | Player → Server | `{ key: "scanner" \| "retro" \| "freeze" \| "NONE" }` โหวต Sprint Booster |
@@ -302,6 +307,7 @@ LOBBY → MORNING → VOTE → VOTE_RESULT → NIGHT → (ประมวลผ�
 * ถ้าเล่นจริงแล้วฝ่ายแสงชนะน้อยเกินไป ตัวปรับแรกคือโควตา Booster (กลับเป็น 2) หรือโควตา Trap ของฝ่ายมืด
 
 ### ข้อสังเกตเพื่อจูนค่า
+* **การ์ด #16–#20:** รัน `npm run balance -- 2000` หลังเพิ่มการ์ดแล้ว ฝ่ายแสงชนะ 6 คน 50%, 7 คน 44%, 8 คน 47%, 9 คน 46%, 10 คน 52%, 11 คน 48%, 12 คน 56% (สำรับเดิมก่อนเพิ่ม: 49 / 46 / 50 / 46 / 50 / 49 / 56) ไม่ได้ปรับค่าใดๆ บอทยังไม่มี AI สำหรับการ์ดใหม่ จึงไม่ได้ใช้ข้อมูลจาก #18 และ #20 และผลของ #17 กับ #19 ต่อสมดุลจริงต้องดูจากการเล่นกับคน ตัวเลขบอทเป็นแนวทางเท่านั้น
 * **การไล่ฝ่ายมืด (+2 Mana) คือแหล่งคะแนนหลัก** ของฝ่ายแสง ส่วนปั่นงานพื้นฐาน +1 ถูกหักจากบั๊กและโทษ Skip จนเฉลี่ยเหลือ Mana ราว 1–3 ต่อเกม
 * **Sprint Booster โควตา 3 ครั้ง** ช่วยฝ่ายแสงได้จริงแต่ไม่ถึงกับพลิกเกม เพราะส่วนใหญ่เป็นบัฟสถานการณ์ (กันล็อกจากการ์ด / ยกเลิกโทษ Skip) ไม่ได้เพิ่ม Mana โดยตรง
 * **Trap Card** ทำให้ฝ่ายมืดได้เปรียบขึ้นชัดเจน ถ้าเล่นจริงแล้วฝ่ายแสงชนะน้อยเกินไป ให้ลดโควตา Trap หรือให้ Debug Scanner มีผลกว้างขึ้นก่อนแตะเป้า Mana
