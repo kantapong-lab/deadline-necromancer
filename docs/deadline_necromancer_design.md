@@ -66,9 +66,9 @@
 | **7 คน** | **3 หน่วย** | 4 / 2 / 1 | ปิดได้ใน 2–3 วัน (เหมือน 6 คน) |
 | **8 คน** | **4 หน่วย** | 5 / 2 / 1 | ปิดได้ใน 3–4 วัน (ไล่ฝ่ายมืด 1 คน `+2` + ผ่าน 2 คืน `+2`) |
 | **9 คน** | **4 หน่วย** | 6 / 2 / 1 | ปิดได้ใน 3–4 วัน (เหมือน 8 คน) |
-| **10 คน** | **5 หน่วย** | 6 / 3 / 1 | ปิดได้ใน 4–5 วัน (ไล่ฝ่ายมืด 2 คน `+4` + ผ่าน 1 คืน `+1`) |
-| **11 คน** | **5 หน่วย** | 7 / 3 / 1 | ปิดได้ใน 4–5 วัน (เหมือน 10 คน) |
-| **12 คน** | **6 หน่วย** | 7 / 3 / 2 | ปิดได้ใน 4–5 วัน (ไล่ฝ่ายมืด 2 คน `+4` + ผ่าน 2 คืน `+2`) |
+| **10 คน** | **5 หน่วย** | 7 / 2 / 1 | ปิดได้ใน 4–5 วัน (ไล่ฝ่ายมืด 2 คน `+4` + ผ่าน 1 คืน `+1`) |
+| **11 คน** | **5 หน่วย** | 7 / 2 / 2 | ปิดได้ใน 4–5 วัน (เหมือน 10 คน) |
+| **12 คน** | **6 หน่วย** | 7 / 2 / 3 | ปิดได้ใน 4–5 วัน (ไล่ฝ่ายมืด 2 คน `+4` + ผ่าน 2 คืน `+2`) |
 
 > **หมายเหตุ:** หลอดเริ่มที่ 1 หน่วย (Kickoff) จังหวะปิดเกมในตารางด้านบนจึงต้องการ Mana อีก `ManaMax − 1` หน่วย
 
@@ -147,10 +147,10 @@
 ### Tech Stack ที่ใช้จริง
 
 * **Server:** Node.js + `http` ในตัว + **Socket.IO** (Server-Authoritative เก็บความลับไว้ที่ Server เท่านั้น)
-* **Client:** HTML + JavaScript ล้วน (ไม่มี build step / framework) 2 หน้า: หน้าผู้เล่น `/` และหน้า Moderator `/mod`
+* **Client:** HTML + JavaScript ล้วน (ไม่มี build step / framework) 3 หน้า: หน้าผู้เล่น `/`, หน้า Moderator `/mod` และแกลเลอรีการ์ด `/gallery`
 * **State:** เก็บในหน่วยความจำของ process (ห้องหายเมื่อรีสตาร์ท server) ไม่มี Redis / ฐานข้อมูล
-* **ข้อมูลร่วม:** `app/data.js` (บทบาท, Event Card, Trap, Booster) ใช้ทั้งฝั่ง server และ client
-* **ทดสอบ:** `npm test` รันผู้เล่นจำลอง 6–12 คน + Moderator ผ่าน Socket.IO จริงจนจบเกม
+* **ข้อมูลร่วม:** `app/src/shared/data.js` (บทบาท, Event Card, Trap, Booster) ใช้ทั้งฝั่ง server และ client (เสิร์ฟให้ client ที่ `/data.js`)
+* **ทดสอบ:** `npm test` รัน 4 ชุดต่อเนื่อง: golden-master ของ engine, http-parity (URL สาธารณะ), mod-actions (คำสั่ง Moderator/ห้อง) และ end-to-end ผู้เล่นจำลอง 6–12 คน + Moderator ผ่าน Socket.IO จริงจนจบเกม
 
 > **เทียบกับแผนเดิม:** Next.js / React / TypeScript / Tailwind / Zustand / Redis / pnpm monorepo / Zod / PostgreSQL ยัง **ไม่ได้ใช้** — เป็นแนวทางต่อยอดเมื่อต้องการ deploy จริง (ดู "ช่องว่างก่อนขึ้นระบบจริง" ด้านล่าง)
 
@@ -158,13 +158,21 @@
 
 | ไฟล์ | หน้าที่ |
 | :--- | :--- |
-| `app/engine.js` | กติกาเกมทั้งหมด (class `Game`) ไม่มี UI · สร้างข้อมูลที่ผู้เล่นแต่ละคนเห็นด้วย `viewFor(pid)` และของ Moderator ด้วย `modView(secrets)` |
-| `app/server.js` | HTTP + Socket.IO, จัดการห้อง (room code 4 ตัวอักษร), reconnect ด้วย token, เสิร์ฟรูปการ์ดจาก `docs/` (เฉพาะ `.jpg/.png`) |
-| `app/data.js` | ตารางบทบาท / Event / Trap / Booster |
+| `app/src/engine/game.js` | คลาส `Game` (state + helper) รวม method จากไฟล์ย่อยด้วย `mixin` · ไม่มี UI |
+| `app/src/engine/{chat,events,vote,night-input,night-resolve,phases,win}.js` | กติกาเกมแยกตามหน้าที่ (แชท, Event/Booster, โหวต, รับแอ็กชันกลางคืน, ประมวลผลกลางคืน, เปลี่ยนเฟส, เงื่อนไขชนะ) · ลำดับ `Math.random` เป็นส่วนหนึ่งของพฤติกรรม ห้ามสลับ |
+| `app/src/engine/{views,mod-view}.js` | ข้อมูลที่แต่ละฝ่ายเห็น: `viewFor(pid)` ของผู้เล่น และ `modView(secrets)` ของ Moderator |
+| `app/src/engine/{constants,random,index}.js` | สัดส่วนฝั่ง/จำนวนผู้เล่น/อีโมจิ · `shuffle`, `rnd` · ทางเข้า export `{ Game, COMP, MIN_PLAYERS, MAX_PLAYERS, EMOJIS }` |
+| `app/src/server/index.js` | จุดเริ่มระบบ: สร้าง HTTP + Socket.IO, ต่อ handler, listen |
+| `app/src/server/{paths,http,rooms}.js` | path จาก `APP_ROOT` ที่เดียว · เสิร์ฟ static และรูปการ์ดจาก `docs/` (เฉพาะ `.jpg/.png`) · ที่เก็บห้อง (รหัส 4 ตัวอักษร, token, `pushState`) |
+| `app/src/server/handlers/{session,moderator,player}.js` | socket handler: สร้าง/เข้าห้อง + reconnect ด้วย token · `mod:do` · `p:*` |
+| `app/src/shared/data.js` | ตารางบทบาท / Event / Trap / Booster |
 | `app/public/index.html` | หน้าผู้เล่น (รองรับมือถือ): เข้าห้อง, ล็อบบี้, ห้องประชุม, โหวต, แอ็กชันกลางคืน, ห้องแชทลับฝ่ายมืด |
 | `app/public/mod.html` | หน้า Moderator: สร้างห้อง, ล็อบบี้, ลำดับเหตุการณ์, คำแนะนำขั้นตอน, ปุ่มคุมเฟส |
-| `app/public/style.css` · `app/public/common.js` | สไตล์ (รวมกฎมือถือ ≤900px) และฟังก์ชันร่วมของทั้งสองหน้า |
-| `app/test/simulate.js` | ทดสอบ end-to-end |
+| `app/public/gallery.html` · `card-info.js` | แกลเลอรีการ์ด (บทบาท, Trap, Booster, Event) พร้อมคำอธิบาย |
+| `app/public/style.css` · `common.js` | สไตล์ (รวมกฎมือถือ ≤900px) และฟังก์ชันร่วมของทุกหน้า |
+| `app/test/` | `golden/` (golden-master ของ engine), `http-parity.js`, `mod-actions.js`, `simulate.js` (end-to-end) |
+
+> URL สาธารณะ (`/`, `/mod`, `/gallery`, `/data.js`, `/docs/*.jpg|png`) คงเดิมหลังจัดโครงสร้างใหม่ — ตรวจด้วย `test/http-parity.js` · โครงสร้างโฟลเดอร์เป็นการย้ายโค้ดล้วน ไม่เปลี่ยนกติกา (ยืนยันด้วย golden-master)
 
 ### Moderator (Host ที่ไม่ได้เล่น)
 
@@ -257,7 +265,7 @@ LOBBY → MORNING → VOTE → VOTE_RESULT → NIGHT → (ประมวลผ�
 * **Match History / สถิติ:** ยังไม่มีฐานข้อมูล
 * **Mobile:** ยังไม่ได้ทดสอบบนอุปกรณ์จริง/จอแนวนอน/แป้นพิมพ์จริง และ UI วาดใหม่ทั้งหน้าทุกครั้งที่ `state` เปลี่ยน (ใช้ได้กับ 12 คน แต่ถ้าต้องการความลื่นกว่านี้ควรอัปเดตเฉพาะส่วนที่เปลี่ยน)
 * **Reclaim ที่นั่ง:** เข้าห้องด้วยชื่อเดิมเพื่อรับช่วงต่อได้เมื่อชื่อนั้นออฟไลน์ — เหมาะกับกลุ่มที่เชื่อใจกัน ถ้าใช้สาธารณะควรผูกด้วยรหัสส่วนตัวหรือการยืนยันจาก Moderator
-* **Frontend:** ยังเป็น HTML ล้วน ไม่มี type-safety / component ถ้าขยายหน้าตามแผนเดิม (Next.js + TypeScript + Zod) ควรย้ายโค้ด `engine.js` ไปเป็นแพ็กเกจร่วมก่อน
+* **Frontend:** ยังเป็น HTML ล้วน ไม่มี type-safety / component ถ้าขยายหน้าตามแผนเดิม (Next.js + TypeScript + Zod) ควรย้ายโค้ด `src/engine/` และ `src/shared/` ไปเป็นแพ็กเกจร่วมก่อน (แยกเป็นโมดูลอยู่แล้ว ย้ายได้ง่ายขึ้น)
 
 ## 6. ไอเดียทางเลือกอื่นที่เสนอไว้ (เผื่อต่อยอด)
 
@@ -307,7 +315,7 @@ LOBBY → MORNING → VOTE → VOTE_RESULT → NIGHT → (ประมวลผ�
 | ฝ่ายมืดสาปทุกคืนทั้ง 2 คน | ≈ 48% | ≈ 49% | 2.1 คน |
 
 * การสาปกินแอ็กชันก่อกวนของคืนนั้น จึงถ่วงกับการวางบั๊ก (ถ้าสาปทุกคืน Mana ไม่ถูกหัก ฝ่ายแสงชนะทาง Mana ได้ง่ายขึ้น) ตัวเลขจึงไม่เอียงแม้สาปบ่อย
-* **ความเสี่ยงที่ผลจำลองวัดไม่ได้:** ผู้ตายต้องนั่งดูนาน, ฝ่ายมืดคนจริงอาจเลือกเหยื่อ (PM / Senior Dev) แม่นกว่าบอท, ห้อง 12 คนฆ่าได้ 3 คนต่อคืน
+* **ความเสี่ยงที่ผลจำลองวัดไม่ได้:** ผู้ตายต้องนั่งดูนาน, ฝ่ายมืดคนจริงอาจเลือกเหยื่อ (PM / Senior Dev) แม่นกว่าบอท, ห้อง 12 คนฆ่าได้ 2 คนต่อคืน (ปรับจาก 3 คนเมื่อลดฝ่ายมืดเหลือ 2 ที่ 10–12 คน)
 * **ตัดสินใจ:** คงคำสาปแบบตายไว้ก่อน ทดสอบกับผู้เล่นจริง · ถ้ารู้สึกหนักไป ทางเลือกเบาที่สุดคือ **ฆ่าได้สูงสุด 1 คนต่อคืน** หรือให้ผู้ตายยังมีบทบาท (แชทผี / โหวต Booster) — ยังไม่ได้ทดสอบ
 
 ### ข้อตีความที่ POC ใช้
