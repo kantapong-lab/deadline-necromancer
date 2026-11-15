@@ -1,0 +1,10 @@
+# architect: event-cards-16-20
+
+## 2026-11-15 round 1
+- Wrote `.team/event-cards-16-20/contract.md` (index) and `contract/{stack,events,engine,night-report,golden,ownership,ac-map}.md` in the feature worktree. AC-1..AC-44 all mapped.
+- Stack: unchanged (Node CommonJS + Socket.IO ^4.7.5, plain client, in-memory rooms); runtime pin none, unchanged. No new ADR: ADR 0002 (Kind: product, Proposed) already covers the structure; the choices below refine it without a scope or AC change.
+- Decisions: #19 `closeVote()` branches inside the engine (one mod button, new `openRound2` action); `G.voteRound`, interim tally weighted, hidden bonus excluded, `voteResult` null in `VOTE_INTERIM`. #20 stash in `resolveNight` with prebuilt feed entries, `publishNight` splices at a recorded feed mark so non-#20 order and `Date.now` order stay identical (rejected: deck peek, retract). NDA and Meeting Hijack lines from `closeNight` join the stash as status lines (AC-30: public sees only Burnout names + announcement); on-call gets the full report. On-call and extra-team ids live on `G.event` (self-clearing, never spread into views). Moderator `statusReport` shown with or without secrets (the timeline already carries the full report); `onCall` id only with secrets. #16 count = code points of the text with EMOJIS removed, spaces count.
+- Verification design: BE stage A (refactors, deck still 15) must keep golden green on the unchanged snapshot; stage B adds cards and re-records golden, mod-actions, then http-parity last.
+- Findings: AC-43 already satisfied by commit 129f3b7; `mod-actions.js` `closeNight` draws the day-2 card; `http-parity.json` hashes include `/docs/deadline_necromancer_design.md`; `simulate.js`, `balance.js`, `golden/bot.js` stall at `VOTE_INTERIM` unless updated; thumbs 16-20 missing, `common.js:54` fallback works.
+- Diagrams: state `docs/architecture/states/game-phase.html` spec'd (phase lifecycle gains `VOTE_INTERIM`); no flow, no ERD. Existing diagram: none counted.
+- Open: product owner may want `statusReport` hidden without secrets (one-line change); #16 and #18 `[assumed]` items unchanged (code points; group result).

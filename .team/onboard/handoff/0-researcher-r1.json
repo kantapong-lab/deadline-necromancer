@@ -1,0 +1,1 @@
+{"role":"researcher","task":"onboard","step":"0","round":1,"status":"done","paths_written":["docs/architecture/baseline.md","docs/architecture/baseline/conventions.md","docs/architecture/baseline/layout.md"],"blockers":[],"quality_checks":{"passed":true,"failed":[]},"summary":"Baseline at de82908 written; engine internals and client JS marked [verify]"}
