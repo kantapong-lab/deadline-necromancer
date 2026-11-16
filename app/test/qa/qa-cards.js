@@ -142,7 +142,7 @@ const get = (p) => new Promise((res, rej) => http.get(URL + p, r => { const b = 
     assert(/EVENTS/.test(src) && ['purge', 'hands', 'uat', 'redesign', 'status'].every(k => src.includes(k)), 'served data.js has keys');
     const imgs = require('fs').readdirSync(require('path').join(__dirname, '../../../docs/event_cards')).filter(f => /^(16|17|18|19|20)_.*\.png$/.test(f));
     assert.strictEqual(imgs.length, 5);
-    for (const f of imgs) { const r = await get('/docs/event_cards/' + f); assert.strictEqual(r.status, 200, f); assert(/image\/jpeg/.test(r.type), f + ' ' + r.type); }
+    for (const f of imgs) { const r = await get('/docs/event_cards/' + f); assert.strictEqual(r.status, 200, f); assert(/image\/png/.test(r.type), f + ' ' + r.type); }
   });
 
   sockets.forEach(s => s.close());
