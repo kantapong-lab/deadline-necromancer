@@ -764,6 +764,8 @@ return live;
 }
 
 // ---- connect as the room's Moderator (same session the /mod page saved) ----
+const adoptHash = () => { try { const m = /^#room=([A-Za-z0-9]+):([A-Za-z0-9]+)$/.exec(location.hash); if (m) { localStorage.setItem('dn-mod', JSON.stringify({ code: m[1].toUpperCase(), modToken: m[2] })); history.replaceState(null, '', location.pathname + location.search); } } catch {} };   // #room=CODE:TOKEN link (e.g. from tools/play-bots.js) → adopt as this browser's moderator session
+adoptHash();
 const saved = () => { try { return JSON.parse(localStorage.getItem('dn-mod') || 'null'); } catch { return null; } };
 const lobby = document.getElementById('lobby'), lobbyTxt = document.getElementById('lobbyTxt');
 let liveApi = null, booting = false, pendingState = null; const pendingFx = [];
