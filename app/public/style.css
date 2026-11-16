@@ -67,8 +67,14 @@ main{display:grid;grid-template-columns:250px 1fr 300px;gap:16px;padding:16px 20
 .msg{font-size:14px;padding:6px 10px;border-radius:8px;background:var(--panel2);max-width:90%}
 .msg b{color:var(--light)} .msg.sys{background:transparent;color:var(--mut);font-style:italic;max-width:100%}
 .msg.you{align-self:flex-end;background:#2b2150} .msg.anon{border:1px dashed var(--indie)}
-.chatbar{display:flex;gap:6px;margin-top:10px}
-.chatbar input{flex:1;padding:8px 10px;border-radius:8px;border:1px solid var(--line);background:var(--panel2);color:var(--txt);font:inherit}
+.chatbar{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+.chatbar input{flex:1;min-width:0;padding:8px 10px;border-radius:8px;border:1px solid var(--line);background:var(--panel2);color:var(--txt);font:inherit}
+.chat-emo{display:flex;flex:1 1 100%;gap:6px}
+.btn:focus-visible,#chatIn:focus-visible{outline:2px solid var(--light);outline-offset:2px}
+.qr-toggle{display:flex;justify-content:space-between;align-items:center;width:100%;margin-top:8px}
+.qr-panel{margin-top:6px;padding:8px;border:1px solid var(--line);border-radius:8px;background:var(--panel2);max-height:176px;overflow-y:auto;display:flex;flex-wrap:wrap;gap:8px}
+.qr-note{flex:1 1 100%;margin:0}
+.btn.qr{background:var(--panel);border-radius:99px;font-size:14px;padding:8px 12px;text-align:left}
 .emo{padding:6px 9px}
 
 /* right */
@@ -137,6 +143,7 @@ main{display:grid;grid-template-columns:250px 1fr 300px;gap:16px;padding:16px 20
   .rolecard img{max-width:280px;margin:0 auto}
   .chatbar{flex-wrap:wrap}
   .chatbar input{flex:1 1 100%}
+  #chatIn{flex:1 1 0;min-width:0}                                  /* ช่องแชทกลาง: ปุ่ม ส่ง อยู่แถวเดียวกัน */
   .setup{margin:4vh 12px;padding:22px}
   .code{font-size:36px;letter-spacing:6px}
   .tabs{display:flex;position:fixed;left:0;right:0;bottom:0;z-index:10;background:#120f20;border-top:1px solid var(--line);padding:6px 6px calc(6px + env(safe-area-inset-bottom));gap:6px}

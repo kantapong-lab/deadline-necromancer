@@ -86,35 +86,57 @@ const curVoteSel = () => UI.voteSel != null ? UI.voteSel : (S && S.voteRound ===
 const sendVote = () => act('p:vote', { target: curVoteSel() });
 const QUICK_EMO = ['👍', '🤔', '😡', '😂', '🙏'];
 let chatErr = '', chatDraft = '', chatErrTimer = null, r1Vote, r1Day = 0;
+let chatBusy = false, qrOpen = false, qrScroll = 0;   // chatBusy: p:chat in flight; qrOpen/qrScroll: quick-reply panel (survive render())
+const qrList = () => typeof QUICK_REPLIES !== 'undefined' ? QUICK_REPLIES : [];   // shared list in /data.js (AC-14), no local copy
 const chatLen = t => Array.from(QUICK_EMO.reduce((a, e) => a.split(e).join(''), t).trim()).length;
 function setChatErr(msg) { chatErr = msg; clearTimeout(chatErrTimer); if (msg) chatErrTimer = setTimeout(() => { chatErr = ''; const el = $('#chatErr'); if (el) el.innerHTML = ''; }, 4000); }
 function clearChatErr() { if (!chatErr) return; setChatErr(''); const el = $('#chatErr'); if (el) el.innerHTML = ''; }
+function chatErrText(er, len) {
+  const lim = S.chatLimit; er = er || '';
+  return er.includes('ยาวเกิน') ? `ข้อความยาวเกิน ${(lim && lim.len) || 30} ตัวอักษร (พิมพ์มา ${len}) ไม่ถูกส่งและไม่เสียโควตา` : er.includes('โควตา') ? 'โควตาข้อความวันนี้หมดแล้ว' : er;
+}
 async function sendChat(e) {
-  e.preventDefault(); const i = $('#chatIn'); const t = i.value.trim(); if (!t) return;
+  e.preventDefault(); if (chatBusy) return;
+  const i = $('#chatIn'); if (!i) return;
+  const raw = i.value, t = raw.trim(); if (!t) return;
   const lim = S.chatLimit, len = chatLen(t);
-  if (lim && len > lim.len) { chatDraft = t; setChatErr(`ข้อความยาวเกิน ${lim.len} ตัวอักษร (พิมพ์มา ${len}) ไม่ถูกส่งและไม่เสียโควตา`); return render(); }
-  if (lim && len > 0 && me().chatLeft === 0) { chatDraft = t; setChatErr('โควตาข้อความวันนี้หมดแล้ว'); return render(); }
+  if (lim && len > lim.len) { chatDraft = raw; setChatErr(chatErrText('ยาวเกิน', len)); return render(); }
+  if (lim && len > 0 && me().chatLeft === 0) { chatDraft = raw; setChatErr(chatErrText('โควตา', len)); return render(); }
+  chatBusy = true;
   const r = await emit(socket, 'p:chat', { text: t });
-  if (r.ok) { chatDraft = ''; setChatErr(''); error = ''; i.value = ''; }
-  else {
-    chatDraft = t; error = '';
-    const er = r.error || '';
-    setChatErr(er.includes('ยาวเกิน') ? `ข้อความยาวเกิน ${(lim && lim.len) || 30} ตัวอักษร (พิมพ์มา ${len}) ไม่ถูกส่งและไม่เสียโควตา` : er.includes('โควตา') ? 'โควตาข้อความวันนี้หมดแล้ว' : er);
-  }
+  chatBusy = false;
+  if (r.ok) { if (chatDraft === raw) chatDraft = ''; setChatErr(''); error = ''; }   // keep text typed while the send was in flight
+  else { error = ''; setChatErr(chatErrText(r.error, len)); }                        // reject: text stays (chatDraft untouched)
+  render();
+  const n = $('#chatIn'); if (n) n.value = chatDraft;                                // `i` is detached after a mid-send re-render
+}
+async function quick(i) {
+  const t = qrList()[i]; if (!t || chatBusy) return;
+  chatBusy = true;
+  const r = await emit(socket, 'p:chat', { text: t });
+  chatBusy = false;
+  if (r.ok) { error = ''; setChatErr(''); } else setChatErr(chatErrText(r.error, chatLen(t)));   // never touches chatDraft / #chatIn (AC-6)
   render();
 }
+function toggleQuick() { qrOpen = !qrOpen; if (qrOpen) qrScroll = 0; render(); }
 const sendDark = e => { e.preventDefault(); const i = $('#darkIn'); const t = i.value.trim(); if (!t) return; i.value = ''; act('p:dark', { text: t }); };
 const emoji = t => act('p:chat', { text: t });
 
 // ---------- render ----------
 function render() {
   const app = $('#app');
-  const focus = document.activeElement?.id, val = document.activeElement?.value;
+  const ae = document.activeElement, focus = ae?.id, qi = ae?.dataset?.qi;
+  const val = focus === 'chatIn' ? undefined : ae?.value;   // #chatIn is rendered from chatDraft; never write a DOM value back (AC-1)
+  const caret = focus === 'chatIn' ? [ae.selectionStart, ae.selectionEnd] : null;
+  const qp = $('.qr-panel'); if (qp) qrScroll = qp.scrollTop;
   if (!S || !session) { app.innerHTML = joinHTML(); }
   else if (S.phase === 'LOBBY') { app.innerHTML = lobbyHTML(); }
   else keepScroll('.chat', () => { app.innerHTML = gameHTML(); });
-  if (focus && $('#' + focus) && val !== undefined) { const el = $('#' + focus); el.value = val; el.focus(); }
-  tickTimer(); Voice.paint();
+  const np = $('.qr-panel'); if (np) np.scrollTop = qrScroll;
+  if (focus === 'chatIn') { const el = $('#chatIn'); if (el) { el.focus(); try { el.setSelectionRange(caret[0], caret[1]); } catch (_) {} } }
+  else if (focus && $('#' + focus) && val !== undefined) { const el = $('#' + focus); el.value = val; el.focus({ preventScroll: focus === 'qrToggle' }); }
+  else if (qi !== undefined) { const el = $(`.btn.qr[data-qi="${qi}"]`); if (el) el.focus({ preventScroll: true }); }
+  tickTimer();
 }
 function joinHTML() {
   return `<div class="setup jn"><h1>🧙 Deadline Necromancer</h1><p class="jn-help">เข้าห้องเล่นกับเพื่อนๆ — รับรหัสห้อง 4 ตัวอักษรจาก Moderator</p>
@@ -164,8 +186,15 @@ function chatBar() {
     chip = `<div class="chips" aria-live="polite">${chip}</div>`;
   }
   const ph = me().silenced ? '🤐 ถูกปิดปาก — ส่งได้แค่อีโมจิ และพูดทางไมค์ไม่ได้' : out ? 'โควตาหมดแล้ว — ส่งได้แค่อีโมจิ' : limited ? `พิมพ์ข้อความ… (ไม่เกิน ${max} ตัวอักษร)` : 'พิมพ์ข้อความ…';
-  return `${chip}<form class="chatbar" onsubmit="sendChat(event)"><input id="chatIn" oninput="chatDraft=this.value;clearChatErr()" value="${esc(chatDraft)}" placeholder="${ph}" ${me().silenced || out ? 'disabled' : ''} autocomplete="off">
-    ${QUICK_EMO.map(e => `<button type="button" class="btn emo" onclick="emoji('${e}')">${e}</button>`).join('')}</form><div id="chatErr">${chatErr ? `<div class="hint bad">${esc(chatErr)}</div>` : ''}</div>`;
+  const silenced = !!me().silenced, off = silenced || out, qr = qrList(), dis = off ? 'disabled' : '';
+  const note = silenced ? '🤐 ถูกปิดปาก — ข้อความด่วนใช้ไม่ได้ ส่งได้แค่อีโมจิ' : out ? 'โควตาหมดแล้ว — ข้อความด่วนใช้ไม่ได้ ส่งได้แค่อีโมจิ' : '';
+  const pills = qr.map((p, i) => `<button type="button" class="btn qr" data-qi="${i}" onclick="quick(${i})" ${off || (limited && chatLen(p) > max) ? 'disabled' : ''}>${esc(p)}</button>`).join('');
+  return `${chip}<form class="chatbar" onsubmit="sendChat(event)"><input id="chatIn" oninput="chatDraft=this.value;clearChatErr()" value="${esc(chatDraft)}" placeholder="${ph}" ${dis} autocomplete="off">
+    <button id="chatSend" type="submit" class="btn primary" aria-label="ส่งข้อความ" ${dis}>ส่ง</button>
+    <div class="chat-emo">${QUICK_EMO.map(e => `<button type="button" class="btn emo" onclick="emoji('${e}')">${e}</button>`).join('')}</div></form><div id="chatErr">${chatErr ? `<div class="hint bad" role="alert">${esc(chatErr)}</div>` : ''}</div>
+    <button type="button" id="qrToggle" class="btn qr-toggle" aria-expanded="${qrOpen}" aria-controls="qrPanel" onclick="toggleQuick()"><span>💬 ข้อความด่วน (${qr.length})</span><span aria-hidden="true">${qrOpen ? '▴' : '▾'}</span></button>
+    ${limited && !off ? `<p class="hint">กดข้อความด่วน = นับ 1 ข้อความ (ทุกข้อความ ≤ ${max} ตัวอักษร)</p>` : ''}
+    ${qrOpen ? `<div id="qrPanel" class="qr-panel">${note ? `<p class="hint qr-note" role="status">${note}</p>` : ''}${pills}</div>` : ''}`;
 }
 function waitMod(text) { return `<p class="hint">⏳ ${text} — รอ Moderator</p>`; }
 
