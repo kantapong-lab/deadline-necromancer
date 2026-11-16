@@ -7,5 +7,6 @@ Node + Socket.IO multiplayer game (app/), docs/ rules + card images.
 - event cards 16-20: no thumbnails, UI not run in a real browser, mod VOTE guidance note and non-mod openRound2 test skipped [[tasks/event-cards-16-20]]
 - Out-of-scope bugs (see .team/refactor-structure/refactor-plan.md section 1): server.js startsWith guard, unguarded decodeURIComponent, biased seat shuffle, rooms never deleted, docs design.md stale paths after refactor.
 ## Tasks
+- change-lobby-ui: in progress [[tasks/change-lobby-ui]]
 - event-cards-16-20: done (branch accepted, not merged or pushed) [[tasks/event-cards-16-20]]
 - change-refactor-structure: done (merged to main locally, not pushed)
