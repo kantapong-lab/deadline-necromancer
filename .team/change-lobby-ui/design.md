@@ -1,6 +1,8 @@
 # Design: change-lobby-ui (ui-only, mobile first)
 
-Scope: `joinHTML` + `lobbyHTML` (`app/public/index.html`), new scoped CSS in `app/public/style.css`. No canvas publish. No `docs/design-system/`; tokens derived from `style.css` `:root`. No new tokens, fonts, assets.
+Canvas: https://claude.ai/artifact/XzytptgJkYCcsBEU1u5Kyn
+
+Scope: `joinHTML` + `lobbyHTML` (`app/public/index.html`), new scoped CSS in `app/public/style.css`. Visual mockup published (see Canvas). No `docs/design-system/`; tokens derived from `style.css` `:root`. No new tokens, fonts, assets.
 
 ## Tokens used (existing)
 `--bg #0f0d1a` `--panel #181528` `--panel2 #201c36` `--line #33294f` `--txt #ebe7f7` `--mut #9a92b8` `--light #f5c451` `--dark #b05cff` `--bad #ff5c7a` `--good #5fe39a`.
