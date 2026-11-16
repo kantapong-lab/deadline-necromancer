@@ -29,7 +29,7 @@ Revert the merge commit. No data to undo.
 
 - Branch: `feature/change-chat-quick-replies` (QA round 3 pass at 3889601, `npm test` exit 0).
 - Migrations: none. New env vars or config: none. New dependencies: none.
-- Changed: static files (`app/public/index.html`), `app/src/shared/data.js`, tests, `app/test/http-parity.json` (re-recorded).
+- Changed: static files (`app/public/index.html`, `app/public/style.css`), `app/src/shared/data.js`, tests, `app/test/http-parity.json` (re-recorded).
 - Order: merge, restart/redeploy the app as usual.
 - Cache: `/data.js` is served no-cache, so clients pick up `QUICK_REPLIES` on reload. A stale `index.html` tab can show old UI until refreshed.
 - Check after: open a room, MORNING as an alive player: send button and 23 quick replies show; tap one and it appears in the feed; under Purge the chip drops by 1; under NDA Silence the buttons are disabled.
