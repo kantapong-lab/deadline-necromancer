@@ -94,6 +94,7 @@ async function main() {
     await fx(); const n0 = (await feed()).length;
     await type('hello AC1'); assert.strictEqual(await draft(), 'hello AC1', 'oninput must have run (draft tracks typing)');
     await enter(); await until(`[...document.querySelectorAll('.chat .msg')].some(e=>e.textContent.includes('hello AC1'))`);
+    await until(`chatBusy===false`);   // the state push (feed) lands a tick before the ack; the input clears on the ack
     assert.strictEqual(await val(), ''); assert.strictEqual(await draft(), '');
     assert.strictEqual((await feed()).length, n0 + 1);
   });
@@ -275,7 +276,10 @@ async function main() {
     assert(Math.abs(g.inp.y + await ev('scrollY') - iy0) < 2, 'input moved when panel opened');
     const m = await ev(`(()=>{const p=document.querySelector('#qrPanel'); return {ch:p.clientHeight,sh:p.scrollHeight,cw:p.clientWidth,sw:p.scrollWidth,oy:getComputedStyle(p).overflowY,ox:getComputedStyle(p).overflowX}})()`);
     assert(m.sh > m.ch, 'panel scrolls vertically'); assert(m.sw <= m.cw + 1, 'no horizontal overflow in panel'); assert(m.ch <= 180, 'panel height capped ' + m.ch);
-    const bw = await ev(`[...document.querySelectorAll('.btn.qr')].map(b=>b.getBoundingClientRect()).filter(b=>b.width>0).every(b=>b.height>=40 && b.right<=innerWidth)`); assert(bw, 'pills >=40px tall and inside viewport');
+    const ph = await ev(`Math.min(...[...document.querySelectorAll('.btn.qr')].map(b=>b.getBoundingClientRect().height))`);
+    console.log(`   AC-13 measured at 375px: min pill height ${ph}px, #chatSend ${g.snd.h}px, #chatIn ${g.inp.h}px, toggle ${g.tg.h}px`);
+    assert(ph >= 44 && g.snd.h >= 44, `design touch target 44px: pill ${ph}, send ${g.snd.h}`);
+    const bw = await ev(`[...document.querySelectorAll('.btn.qr')].map(b=>b.getBoundingClientRect()).filter(b=>b.width>0).every(b=>b.right<=innerWidth)`); assert(bw, 'pills inside viewport');
     // scroll the panel then tap a visible pill: scrollTop kept, phrase posted
     await ev(`document.querySelector('#qrPanel').scrollIntoView({block:'center'}); document.querySelector('#qrPanel').scrollTop=120`); const st0 = await ev(`document.querySelector('#qrPanel').scrollTop`); assert(st0 > 50, 'scrolled ' + st0);
     const qi = await ev(`(()=>{const p=document.querySelector('#qrPanel').getBoundingClientRect(); const b=[...document.querySelectorAll('.btn.qr')].find(b=>{const r=b.getBoundingClientRect(); return r.top>p.top+4 && r.bottom<p.bottom-4 && r.bottom<innerHeight && r.top>0}); return b.dataset.qi})()`);
