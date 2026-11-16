@@ -13,7 +13,8 @@ module.exports = {
   // Secret details are stripped unless the Moderator turned Secrets on (same rule as modView(secrets)).
   redactFx(batch, secrets) {
     if (secrets) return batch;
-    return batch.filter(f => PUBLIC_KINDS.has(f.kind)).map(f => {
+    const hid = this.evIs('status') && this.phase !== 'OVER';   // #20: ไม่ส่งค่า Mana ใน payload
+    return batch.filter(f => PUBLIC_KINDS.has(f.kind)).map(f => hid && f.mana !== undefined ? { ...f, mana: undefined } : f).map(f => {
       if (f.kind === 'trapTrigger') return { kind: f.kind, day: f.day, phase: f.phase, trap: f.trap, mana: f.trap === 'exit' ? f.mana : undefined };   // name only
       if (f.kind === 'event' && f.onCall !== undefined) { const { onCall, ...rest } = f; return rest; }
       return f;

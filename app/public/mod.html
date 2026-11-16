@@ -107,8 +107,8 @@ function unreadChat() {
   return n - seen;
 }
 function manaHTML() {
-  const pct = S.manaMax ? Math.min(100, Math.round(S.mana / S.manaMax * 100)) : 0;
-  return `<div class="card"><h3>Mana Task</h3><div class="manabig"><b>${S.mana}</b><span>/ ${S.manaMax}</span></div>
+  const pct = S.manaMax && S.mana != null ? Math.min(100, Math.round(S.mana / S.manaMax * 100)) : 0;
+  return `<div class="card"><h3>Mana Task</h3><div class="manabig">${S.manaHidden || S.mana == null ? '<b>??</b><span>หน้าสถานะล่ม · เปิด Secrets เพื่อดู</span>' : `<b>${S.mana}</b><span>/ ${S.manaMax}</span>`}</div>
     <div class="progress"><div style="width:${pct}%"></div></div>
     <div class="hint" style="margin-top:8px">Skip ติดกัน ${S.skipStreak} · โควตา Booster ${S.boosterCharges}${S.hijackSet ? ' · Meeting Hijack ทำงาน' : ''}</div></div>`;
 }

@@ -20,8 +20,10 @@ module.exports = {
   },
   common() {
     const ev = this.event, e = ev ? EVENTS[ev.id] : null;
+    // #20 Status Page Down: หลอด Mana ปิดทั้งวัน (ไม่รู้ผลเมื่อคืน = ไม่รู้ค่า Mana) จนจบเกมจึงเปิด
+    const manaHidden = this.evIs('status') && this.phase !== 'OVER';
     return {
-      day: this.day, dayName: DAYS[this.day - 1], phase: this.phase, mana: this.mana, manaMax: this.manaMax, skipStreak: this.skipStreak,
+      day: this.day, dayName: DAYS[this.day - 1], phase: this.phase, mana: manaHidden ? null : this.mana, manaMax: this.manaMax, manaHidden, skipStreak: this.skipStreak,
       boosterCharges: this.boosterCharges, boosterOpen: this.booster.open, paused: this.paused, timer: this.timer,
       report: this.report, feed: this.feed.slice(-80),
       event: ev ? { id: ev.id, n: e.n, t: e.t, d: e.d, img: e.img, choice: !!e.choice, yes: e.yes, no: e.no, pending: ev.pending, accepted: ev.accepted, ...(ev.id === 'hands' && ev.extra ? { extra: ev.extra } : {}) } : null,

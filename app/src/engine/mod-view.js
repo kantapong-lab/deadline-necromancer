@@ -1,4 +1,5 @@
 'use strict';
+const MANA_LINE = /Mana Task [+-−]?\d|ตอนนี้ \d+\/\d+/;
 // Moderator view: pending votes, guidance text and the full moderator state.
 const { EVENTS } = require('../shared/data');
 
@@ -24,7 +25,7 @@ module.exports = {
     const G = this, pd = G.pending();
     switch (G.phase) {
       case 'MORNING': {
-        const steps = [`ประกาศผลเมื่อคืนและหลอด Mana (${G.mana}/${G.manaMax}) ให้ทุกคนฟัง`];
+        const steps = [G.evIs('status') ? 'ประกาศเฉพาะชื่อคนที่ Burnout — วันนี้ห้ามประกาศรายงานเมื่อคืนและหลอด Mana (หน้าสถานะล่ม)' : `ประกาศผลเมื่อคืนและหลอด Mana (${G.mana}/${G.manaMax}) ให้ทุกคนฟัง`];
         if (G.event) steps.push(`อ่านการ์ด Event #${EVENTS[G.event.id].n} "${EVENTS[G.event.id].t}"${G.event.pending ? ' แล้วให้ทุกคนโหวตรับ/ปฏิเสธ' : ''}`);
         if (G.booster.open) steps.push(`เปิดโหวต Sprint Booster (เหลือโควตา ${G.boosterCharges}) — ผู้เล่นโหวตแบบไม่ระบุตัวตน`);
         steps.push('เปิดห้องประชุมให้ถกเถียง' + (G.evIs('marathon') ? ' (ประชุมมาราธอน: เวลาครึ่งเดียว)' : G.hijackVoter != null ? ' (Meeting Hijack: ลดเวลา 30%)' : ''));
@@ -40,19 +41,22 @@ module.exports = {
   },
   modView(secrets) {
     const G = this, base = G.common();
+    const hide = base.manaHidden && !secrets;   // จอ Moderator ที่ไม่เปิด Secrets อาจหันเข้าหาผู้เล่น: ห้ามหลุดค่า Mana
     return {
       ...base, role: 'moderator', secrets: !!secrets,
+      // จอ Moderator อาจหันเข้าหาผู้เล่น: วัน Status Page Down เห็น Mana เฉพาะตอนเปิด Secrets
+      ...(base.manaHidden && secrets ? { mana: G.mana, manaHidden: false } : {}),
       players: G.players.map(p => {
         const rv = secrets || G.phase === 'OVER' || (!p.alive && p.cause !== 'burnout');
         const o = { id: p.id, name: p.name, alive: p.alive, cause: p.alive ? null : p.cause, silenced: !!secrets && p.alive && p.silenced, role: rv ? p.role : null, faction: rv ? p.faction : null };
         if (secrets) Object.assign(o, { zero: p.zero, dbl: p.dbl, locked: p.locked, credit: G.credit[p.id], target: p.target });
         return o;
       }),
-      pending: G.pending(!!secrets), guidance: G.guidance(), timeline: G.timeline.slice(-200),
+      pending: G.pending(!!secrets), guidance: G.guidance(), timeline: G.timeline.slice(-200).map(t => hide ? { ...t, text: t.text.split(' | ').filter(x => !MANA_LINE.test(x)).join(' | ') } : t),
       traps: secrets ? G.traps.map(t => ({ kind: t.kind, target: t.target, day: t.day })) : G.traps.length,
       trapCharges: G.trapCharges, hijackSet: G.hijackVoter != null,
       nightActions: secrets && G.phase !== 'MORNING' ? G.night : null,
-      ...(G.evIs('status') && G.event.fullReport ? { statusReport: G.event.fullReport } : {}),
+      ...(G.evIs('status') && G.event.fullReport ? { statusReport: hide ? G.event.fullReport.filter(x => !MANA_LINE.test(x)) : G.event.fullReport } : {}),
       ...(G.evIs('status') && secrets ? { onCall: G.event.onCall ?? null } : {}),
     };
   },

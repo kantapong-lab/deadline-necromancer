@@ -295,8 +295,11 @@ const cases = {
     const other = onCall === 5 ? 4 : 5;
     assert(!JSON.stringify(G.viewFor(other)).includes('onCall') && !JSON.stringify(G.viewFor(other)).includes('fullReport'));
     assert.strictEqual(G.modView(false).onCall, undefined); assert.strictEqual(G.modView(true).onCall, onCall);
-    assert(G.modView(false).statusReport.length > 1 && G.modView(false).statusReport.some(l => /Mana/.test(l)), 'moderator keeps the full report');
-    assert.strictEqual(G.common().mana, G.mana); assert.strictEqual(G.common().manaMax, 6);
+    assert(G.modView(true).statusReport.length > 1 && G.modView(true).statusReport.some(l => /Mana/.test(l)), "moderator (secrets) keeps the full report");
+    assert.strictEqual(G.common().mana, null); assert.strictEqual(G.common().manaHidden, true); assert.strictEqual(G.viewFor(other).mana, null, 'Mana bar closed for players'); assert.strictEqual(G.modView(false).mana, null); assert.strictEqual(G.modView(true).mana, G.mana, 'secrets moderator still sees Mana'); assert(!/Mana Task|ตอนนี้ \d+\/\d+/.test(G.modView(false).timeline.map(t => t.text).join('\n')), 'timeline carries no Mana value for a non-secrets moderator');
+    assert(!G.modView(false).statusReport.some(l => /Mana Task/.test(l)), 'non-secrets moderator statusReport drops the Mana line'); assert(G.modView(true).statusReport.some(l => /Mana Task/.test(l)));
+    assert(!G.redactFx([{ kind: 'event', mana: 3 }, { kind: 'voteOut', mana: 3 }], false).some(f => f.mana !== undefined), 'fx mana stripped');
+    G.phase = 'OVER'; assert.strictEqual(G.common().mana, G.mana, 'revealed at game over'); G.phase = 'MORNING';
     assert(!JSON.stringify(G.common()).includes('onCall') && !JSON.stringify(G.pubPlayers(G.P(5), false)).includes('onCall'));
     // Meeting Hijack trap + NDA-silenced player: both status lines withheld from public, both in on-call intel and moderator statusReport
     const T = mk(); T.traps = [{ kind: 'hijack', target: null, day: T.day, fresh: false, triggered: false }]; T.P(5).silencedNext = true;

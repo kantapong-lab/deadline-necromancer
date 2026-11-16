@@ -541,7 +541,7 @@ const PRESET = {
   NIGHT:  { bg:0x07050f, hemi:.3, hemiG:0x241450, sun:.6, sunC:0x8a9cff, rune:0xb05cff, runeOp:1,  mon:0xb05cff, part:.9,  partC:0xb48cff, sky:skyNight, spot:0, torch:1, r:12.5, h:9.5, label:'กลางคืน — ลัทธิอู้งานออกล่า' },
 };
 let curSt = null;
-let phase = 'MORNING', day = 1, mana = 1, secrets = false;
+let phase = 'MORNING', day = 1, mana = 1, secrets = false, manaHidden = false;
 // `secrets` = what this screen actually shows = engine Secrets flag (srvSecrets) AND the local reveal toggle. Reveal is OFF by default so a TV facing the players never leaks factions/roles/night log.
 let srvSecrets = false, reveal = false, relabel = () => {};
 function recomputeSecrets() {
@@ -565,8 +565,8 @@ function setPhase(p) {
 document.querySelectorAll('[data-p]').forEach(b => b.onclick = () => setPhase(b.dataset.p));
 function renderHud() {
   document.getElementById('days').innerHTML = DAYS.map((d, i) => `<span class="day ${i === day-1 ? 'now' : i < day-1 ? 'past' : ''}">${d}</span>`).join('');
-  document.getElementById('fill').style.width = (mana/MANA_MAX*100) + '%';
-  document.getElementById('manaTxt').textContent = `Mana Task ${mana}/${MANA_MAX}`;
+  document.getElementById('fill').style.width = manaHidden ? '0%' : (mana/MANA_MAX*100) + '%';
+  document.getElementById('manaTxt').textContent = manaHidden ? 'Mana Task ?? (หน้าสถานะล่ม)' : `Mana Task ${mana}/${MANA_MAX}`;
 }
 renderHud();
 const setMana = v => { mana = Math.max(0, Math.min(MANA_MAX, v)); renderHud(); };
@@ -779,7 +779,7 @@ function applyState(st) {
     if (hydrated && pk !== lastPhase && PFX[pk]) { const f = { kind:'phase', key:pk, st }; if (pk === 'OVER') setTimeout(() => { fxQueue.push(f); pump(); }, 700); else { fxQueue.unshift(f); pump(); } }   // OVER state arrives just before the last night's fx batch → give it a moment so the game-over card really is last and nothing is dropped
     lastPhase = pk; }
   curSt = st; if (!!st.secrets !== srvSecrets) applySecrets(st.secrets); renderChat(st); renderDark(st); desks.forEach(refreshLabel);
-  day = st.day; mana = Math.max(0, Math.min(MANA_MAX, st.mana)); renderHud(); setPhaseQuiet(SCENE_PHASE[st.phase] || 'MORNING');
+  day = st.day; manaHidden = !!st.manaHidden; if (st.mana != null) mana = Math.max(0, Math.min(MANA_MAX, st.mana)); renderHud(); setPhaseQuiet(SCENE_PHASE[st.phase] || 'MORNING');
   if (st.phase !== 'OVER') applyState.prev = st.phase; if (st.phase !== 'OVER') gameEnded = false;
   renderPhase(st.phase === 'OVER' && (playing || fxQueue.length) ? { ...st, phase: applyState.prev || 'NIGHT' } : st);   // the 'game over' stepper waits until the last night skills / vote fx have finished playing
   if (st.phase !== 'VOTE_RESULT' && capEl.classList.contains('res')) capEl.classList.remove('show');   // leave the result caption behind when the night starts

@@ -6,11 +6,11 @@ const PHASES = { LOBBY: '🪑 ล็อบบี้', MORNING: '☀️ ห้อ
 const CAUSE = { burnout: '💀 Burnout', fired: '🔥 ถูกไล่ออก', seeker: '💰 ชิ่งออก' };
 
 function topbar(s, extra = '') {
-  const pct = Math.round(s.mana / s.manaMax * 100);
+  const hid = s.manaHidden || s.mana == null, pct = hid ? 0 : Math.round(s.mana / s.manaMax * 100);
   return `<div class="top">
     <div class="brand">🧙 Deadline Necromancer</div>
     <div class="days">${DAYS.map((d, i) => `<span class="day ${i + 1 === s.day ? 'now' : i + 1 < s.day ? 'past' : ''}">${d.slice(0, 3)}</span>`).join('')}</div>
-    <div class="mana"><small>Mana Task ${s.mana}/${s.manaMax}${s.skipStreak ? ` · Skip ติดกัน ${s.skipStreak}` : ''}</small><div class="bar"><div class="fill" style="width:${pct}%"></div></div></div>
+    <div class="mana"><small>Mana Task ${hid ? '?? (หน้าสถานะล่ม)' : s.mana + '/' + s.manaMax}${s.skipStreak ? ` · Skip ติดกัน ${s.skipStreak}` : ''}</small><div class="bar"><div class="fill" style="width:${pct}%"></div></div></div>
     <div class="phase">${PHASES[s.phase] || ''} ${s.paused ? '⏸️' : ''}</div>
     <div class="timer" id="timer"></div>${typeof DNAudio !== 'undefined' ? DNAudio.controlHTML() : ''}${extra}
   </div>`;

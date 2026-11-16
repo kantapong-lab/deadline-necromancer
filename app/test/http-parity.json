@@ -15,7 +15,7 @@
   "status": 200,
   "type": "text/html; charset=utf-8",
   "cache": "no-cache",
-  "sha256": "cd80697e8c38b012d25071b5e264766e16980e990173862f75e784e01b658b72"
+  "sha256": "66aa7c598b1ced8af7e3f641513086e19bb5b3336e1313fe15714f0fc85dc909"
  },
  "/gallery": {
   "status": 200,
@@ -27,7 +27,7 @@
   "status": 200,
   "type": "text/javascript; charset=utf-8",
   "cache": "no-cache",
-  "sha256": "52e6fa7c67ffc9c51ef2c2bb97508456a3b4b1c1cefe1ec71473fe6c9753ff72"
+  "sha256": "efdbae519fae51ee24ad4cd827da05505dd1418ec0612a01555d57a4962900b0"
  },
  "/style.css": {
   "status": 200,
@@ -39,7 +39,7 @@
   "status": 200,
   "type": "text/javascript; charset=utf-8",
   "cache": "no-cache",
-  "sha256": "2b996bc167c161c971e9700be1bc27725e05a5ee4ebe14f0954a6880f8950858"
+  "sha256": "ad2a857c8e400dc1b7468940792ac96aa14ef495293705c6b6b8152020772156"
  },
  "/card-info.js": {
   "status": 200,
@@ -57,7 +57,7 @@
   "status": 200,
   "type": "text/html; charset=utf-8",
   "cache": "no-cache",
-  "sha256": "cd80697e8c38b012d25071b5e264766e16980e990173862f75e784e01b658b72"
+  "sha256": "66aa7c598b1ced8af7e3f641513086e19bb5b3336e1313fe15714f0fc85dc909"
  },
  "/gallery.html": {
   "status": 200,
