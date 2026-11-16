@@ -1,6 +1,6 @@
 # Design: change-chat-quick-replies
 
-Canvas URL: none, local file canvas/chatbar-mockup.html (artifact publish denied; user approved from browser pane 2026-11-16)
+Canvas URL: http://localhost:5173/.worktrees/feature-change-chat-quick-replies/.team/change-chat-quick-replies/canvas/chatbar-mockup.html (local poc server; artifact publish denied, user approved this mockup in the browser pane 2026-11-16)
 Design system: none in repo (`docs/design-system/` absent). Scope is a change to an existing screen: reuse `app/public/style.css` tokens and classes (`--panel`, `--panel2`, `--line`, `--mut`, `--bad`, `--light`, `.btn`, `.btn.primary`, `.btn.emo`, `.chips`, `.chip`, `.hint`). No intake, no new tokens.
 Screen map: none needed (one bar on one existing screen).
 Platform: web, mobile-first (375px).
