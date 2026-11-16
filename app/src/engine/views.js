@@ -1,6 +1,6 @@
 'use strict';
 // Per-player views (what each seat is allowed to see).
-const { ROLES, EVENTS, TRAPS, FNAME, DAYS } = require('../shared/data');
+const { ROLES, EVENTS, TRAPS, FNAME, DAYS, useLimit } = require('../shared/data');
 const { PURGE_MSGS, PURGE_LEN } = require('./constants');
 
 // Views
@@ -42,9 +42,9 @@ module.exports = {
       me: {
         id: pid, name: p.name, role: p.role, roleName: r.n, sub: r.sub, faction: p.faction, factionName: FNAME[p.faction], img: r.img,
         skill: r.skill, desc: r.d, goal, alive: p.alive, silenced: p.silenced, dbl: p.dbl, zero: p.zero, locked: p.locked,
-        once: !!r.once, used: p.used, plus1Used: p.plus1Used, dodgeUsed: p.dodgeUsed, credit: this.credit[pid],
+        once: !!useLimit(r), usesMax: useLimit(r), usesLeft: Math.max(0, useLimit(r) - p.usedN), used: p.used, plus1Used: p.plus1Used, dodgeUsed: p.dodgeUsed, credit: this.credit[pid],
         target: p.role === 'soul_recruiter' ? p.target : null, targetName: p.role === 'soul_recruiter' ? this.nm(p.target) : null,
-        copy: p.copy, copyFrom: p.copyFrom, copyName: p.copy ? ROLES[p.copy].n : null,
+        copy: p.copy, copyName: p.copy ? ROLES[p.copy].n : null,
         spec: s ? { skill: s.skill, t: s.t, d: s.d, pool: s.pool } : null,
         skillOK: this.hasSkill(p), canRest: this.canRest(p), skillsBanned: this.skillsBanned(), snack: this.evIs('snack'),
         candidates: this.phase === 'NIGHT' && p.alive ? this.candidates(p).map(x => x.id) : [],

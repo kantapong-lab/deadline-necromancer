@@ -19,7 +19,8 @@ let seedN = 0;
 const out = [];
 const tokens = new Map();   // random-looking values -> stable labels
 const label = (kind, v) => { if (!v) return v; const k = kind + ':' + v; if (!tokens.has(k)) tokens.set(k, `<${kind}${tokens.size}>`); return tokens.get(k); };
-const norm = v => JSON.parse(JSON.stringify(v, (k, x) => (k === 'ts' || k === 'endsAt') ? '<time>' : x));
+// room codes come from crypto now (not the seeded Math.random), so mask them like the tokens
+const norm = v => JSON.parse(JSON.stringify(v, (k, x) => (k === 'ts' || k === 'endsAt') ? '<time>' : (k === 'code' && typeof x === 'string' ? '<code>' : x)));
 const sha = v => crypto.createHash('sha256').update(JSON.stringify(v)).digest('hex').slice(0, 16);
 
 function client() {

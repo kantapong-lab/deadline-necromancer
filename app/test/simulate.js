@@ -46,7 +46,7 @@ async function playGame(N, verbose) {
       const sent = {};
       for (const p of players) { const me = p.v.me; if (!me.alive) continue;
         let a;
-        if (me.skillOK && !me.skillsBanned && !(me.once && Math.random() < .6)) {
+        if (me.skillOK && !me.skillsBanned && me.candidates.length >= Math.max(me.spec.t, 0) && !(me.once && Math.random() < .6)) {   // Lantern Keeper has no targets until someone burns out
           const t = Math.max(me.spec.t, 0), c = me.candidates.slice().sort(() => Math.random() - .5);
           a = { type: 'SKILL', targets: c.slice(0, t) };
           if (me.role === 'soul_recruiter' && !me.plus1Used && Math.random() < .3) a.plus1 = true;

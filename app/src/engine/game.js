@@ -1,6 +1,6 @@
 // Game engine (server-authoritative) — พอร์ตกติกาจาก poc/index.html เป็นโมดูลไม่มี UI/บอท
 // Moderator เป็นคนสั่งเปลี่ยนเฟส ผู้เล่นส่งแอ็กชันของตัวเองผ่าน method ด้านล่าง
-const { ROLES, EVENTS, TRAPS, DAYS, LIGHT, DARK, INDIE } = require('../shared/data');
+const { ROLES, EVENTS, TRAPS, DAYS, LIGHT, DARK, INDIE, useLimit } = require('../shared/data');
 const { shuffle, rnd } = require('./random');
 const { COMP, MIN_PLAYERS, MAX_PLAYERS, EMOJIS } = require('./constants');
 const chat = require('./chat');
@@ -13,6 +13,8 @@ const win = require('./win');
 const views = require('./views');
 const modViewPart = require('./mod-view');
 const fx = require('./fx');
+
+const FACTION_READERS = ['senior_dev', 'qa_hunter'];
 
 // Mixes the method groups of src/engine/*.js onto Game.prototype (non-enumerable, like class methods).
 // Throws if a name is already defined, so two parts can never silently shadow each other.
@@ -30,9 +32,13 @@ class Game {
     const N = names.length;
     if (!COMP[N]) throw new Error('จำนวนผู้เล่นต้อง ' + MIN_PLAYERS + '–' + MAX_PLAYERS + ' คน');
     const [l, d, i] = COMP[N];
-    const roles = shuffle([...shuffle(LIGHT).slice(0, l), ...shuffle(DARK).slice(0, d), ...shuffle(INDIE).slice(0, i)]);
+    const lightRoles = shuffle(LIGHT).slice(0, l);
+    // Small rooms (≤5 Light seats) always hold at least one Light role that can read a faction (Senior Dev / QA Hunter):
+    // the Light pool is bigger than the room, so a table with no faction reader at all would be near-unwinnable for them.
+    if (l <= 5 && !lightRoles.some(r => FACTION_READERS.includes(r))) lightRoles[lightRoles.length - 1] = rnd(FACTION_READERS);
+    const roles = shuffle([...lightRoles, ...shuffle(DARK).slice(0, d), ...shuffle(INDIE).slice(0, i)]);
     this.players = names.map((name, id) => ({
-      id, name, role: roles[id], faction: ROLES[roles[id]].f, alive: true, used: false, copy: null, copyFrom: null,
+      id, name, role: roles[id], faction: ROLES[roles[id]].f, alive: true, used: false, usedN: 0, copy: null, copyFrom: null,
       silenced: false, zero: false, dbl: false, silencedNext: false, zeroNext: false, dblNext: false,
       overpromised: false, dodgeUsed: false, plus1Used: false, locked: false, lockedNext: false,
       votedOut: false, soloWon: false, cause: null, target: null, prevTargets: [], prevSide: [],
@@ -68,7 +74,8 @@ class Game {
   alive() { return this.players.filter(p => p.alive); }
   er(p) { return p.role === 'mystery_intern' ? p.copy : p.role; }
   spec(p) { return ROLES[this.er(p)]; }
-  hasSkill(p) { const s = this.spec(p); return !!s && !(ROLES[p.role].once && p.used) && !p.locked; }
+  // usedN counts nights the skill was used; limited roles (once / uses:N) are done when it reaches the limit
+  hasSkill(p) { const s = this.spec(p), lim = useLimit(ROLES[p.role]); return !!s && !(lim && (p.used || p.usedN >= lim)) && !p.locked; }
   evIs(id) { return this.event?.id === id; }
   skillsBanned() { return this.event?.id === 'prod' && this.event.accepted === true; }
   curseBlocked() { return this.day === 1 || this.event?.id === 'watch'; }
@@ -82,6 +89,7 @@ class Game {
   }
   candidatesRaw(p) {
     const s = this.spec(p); if (!s) return [];
+    if (s.pool === 'burned') return this.players.filter(x => !x.alive && x.cause === 'burnout');   // Lantern Keeper: only night-Burnout victims (not vote-outs)
     return this.alive().filter(x => {
       if (s.pool === 'any') return true;
       if (x.id === p.id) return false;
@@ -96,7 +104,7 @@ class Game {
   // เป้าของแอ็กชันก่อกวนฝ่ายมืด (CURSE / TRAP ที่ต้องมีเป้า) หลังตัดเป้าคืนก่อน
   sideTargets(p, pool) { return this.avoidRepeat(pool, p.prevSide, 1); }
   canRest(p) {
-    return !this.hasSkill(p) || !!ROLES[p.role].once || this.skillsBanned() || this.evIs('snack');
+    return !this.hasSkill(p) || !!useLimit(ROLES[p.role]) || this.skillsBanned() || this.evIs('snack');
   }
 }
 

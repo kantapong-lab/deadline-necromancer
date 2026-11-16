@@ -8,6 +8,7 @@
 // Light win rate near 50% at every size is the goal; compare before/after a rules change.
 const { Game } = require('../src/engine');
 const { COMP } = require('../src/engine/constants');
+const { ROLES, useLimit } = require('../src/shared/data');
 
 // What-if overrides without editing the engine: BALANCE_COMP='9:6,2,1;10:7,2,1' (light,dark,freelancer)
 // and BALANCE_MANA='9:5;10:6' (ManaMax per size).
@@ -16,7 +17,8 @@ const MANA = parse(process.env.BALANCE_MANA);
 for (const [n, c] of Object.entries(parse(process.env.BALANCE_COMP))) COMP[n] = c.split(',').map(Number);
 
 const rnd = a => a[Math.floor(Math.random() * a.length)];
-const ONCE = new Set(['chrono_tech_lead', 'chaos_devops']);
+// limited-use skills (once / uses:N) are held back half the time, like the original once-per-game roles
+const LIMITED = role => useLimit(ROLES[role]) > 0;
 
 function play(N, o) {
   const G = new Game(Array.from({ length: N }, (_, i) => 'P' + i));
@@ -45,7 +47,7 @@ function play(N, o) {
       const darks = G.alive().filter(x => x.faction === 'dark');
       for (const p of G.alive()) {
         let a = { type: 'REST', targets: [] };
-        if (G.hasSkill(p) && !G.skillsBanned() && !(ONCE.has(p.role) && Math.random() < .5)) {
+        if (G.hasSkill(p) && !G.skillsBanned() && !(LIMITED(p.role) && Math.random() < .5)) {
           const need = Math.max(G.spec(p).t, 0), c = G.candidates(p).sort(() => Math.random() - .5);
           a = { type: 'SKILL', targets: c.slice(0, need).map(x => x.id) };
         }

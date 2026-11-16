@@ -118,7 +118,8 @@ const cases = {
     assert.match(report(G), /Reply-All Leak: เมื่อคืน P\d+ กับ P\d+ ทำแอ็กชัน"เหมือนกัน"/, 'all rest → same');
     const D = table(); D.phase = 'NIGHT';
     D.night = Object.fromEntries(D.alive().map(p => [p.id, { type: p.id < 6 ? 'REST' : 'SKILL', targets: [] }]));
-    for (let i = 0; i < 30; i++) { D.report = []; D.event = null; draw(D, 'leak'); assert.match(report(D), /Reply-All Leak: .*"(เหมือนกัน|ต่างกัน)"/); }
+    for (let i = 0; i < 30; i++) { D.report = []; D.event = null; D.eventsSeen = new Set(); draw(D, 'leak');   // a card is never drawn twice per game, so forget it between draws
+      assert.match(report(D), /Reply-All Leak: .*"(เหมือนกัน|ต่างกัน)"/); }
   },
   prod() {      // 🚨 accept: no skills, Mana +0, 1 light shielded · reject: Mana −2 + random curse on a non-dark
     const A = voteCard(table({ mana: 3 }), 'prod', 12);

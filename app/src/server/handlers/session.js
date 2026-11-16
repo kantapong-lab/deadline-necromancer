@@ -1,30 +1,44 @@
 // Session handlers: mod:create, mod:join, player:join, disconnect.
 const { MAX_PLAYERS } = require('../../engine');
+const crypto = require('crypto');
 const { token, newCode, ack } = require('../rooms');
 
+const MOD_PASSWORD = process.env.MOD_PASSWORD || '';
+// Compare hashes so the check is constant-time and length-independent.
+const sha = s => crypto.createHash('sha256').update(String(s)).digest();
+const samePassword = p => crypto.timingSafeEqual(sha(p ?? ''), sha(MOD_PASSWORD));
+
 module.exports = function registerSession(socket, { rooms, ctx, member, pushState }) {
-  socket.on('mod:create', (_, cb) => {
+  // `data || {}` (not a `= {}` default): a client can send null, and a throw inside a handler would take the whole server down.
+  socket.on('mod:create', (data, cb) => {
+    const { password } = data || {};
+    // MOD_PASSWORD (env) gates room creation. Unset = open, as before (private LAN).
+    if (MOD_PASSWORD && !samePassword(password)) return ack(cb, { ok: false, needPassword: true, error: password ? 'รหัสผ่าน Moderator ไม่ถูกต้อง' : 'ต้องใส่รหัสผ่าน Moderator เพื่อสร้างห้อง' });
     const code = newCode(), modToken = token();
     rooms.set(code, { code, modToken, modSockets: new Set([socket.id]), members: [], game: null, secrets: false });
     socket.data = { code, mod: true };
     ack(cb, { ok: true, code, modToken }); pushState(rooms.get(code));
   });
-  socket.on('mod:join', ({ code, modToken, full } = {}, cb) => {
-    const r = rooms.get((code || '').toUpperCase());
+  socket.on('mod:join', (data, cb) => {
+    const { code, modToken, full } = data || {};
+    const r = rooms.get(String(code || '').toUpperCase());
     if (!r || r.modToken !== modToken) return ack(cb, { ok: false, error: 'ห้องหรือรหัส Moderator ไม่ถูกต้อง' });
     r.modSockets.add(socket.id); socket.data = { code: r.code, mod: true };
     // `full` = the shared 3D spectator screen: it always shows roles and secret actions, independent of the Moderator's own Secrets toggle
     if (full) (r.fullSockets || (r.fullSockets = new Set())).add(socket.id);
     ack(cb, { ok: true, code: r.code }); pushState(r);
   });
-  socket.on('player:join', ({ code, name, token: tk } = {}, cb) => {
-    const r = rooms.get((code || '').toUpperCase());
+  socket.on('player:join', (data, cb) => {
+    const { code, name: nameIn, token: tk } = data || {};
+    let name = nameIn;
+    const r = rooms.get(String(code || '').toUpperCase());
     if (!r) return ack(cb, { ok: false, error: 'ไม่พบห้องนี้' });
     let m = tk && r.members.find(x => x.token === tk);
     if (!m) {
       name = String(name || '').trim().slice(0, 14);
-      // เข้ากลับด้วยชื่อเดิม (ปิดแท็บแล้วเปิดใหม่): ยอมให้รับช่วงต่อได้เฉพาะเมื่อชื่อนั้นออฟไลน์อยู่
-      const same = r.members.find(x => x.name === name && x.sockets.size === 0);
+      // Taking over an offline seat by name is allowed in the lobby only. Once a game exists the seat holds a secret role, so
+      // coming back needs the seat's token (kept in the player's localStorage); a bare name never reaches in-game state.
+      const same = !r.game && r.members.find(x => x.name === name && x.sockets.size === 0);
       if (same) { m = same; }
     }
     if (!m) {

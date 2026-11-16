@@ -40,8 +40,7 @@
         if (d.state !== want(p)) fail(`${tag}: ${p.name} engine=${want(p)} scene=${d.state}`);
         if (!p.role) fail(`${tag}: engine did not send a role for ${p.name} to the spectator`); else if (d.role !== p.role) fail(`${tag}: ${p.name} role engine=${p.role} scene=${d.role}`);
         if (!d.front.material.map) fail(`${tag}: ${p.name} card art missing`);
-        if (d.el.textContent.indexOf(p.name) < 0) fail(`${tag}: label lost name for ${p.name}`);
-        if (p.role && d.el.textContent.indexOf(ROLES[p.role].n) < 0 && d.state !== 'burnout') fail(`${tag}: label "${d.el.textContent}" misses role ${ROLES[p.role].n}`);
+        if (d.el.textContent.indexOf(p.name) < 0) fail(`${tag}: name plate lost name for ${p.name}`);
       });
       const f = truth.fx, pl = m.played; if (pl.length !== f.length) fail(`${tag}: fx count scene=${pl.length} engine=${f.length}`);
       for (let i = 0; i < Math.min(f.length, pl.length); i++) {

@@ -1,9 +1,13 @@
 // Room store and the helpers every handler shares: codes, tokens, lobby view, state push, ack.
 const { MIN_PLAYERS, MAX_PLAYERS } = require('../engine');
 
+const crypto = require('crypto');
+
 const rooms = new Map();
-const token = () => Math.random().toString(36).slice(2) + Math.random().toString(36).slice(2);
-function newCode() { const L = 'ABCDEFGHJKMNPQRSTUVWXYZ'; let c; do { c = Array.from({ length: 4 }, () => L[Math.floor(Math.random() * L.length)]).join(''); } while (rooms.has(c)); return c; }
+// Tokens and room codes use the OS CSPRNG, never Math.random: the game engine shuffles roles with Math.random, so a
+// token or code drawn from the same stream would let a player who sees theirs predict the role assignment.
+const token = () => crypto.randomBytes(16).toString('hex');
+function newCode() { const L = 'ABCDEFGHJKMNPQRSTUVWXYZ'; let c; do { c = Array.from({ length: 4 }, () => L[crypto.randomInt(L.length)]).join(''); } while (rooms.has(c)); return c; }
 
 function lobbyView(room, extra) {
   return { phase: 'LOBBY', code: room.code, min: MIN_PLAYERS, max: MAX_PLAYERS, ...extra,
@@ -19,7 +23,8 @@ function createPushState(io) {
       for (const sid of m.sockets) io.to(sid).emit('state', view);
     }
     const modView = g ? g.modView(room.secrets) : lobbyView(room, { role: 'moderator', secrets: room.secrets, canStart: room.members.length >= MIN_PLAYERS && room.members.length <= MAX_PLAYERS });
-    const fullView = g && room.fullSockets && room.fullSockets.size && !room.secrets ? g.modView(true) : modView;   // 3D spectator screens always get the secret view
+    const fullBase = g && room.fullSockets && room.fullSockets.size && !room.secrets ? g.modView(true) : modView;   // 3D spectator screens always get the secret view
+    const fullView = g ? { ...fullBase, darkChat: g.darkChat } : fullBase;                                       // …plus the dark faction's night chat (server layer only, so engine snapshots stay unchanged)
     for (const sid of room.modSockets) io.to(sid).emit('state', room.fullSockets && room.fullSockets.has(sid) ? fullView : modView);
     // presentation events for the 3D Moderator screen: drained every push (so they never pile up), sent to Moderator sockets only,
     // and redacted like modView(secrets) — skills / curses / trap placement only travel while Secrets are on

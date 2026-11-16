@@ -1,7 +1,7 @@
 'use strict';
 // Night action validation and the Mystery Intern copy.
-const { ROLES, TRAPS } = require('../shared/data');
-const { shuffle } = require('./random');
+const { ROLES, TRAPS, useLimit } = require('../shared/data');
+const { shuffle, rnd } = require('./random');
 
 const REPEAT_MSG = 'ห้ามเลือกเป้าหมายเดิมที่ใช้เมื่อคืนติดกัน — เลือกคนอื่น';
 
@@ -71,11 +71,11 @@ module.exports = {
   setCopies() {
     this.players.forEach(p => {
       if (p.role !== 'mystery_intern' || !p.alive) return;
+      // Random living Light player each night (not the next seat to the right): seat order must not reveal whose role the Intern copied.
+      // copyFrom stays server-side only (3D fx source); viewFor never sends it to the player.
       p.copy = null; p.copyFrom = null;
-      for (let i = 1; i < this.players.length; i++) {
-        const q = this.players[(p.id + i) % this.players.length];
-        if (q.alive && q.faction === 'light' && !ROLES[q.role].once) { p.copy = q.role; p.copyFrom = q.name; break; }
-      }
+      const pool = this.players.filter(q => q.alive && q.faction === 'light' && !useLimit(ROLES[q.role]));   // limited-use skills (once / uses:N) can't be copied
+      if (pool.length) { const q = rnd(pool); p.copy = q.role; p.copyFrom = q.name; }
     });
   },
 };
