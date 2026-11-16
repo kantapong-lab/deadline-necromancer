@@ -27,7 +27,7 @@
   "status": 200,
   "type": "text/javascript; charset=utf-8",
   "cache": "no-cache",
-  "sha256": "a0fb5f3197cd6fc896ff179955144b78822c4dcb56b228dc906e5cc21e85a032"
+  "sha256": "52e6fa7c67ffc9c51ef2c2bb97508456a3b4b1c1cefe1ec71473fe6c9753ff72"
  },
  "/style.css": {
   "status": 200,
@@ -75,13 +75,13 @@
   "status": 200,
   "type": "image/png",
   "cache": "no-cache",
-  "sha256": "9284eb4eaafe305ab8c828b6b908fb9c0b8b4e28ad8fa65eb268c9e1f1130e55"
+  "sha256": "64a64cdfa8287eb3c82600305c210e85854d7d0fd662d8b9ff5e36d54867a32c"
  },
  "/docs/event_cards/01_fast_approval.png": {
   "status": 200,
   "type": "image/png",
   "cache": "no-cache",
-  "sha256": "61bdd48dd3efdb20085818ab983cc8c49f615a08b083587aa5001a417ef6bcc6"
+  "sha256": "15e848937407ec353fe7009afd41e3ccf3d81e5fac64a9718e01ce2a355f08e8"
  },
  "/docs/deadline_necromancer_design.md": {
   "status": 403,
