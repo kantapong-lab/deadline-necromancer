@@ -4,3 +4,5 @@
 3	designer	sonnet	medium	1	pass	0	collapsible panel mockup tok:43121
 3	architect	sonnet	high	1	pass	0	data.js shared list, no engine edit tok:95653
 4	backend-dev	sonnet	medium	1	pass	0	QUICK_REPLIES + test tok:34029
+4	frontend-dev	sonnet	high	1	pass	0	chat bar built, headless check 23/23 tok:75710
+6	code-reviewer	sonnet	high	1	pass	0	approve, S-1 chatBusy tok:61825
