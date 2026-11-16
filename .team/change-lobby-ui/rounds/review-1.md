@@ -1,0 +1,3 @@
+# Review r1: change-lobby-ui. Verdict: Reject
+B-1 (FE, AC-1.3): join button text fails 4.5:1 (gradient #7c3aed->#b05cff, ~3.7:1 at centre). Fix: .jn .btn.primary{background:#7c3aed;color:#fff}.
+All other AC pass. Suggestions: S-1 tags (คุณ)/(ออฟไลน์) clipped by ellipsis in .nm on long names; S-2 lobbySeen never pruned; S-3 .lb collides with gallery.html lightbox (scope reduced-motion rule to .setup.lb); S-4 decorative emoji content: add "/ ''" alt; S-5 outline:none -> outline:2px solid transparent; S-6 list as ul/li (optional); S-7 redundant rules; S-8 jcode trailing letter-spacing; S-9 card centring at 421-1000px.

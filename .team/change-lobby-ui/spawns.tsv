@@ -1,0 +1,8 @@
+2	product-manager	sonnet	low	1	pass	0	tok:22794
+3	designer	sonnet	medium	1	pass	0	tok:30233
+4	frontend-dev	sonnet	medium	1	pass	0	tok:36148
+6	code-reviewer	sonnet	high	1	reject	1	tok:67374
+4	frontend-dev	sonnet	medium	2	pass	0	tok:25024
+6	code-reviewer	sonnet	high	2	pass	0	tok:47451
+7	qa-tester	sonnet	medium	1	pass	0	tok:56526
+11	docs-writer	haiku	low	1	pass	0	tok:43029
