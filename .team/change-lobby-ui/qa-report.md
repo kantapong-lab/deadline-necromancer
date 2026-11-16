@@ -8,6 +8,10 @@ No test files added (UI-only, no existing UI test harness; checks are throw-away
 
 | AC | Result | Evidence |
 |---|---|---|
+| AC-1 | pass | covers 1.1-1.5 below |
+| AC-2 | pass | covers 2.1-2.6 below |
+| AC-3 | pass | covers 3.1-3.4 below |
+| AC-4 | pass | covers 4.1 below |
 | 1.1 | pass | 360px: scrollWidth 360 = innerWidth; #jcode 298x49, #jname 298x48 (full card width), button 298x48 |
 | 1.2 | pass (note N-1) | h1 `--light`, help/placeholder `--mut`, labels `--txt`, card `--panel`/`--panel2`; only hard-coded text colour is `#fff` on the join button (`#7c3aed` bg), see N-1 |
 | 1.3 | pass | h1 10.96:1 (large, needs 3), help 6.1, labels 14.7, input 13.5, button #fff on #7c3aed 5.7, error banner 12.7 |
@@ -41,11 +45,17 @@ No test files added (UI-only, no existing UI test harness; checks are throw-away
 `npm test` exit 1, **pre-existing failure, not caused by this change**: `test/http-parity.js` reports 7 DIFFs (`/`, `/?room=ABCD`, `/mod`, `/style.css`, `/common.js`, `/index.html`, `/mod.html`). The identical 7 DIFFs occur on the untouched `main` checkout (stale `test/http-parity.json`: it also flags /mod.html and /common.js which this branch does not change). `&&` chain stopped there, so the rest were run individually, all pass: golden (315 games) OK, mod-actions OK (71 steps), simulate ALL OK, events ok, fx OK, no-repeat-cards OK.
 After this branch merges, `http-parity.json` needs a re-record (`node test/http-parity.js --record`) by the owner on a known-good baseline (not done by QA; that is not a UI regression).
 
+## Results
+
+16 of 16 AC pass (story rows AC-1..AC-4 plus 1.1-4.1). Bugs: none.
+
 ## Bugs
 
-Blockers: none.
+none
 
-Non-blockers (backlog):
+## Notes
+
+For backlog (not bugs, nothing open):
 - N-1 (FE, AC-1.2): join button text is hard-coded `#fff` on `#7c3aed` (neither a theme token); done deliberately to fix review B-1 (contrast 5.7:1). Consider a token later.
 - N-2 (FE, AC-3.4): on every state push the whole `#app` is re-rendered, so the code badge glow and waiting-dot pulse restart (glow jumps from 750ms to ~80ms). List rows do not flicker. Visible only on join/leave pushes; low impact.
 - N-3 (Orchestrator/Dev, tests): stale `app/test/http-parity.json`, see npm test.
