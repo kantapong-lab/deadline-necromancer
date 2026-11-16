@@ -16,6 +16,7 @@
 // =====================================================================
 export function createDirector(env) {
   const { THREE, scene, camera, desks, N, NAMES, ROLE, ROLES, EVENTS, TRAPS, BOOSTERS, FCOL, ui, assets } = env;
+  const cvs = document.getElementById('c');
   const state = { lightMul:1, shake:0 };
   const items = [];                                                  // per-frame updaters: fn(dt,t) → true when finished
   const update = (dt, t) => { for (let i = items.length - 1; i >= 0; i--) if (items[i](dt, t)) items.splice(i, 1); };
@@ -32,12 +33,18 @@ export function createDirector(env) {
   const V = (x, y, z) => new THREE.Vector3(x, y, z);
   const timed = (ms, fn) => new Promise(res => { let u = 0; items.push((dt, t) => { u += dt/(ms/1000); fn(Math.min(1, u), dt, t); if (u >= 1) { res(); return true; } return false; }); });
   const style = document.createElement('style');
-  style.textContent = `.dstamp{position:fixed;left:50%;top:46%;transform:translate(-50%,-50%) rotate(-7deg) scale(2.4);font:900 54px "Segoe UI","Noto Sans Thai",system-ui;letter-spacing:2px;padding:6px 26px;border:7px solid;border-radius:14px;background:#0b0818cc;opacity:0;z-index:9;pointer-events:none;text-shadow:0 0 18px currentColor;animation:dstamp 2.1s ease-out forwards}
+  style.textContent = `.dstamp{position:fixed;left:50%;top:var(--bandY,40%);transform:translate(-50%,-50%) rotate(-7deg) scale(2.4);font:900 3.2rem "Segoe UI","Noto Sans Thai",system-ui;letter-spacing:2px;padding:.4rem 1.6rem;border:.4rem solid;border-radius:.9rem;background:#0b0818cc;opacity:0;z-index:var(--z-stamp,680);pointer-events:none;text-shadow:0 0 18px currentColor;animation:dstamp 2.1s ease-out forwards}
   @keyframes dstamp{0%{opacity:0;transform:translate(-50%,-50%) rotate(-7deg) scale(2.8)}14%{opacity:1;transform:translate(-50%,-50%) rotate(-7deg) scale(1)}80%{opacity:1}100%{opacity:0;transform:translate(-50%,-60%) rotate(-7deg) scale(1)}}
-  .dbub{position:fixed;left:0;top:0;pointer-events:none;z-index:4;font-weight:800;font-size:14px;padding:2px 9px;border-radius:99px;border:2px solid;background:#120f20e6;white-space:nowrap}
+  .dbub{position:fixed;left:0;top:0;pointer-events:none;z-index:4;font-weight:800;font-size:.9rem;padding:.05rem .55rem;border-radius:99px;border:2px solid;background:#120f20e6;white-space:nowrap}
   .dbub.y{border-color:#5fe39a;color:#5fe39a}.dbub.n{border-color:#ff5c7a;color:#ff5c7a}
-  .dtimer{position:fixed;left:50%;top:118px;transform:translateX(-50%);width:300px;height:14px;border:1px solid #33294f;border-radius:99px;background:#120f20e6;z-index:6;overflow:hidden}
-  .dtimer i{display:block;height:100%;background:linear-gradient(90deg,#f5c451,#ff5c7a);transition:width 1.4s}`;
+  .dtimer{position:fixed;left:50%;top:1rem;transform:translateX(-50%);width:18rem;height:.9rem;border:1px solid #33294f;border-radius:99px;background:#120f20e6;z-index:var(--z-dbig,650);overflow:hidden}
+  .dtimer i{display:block;height:100%;background:linear-gradient(90deg,#f5c451,#ff5c7a);transition:width 1.4s}
+  .dbig{position:fixed;left:50%;top:calc((100vh - var(--chatH,25vh))*.44);transform:translate(-50%,-50%);height:calc((100vh - var(--chatH,25vh))*.6);aspect-ratio:300/407;z-index:var(--z-dbig,650);pointer-events:none;animation:dbigIn .9s cubic-bezier(.2,.9,.3,1) both;filter:drop-shadow(0 0 28px var(--c))}
+  .dbig img{height:100%;width:100%;object-fit:cover;display:block;border-radius:1rem;border:.3rem solid var(--c);box-shadow:0 0 60px var(--c),0 1rem 3rem #000}
+  .dbig.out{animation:dbigOut .55s ease-in both}
+  @keyframes dbigIn{from{opacity:0;transform:translate(-50%,-50%) scale(.3) rotateY(180deg)}to{opacity:1;transform:translate(-50%,-50%) scale(1)}}
+  @keyframes dbigOut{to{opacity:0;transform:translate(-50%,-50%) scale(1.08)}}
+  @media (prefers-reduced-motion:reduce){.dstamp,.dbig,.dbig.out{animation-duration:.01ms!important}}`;
   document.head.appendChild(style);
   function stamp(text, color = '#f5c451') { const e = document.createElement('div'); e.className = 'dstamp'; e.textContent = text; e.style.color = color; e.style.borderColor = color; document.body.appendChild(e); setTimeout(() => e.remove(), 2200); }
 
@@ -77,13 +84,16 @@ export function createDirector(env) {
         if (u >= 1 && !done) { done = true; res(); } if (u >= 1.15) { scene.remove(head); drop(trail); return true; } return false; });
     });
   }
-  const shoot = (c, t, color) => projectile(wp(c), wp(t), color);
+  const shoot = async (c, t, color) => { await projectile(wp(c), wp(t), color); act(t, 'hit', color); };
   function ringUp(d, color, ms = 900, r = .6) { const p = wp(d, 0), m = new THREE.Mesh(new THREE.TorusGeometry(r, .03, 8, 40), new THREE.MeshBasicMaterial({ color, transparent:true, blending:THREE.AdditiveBlending, depthWrite:false, toneMapped:false })); m.rotation.x = Math.PI/2; scene.add(m);
     timed(ms, u => { m.position.set(p.x, p.y + .1 + u*2, p.z); m.material.opacity = 1 - u; }).then(() => scene.remove(m)); }
   function pulse(x, z, color, scale = 6) { const m = new THREE.Mesh(new THREE.RingGeometry(.9, 1, 48), new THREE.MeshBasicMaterial({ color, transparent:true, opacity:.9, blending:THREE.AdditiveBlending, depthWrite:false, side:THREE.DoubleSide, toneMapped:false })); m.rotation.x = -Math.PI/2; m.position.set(x, .12, z); scene.add(m);
     timed(1200, u => { m.scale.setScalar(.5 + u*scale*1.2); m.material.opacity = .9*(1 - u); }).then(() => scene.remove(m)); }
   const persist = [];                                                  // things that last until the next clearNight()
-  function dome(d, color, r = .95) { const m = new THREE.Mesh(new THREE.SphereGeometry(r, 24, 16), new THREE.MeshBasicMaterial({ color, transparent:true, opacity:.22, blending:THREE.AdditiveBlending, depthWrite:false, side:THREE.DoubleSide, toneMapped:false })); m.position.copy(wp(d, .85)); scene.add(m); persist.push(m); return m; }
+  // "dome" (barrier / shield) is now a pulsing glow that hugs the player's card, instead of a sphere around the character
+  const glowTex = (() => { const c = document.createElement('canvas'); c.width = 256; c.height = 356; const x = c.getContext('2d'); x.shadowColor = '#fff'; x.shadowBlur = 30; x.strokeStyle = '#fff'; x.lineWidth = 12; x.beginPath(); x.roundRect(46, 54, 164, 248, 16); x.stroke(); x.stroke(); const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace; return t; })();
+  function dome(d, color) { const CH = 1.12*417/300, m = new THREE.Mesh(new THREE.PlaneGeometry(2.05, 2.05*356/256), new THREE.MeshBasicMaterial({ map:glowTex, color, transparent:true, opacity:.8, blending:THREE.AdditiveBlending, depthWrite:false, toneMapped:false }));
+    m.position.set(0, .15 + CH/2, -.1); d.worker.add(m); persist.push(m); items.push((dt, t) => { if (!m.parent) return true; m.material.opacity = .62 + Math.sin(t*3.2)*.22; return false; }); return m; }
   function shake(amp = .04, ms = 900) { state.shake = amp; timed(ms, u => { state.shake = amp*(1 - u); }).then(() => (state.shake = 0)); }
   function postCamera() { if (state.shake > .0005) { camera.rotateZ((Math.random() - .5)*state.shake); camera.rotateX((Math.random() - .5)*state.shake*.6); } }
   const colorFlicker = (list, color, ms = 3000, every = .12) => { list.forEach(d => (d.fxColor = new THREE.Color(color))); return timed(ms, (u, dt, t) => list.forEach(d => { d.fxColor.set(Math.sin(t/every) > 0 ? color : 0x220000); })).then(() => list.forEach(d => (d.fxColor = null))); };
@@ -93,15 +103,15 @@ export function createDirector(env) {
 
   // ---------- DOM bubbles (✓/✗, results) ----------
   const bubs = [], bv = new THREE.Vector3();
-  function bubble(d, text, cls = 'y', ms = 3600) { const el = document.createElement('div'); el.className = 'dbub ' + cls; el.textContent = text; document.body.appendChild(el); bubs.push({ el, d, until:performance.now() + ms }); }
-  const priv = (d, text, cls = 'y') => { if (sec()) bubble(d, text, cls, 4800); };
+  function bubble(d, text, cls = 'y', ms = 3600) { const mine = bubs.filter(b => b.d === d); while (mine.length >= 2) { const o = mine.shift(); o.el.remove(); bubs.splice(bubs.indexOf(o), 1); } const el = document.createElement('div'); el.className = 'dbub ' + cls; el.textContent = text; document.body.appendChild(el); bubs.push({ el, d, until:performance.now() + ms }); }
+  const priv = () => {};   // secret skill results (who is dark, bug found, shield info…) are no longer drawn on screen — too many bubbles; they stay in the Night Log
   // bubbles sit on top of their owner's name tag (the page lays the tags out and publishes d.labelPos); several bubbles of one player stack upwards
-  const BUB_H = 26, bubbleCount = d => bubs.reduce((n, b) => n + (b.d === d ? 1 : 0), 0);
+  const BUB_H = 22, bubbleCount = d => bubs.reduce((n, b) => n + (b.d === d ? 1 : 0), 0);
   items.push(() => { const now = performance.now(), stack = new Map(); for (let i = bubs.length - 1; i >= 0; i--) { const b = bubs[i]; if (now > b.until) { b.el.remove(); bubs.splice(i, 1); } }
     for (const b of bubs) { const lp = b.d.labelPos; let x, y;
       if (lp) { const k = stack.get(b.d) || 0; stack.set(b.d, k + 1); x = lp.x; y = lp.top - 4 - k*BUB_H; b.el.style.display = ''; }
-      else { b.d.anchor.getWorldPosition(bv); bv.project(camera); b.el.style.display = bv.z < 1 ? '' : 'none'; x = (bv.x*.5 + .5)*innerWidth; y = (-bv.y*.5 + .5)*innerHeight - 30; }
-      b.el.style.zIndex = 60; b.el.style.transform = `translate(${x}px,${y}px) translate(-50%,-100%)`; } return false; });
+      else { b.d.anchor.getWorldPosition(bv); bv.project(camera); b.el.style.display = bv.z < 1 ? '' : 'none'; x = (bv.x*.5 + .5)*cvs.clientWidth; y = (-bv.y*.5 + .5)*cvs.clientHeight - 30; }
+      b.el.style.zIndex = 'var(--z-bub, 60)'; b.el.style.transform = `translate(${x}px,${y}px) translate(-50%,-100%)`; } return false; });
   async function showVotes(list) { let yes = 0, no = 0; for (const { desk, yes: y, label } of list) { y ? yes++ : no++; bubble(D_(desk), label || (y ? '✓' : '✗'), y ? 'y' : 'n'); await wait(170); } return { yes, no }; }   // list: [{desk, yes, label?}]
   async function simVotes(group, pYes) { return showVotes(group.map(d => ({ desk:d, yes:Math.random() < pYes }))); }
 
@@ -114,7 +124,15 @@ export function createDirector(env) {
   const bigBack = new THREE.Mesh(new THREE.PlaneGeometry(BW, BH), new THREE.MeshBasicMaterial({ map:assets.backTex, toneMapped:false })); bigBack.rotation.y = Math.PI; bigBack.position.z = -.03; bigPivot.add(bigBack);
   const bigHalo = new THREE.Mesh(new THREE.PlaneGeometry(BW*2.4, BH*1.8), new THREE.MeshBasicMaterial({ map:assets.dotTex, transparent:true, opacity:0, blending:THREE.AdditiveBlending, depthWrite:false, toneMapped:false })); bigHalo.position.z = -.2; big.add(bigHalo);
   let bigS = null;
-  function showBig(url, { face = true, color = 0xf5c451, hold = 6 } = {}) { bigFront.material.map = loadTex(url); bigFront.material.needsUpdate = true; bigHalo.material.color.set(color); bigS = { t:0, hold, face }; big.visible = true; }
+  // event / trap / booster cards: shown big in the middle of the screen (DOM overlay, above the name tags), then fade out
+  const backURL = (() => { try { return assets.backTex.image.toDataURL(); } catch (e) { return ''; } })();
+  let bigEl = null, bigTimer;
+  function showBig(url, { face = true, color = 0xf5c451, hold = 6 } = {}) {
+    if (bigEl) bigEl.remove(); clearTimeout(bigTimer);
+    const el = document.createElement('div'), img = document.createElement('img'); el.className = 'dbig'; el.style.setProperty('--c', '#' + new THREE.Color(color).getHexString());
+    img.src = face ? url : (backURL || url); el.appendChild(img); document.body.appendChild(el); bigEl = el;
+    bigTimer = setTimeout(() => { el.classList.add('out'); setTimeout(() => el.remove(), 600); }, hold*1000);
+  }
   items.push((dt, t) => { if (!bigS) return false; bigS.t += dt; const dr = Math.min(1, bigS.t/.9), e = 1 - Math.pow(1 - dr, 3), lv = Math.max(0, (bigS.t - bigS.hold)/.5);
     big.position.set(0, 4.6 + (1 - e)*5 + Math.sin(t*1.6)*.07, 0); big.scale.setScalar(Math.max(.001, (.4 + .6*e)*(1 - lv))); big.rotation.y = Math.atan2(camera.position.x, camera.position.z);
     bigPivot.rotation.y = (bigS.face ? 0 : Math.PI) + (1 - e)*Math.PI*2; bigHalo.material.opacity = .6*e*(1 - lv); if (lv >= 1) { big.visible = false; bigS = null; } return false; });
@@ -123,13 +141,14 @@ export function createDirector(env) {
   //  🎭 SKILLS — one function per role (keys = app/src/shared/data.js ROLES)
   //  payload: { caster, targets:[…], result:{…} }   (result fields are noted per role)
   // =====================================================================
-  const prelude = (c, color, key) => { priv(c, '✨ ' + ROLES[key].skill, 'y'); ringUp(c, color, 700); };
+  const act = (d, kind, color) => { if (d) d.fx = { t:0, dur:kind === 'hit' ? .7 : 1.3, kind, color }; };   // card animation (read by the page's frame loop)
+  const prelude = (c, color, key) => act(c, 'cast', color);                                                    // skill used → the caster's card animates (no text)
   const skills = {
     // result:{ bug:boolean }
     async senior_dev({ caster:c, targets:[t], result:r = {} }) { await shoot(c, t, 0x4fd0ff); ringUp(t, 0x4fd0ff); ringUp(t, 0x4fd0ff, 1300); hover('🔍', wp(t, 2.1)); priv(c, `${r.bug ? '🐛' : '✅'} ${nm(t)}: ${r.bug ? 'แอบวางบั๊ก' : 'ส่งงานจริง'}`, r.bug ? 'n' : 'y'); },
     // result:{ barrierBroke:boolean }  (PM shielded a dark player → barrier shatters, PM locked next night)
-    async oracle_pm({ caster:c, targets:[t], result:r = {} }) { await shoot(c, t, 0x4fd0ff); const m = dome(t, 0x4fd0ff); burst('🛡️', wp(t, 1), { n:6, r:1.1, size:.35 });
-      if (r.barrierBroke) { await wait(500); m.material.color.set(0xff4d5e); burst('💥', wp(t, 1), { n:8, r:1.4 }); persist.splice(persist.indexOf(m), 1); scene.remove(m); priv(c, '💥 เป้าหมายมีออร่ามืด!', 'n'); } },
+    async oracle_pm({ caster:c, targets:[t], result:r = {} }) { await shoot(c, t, 0x4fd0ff); const m = dome(t, 0x4fd0ff);
+      if (r.barrierBroke) { await wait(500); m.material.color.set(0xff4d5e); burst('💥', wp(t, 1), { n:8, r:1.4 }); persist.splice(persist.indexOf(m), 1); m.parent && m.parent.remove(m); priv(c, '💥 เป้าหมายมีออร่ามืด!', 'n'); } },
     // targets:[a,b]  result:{ hasDark:boolean }
     async qa_hunter({ caster:c, targets:T, result:r = {} }) { await Promise.all(T.map(t => shoot(c, t, 0xd8b050))); T.forEach(t => { ringUp(t, 0xd8b050); hover('🔎', wp(t, 2.1)); }); priv(c, r.hasDark ? '🔎 มีฝ่ายมืด ≥1' : '🔎 ไม่มีฝ่ายมืด', r.hasDark ? 'n' : 'y'); },
     // result:{ reveal:[desk…] }  (names of everyone who used a skill on the target — shown next morning; pass later via D.skillMorning)
@@ -164,6 +183,7 @@ export function createDirector(env) {
   }
   async function playSkill(key, p) {
     const c = D_(p.caster), S = ROLES[key]; if (!skills[key]) return; const targets = (p.targets || []).map(D_);
+    if (!sec()) { if (key === 'chaos_intern' && p.result?.note) ui.caption('📧 Reply All — ไม่ระบุชื่อ', `“${p.result.note}”`, 7000, 'trap'); return; }   // roles hidden → skills stay invisible (only the anonymous Reply-All note is public)
     prelude(c, FCOL[ROLE[key].f], key);
     if (p.via && p.via.source != null && p.via.source >= 0 && D_(p.via.source)) await fly('👻', wp(D_(p.via.source), 1), wp(c, 1), 800, .7);          // Mystery Intern copying the skill of its right-hand neighbour
     if (p.result?.disabled) { targets.forEach(t => burst('💥', wp(t, 1), { n:6, r:1 })); priv(c, '⚙️ ถูกปิดระบบคืนนี้', 'n'); return; }                      // barrier / heal shut down (Server Down, Deploy on Friday…)
@@ -278,7 +298,7 @@ export function createDirector(env) {
       const found = p.result?.trapFound; ui.say(found ? 'พบ Trap ที่ถูกหมอบไว้เมื่อคืน' : 'ไม่พบ Trap เมื่อคืน'); placedTraps.filter(h => ['honeypot', 'alibi'].includes(h.key)).forEach(h => burst('🔄', h.target ? wp(h.target, 1.2) : altar(), { n:6, r:1 })); await wait(800); },
     async retro(p) { stamp('RETROSPECTIVE ⏪', '#f5c451'); const clk = clockProp(); rain('✨', { n:24, size:.35 }); await prop(clk.g, 3600, (u, t) => { clk.hand.rotation.z = u*Math.PI*14; clk.g.scale.setScalar(Math.min(1, u*6, (1 - u)*6)); clk.g.position.set(0, 4.8, 0); clk.g.rotation.y = Math.atan2(camera.position.x, camera.position.z); }); },
     async freeze(p) { stamp('EMERGENCY FREEZE ❄️', '#7fe3ff'); rain('❄️', { n:34, size:.4 }); const ice = new THREE.Mesh(new THREE.IcosahedronGeometry(2.5, 1), new THREE.MeshStandardMaterial({ color:0x9fe8ff, emissive:0x2a8ab8, emissiveIntensity:.5, transparent:true, opacity:.28, flatShading:true, roughness:.1 })); ice.position.y = 1.4; scene.add(ice);
-      const lights = alive().filter(d => fac(d) === 'light'); lights.forEach(d => dome(d, 0x7fe3ff, 1.1)); pulse(0, 0, 0x7fe3ff, 9); await timed(4200, u => { ice.rotation.y = u*2; ice.scale.setScalar(Math.min(1, u*5)*(u > .85 ? 1 - (u - .85)*6 : 1)); }); scene.remove(ice); },
+      const lights = alive().filter(d => fac(d) === 'light'); lights.forEach(d => dome(d, 0x7fe3ff)); pulse(0, 0, 0x7fe3ff, 9); await timed(4200, u => { ice.rotation.y = u*2; ice.scale.setScalar(Math.min(1, u*5)*(u > .85 ? 1 - (u - .85)*6 : 1)); }); scene.remove(ice); },
   };
   async function playBooster(key, p = {}) {
     const b = BOOSTERS[key]; if (!b || !boosters[key]) return;
@@ -288,7 +308,7 @@ export function createDirector(env) {
   }
 
   // curse (dark side action): projectile, then blocked (shield/heal/dodge → white ring) or lands (burnout follows as its own fx)
-  async function playCurse({ caster, target, blocked }) { const c = D_(caster), t = D_(target); await projectile(wp(c), wp(t), 0xff2040, 900); if (blocked) { ringUp(t, 0xffffff); burst('🛡️', wp(t, 1), { n:5, r:1 }); } else burst('💀', wp(t, 1.2), { n:6, r:1.1 }); }
+  async function playCurse({ caster, target, blocked }) { const c = D_(caster), t = D_(target); if (!sec()) return; act(c, 'cast', 0xff2040); await projectile(wp(c), wp(t), 0xff2040, 900); act(t, 'hit', blocked ? 0xffffff : 0xff2040); if (blocked) { ringUp(t, 0xffffff); burst('🛡️', wp(t, 1), { n:5, r:1 }); } else burst('💀', wp(t, 1.2), { n:6, r:1.1 }); }
   // choice events: only show the card now; the vote result plays later through playEvent(key,{ accepted, votes })
   async function showEventCard(key, p = {}) { const e = EVENTS[key]; if (!e) return; if (p.forcePhase && ui.getPhase() !== 'MORNING') ui.setPhase('MORNING'); showBig(env.THUMB + 'events/' + e.img, { color:0x4fd0ff, hold:7 });
     ui.caption(`🎴 Event Card #${e.n} · ${e.t}`, e.d + '\nทุกคนโหวต: ' + e.yes + ' / ' + e.no, 11000, 'evt'); await wait(2300); }

@@ -19,7 +19,8 @@ function createPushState(io) {
       for (const sid of m.sockets) io.to(sid).emit('state', view);
     }
     const modView = g ? g.modView(room.secrets) : lobbyView(room, { role: 'moderator', secrets: room.secrets, canStart: room.members.length >= MIN_PLAYERS && room.members.length <= MAX_PLAYERS });
-    const fullView = g && room.fullSockets && room.fullSockets.size && !room.secrets ? g.modView(true) : modView;   // 3D spectator screens always get the secret view
+    const fullBase = g && room.fullSockets && room.fullSockets.size && !room.secrets ? g.modView(true) : modView;   // 3D spectator screens always get the secret view
+    const fullView = g ? { ...fullBase, darkChat: g.darkChat } : fullBase;                                       // …plus the dark faction's night chat (server layer only, so engine snapshots stay unchanged)
     for (const sid of room.modSockets) io.to(sid).emit('state', room.fullSockets && room.fullSockets.has(sid) ? fullView : modView);
     // presentation events for the 3D Moderator screen: drained every push (so they never pile up), sent to Moderator sockets only,
     // and redacted like modView(secrets) — skills / curses / trap placement only travel while Secrets are on
