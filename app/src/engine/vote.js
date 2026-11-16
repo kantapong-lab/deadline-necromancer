@@ -7,7 +7,7 @@ const { rnd, shuffle } = require('./random');
 module.exports = {
   castVote(pid, target) {
     const p = this.P(pid); if (!p?.alive) return 'ไม่มีสิทธิ์โหวต';
-    if (this.phase !== 'VOTE') return 'ยังไม่ถึงเฟสโหวต';
+    if (this.phase !== 'VOTE' || this.day === 1) return 'ยังไม่ถึงเฟสโหวต';
     if (p.silenced) return 'คุณถูก NDA Silence — โหวตไม่ได้ในรอบนี้';
     if (pid === this.hijackVoter) return 'ไมค์ของคุณถูกยึด (Meeting Hijack) — คุณถูกบังคับให้ Skip';
     if (target === 'SKIP') { if (this.evIs('marathon')) return 'ประชุมมาราธอน: วันนี้ห้ามกด Skip'; }
@@ -98,7 +98,7 @@ module.exports = {
       } else {
         t.votedOut = true; t.cause = 'fired';
         text = `${t.name} ถูกไล่ออก! บทบาทคือ ${ROLES[t.role].n} (${FNAME[t.faction]})`;
-        if (t.faction === 'dark') { G.mana = Math.min(G.manaMax, G.mana + 2); G.cleanSprint = true; text += ' — กำจัดตัวถ่วงสำเร็จ Mana +2! (Clean Sprint: คืนนี้สายสืบเจาะ Honeypot Bug ได้)'; }
+        if (t.faction === 'dark') { G.mana = Math.min(G.manaMax, G.mana + 1); G.cleanSprint = true; text += ' — กำจัดตัวถ่วงสำเร็จ Mana +1! (Clean Sprint: คืนนี้สายสืบเจาะ Honeypot Bug ได้)'; }
       }
     }
     if (trapMsgs.length) text += ' · ' + trapMsgs.join(' · ');

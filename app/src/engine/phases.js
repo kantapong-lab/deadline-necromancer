@@ -10,6 +10,14 @@ module.exports = {
     if (this.event?.pending) this.closeEventVote();
     if (this.booster.open) this.closeBoosterVote();
     if (this.phase === 'OVER') return null;
+    if (this.day === 1) {   // วันจันทร์ไม่มีการโหวตไล่ออก — ข้ามไปหน้าผล (ไม่นับเป็น Skip, ไม่โดนโทษ Mana)
+      this.votes = {}; this.voteRound = 0; this.lastVotes = {};
+      const text = 'วันจันทร์ — ยังไม่มีการโหวตไล่ออก';
+      this.voteResult = { lines: [], text, tally: [], skip: 0 };
+      this.phase = 'VOTE_RESULT';
+      this.sys('🗳️ ' + text); this.log('ข้ามเฟสโหวต', text);
+      return null;
+    }
     this.phase = 'VOTE'; this.votes = {}; this.voteRound = this.evIs('redesign') ? 1 : 0;
     this.log('เริ่มเฟสโหวตไล่ออก', this.evIs('marathon') ? 'ประชุมมาราธอน: ห้าม Skip' : '');
     this.sys('🗳️ เริ่มเฟสโหวตไล่ออก (PIP Vote)');

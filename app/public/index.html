@@ -175,7 +175,7 @@ function stageHTML() {
   if (s.phase === 'MORNING') {
     return `<div class="card stage">${deadBanner}<h2>☀️ Morning Stand-up — วัน${s.dayName}</h2><div class="report">${rep}</div>
       ${eventPanel()}${boosterPanel()}
-      <p class="hint">⚠️ ผ่านคืน = Mana +1 แต่ถ้าโหวตแล้วไม่มีใครถูกไล่ออก ประชุมจะเสียเวลา · ไล่ฝ่ายมืดออกได้ Mana +2</p>${waitMod('คุยจับผิดในแชท แล้ว Moderator จะเปิดเฟสโหวต')}</div>`;
+      <p class="hint">${s.day === 1 ? '📅 วันจันทร์ไม่มีโหวตไล่ออก — คุยกันให้เต็มที่ แล้วไปกลางคืน<br>' : ''}⚠️ ผ่านคืน = Mana +1 แต่ถ้าโหวตแล้วไม่มีใครถูกไล่ออก ประชุมจะเสียเวลา · ไล่ฝ่ายมืดออกได้ Mana +1</p>${waitMod(s.day === 1 ? 'คุยในแชท แล้ว Moderator จะพาเข้ากลางคืน (วันจันทร์ไม่มีโหวต)' : 'คุยจับผิดในแชท แล้ว Moderator จะเปิดเฟสโหวต')}</div>`;
   }
   if (s.phase === 'VOTE') {
     if (!m.alive) return `<div class="card stage">${deadBanner}<h2>🗳️ โหวตไล่ออก</h2>${waitMod('กำลังโหวต')}</div>`;
@@ -198,7 +198,7 @@ function stageHTML() {
   }
   if (s.phase === 'VOTE_RESULT') {
     const vr = s.voteResult;
-    return `<div class="card stage"><h2>📋 ผลโหวต</h2><div class="votes">${vr.lines.map(esc).join('<br>')}</div>
+    return `<div class="card stage"><h2>${s.day === 1 ? '📋 วันจันทร์ — ไม่มีโหวต' : '📋 ผลโหวต'}</h2>${vr.lines.length ? `<div class="votes">${vr.lines.map(esc).join('<br>')}</div>` : ''}
       <div class="report"><div>${esc(vr.text)}</div></div>${waitMod('เตรียมเข้ากลางคืน')}</div>`;
   }
   if (s.phase === 'NIGHT') return m.alive ? nightHTML() : `<div class="card stage">${deadBanner}<h2>🌙 กลางคืน</h2>${waitMod('ผู้เล่นกำลังเลือกแอ็กชัน')}</div>`;

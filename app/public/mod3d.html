@@ -236,7 +236,7 @@ const socket = io();
 const emitP = (ev, payload) => new Promise(res => socket.emit(ev, payload, res));
 
 async function boot(st) {
-const N = st.players.length, MANA_MAX = st.manaMax || Math.floor(N / 2), NAMES = st.players.map(p => p.name);
+const N = st.players.length, MANA_MAX = st.manaMax || Math.floor(N / 2) + 1, NAMES = st.players.map(p => p.name);
 // ================= renderer / post =================
 const canvas = document.getElementById('c');
 const renderer = new THREE.WebGLRenderer({ canvas, antialias:true });
@@ -650,7 +650,7 @@ function applyState(st) {
   st.players.forEach(p => { const d = desks[p.id]; if (!d) return; if (p.role) setRole(d, p.role);
     if (!hydrated && !p.alive && d.state === 'alive') { if (p.cause === 'burnout') burnDesk(d); else fireDesk(d); } });
   hydrated = true;
-  const n = NEXT[st.phase], nb = document.getElementById('nextStep'); nb.style.display = n ? '' : 'none'; if (n) nb.textContent = n[1];
+  const n = NEXT[st.phase], nb = document.getElementById('nextStep'); nb.style.display = n ? '' : 'none'; if (n) nb.textContent = (st.phase === 'MORNING' && st.day === 1) ? '➡ ข้ามโหวต (วันจันทร์)' : n[1];
   const pd = st.pending || {}; document.getElementById('closeEv').style.display = pd.event ? '' : 'none'; document.getElementById('closeBo').style.display = pd.booster ? '' : 'none';
   if (pd.event) document.getElementById('closeEv').textContent = `📞 ปิดโหวต Event (${pd.event.done}/${pd.event.total})`; if (pd.booster) document.getElementById('closeBo').textContent = `🚀 ปิดโหวต Booster (${pd.booster.done}/${pd.booster.total})`;
   const w = pd.vote || pd.night; document.getElementById('waitTxt').textContent = w ? `${st.phase === 'NIGHT' ? 'แอ็กชันลับ' : 'โหวต'} ${w.done}/${w.total}` : '';

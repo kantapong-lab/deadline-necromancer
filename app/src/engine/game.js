@@ -44,7 +44,7 @@ class Game {
       votedOut: false, soloWon: false, cause: null, target: null, prevTargets: [], prevSide: [],
     }));
     this.day = 1; this.phase = 'MORNING';
-    this.mana = 1; this.manaMax = Math.floor(N / 2); this.skipStreak = 0;
+    this.mana = 1; this.manaMax = Math.floor(N / 2) + 1; this.skipStreak = 0;
     this.trapCharges = N <= 9 ? 1 : 2; this.boosterCharges = 1;   // โควตา Sprint Booster 1 ครั้ง/เกม ทุกขนาดห้อง
     // Trap ฝ่ายมืด: ระบบสุ่มแจกตามโควตาตอนเริ่มเกม (ทั้งทีมถือร่วมกัน) · ขอสุ่มเปลี่ยนใบที่ยังไม่ใช้ได้ 1 ครั้ง/คืน
     this.trapHand = shuffle(Object.keys(TRAPS)).slice(0, this.trapCharges); this.trapRerolled = false;

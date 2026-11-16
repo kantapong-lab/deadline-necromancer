@@ -574,13 +574,13 @@
      "waiting": null
     }
    },
-   "hash": "b3848c50db875a3f"
+   "hash": "117a07ac94863c00"
   },
   "who": {
    "phase": "MORNING",
    "role": "player",
    "paused": false,
-   "hash": "135bdce5108ac98c"
+   "hash": "2331cb959499eee2"
   }
  },
  {
@@ -610,13 +610,13 @@
      "waiting": null
     }
    },
-   "hash": "b3848c50db875a3f"
+   "hash": "117a07ac94863c00"
   },
   "who": {
    "phase": "MORNING",
    "role": "player",
    "paused": false,
-   "hash": "135bdce5108ac98c"
+   "hash": "2331cb959499eee2"
   }
  },
  {
@@ -646,7 +646,7 @@
      "waiting": null
     }
    },
-   "hash": "b3848c50db875a3f"
+   "hash": "117a07ac94863c00"
   },
   "who": null
  },
@@ -677,7 +677,7 @@
      "waiting": null
     }
    },
-   "hash": "b3848c50db875a3f"
+   "hash": "117a07ac94863c00"
   },
   "who": null
  },
@@ -714,13 +714,13 @@
      ]
     }
    },
-   "hash": "6c81e41c6d9c140f"
+   "hash": "8aad073af6182429"
   },
   "who": {
    "phase": "MORNING",
    "role": "player",
    "paused": false,
-   "hash": "135bdce5108ac98c"
+   "hash": "2331cb959499eee2"
   }
  },
  {
@@ -749,13 +749,13 @@
      "waiting": null
     }
    },
-   "hash": "b3848c50db875a3f"
+   "hash": "117a07ac94863c00"
   },
   "who": {
    "phase": "MORNING",
    "role": "player",
    "paused": false,
-   "hash": "135bdce5108ac98c"
+   "hash": "2331cb959499eee2"
   }
  },
  {
@@ -784,13 +784,13 @@
      "waiting": null
     }
    },
-   "hash": "5357742d3cbda47e"
+   "hash": "0189dbc3b0571bb7"
   },
   "who": {
    "phase": "MORNING",
    "role": "player",
    "paused": true,
-   "hash": "dd5093dcf23790a8"
+   "hash": "d52d09415dc143b5"
   }
  },
  {
@@ -820,13 +820,13 @@
      "waiting": null
     }
    },
-   "hash": "5357742d3cbda47e"
+   "hash": "0189dbc3b0571bb7"
   },
   "who": {
    "phase": "MORNING",
    "role": "player",
    "paused": true,
-   "hash": "dd5093dcf23790a8"
+   "hash": "d52d09415dc143b5"
   }
  },
  {
@@ -856,13 +856,13 @@
      "waiting": null
     }
    },
-   "hash": "5357742d3cbda47e"
+   "hash": "0189dbc3b0571bb7"
   },
   "who": {
    "phase": "MORNING",
    "role": "player",
    "paused": true,
-   "hash": "a02937397493805d"
+   "hash": "f2abe980987469bf"
   }
  },
  {
@@ -891,13 +891,13 @@
      "waiting": null
     }
    },
-   "hash": "755fec0f2462b6ef"
+   "hash": "74e4014b7c5b76ae"
   },
   "who": {
    "phase": "MORNING",
    "role": "player",
    "paused": false,
-   "hash": "e88bb6e655b4c8f2"
+   "hash": "272a56689b1ae998"
   }
  },
  {
@@ -926,13 +926,13 @@
      "waiting": null
     }
    },
-   "hash": "0c93dd36fdd271db"
+   "hash": "fb2bed6539ebfc39"
   },
   "who": {
    "phase": "MORNING",
    "role": "player",
    "paused": false,
-   "hash": "f29cd22d5ad35ba9"
+   "hash": "8f5a35a2279991b1"
   }
  },
  {
@@ -964,13 +964,13 @@
      "waiting": null
     }
    },
-   "hash": "467dd2a9af6ce5c7"
+   "hash": "63641e16319b9ead"
   },
   "who": {
    "phase": "MORNING",
    "role": "player",
    "paused": false,
-   "hash": "031dd3cf25e80be2"
+   "hash": "1ac6734c09377789"
   }
  },
  {
@@ -999,13 +999,13 @@
      "waiting": null
     }
    },
-   "hash": "cadf41080d7c3d04"
+   "hash": "39437a161e31996b"
   },
   "who": {
    "phase": "MORNING",
    "role": "player",
    "paused": false,
-   "hash": "f29cd22d5ad35ba9"
+   "hash": "8f5a35a2279991b1"
   }
  },
  {
@@ -1034,13 +1034,13 @@
      "waiting": null
     }
    },
-   "hash": "c1eadec257a1414c"
+   "hash": "e07e9d476073a6a0"
   },
   "who": {
    "phase": "MORNING",
    "role": "player",
    "paused": false,
-   "hash": "f29cd22d5ad35ba9"
+   "hash": "8f5a35a2279991b1"
   }
  },
  {
@@ -1069,13 +1069,13 @@
      "waiting": null
     }
    },
-   "hash": "5efce84ca566e330"
+   "hash": "df233e99b341ccba"
   },
   "who": {
    "phase": "MORNING",
    "role": "player",
    "paused": false,
-   "hash": "d2f0326ed77b6189"
+   "hash": "9feed5721ec813de"
   }
  },
  {
@@ -1104,13 +1104,13 @@
      "waiting": null
     }
    },
-   "hash": "5efce84ca566e330"
+   "hash": "df233e99b341ccba"
   },
   "who": {
    "phase": "MORNING",
    "role": "player",
    "paused": false,
-   "hash": "d2f0326ed77b6189"
+   "hash": "9feed5721ec813de"
   }
  },
  {
@@ -1139,13 +1139,13 @@
      "waiting": null
     }
    },
-   "hash": "3a7ff98a4c216430"
+   "hash": "08350d5f6aa45d57"
   },
   "who": {
    "phase": "MORNING",
    "role": "player",
    "paused": false,
-   "hash": "e108b54cd926853b"
+   "hash": "aa6fea23ed0e0c29"
   }
  },
  {
@@ -1175,13 +1175,13 @@
      "waiting": null
     }
    },
-   "hash": "3a7ff98a4c216430"
+   "hash": "08350d5f6aa45d57"
   },
   "who": {
    "phase": "MORNING",
    "role": "player",
    "paused": false,
-   "hash": "e108b54cd926853b"
+   "hash": "aa6fea23ed0e0c29"
   }
  },
  {
@@ -1211,13 +1211,13 @@
      "waiting": null
     }
    },
-   "hash": "3a7ff98a4c216430"
+   "hash": "08350d5f6aa45d57"
   },
   "who": {
    "phase": "MORNING",
    "role": "player",
    "paused": false,
-   "hash": "e108b54cd926853b"
+   "hash": "aa6fea23ed0e0c29"
   }
  },
  {
@@ -1247,13 +1247,13 @@
      "waiting": null
     }
    },
-   "hash": "3a7ff98a4c216430"
+   "hash": "08350d5f6aa45d57"
   },
   "who": {
    "phase": "MORNING",
    "role": "player",
    "paused": false,
-   "hash": "e108b54cd926853b"
+   "hash": "aa6fea23ed0e0c29"
   }
  },
  {
@@ -1283,13 +1283,13 @@
      "waiting": null
     }
    },
-   "hash": "3a7ff98a4c216430"
+   "hash": "08350d5f6aa45d57"
   },
   "who": {
    "phase": "MORNING",
    "role": "player",
    "paused": false,
-   "hash": "e108b54cd926853b"
+   "hash": "aa6fea23ed0e0c29"
   }
  },
  {
@@ -1319,13 +1319,13 @@
      "waiting": null
     }
    },
-   "hash": "3a7ff98a4c216430"
+   "hash": "08350d5f6aa45d57"
   },
   "who": {
    "phase": "MORNING",
    "role": "player",
    "paused": false,
-   "hash": "e108b54cd926853b"
+   "hash": "aa6fea23ed0e0c29"
   }
  },
  {
@@ -1355,13 +1355,13 @@
      "waiting": null
     }
    },
-   "hash": "3a7ff98a4c216430"
+   "hash": "08350d5f6aa45d57"
   },
   "who": {
    "phase": "MORNING",
    "role": "player",
    "paused": false,
-   "hash": "e108b54cd926853b"
+   "hash": "aa6fea23ed0e0c29"
   }
  },
  {
@@ -1391,13 +1391,13 @@
      "waiting": null
     }
    },
-   "hash": "3a7ff98a4c216430"
+   "hash": "08350d5f6aa45d57"
   },
   "who": {
    "phase": "MORNING",
    "role": "player",
    "paused": false,
-   "hash": "e108b54cd926853b"
+   "hash": "aa6fea23ed0e0c29"
   }
  },
  {
@@ -1426,13 +1426,13 @@
      "waiting": null
     }
    },
-   "hash": "04281182889392e4"
+   "hash": "0b705ca0464fe02c"
   },
   "who": {
    "phase": "MORNING",
    "role": "player",
    "paused": false,
-   "hash": "ff3aaf5970d28785"
+   "hash": "e4f23b07a325ec6a"
   }
  },
  {
@@ -1455,13 +1455,13 @@
     "C"
    ],
    "pending": {},
-   "hash": "96d09730be866214"
+   "hash": "74558765768ce779"
   },
   "who": {
    "phase": "MORNING",
    "role": "player",
    "paused": false,
-   "hash": "797ca28098559b03"
+   "hash": "0df0d530b7df9b3f"
   }
  },
  {
@@ -1485,13 +1485,13 @@
     "C"
    ],
    "pending": {},
-   "hash": "96d09730be866214"
+   "hash": "74558765768ce779"
   },
   "who": {
    "phase": "MORNING",
    "role": "player",
    "paused": false,
-   "hash": "797ca28098559b03"
+   "hash": "0df0d530b7df9b3f"
   }
  },
  {
@@ -1515,13 +1515,13 @@
     "C"
    ],
    "pending": {},
-   "hash": "96d09730be866214"
+   "hash": "74558765768ce779"
   },
   "who": {
    "phase": "MORNING",
    "role": "player",
    "paused": false,
-   "hash": "797ca28098559b03"
+   "hash": "0df0d530b7df9b3f"
   }
  },
  {
@@ -1544,13 +1544,13 @@
     "C"
    ],
    "pending": {},
-   "hash": "96d09730be866214"
+   "hash": "74558765768ce779"
   },
   "who": {
    "phase": "MORNING",
    "role": "player",
    "paused": false,
-   "hash": "797ca28098559b03"
+   "hash": "0df0d530b7df9b3f"
   }
  },
  {
@@ -1576,13 +1576,13 @@
     "C"
    ],
    "pending": {},
-   "hash": "96d09730be866214"
+   "hash": "74558765768ce779"
   },
   "who": {
    "phase": "MORNING",
    "role": "player",
    "paused": false,
-   "hash": "29c5173161fe6b4b"
+   "hash": "73349dc8d45410af"
   }
  },
  {
@@ -1606,7 +1606,7 @@
     "C"
    ],
    "pending": {},
-   "hash": "96d09730be866214"
+   "hash": "74558765768ce779"
   },
   "who": null
  },
@@ -1631,7 +1631,7 @@
     "C"
    ],
    "pending": {},
-   "hash": "96d09730be866214"
+   "hash": "74558765768ce779"
   },
   "who": null
  },
@@ -1656,7 +1656,7 @@
     "C"
    ],
    "pending": {},
-   "hash": "96d09730be866214"
+   "hash": "74558765768ce779"
   },
   "who": null
  },
@@ -1681,7 +1681,7 @@
     "C"
    ],
    "pending": {},
-   "hash": "96d09730be866214"
+   "hash": "74558765768ce779"
   },
   "who": null
  },
@@ -1706,83 +1706,12 @@
     "C"
    ],
    "pending": {},
-   "hash": "96d09730be866214"
+   "hash": "74558765768ce779"
   },
   "who": null
  },
  {
   "step": "toVote",
-  "ack": {
-   "ok": true
-  },
-  "mod": {
-   "phase": "VOTE",
-   "role": "moderator",
-   "secrets": false,
-   "paused": false,
-   "timer": null,
-   "players": [
-    "A",
-    "B",
-    "D",
-    "E",
-    "F",
-    "C"
-   ],
-   "pending": {
-    "vote": {
-     "done": 0,
-     "total": 6,
-     "waiting": null
-    }
-   },
-   "hash": "4dbc63a3d849bbb3"
-  },
-  "who": {
-   "phase": "VOTE",
-   "role": "player",
-   "paused": false,
-   "hash": "4797f920d2eb28ea"
-  }
- },
- {
-  "step": "toVote again",
-  "ack": {
-   "ok": false,
-   "error": "เปลี่ยนเฟสไม่ได้ในตอนนี้"
-  },
-  "mod": {
-   "phase": "VOTE",
-   "role": "moderator",
-   "secrets": false,
-   "paused": false,
-   "timer": null,
-   "players": [
-    "A",
-    "B",
-    "D",
-    "E",
-    "F",
-    "C"
-   ],
-   "pending": {
-    "vote": {
-     "done": 0,
-     "total": 6,
-     "waiting": null
-    }
-   },
-   "hash": "4dbc63a3d849bbb3"
-  },
-  "who": {
-   "phase": "VOTE",
-   "role": "player",
-   "paused": false,
-   "hash": "4797f920d2eb28ea"
-  }
- },
- {
-  "step": "closeVote",
   "ack": {
    "ok": true
   },
@@ -1801,13 +1730,73 @@
     "C"
    ],
    "pending": {},
-   "hash": "cfae3e202490f772"
+   "hash": "fff2ca7238dcc9c3"
   },
   "who": {
    "phase": "VOTE_RESULT",
    "role": "player",
    "paused": false,
-   "hash": "acf1d6dec513768e"
+   "hash": "1f3d54fc8ef9554b"
+  }
+ },
+ {
+  "step": "toVote again",
+  "ack": {
+   "ok": false,
+   "error": "เปลี่ยนเฟสไม่ได้ในตอนนี้"
+  },
+  "mod": {
+   "phase": "VOTE_RESULT",
+   "role": "moderator",
+   "secrets": false,
+   "paused": false,
+   "timer": null,
+   "players": [
+    "A",
+    "B",
+    "D",
+    "E",
+    "F",
+    "C"
+   ],
+   "pending": {},
+   "hash": "fff2ca7238dcc9c3"
+  },
+  "who": {
+   "phase": "VOTE_RESULT",
+   "role": "player",
+   "paused": false,
+   "hash": "1f3d54fc8ef9554b"
+  }
+ },
+ {
+  "step": "closeVote",
+  "ack": {
+   "ok": false,
+   "error": "ไม่ได้อยู่ในเฟสโหวต"
+  },
+  "mod": {
+   "phase": "VOTE_RESULT",
+   "role": "moderator",
+   "secrets": false,
+   "paused": false,
+   "timer": null,
+   "players": [
+    "A",
+    "B",
+    "D",
+    "E",
+    "F",
+    "C"
+   ],
+   "pending": {},
+   "hash": "fff2ca7238dcc9c3"
+  },
+  "who": {
+   "phase": "VOTE_RESULT",
+   "role": "player",
+   "paused": false,
+   "hash": "1f3d54fc8ef9554b"
   }
  },
  {
@@ -1836,13 +1825,13 @@
      "waiting": null
     }
    },
-   "hash": "3eadf7c58a95ec03"
+   "hash": "6aa61dd245a7fb9c"
   },
   "who": {
    "phase": "NIGHT",
    "role": "player",
    "paused": false,
-   "hash": "74f58c222673c0e2"
+   "hash": "f6e1ec9f8c114b6d"
   }
  },
  {
@@ -1871,13 +1860,13 @@
      "waiting": null
     }
    },
-   "hash": "dde3757c73bcff3b"
+   "hash": "ba0e9fc4fd77cd5d"
   },
   "who": {
    "phase": "MORNING",
    "role": "player",
    "paused": false,
-   "hash": "92b5d2ba6addb0e3"
+   "hash": "cc366aca0d6de3f5"
   }
  },
  {
@@ -1986,13 +1975,13 @@
      "waiting": null
     }
    },
-   "hash": "89dba14548b8e1f3"
+   "hash": "fba138b2a9290864"
   },
   "who": {
    "phase": "MORNING",
    "role": "player",
    "paused": false,
-   "hash": "4782b76be57b4bbc"
+   "hash": "bd9afe11e5d47fb2"
   }
  },
  {
@@ -2021,13 +2010,13 @@
      "waiting": null
     }
    },
-   "hash": "b49bbea39b2d09b6"
+   "hash": "7f1bbaa86ab1f038"
   },
   "who": {
    "phase": "MORNING",
    "role": "player",
    "paused": true,
-   "hash": "5087ba4e982e0f64"
+   "hash": "055c0f4e9f1d56d8"
   }
  },
  {
