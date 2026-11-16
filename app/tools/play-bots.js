@@ -6,8 +6,7 @@
 //
 // Options:  --port 3000   --players 7 (min..max per the server)   --pace 3000 (ms between steps)
 //           --no-wait     start immediately instead of waiting for you to open the 3D page
-// Watching: the script prints a one-line snippet. Paste it into the browser console on the server's origin
-//           (any page of it), then open /mod3d.html and press Enter in this terminal.
+// Watching: the script prints a link (/mod3d.html#room=CODE:TOKEN or /mod#room=...). Open it, then press Enter in this terminal.
 const { io } = require('socket.io-client');
 
 const arg = (k, d) => { const i = process.argv.indexOf('--' + k); return i < 0 ? d : (process.argv[i + 1] && !process.argv[i + 1].startsWith('--') ? process.argv[i + 1] : true); };
@@ -23,8 +22,9 @@ const say = ['ฉันว่ามีคนแอบอู้', 'ใครส�
   const c = await em(mod, 'mod:create', {});
   if (!c || !c.code) { console.error('mod:create failed — is the server running on ' + URL + ' ?'); process.exit(1); }
   console.log('ห้อง', c.code);
-  console.log('วางในคอนโซลเบราว์เซอร์ (origin ' + URL + ') แล้วเปิด ' + URL + '/mod3d.html :');
-  console.log(`localStorage.setItem('dn-mod', JSON.stringify({code:'${c.code}',modToken:'${c.modToken}'}))`);
+  console.log('เปิดลิงก์นี้ในเบราว์เซอร์ (เข้าห้องนี้เป็น Moderator อัตโนมัติ):');
+  console.log('  ' + URL + '/mod3d.html#room=' + c.code + ':' + c.modToken);
+  console.log('  ' + URL + '/mod#room=' + c.code + ':' + c.modToken + '   (หน้า Moderator เต็ม)');
   if (!NOWAIT) { console.log('\nกด Enter เพื่อเริ่มเกม...'); await new Promise(r => process.stdin.once('data', r)); }
 
   const ps = [];
