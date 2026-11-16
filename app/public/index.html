@@ -108,17 +108,24 @@ function render() {
   tickTimer();
 }
 function joinHTML() {
-  return `<div class="setup"><h1>🧙 Deadline Necromancer</h1><p>เข้าห้องเล่นกับเพื่อนๆ — รับรหัสห้อง 4 ตัวอักษรจาก Moderator</p>
-    ${error ? `<div class="banner warn">${esc(error)}</div>` : ''}
-    <label>รหัสห้อง</label><input id="jcode" class="input" style="width:100%;text-transform:uppercase" maxlength="4" value="${esc(urlCode())}" placeholder="ABCD">
-    <label>ชื่อของคุณ</label><input id="jname" class="input" style="width:100%" maxlength="14" placeholder="ชื่อเล่น">
-    <div style="margin-top:20px"><button class="btn primary" onclick="join()">เข้าห้อง</button></div></div>`;
+  return `<div class="setup jn"><h1>🧙 Deadline Necromancer</h1><p class="jn-help">เข้าห้องเล่นกับเพื่อนๆ — รับรหัสห้อง 4 ตัวอักษรจาก Moderator</p>
+    ${error ? `<div class="banner warn" role="alert">${esc(error)}</div>` : ''}
+    <label for="jcode">รหัสห้อง</label><input id="jcode" class="input" maxlength="4" autocomplete="off" autocapitalize="characters" value="${esc(urlCode())}" placeholder="ABCD">
+    <label for="jname">ชื่อของคุณ</label><input id="jname" class="input" maxlength="14" autocomplete="off" placeholder="ชื่อเล่น">
+    <div class="jn-act"><button class="btn primary" onclick="join()">เข้าห้อง</button></div></div>`;
 }
+const lobbySeen = new Set();
 function lobbyHTML() {
-  return `<div class="setup"><h1>🪑 ล็อบบี้ห้อง <span class="code" style="font-size:28px;letter-spacing:6px">${esc(S.code)}</span></h1>
-    <p>รอ Moderator เริ่มเกม (ต้องมีผู้เล่น ${S.min}–${S.max} คน)</p>
-    <div class="plist">${S.players.map(p => `<div class="pl ${p.name === session.name ? 'me' : ''}"><div class="av">${esc(p.name[0])}</div><div class="nm">${esc(p.name)}${p.name === session.name ? ' (คุณ)' : ''} ${p.connected ? '' : '<span class="mut">(ออฟไลน์)</span>'}</div></div>`).join('')}</div>
-    <p class="hint" style="margin-top:12px">ผู้เล่นตอนนี้ ${S.players.length} คน</p></div>`;
+  const rows = S.players.map(p => {
+    const isMe = p.name === session.name, isNew = !lobbySeen.has(p.name);
+    lobbySeen.add(p.name);
+    return `<div class="pl lb-row ${isMe ? 'me' : ''} ${p.connected ? '' : 'off'} ${isNew ? 'enter' : ''}"><div class="av">${esc(p.name[0])}</div><div class="nm">${esc(p.name)}${isMe ? ' (คุณ)' : ''} ${p.connected ? '' : '<span class="mut">(ออฟไลน์)</span>'}</div></div>`;
+  }).join('');
+  return `<div class="setup lb"><h1>🪑 ล็อบบี้ห้อง</h1>
+    <div class="lb-codebox"><small>รหัสห้อง</small><span class="code">${esc(S.code)}</span></div>
+    <p class="lb-wait"><i class="lb-dot" aria-hidden="true"></i>รอ Moderator เริ่มเกม (ต้องมีผู้เล่น ${S.min}–${S.max} คน)</p>
+    <p class="lb-count">ผู้เล่นตอนนี้ ${S.players.length} คน</p>
+    <div class="plist lb-list">${rows}</div></div>`;
 }
 function gameHTML() {
   const feed = S.feed.map(m => ({ ...m, mine: m.kind === 'chat' && m.who === S.youId }));
