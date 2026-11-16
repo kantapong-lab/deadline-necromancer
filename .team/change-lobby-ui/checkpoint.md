@@ -8,7 +8,7 @@ Updated: step 2 · round 1
 lane: change (ui-only) · skipped 1, 2b
 
 ## Status
-base: main (4bdc363) · baseline: red, user chose continue (code is the only truth) · announcement: no
+base: main (4bdc363) · baseline: red user chose continue, code is the only truth · announcement: no
 route: change · scope: ui-only · screens: player lobby (lobbyHTML) + join (joinHTML) in app/public/index.html + style.css · targets: game theme, readability, liveliness · mobile first
 next: 2 · product-manager · ac.md
 
