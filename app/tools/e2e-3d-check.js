@@ -27,6 +27,7 @@
     const sig = f => f.role || f.key || f.trap || '';
     const check = tag => {
       E.checks++; const T = truth.st, m = M(); if (!T || !m) return fail(tag + ': no state');
+      if (!m.reveal) { m.setReveal(true); E.revealed = true; }   // the screen hides secrets by default; this check needs them shown
       if (m.day !== T.day) fail(`${tag}: day scene=${m.day} engine=${T.day}`);
       if (m.mana !== T.mana) fail(`${tag}: mana scene=${m.mana} engine=${T.mana}`);
       const lab = document.getElementById('phase').textContent; if (lab !== PHASE_LABEL[T.phase]) fail(`${tag}: phase label "${lab}" vs engine ${T.phase}`);

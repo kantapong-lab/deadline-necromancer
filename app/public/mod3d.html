@@ -5,56 +5,81 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Deadline Necromancer — Moderator 3D</title>
 <style>
-  :root{--bg:#0f0d1a;--panel:#181528;--panel2:#201c36;--line:#33294f;--txt:#ebe7f7;--mut:#9a92b8;
+  :root{--bg:#0f0d1a;--panel:#181528;--panel2:#201c36;--line:#33294f;--txt:#ebe7f7;--mut:#a79fc6;
         --light:#f5c451;--dark:#b05cff;--indie:#4ecdc4;--bad:#ff5c7a;--good:#5fe39a;
-        --team:#4fd0ff;--cult:#ff4d5e;--seek:#4ee07a}
+        --team:#4fd0ff;--cult:#ff4d5e;--seek:#4ee07a;--glass:#120f20e6;--gap:.9rem}
   *{box-sizing:border-box}
+  /* fluid scale: ~17px on a 1366 laptop, ~21px on 1080p, up to 28px on a 4K TV — every HUD size below is in rem */
+  html{font-size:clamp(16px,.55vw + 10px,28px)}
   html,body{margin:0;height:100%;background:var(--bg);overflow:hidden;color:var(--txt);font-family:"Segoe UI","Noto Sans Thai",Tahoma,sans-serif}
   #c{position:fixed;inset:0;width:100%;height:100%;display:block}
   button{font:inherit;color:inherit;cursor:pointer}
-  .top{position:fixed;left:0;right:0;top:0;display:flex;align-items:center;gap:20px;padding:10px 20px;background:#120f20d9;border-bottom:1px solid var(--line);backdrop-filter:blur(6px);z-index:5}
-  .brand{font-weight:700;letter-spacing:.3px}
-  .days{display:flex;gap:4px}
-  .day{padding:3px 9px;border-radius:6px;background:var(--panel2);font-size:12px;color:var(--mut)}
+  /* ---- top bar: day · mana · phase (slim) ---- */
+  .top{position:fixed;left:0;right:0;top:0;display:flex;align-items:center;gap:1.2rem;padding:.45rem 1.1rem;background:#120f20d9;border-bottom:1px solid var(--line);backdrop-filter:blur(6px);z-index:5}
+  .brand{font-weight:700;letter-spacing:.3px;white-space:nowrap}
+  .days{display:flex;gap:.25rem}
+  .day{padding:.12rem .55rem;border-radius:.4rem;background:var(--panel2);font-size:.8rem;color:var(--mut)}
   .day.now{background:var(--dark);color:#fff} .day.past{opacity:.5}
-  .mana{flex:1;max-width:380px}
-  .mana .bar{height:12px;background:var(--panel2);border-radius:99px;overflow:hidden;border:1px solid var(--line)}
+  .mana{flex:1;max-width:24rem}
+  .mana .bar{height:.7rem;background:var(--panel2);border-radius:99px;overflow:hidden;border:1px solid var(--line)}
   .mana .fill{height:100%;background:linear-gradient(90deg,#4f8cff,#9b6bff);transition:width .5s}
-  .mana small{color:var(--mut);font-size:12px}
-  .phase{margin-left:auto;font-weight:600;color:var(--light)}
-  .bar2{position:fixed;left:50%;bottom:14px;transform:translateX(-50%);display:flex;gap:8px;flex-wrap:wrap;justify-content:center;width:calc(100% - 32px);z-index:5}
-  .btn{background:var(--panel2);border:1px solid var(--line);padding:8px 14px;border-radius:8px;transition:.15s}
-  .btn:hover{border-color:var(--dark);background:#2a2447}
-  .btn.on{background:linear-gradient(135deg,#7c3aed,#b05cff);border:0;font-weight:600}
-  .sep{width:1px;background:var(--line);margin:0 4px}
+  .mana small{color:var(--mut);font-size:.8rem}
+  #waitTxt{color:var(--mut);font-size:.85rem}
+  .phase{margin-left:auto;font-weight:700;color:var(--light);font-size:1.1rem;white-space:nowrap}
+  .secbadge{display:none;background:#3a0f18;border:1px solid var(--cult);color:#ffb3bb;border-radius:99px;padding:.1rem .7rem;font-size:.8rem;font-weight:600;white-space:nowrap}
+  body.sec .secbadge{display:inline-block}
+  /* ---- dock: primary actions always visible, secondary controls fade out when idle ---- */
+  .bar2{position:fixed;left:50%;bottom:.8rem;transform:translateX(-50%);display:flex;gap:.5rem;flex-wrap:wrap;justify-content:center;align-items:center;width:calc(100% - 2rem);z-index:5;pointer-events:none}
+  .bar2>*{pointer-events:auto}
+  .dockSec{display:flex;gap:.5rem;flex-wrap:wrap;justify-content:center;align-items:center;transition:opacity .4s}
+  body.idle .dockSec{opacity:0;pointer-events:none}
+  .btn{background:var(--panel2);border:1px solid var(--line);padding:.45rem .9rem;border-radius:.55rem;transition:.15s;font-size:.9rem;text-decoration:none;color:var(--txt)}
+  .btn:hover,.btn:focus-visible{border-color:var(--dark);background:#2a2447;outline:none}
+  .btn.on{background:linear-gradient(135deg,#7c3aed,#b05cff);border:0;font-weight:600;font-size:1rem;padding:.55rem 1.2rem;box-shadow:0 .2rem 1rem #7c3aed66}
+  .btn:disabled{opacity:.5;cursor:not-allowed}
+  .sep{width:1px;align-self:stretch;background:var(--line);margin:0 .25rem}
   #flash{position:fixed;inset:0;pointer-events:none;background:#000;opacity:0;transition:opacity .6s}
-  #msg{position:fixed;left:50%;top:40%;transform:translate(-50%,-50%);font-size:34px;font-weight:700;text-shadow:0 2px 14px #000;opacity:0;transition:opacity .5s;pointer-events:none;text-align:center;z-index:4}
-  .tag{position:fixed;left:0;top:0;pointer-events:none;background:#181528e6;border:1px solid var(--line);color:#fff;font-weight:600;font-size:13px;padding:2px 10px;border-radius:99px;white-space:nowrap;z-index:3}
+  #msg{position:fixed;left:50%;top:38%;transform:translate(-50%,-50%);font-size:2.2rem;font-weight:700;text-shadow:0 2px 14px #000;opacity:0;transition:opacity .5s;pointer-events:none;text-align:center;z-index:4;max-width:90vw}
+  .tag{position:fixed;left:0;top:0;pointer-events:none;background:#181528e6;border:1px solid var(--line);color:#fff;font-weight:600;font-size:.85rem;padding:.12rem .65rem;border-radius:99px;white-space:nowrap;z-index:3}
   .tag.light{border-color:var(--team);color:var(--team)} .tag.dark{border-color:var(--cult);color:var(--cult)} .tag.indie{border-color:var(--seek);color:var(--seek)}
   .tag.out{border-color:#555;color:#999;text-decoration:line-through}
-  #cap{position:fixed;left:50%;top:60px;transform:translateX(-50%) translateY(-8px);width:min(560px,calc(100% - 32px));background:#120f20eb;border:1px solid var(--line);border-radius:14px;padding:10px 16px;z-index:6;opacity:0;pointer-events:none;transition:.35s;white-space:pre-line}
+  /* ---- caption: broadcast lower-third above the dock, clear of the characters ---- */
+  #cap{position:fixed;left:50%;bottom:7rem;transform:translateX(-50%) translateY(.5rem);width:min(46rem,calc(100% - 2rem));background:var(--glass);border:1px solid var(--line);border-left:.3rem solid var(--light);border-radius:.8rem;padding:.6rem 1.1rem;z-index:6;opacity:0;pointer-events:none;transition:.35s;white-space:pre-line}
   #cap.show{opacity:1;transform:translateX(-50%)}
-  #cap b{display:block;font-size:16px;margin-bottom:3px;color:var(--light)} #cap div{font-size:13px;color:var(--txt)}
-  #cap.trap b{color:var(--cult)} #cap.boost b{color:var(--light)} #cap.evt b{color:var(--team)}
-  #chips{position:fixed;right:14px;top:60px;display:flex;flex-direction:column;align-items:flex-end;gap:6px;z-index:5;max-width:360px}
-  .chip{background:#120f20e6;border:1px solid var(--line);border-radius:99px;padding:4px 12px;font-size:12px;animation:pop .4s}
+  #cap b{display:block;font-size:1.1rem;margin-bottom:.15rem;color:var(--light)} #cap div{font-size:.95rem;color:var(--txt)}
+  #cap.trap{border-left-color:var(--cult)} #cap.trap b{color:var(--cult)} #cap.boost b{color:var(--light)} #cap.evt{border-left-color:var(--team)} #cap.evt b{color:var(--team)}
+  /* ---- right rail: event chips (max 3, auto-expire) ---- */
+  #chips{position:fixed;right:1rem;top:3.6rem;display:flex;flex-direction:column;align-items:flex-end;gap:.4rem;z-index:5;max-width:24rem}
+  .chip{background:var(--glass);border:1px solid var(--line);border-radius:99px;padding:.25rem .8rem;font-size:.85rem;animation:pop .4s}
   .chip.evt{border-color:var(--team);color:var(--team)} .chip.trap{border-color:var(--cult);color:var(--cult)} .chip.boost{border-color:var(--light);color:var(--light)}
   @keyframes pop{from{transform:scale(.6);opacity:0}to{transform:none;opacity:1}}
-  .bub{position:fixed;left:0;top:0;pointer-events:none;z-index:4;font-weight:800;font-size:14px;padding:2px 9px;border-radius:99px;border:2px solid;background:#120f20e6;white-space:nowrap}
+  .bub{position:fixed;left:0;top:0;pointer-events:none;z-index:4;font-weight:800;font-size:.9rem;padding:.12rem .6rem;border-radius:99px;border:2px solid;background:var(--glass);white-space:nowrap}
   .bub.y{border-color:var(--good);color:var(--good)} .bub.n{border-color:var(--bad);color:var(--bad)}
-  #nlog{position:fixed;left:14px;top:132px;width:330px;max-height:42vh;overflow:auto;background:#120f20e6;border:1px solid var(--line);border-radius:12px;padding:8px 10px;font-size:12px;z-index:4;display:none}
+  /* ---- left rail: legend + night log drawer (secrets only) ---- */
+  #leftRail{position:fixed;left:1rem;top:3.6rem;bottom:5rem;width:min(22rem,34vw);display:flex;flex-direction:column;gap:.6rem;z-index:4;pointer-events:none}
+  #leftRail>*{pointer-events:auto}
+  .legend{font-size:.8rem;color:var(--mut);display:none;background:#120f20d9;border:1px solid var(--line);border-radius:.7rem;padding:.5rem .8rem;flex:none}
+  .legend i{display:inline-block;width:.6rem;height:.6rem;border-radius:50%;margin-right:.4rem}
+  #nlog{max-height:100%;min-height:0;overflow:auto;background:var(--glass);border:1px solid var(--line);border-radius:.8rem;padding:.5rem .7rem;font-size:.8rem;display:none}
   body.sec #nlog.has{display:block}
   body.nlogoff #nlog{display:none!important}
-  #nlog .lh{position:sticky;top:-8px;margin:-8px -10px 4px;padding:6px 10px;background:#181528;border-bottom:1px solid var(--line);border-radius:12px 12px 0 0;display:flex;justify-content:space-between;align-items:center;color:var(--mut);font-weight:600}
-  #nlog .lh button{background:none;border:0;color:var(--mut);cursor:pointer;font-size:14px;padding:0 4px} #nlog .lh button:hover{color:var(--txt)}
-  .ln{padding:2px 0 2px 8px;border-left:3px solid var(--line);margin:2px 0;color:var(--txt)}
+  #nlog .lh{position:sticky;top:-.5rem;margin:-.5rem -.7rem .3rem;padding:.4rem .7rem;background:#181528;border-bottom:1px solid var(--line);border-radius:.8rem .8rem 0 0;display:flex;justify-content:space-between;align-items:center;color:var(--mut);font-weight:600}
+  #nlog .lh button{background:none;border:0;color:var(--mut);cursor:pointer;font-size:.9rem;padding:0 .25rem} #nlog .lh button:hover{color:var(--txt)}
+  .ln{padding:.12rem 0 .12rem .5rem;border-left:3px solid var(--line);margin:.12rem 0;color:var(--txt)}
   .ln.light{border-color:var(--team)} .ln.dark{border-color:var(--cult)} .ln.indie{border-color:var(--seek)} .ln.sys{border-color:var(--light);color:var(--light);font-weight:600}
-  select.btn{max-width:260px}
-  #lab{position:fixed;left:14px;bottom:58px;z-index:7;background:#120f20f0;border:1px solid var(--line);border-radius:12px;padding:10px;display:none;gap:6px;flex-direction:column;max-width:420px}
-  #lab.open{display:flex} #lab .lr{display:flex;gap:6px;align-items:center} #lab .lr span{width:74px;font-size:12px;color:var(--mut)} #lab select{flex:1;min-width:0;padding:6px 8px}
-  #lobby{position:fixed;inset:0;z-index:20;display:grid;place-items:center;text-align:center;background:radial-gradient(900px 500px at 50% 0,#2a1f4d,#0f0d1a);padding:24px} #lobby h2{margin:0 0 8px} #lobby p{color:var(--mut)}
-  .legend{position:fixed;left:16px;top:58px;font-size:12px;color:var(--mut);z-index:4;display:none;background:#120f20d9;border:1px solid var(--line);border-radius:10px;padding:8px 12px}
-  .legend i{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:6px}
+  select.btn{max-width:16rem}
+  #lab{position:fixed;left:1rem;bottom:4rem;z-index:7;background:#120f20f0;border:1px solid var(--line);border-radius:.8rem;padding:.6rem;display:none;gap:.4rem;flex-direction:column;max-width:26rem}
+  #lab.open{display:flex} #lab .lr{display:flex;gap:.4rem;align-items:center} #lab .lr span{width:4.6rem;font-size:.8rem;color:var(--mut)} #lab select{flex:1;min-width:0;padding:.35rem .5rem}
+  /* ---- lobby: room code, join URL, live roster ---- */
+  #lobby{position:fixed;inset:0;z-index:20;display:grid;place-items:center;text-align:center;background:radial-gradient(900px 500px at 50% 0,#2a1f4d,#0f0d1a);padding:1.5rem;overflow:auto}
+  #lobby h2{margin:0 0 .3rem;font-size:1.6rem} #lobby p{color:var(--mut);margin:.4rem 0}
+  #lobbyCode{font-size:4.2rem;font-weight:800;letter-spacing:.35em;padding-left:.35em;color:var(--light);line-height:1.1;text-shadow:0 0 1.5rem #f5c45155;font-variant-numeric:tabular-nums}
+  #lobbyUrl{font-size:1.1rem;color:var(--txt);word-break:break-all}
+  #lobbyCount{font-weight:700;color:var(--txt)}
+  #roster{display:flex;flex-wrap:wrap;gap:.4rem;justify-content:center;max-width:46rem;margin:.6rem auto 1rem}
+  #roster span{background:var(--panel2);border:1px solid var(--line);border-radius:99px;padding:.2rem .8rem;font-size:.95rem}
+  #lobbyWhy{min-height:1.4em;font-size:.9rem}
+  @media (max-width:900px){.top{flex-wrap:wrap;gap:.5rem .9rem}.brand{display:none}#leftRail{width:min(18rem,46vw)}#lobbyCode{font-size:3rem}}
 </style>
 <script src="/data.js"></script>
 <script src="/socket.io/socket.io.js"></script>
@@ -69,27 +94,43 @@
   <div class="brand">🧙 Deadline Necromancer</div>
   <div class="days" id="days"></div>
   <div class="mana"><div class="bar"><div class="fill" id="fill"></div></div><small id="manaTxt"></small></div>
-  <span id="waitTxt" style="color:var(--mut);font-size:12px"></span>
+  <span id="waitTxt"></span>
+  <span class="secbadge" id="secBadge">👁 กำลังแสดงบทบาทลับ</span>
   <div class="phase" id="phase">ประชุมเช้า</div>
 </div>
-<div class="legend" id="legend"><div><i style="background:#4fd0ff"></i>Team Deliver (ฝ่ายแสง)</div><div><i style="background:#ff4d5e"></i>Cult of Burnout (ฝ่ายมืด)</div><div><i style="background:#4ee07a"></i>Severance Seekers (ฝ่ายอิสระ)</div></div>
-<div id="nlog"><div class="lh"><span>📜 Night Log (Moderator เท่านั้น)</span><span><button id="nlogClear" title="ล้างบันทึก">🗑</button><button id="nlogHide" title="ซ่อน">✕</button></span></div></div><div id="cap"><b id="capT"></b><div id="capD"></div></div><div id="chips"></div><div id="msg"></div><div id="flash"></div>
-<div class="bar2">
+<div id="leftRail">
+  <div class="legend" id="legend"><div><i style="background:#4fd0ff"></i>Team Deliver (ฝ่ายแสง)</div><div><i style="background:#ff4d5e"></i>Cult of Burnout (ฝ่ายมืด)</div><div><i style="background:#4ee07a"></i>Severance Seekers (ฝ่ายอิสระ)</div></div>
+  <div id="nlog"><div class="lh"><span>📜 Night Log (Moderator เท่านั้น)</span><span><button id="nlogClear" title="ล้างบันทึก">🗑</button><button id="nlogHide" title="ซ่อน">✕</button></span></div></div>
+</div>
+<div id="cap"><b id="capT"></b><div id="capD"></div></div><div id="chips"></div><div id="msg"></div><div id="flash"></div>
+<div class="bar2" id="dock">
   <button class="btn on" id="nextStep" style="display:none"></button>
   <button class="btn" id="closeEv" style="display:none"></button>
   <button class="btn" id="closeBo" style="display:none"></button>
-  <span class="sep"></span>
-  <span class="btn" id="secretLive" style="cursor:default" title="หน้านี้เป็นจอ Moderator/ผู้ชม: เห็นบทบาทและแอ็กชันลับตลอด">👁 โหมดผู้ชม: เห็นบทบาททั้งหมด</span>
-  <button class="btn" id="nlogBtn">📜 Night Log: แสดง</button>
-  <button class="btn" id="focus">🔍 ดูตัวละคร</button>
-  <button class="btn" id="orbit">🎥 กล้องหมุน</button>
-  <a class="btn" href="/mod" style="text-decoration:none">📋 หน้าควบคุมเต็ม</a>
+  <div class="dockSec" id="dockSec">
+    <span class="sep"></span>
+    <button class="btn" id="secretLive" title="เปิด/ปิดการแสดงสีฝ่าย บทบาท และ Night Log บนจอนี้ (ปิดไว้เป็นค่าเริ่มต้น เพื่อไม่ให้ผู้เล่นเห็น)">👁 แสดงบทบาทลับ: ปิด</button>
+    <button class="btn" id="nlogBtn">📜 Night Log: แสดง</button>
+    <button class="btn" id="focus">🔍 ดูตัวละคร</button>
+    <button class="btn" id="orbit">🎥 กล้องหมุน</button>
+    <a class="btn" href="/mod">📋 หน้าควบคุมเต็ม</a>
+  </div>
 </div>
 <div id="legacy" style="display:none">
   <button data-p="MORNING"></button><button data-p="VOTE"></button><button data-p="NIGHT"></button>
   <button id="fire"></button><button id="burn"></button><button id="mp"></button><button id="mm"></button><button id="next"></button><button id="reroll"></button><button id="secret"></button>
 </div>
-<div id="lobby"><div><h2>🧙 Deadline Necromancer — Moderator 3D</h2><p id="lobbyTxt"></p><p><button class="btn on" id="startBtn" style="display:none">▶ เริ่มเกม</button> <a class="btn" href="/mod" style="text-decoration:none">หน้า Moderator เต็ม</a></p></div></div>
+<div id="lobby"><div>
+  <h2>🧙 Deadline Necromancer — Moderator 3D</h2>
+  <p>รหัสห้อง</p>
+  <div id="lobbyCode">—</div>
+  <p id="lobbyUrl"></p>
+  <p id="lobbyCount"></p>
+  <div id="roster"></div>
+  <p id="lobbyTxt"></p>
+  <p id="lobbyWhy"></p>
+  <p><button class="btn on" id="startBtn" disabled style="display:none">▶ เริ่มเกม</button> <a class="btn" href="/mod">หน้า Moderator เต็ม</a></p>
+</div></div>
 <script type="module">
 import * as THREE from 'three';
 import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
@@ -391,6 +432,15 @@ const PRESET = {
   NIGHT:  { bg:0x07050f, hemi:.3, hemiG:0x241450, sun:.6, sunC:0x8a9cff, rune:0xb05cff, runeOp:1,  mon:0xb05cff, part:.9,  partC:0xb48cff, sky:skyNight, spot:0, torch:1, r:12.5, h:9.5, label:'กลางคืน — ลัทธิอู้งานออกล่า' },
 };
 let phase = 'MORNING', day = 1, mana = 1, orbit = true, secrets = false, camAngle = .3;
+// `secrets` = what this screen actually shows = engine Secrets flag (srvSecrets) AND the local reveal toggle. Reveal is OFF by default so a TV facing the players never leaks factions/roles/night log.
+let srvSecrets = false, reveal = false, relabel = () => {};
+function recomputeSecrets() {
+  secrets = srvSecrets && reveal; document.body.classList.toggle('sec', secrets);
+  document.getElementById('legend').style.display = secrets ? 'block' : 'none';
+  document.getElementById('secretLive').textContent = '👁 แสดงบทบาทลับ: ' + (reveal ? (srvSecrets ? 'เปิด' : 'เปิด (รอ Secrets ของเกม)') : 'ปิด');
+  relabel();
+}
+function setReveal(v) { reveal = !!v; recomputeSecrets(); }
 const cur = { bg:hexC(0x2a2250), hemiG:hexC(0x4a3a80), sunC:hexC(0xfff1d6), rune:hexC(0xf5c451), mon:hexC(0x7fe3ff), partC:hexC(0xf5c451), hemi:1, sun:2, runeOp:.6, part:.25, spot:0, torch:.35, r:13.5, h:7.5, tgt:new THREE.Vector3(0, 1.5, 0), cry:hexC(0x9b6bff) };
 
 const msg = document.getElementById('msg'), fl = document.getElementById('flash');
@@ -434,7 +484,10 @@ orbitBtn.onclick = () => { if (manual) { manual = false; orbit = true; camAngle 
 canvas.title = 'ลากเมาส์ = หมุนกล้อง · ล้อเมาส์ = ซูม · คลิกขวาลาก = เลื่อน';
 setOrbitLabel();
 document.getElementById('reroll').onclick = () => location.reload();
-document.getElementById('secret').onclick = e => { secrets = !secrets; document.body.classList.toggle('sec', secrets); desks.forEach(refreshLabel); e.target.textContent = '👁 มุมมอง Moderator: ' + (secrets ? 'เปิด' : 'ปิด'); document.getElementById('legend').style.display = secrets ? 'block' : 'none'; desks.forEach(refreshLabel); };
+relabel = () => desks.forEach(refreshLabel);
+document.getElementById('secret').onclick = () => setReveal(!reveal);          // legacy hidden button
+document.getElementById('secretLive').onclick = () => setReveal(!reveal);
+recomputeSecrets();
 const pickAlive = () => { const al = desks.filter(d => d.state === 'alive'); return al.length > 1 ? (candidate && candidate.state === 'alive' ? candidate : al[Math.floor(Math.random()*al.length)]) : null; };
 document.getElementById('fire').onclick = () => {                 // voted out → role + faction revealed with the real role card
   const d = pickAlive(); if (!d) return; d.state = 'fired'; d.t = 0; candidate = null;
@@ -462,7 +515,9 @@ const deskOf = id => (id == null ? null : desks[id]);
 // ----- UI helpers handed to the Director -----
 const capEl = document.getElementById('cap'), chipsEl = document.getElementById('chips'); let capTimer;
 function caption(title, desc, ms = 7000, cls = '') { document.getElementById('capT').textContent = title; document.getElementById('capD').textContent = desc; capEl.className = 'show ' + cls; clearTimeout(capTimer); capTimer = setTimeout(() => capEl.classList.remove('show'), ms); }
-function chip(text, kind, tip) { const c = document.createElement('div'); c.className = 'chip ' + kind; c.textContent = text; if (tip) c.title = tip; chipsEl.appendChild(c); }
+function chip(text, kind, tip) { const c = document.createElement('div'); c.className = 'chip ' + kind; c.textContent = text; if (tip) c.title = tip; chipsEl.appendChild(c);
+  while (chipsEl.children.length > 3) chipsEl.firstChild.remove();        // keep the right rail short: newest 3 only
+  setTimeout(() => c.remove(), 15000); }                                    // …and let each one expire
 const clearChips = () => { chipsEl.innerHTML = ''; };
 function badge(d, icon) { (d.badges ||= []).push(icon); refreshLabel(d); }
 const clearBadges = () => desks.forEach(d => { d.badges = []; refreshLabel(d); });
@@ -476,7 +531,10 @@ const D = createDirector({ THREE, scene, camera, desks, N, NAMES, ROLE, ROLES, E
 const logEl = document.getElementById('nlog');
 let logOn = true; try { logOn = localStorage.getItem('nlogOn') !== '0'; } catch (e) {}
 function setLogOn(v) { logOn = v; document.body.classList.toggle('nlogoff', !v); document.getElementById('nlogBtn').textContent = '📜 Night Log: ' + (v ? 'แสดง' : 'ซ่อน'); try { localStorage.setItem('nlogOn', v ? '1' : '0'); } catch (e) {} }
-document.getElementById('nlogBtn').onclick = () => { setLogOn(!logOn); if (logOn && !secrets) say('Night Log จะแสดงเมื่อเปิดมุมมอง Moderator'); };
+document.getElementById('nlogBtn').onclick = () => { setLogOn(!logOn); if (logOn && !secrets) say('Night Log จะแสดงเมื่อเปิด “แสดงบทบาทลับ”'); };
+// ----- dock: secondary controls fade out after a few idle seconds (TV view); any mouse / key / touch brings them back -----
+{ let idleT; const wake = () => { document.body.classList.remove('idle'); clearTimeout(idleT); idleT = setTimeout(() => { if (!document.getElementById('dockSec').matches(':hover, :focus-within')) document.body.classList.add('idle'); else wake(); }, 4000); };
+  for (const ev of ['mousemove', 'pointerdown', 'keydown', 'touchstart', 'wheel']) addEventListener(ev, wake, { passive:true }); wake(); }
 document.getElementById('nlogHide').onclick = () => setLogOn(false);
 document.getElementById('nlogClear').onclick = () => { logEl.querySelectorAll('.ln').forEach(e => e.remove()); logEl.classList.remove('has'); };
 setLogOn(logOn);
@@ -486,10 +544,7 @@ function setRole(d, key) {                                         // the engine
   if (!key || d.role === key || !ROLE[key]) return; d.role = key;
   d.front.material.map = cardTex(key); d.front.material.needsUpdate = true; d.halo.material.color.set(FCOL[ROLE[key].f]); d.ring.material.color.set(FCOL[ROLE[key].f]); refreshLabel(d);
 }
-function applySecrets(v) {
-  secrets = !!v; document.body.classList.toggle('sec', secrets); desks.forEach(refreshLabel);
-  document.getElementById('legend').style.display = secrets ? 'block' : 'none';
-}
+function applySecrets(v) { srvSecrets = !!v; recomputeSecrets(); }
 function fireDesk(d) {                                              // voted out → card flips face-up (role + faction revealed) and the white envelope lands
   if (!d || d.state === 'fired') return; d.state = 'fired'; d.t = 0; candidate = null;
   d.env = envelope(); d.env.position.set(0, 4, 1.4); d.g.add(d.env); refreshLabel(d);
@@ -530,7 +585,7 @@ async function pump() { if (playing) return; playing = true; while (fxQueue.leng
 const SCENE_PHASE = { MORNING:'MORNING', VOTE:'VOTE', VOTE_INTERIM:'VOTE', VOTE_RESULT:'VOTE', NIGHT:'NIGHT', OVER:'MORNING' };
 let hydrated = false;
 function applyState(st) {
-  curSt = st; if (st.secrets !== secrets) applySecrets(st.secrets);
+  curSt = st; if (!!st.secrets !== srvSecrets) applySecrets(st.secrets);
   day = st.day; mana = Math.max(0, Math.min(MANA_MAX, st.mana)); renderHud(); setPhaseQuiet(SCENE_PHASE[st.phase] || 'MORNING');
   document.getElementById('phase').textContent = ({ MORNING:'ประชุมเช้า', VOTE:'โหวตไล่ออก', VOTE_INTERIM:'พักโหวต — ผลรอบแรก', VOTE_RESULT:'ประกาศผลโหวต', NIGHT:'กลางคืน — แอ็กชันลับ', OVER:'จบเกม' })[st.phase] || st.phase;
   st.players.forEach(p => { const d = desks[p.id]; if (!d) return; if (p.role) setRole(d, p.role);
@@ -542,8 +597,8 @@ function applyState(st) {
   const w = pd.vote || pd.night; document.getElementById('waitTxt').textContent = w ? `${st.phase === 'NIGHT' ? 'แอ็กชันลับ' : 'โหวต'} ${w.done}/${w.total}` : '';
   if (st.phase === 'OVER' && !applyState.over) { applyState.over = true; caption('🏁 จบเกม', (st.over && (st.over.why || st.over.text || JSON.stringify(st.over))) || '', 20000, 'boost'); } if (st.phase !== 'OVER') applyState.over = false;
 }
-const live = { applyState, enqueue(batch) { fxQueue.push(...batch); pump(); } };
-window.__mod3d = { desks, played, get phase() { return phase; }, get day() { return day; }, get mana() { return mana; }, get manaMax() { return MANA_MAX; }, get secrets() { return secrets; }, get busy() { return playing || fxQueue.length > 0; }, get state() { return curSt; } };   // read-only test hook
+const live = { applyState, setReveal, enqueue(batch) { fxQueue.push(...batch); pump(); } };
+window.__mod3d = { desks, played, get phase() { return phase; }, get day() { return day; }, get mana() { return mana; }, get manaMax() { return MANA_MAX; }, get secrets() { return secrets; }, get reveal() { return reveal; }, setReveal, get busy() { return playing || fxQueue.length > 0; }, get state() { return curSt; } };   // read-only test hook
 
 desks.forEach(refreshLabel);
 
@@ -559,9 +614,9 @@ function tint(d, k) { d.worker.traverse(o => { if (!o.material || o === d.ring) 
 // ---- name tags: de-overlap on screen. Tags (plus the vote/result bubbles stacked on top of them) are boxes; they are placed
 // nearest-first, and each farther tag slides up/down to the closest free slot, so the nearest tags keep their place and stay readable.
 function layoutLabels() {
-  const L = desks.filter(d => d.lbl).map(d => { const w = d.el.offsetWidth || 70, h = d.el.offsetHeight || 22, ex = (D.bubbleCount ? D.bubbleCount(d) : 0)*26; return { d, w, h, ex, x:Math.max(w/2 + 4, Math.min(innerWidth - w/2 - 4, d.lbl.x)), y:d.lbl.y, z:d.lbl.z }; });
+  const L = desks.filter(d => d.lbl).map(d => { const w = d.el.offsetWidth || 70, h = d.el.offsetHeight || 22, ex = (D.bubbleCount ? D.bubbleCount(d) : 0)*Math.round(h*1.15); return { d, w, h, ex, x:Math.max(w/2 + 4, Math.min(innerWidth - w/2 - 4, d.lbl.x)), y:d.lbl.y, z:d.lbl.z }; });
   L.sort((a, b) => a.z - b.z);                                   // near → far
-  const placed = [], yMin = l => 56 + l.h/2 + l.ex, yMax = l => innerHeight - l.h/2 - 8;
+  const topH = (document.querySelector('.top').offsetHeight || 56) + 4, dockH = (document.getElementById('dock').offsetHeight || 40) + 16, placed = [], yMin = l => topH + l.h/2 + l.ex, yMax = l => innerHeight - dockH - l.h/2 - 8;
   const hit = (l, y) => placed.some(p => Math.abs(p.x - l.x) < (p.w + l.w)/2 + 4 && (y - l.h/2 - l.ex) < (p.y + p.h/2 + 2) && (y + l.h/2) > (p.y - p.h/2 - p.ex - 2));
   for (const l of L) {
     const step = l.h + 3, base = Math.max(yMin(l), Math.min(yMax(l), l.y)); let best = base, found = false;
@@ -651,14 +706,26 @@ return live;
 const saved = () => { try { return JSON.parse(localStorage.getItem('dn-mod') || 'null'); } catch { return null; } };
 const lobby = document.getElementById('lobby'), lobbyTxt = document.getElementById('lobbyTxt');
 let liveApi = null, booting = false, pendingState = null; const pendingFx = [];
-function showLobby(msg) { lobby.style.display = 'grid'; lobbyTxt.textContent = msg; }
-document.getElementById('startBtn').onclick = () => socket.emit('mod:do', { action:'start' }, r => { if (r && !r.ok) showLobby(r.error); });
+const startBtn = document.getElementById('startBtn');
+function showLobby(msg) { lobby.style.display = 'grid'; lobbyTxt.textContent = msg || ''; }
+function renderLobby(st) {                                           // room code + join URL + live roster, from the lobby `state` payload
+  showLobby('');
+  document.getElementById('lobbyCode').textContent = st.code || '—';
+  document.getElementById('lobbyUrl').textContent = 'เข้าร่วมที่ ' + location.origin + ' แล้วใส่รหัสห้อง';
+  const n = st.players.length, short = Math.max(0, (st.min || 0) - n);
+  document.getElementById('lobbyCount').textContent = `ผู้เล่น ${n} คน (ต้อง ${st.min}–${st.max})`;
+  const ro = document.getElementById('roster'); ro.textContent = '';
+  st.players.forEach(p => { const s = document.createElement('span'); s.textContent = p.name; ro.appendChild(s); });
+  startBtn.style.display = ''; startBtn.disabled = !st.canStart;
+  document.getElementById('lobbyWhy').textContent = st.canStart ? 'พร้อมแล้ว — กดเริ่มเกมได้เลย' : (short ? `ยังเริ่มไม่ได้ — ขาดผู้เล่นอีก ${short} คน` : 'ยังเริ่มไม่ได้ — รอ Moderator');
+}
+startBtn.onclick = () => socket.emit('mod:do', { action:'start' }, r => { if (r && !r.ok) showLobby(r.error); });
 socket.on('connect', async () => {
   const sv = saved(); if (!sv) { showLobby('ยังไม่ได้เข้าห้อง — เปิดหน้า Moderator เพื่อสร้างห้องก่อน แล้วกลับมาหน้านี้'); return; }
   const r = await emitP('mod:join', { ...sv, full:true });   // full = always show roles / secret actions (server-side, independent of the /mod Secrets toggle) if (!r || !r.ok) showLobby((r && r.error) || 'เข้าห้องไม่สำเร็จ');
 });
 socket.on('state', async st => {
-  if (st.phase === 'LOBBY') { showLobby(`ห้อง ${st.code} · ผู้เล่น ${st.players.length} คน (ต้อง ${st.min}–${st.max}) — รอ Moderator กดเริ่มเกม`); document.getElementById('startBtn').style.display = st.canStart ? '' : 'none'; return; }
+  if (st.phase === 'LOBBY') { if (liveApi) liveApi.setReveal(false); renderLobby(st); return; }   // new game → secrets back to hidden
   lobby.style.display = 'none';
   if (liveApi) { liveApi.applyState(st); return; }
   pendingState = st; if (booting) return; booting = true;
