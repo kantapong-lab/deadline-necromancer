@@ -22,7 +22,8 @@ lane: change (ui+logic) · skipped 1, 3d
 - gate 2b: passed (23 phrases)
 - canvas: http://localhost:5173/.worktrees/feature-change-chat-quick-replies/.team/change-chat-quick-replies/canvas/chatbar-mockup.html (local)
 - gate 3d: skipped (no smoke trigger)
-- next: 4 · frontend-dev ∥ backend-dev · build
+- human gate (step 10): approved by user "อนุมัติ (Recommended)" 2026-11-16; role worktrees removed
+- next: 11 · docs-writer · changelog + rules + Deploy hand-off
 gate 2b passed · user: "อนุมัติ (Recommended) — 23 phrases" · 2026-11-16
 gate 2b passed · user: "อนุมัติ (Recommended) — 23 phrases" · 2026-11-16
 gate 3c passed · user: "อนุมัติ (Recommended); server: ไม่ต้อง ใช้เส้นทางเดิม (Recommended); mockup: ใช้ไฟล์ local (Recommended)" · 2026-11-16
