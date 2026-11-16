@@ -119,7 +119,7 @@ function lobbyHTML() {
   const rows = S.players.map(p => {
     const isMe = p.name === session.name, isNew = !lobbySeen.has(p.name);
     lobbySeen.add(p.name);
-    return `<div class="pl lb-row ${isMe ? 'me' : ''} ${p.connected ? '' : 'off'} ${isNew ? 'enter' : ''}"><div class="av">${esc(p.name[0])}</div><div class="nm">${esc(p.name)}${isMe ? ' (คุณ)' : ''} ${p.connected ? '' : '<span class="mut">(ออฟไลน์)</span>'}</div></div>`;
+    return `<div class="pl lb-row ${isMe ? 'me' : ''} ${p.connected ? '' : 'off'} ${isNew ? 'enter' : ''}"><div class="av">${esc(p.name[0])}</div><div class="nm"><span class="nm-t">${esc(p.name)}</span>${isMe ? '<span class="nm-tag">(คุณ)</span>' : ''}${p.connected ? '' : '<span class="nm-tag mut">(ออฟไลน์)</span>'}</div></div>`;
   }).join('');
   return `<div class="setup lb"><h1>🪑 ล็อบบี้ห้อง</h1>
     <div class="lb-codebox"><small>รหัสห้อง</small><span class="code">${esc(S.code)}</span></div>
