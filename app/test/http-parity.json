@@ -3,19 +3,19 @@
   "status": 200,
   "type": "text/html; charset=utf-8",
   "cache": "no-cache",
-  "sha256": "adffbaab776c0acda71492010d8413e079deabe1b65a62241a59d72fb12c1d37"
+  "sha256": "f41ff3611d612536c027f4b770ad0535a632116e657826f19728c84787e1770e"
  },
  "/?room=ABCD": {
   "status": 200,
   "type": "text/html; charset=utf-8",
   "cache": "no-cache",
-  "sha256": "adffbaab776c0acda71492010d8413e079deabe1b65a62241a59d72fb12c1d37"
+  "sha256": "f41ff3611d612536c027f4b770ad0535a632116e657826f19728c84787e1770e"
  },
  "/mod": {
   "status": 200,
   "type": "text/html; charset=utf-8",
   "cache": "no-cache",
-  "sha256": "9d539c0a740d1d3a7580e731c214a4f7313087cf57b9951aa525bd2b2669d044"
+  "sha256": "0f117a6f1cef4e9d4a497e49fd9930ce57c83572a3005c8fb3017624328695a4"
  },
  "/gallery": {
   "status": 200,
@@ -33,13 +33,13 @@
   "status": 200,
   "type": "text/css; charset=utf-8",
   "cache": "no-cache",
-  "sha256": "054b4cf26064967359a51291aae67d2c0a8528c3785070e136b3cd801f3e4135"
+  "sha256": "f6d07974e5f5155aaf2b874fa031ac96e6179cde9e153c8a486cd6edf062a2b3"
  },
  "/common.js": {
   "status": 200,
   "type": "text/javascript; charset=utf-8",
   "cache": "no-cache",
-  "sha256": "d5793b77c20f97606a05fef2107d425325625b639d48269744063b78897f4a92"
+  "sha256": "2b996bc167c161c971e9700be1bc27725e05a5ee4ebe14f0954a6880f8950858"
  },
  "/card-info.js": {
   "status": 200,
@@ -51,13 +51,13 @@
   "status": 200,
   "type": "text/html; charset=utf-8",
   "cache": "no-cache",
-  "sha256": "adffbaab776c0acda71492010d8413e079deabe1b65a62241a59d72fb12c1d37"
+  "sha256": "f41ff3611d612536c027f4b770ad0535a632116e657826f19728c84787e1770e"
  },
  "/mod.html": {
   "status": 200,
   "type": "text/html; charset=utf-8",
   "cache": "no-cache",
-  "sha256": "9d539c0a740d1d3a7580e731c214a4f7313087cf57b9951aa525bd2b2669d044"
+  "sha256": "0f117a6f1cef4e9d4a497e49fd9930ce57c83572a3005c8fb3017624328695a4"
  },
  "/gallery.html": {
   "status": 200,
