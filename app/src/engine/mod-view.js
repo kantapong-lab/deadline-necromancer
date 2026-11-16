@@ -4,9 +4,11 @@ const { EVENTS } = require('../shared/data');
 
 // Moderator view
 module.exports = {
-  pending() {
+  // `names`: who is still pending. Moderator screens may face the players, so names are only sent while Secrets are on
+  // (the Moderator otherwise sees counts only: a slow submitter would give away the Dark faction, who must pick two actions).
+  pending(names = true) {
     const G = this, al = G.alive();
-    const list = (arr) => arr.map(p => p.name);
+    const list = (arr) => names ? arr.map(p => p.name) : null;
     if (G.phase === 'MORNING') {
       const out = {};
       if (G.event?.pending) out.event = { done: al.filter(p => G.event.votes[p.id] !== undefined).length, total: al.length, waiting: list(al.filter(p => G.event.votes[p.id] === undefined)) };
@@ -42,11 +44,11 @@ module.exports = {
       ...base, role: 'moderator', secrets: !!secrets,
       players: G.players.map(p => {
         const rv = secrets || G.phase === 'OVER' || (!p.alive && p.cause !== 'burnout');
-        const o = { id: p.id, name: p.name, alive: p.alive, cause: p.alive ? null : p.cause, silenced: p.alive && p.silenced, role: rv ? p.role : null, faction: rv ? p.faction : null };
+        const o = { id: p.id, name: p.name, alive: p.alive, cause: p.alive ? null : p.cause, silenced: !!secrets && p.alive && p.silenced, role: rv ? p.role : null, faction: rv ? p.faction : null };
         if (secrets) Object.assign(o, { zero: p.zero, dbl: p.dbl, locked: p.locked, credit: G.credit[p.id], target: p.target });
         return o;
       }),
-      pending: G.pending(), guidance: G.guidance(), timeline: G.timeline.slice(-200),
+      pending: G.pending(!!secrets), guidance: G.guidance(), timeline: G.timeline.slice(-200),
       traps: secrets ? G.traps.map(t => ({ kind: t.kind, target: t.target, day: t.day })) : G.traps.length,
       trapCharges: G.trapCharges, hijackSet: G.hijackVoter != null,
       nightActions: secrets && G.phase !== 'MORNING' ? G.night : null,

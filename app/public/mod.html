@@ -24,9 +24,12 @@ socket.on('connect', async () => {
 });
 socket.on('state', st => { S = st; setTimerFrom(st); render(); DNAudio.onState(st); });
 
+let needPw = false;   // set when the server answers that MOD_PASSWORD is required
 async function createRoom() {
-  const r = await emit(socket, 'mod:create');
-  if (!r.ok) { error = 'สร้างห้องไม่สำเร็จ'; return render(); }
+  const password = needPw ? ($('#mpw')?.value || '') : undefined;
+  const r = await emit(socket, 'mod:create', { password });
+  if (!r.ok) { needPw = !!r.needPassword; error = r.error || 'สร้างห้องไม่สำเร็จ'; return render(); }
+  needPw = false; error = '';
   session = { code: r.code, modToken: r.modToken }; localStorage.setItem('dn-mod', JSON.stringify(session));
 }
 function leaveRoom() { localStorage.removeItem('dn-mod'); session = null; S = null; render(); }
@@ -59,7 +62,7 @@ function render() {
 }
 function startHTML() {
   return `<div class="setup"><h1>🎛️ Moderator</h1><p>สร้างห้องใหม่ แล้วแจกรหัสห้องให้ผู้เล่น (Moderator ไม่ได้เล่น — ควบคุมจังหวะเกมเท่านั้น)</p>
-    ${error ? `<div class="banner warn">${esc(error)}</div>` : ''}<button class="btn primary bigbtn" onclick="createRoom()">สร้างห้องใหม่</button></div>`;
+    ${error ? `<div class="banner warn">${esc(error)}</div>` : ''}${needPw ? '<form onsubmit="event.preventDefault();createRoom()" style="margin:8px 0"><input id="mpw" type="password" placeholder="รหัสผ่าน Moderator" autocomplete="current-password" style="font-size:16px"></form>' : ''}<button class="btn primary bigbtn" onclick="createRoom()">สร้างห้องใหม่</button></div>`;
 }
 function lobbyHTML() {
   const n = S.players.length, ok = n >= S.min && n <= S.max;
@@ -84,7 +87,7 @@ const ACTIONS = {
 function progress(p, label) {
   if (!p) return '';
   const pct = p.total ? Math.round(p.done / p.total * 100) : 100;
-  return `<div style="margin:8px 0"><b>${label}</b> ${p.done}/${p.total}<div class="progress"><div style="width:${pct}%"></div></div>${p.waiting.length ? `<div class="hint">ยังไม่ส่ง: ${p.waiting.map(esc).join(', ')}</div>` : '<div class="ok hint">ครบแล้ว ✅</div>'}</div>`;
+  return `<div style="margin:8px 0"><b>${label}</b> ${p.done}/${p.total}<div class="progress"><div style="width:${pct}%"></div></div>${p.done >= p.total ? '<div class="ok hint">ครบแล้ว ✅</div>' : p.waiting ? `<div class="hint">ยังไม่ส่ง: ${p.waiting.map(esc).join(', ')}</div>` : `<div class="hint">ยังรอ ${p.total - p.done} คน (ชื่อแสดงเมื่อเปิดโหมดข้อมูลลับ)</div>`}</div>`;
 }
 // ---------- tabs ----------
 const TABS = [['match', '🏆 การแข่งขัน'], ['players', '👥 ผู้เล่นในเกม'], ['chat', '💬 Chat']];

@@ -1,9 +1,13 @@
 // Room store and the helpers every handler shares: codes, tokens, lobby view, state push, ack.
 const { MIN_PLAYERS, MAX_PLAYERS } = require('../engine');
 
+const crypto = require('crypto');
+
 const rooms = new Map();
-const token = () => Math.random().toString(36).slice(2) + Math.random().toString(36).slice(2);
-function newCode() { const L = 'ABCDEFGHJKMNPQRSTUVWXYZ'; let c; do { c = Array.from({ length: 4 }, () => L[Math.floor(Math.random() * L.length)]).join(''); } while (rooms.has(c)); return c; }
+// Tokens and room codes use the OS CSPRNG, never Math.random: the game engine shuffles roles with Math.random, so a
+// token or code drawn from the same stream would let a player who sees theirs predict the role assignment.
+const token = () => crypto.randomBytes(16).toString('hex');
+function newCode() { const L = 'ABCDEFGHJKMNPQRSTUVWXYZ'; let c; do { c = Array.from({ length: 4 }, () => L[crypto.randomInt(L.length)]).join(''); } while (rooms.has(c)); return c; }
 
 function lobbyView(room, extra) {
   return { phase: 'LOBBY', code: room.code, min: MIN_PLAYERS, max: MAX_PLAYERS, ...extra,

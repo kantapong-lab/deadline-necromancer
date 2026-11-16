@@ -3,19 +3,19 @@
   "status": 200,
   "type": "text/html; charset=utf-8",
   "cache": "no-cache",
-  "sha256": "f41ff3611d612536c027f4b770ad0535a632116e657826f19728c84787e1770e"
+  "sha256": "234193238b31df0d7a37a66822fdf338399b15574d8fc3fec05b7c9d174a8514"
  },
  "/?room=ABCD": {
   "status": 200,
   "type": "text/html; charset=utf-8",
   "cache": "no-cache",
-  "sha256": "f41ff3611d612536c027f4b770ad0535a632116e657826f19728c84787e1770e"
+  "sha256": "234193238b31df0d7a37a66822fdf338399b15574d8fc3fec05b7c9d174a8514"
  },
  "/mod": {
   "status": 200,
   "type": "text/html; charset=utf-8",
   "cache": "no-cache",
-  "sha256": "0f117a6f1cef4e9d4a497e49fd9930ce57c83572a3005c8fb3017624328695a4"
+  "sha256": "70527a74b9b2ad5c1a770e553ce6b6c8c3cfdcb2c180b8a3599bcf6550a0e480"
  },
  "/gallery": {
   "status": 200,
@@ -51,13 +51,13 @@
   "status": 200,
   "type": "text/html; charset=utf-8",
   "cache": "no-cache",
-  "sha256": "f41ff3611d612536c027f4b770ad0535a632116e657826f19728c84787e1770e"
+  "sha256": "234193238b31df0d7a37a66822fdf338399b15574d8fc3fec05b7c9d174a8514"
  },
  "/mod.html": {
   "status": 200,
   "type": "text/html; charset=utf-8",
   "cache": "no-cache",
-  "sha256": "0f117a6f1cef4e9d4a497e49fd9930ce57c83572a3005c8fb3017624328695a4"
+  "sha256": "70527a74b9b2ad5c1a770e553ce6b6c8c3cfdcb2c180b8a3599bcf6550a0e480"
  },
  "/gallery.html": {
   "status": 200,

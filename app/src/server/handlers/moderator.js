@@ -3,7 +3,8 @@ const { Game, MIN_PLAYERS, MAX_PLAYERS } = require('../../engine');
 const { ack } = require('../rooms');
 
 module.exports = function registerModerator(socket, { io, ctx, pushState }) {
-  socket.on('mod:do', ({ action, payload } = {}, cb) => {
+  socket.on('mod:do', (data, cb) => {
+    const { action, payload } = data || {};
     const r = ctx(); if (!r || !socket.data.mod) return ack(cb, { ok: false, error: 'ไม่ใช่ Moderator' });
     const g = r.game; let err = null;
     switch (action) {

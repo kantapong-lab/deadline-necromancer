@@ -44,7 +44,7 @@ module.exports = {
         skill: r.skill, desc: r.d, goal, alive: p.alive, silenced: p.silenced, dbl: p.dbl, zero: p.zero, locked: p.locked,
         once: !!r.once, used: p.used, plus1Used: p.plus1Used, dodgeUsed: p.dodgeUsed, credit: this.credit[pid],
         target: p.role === 'soul_recruiter' ? p.target : null, targetName: p.role === 'soul_recruiter' ? this.nm(p.target) : null,
-        copy: p.copy, copyFrom: p.copyFrom, copyName: p.copy ? ROLES[p.copy].n : null,
+        copy: p.copy, copyName: p.copy ? ROLES[p.copy].n : null,
         spec: s ? { skill: s.skill, t: s.t, d: s.d, pool: s.pool } : null,
         skillOK: this.hasSkill(p), canRest: this.canRest(p), skillsBanned: this.skillsBanned(), snack: this.evIs('snack'),
         candidates: this.phase === 'NIGHT' && p.alive ? this.candidates(p).map(x => x.id) : [],

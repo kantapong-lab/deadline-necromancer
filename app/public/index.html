@@ -22,12 +22,19 @@ let tab = 'game', seenIntel = 0, seenDark = 0;   // แท็บบนมือ�
 const isMobile = () => matchMedia('(max-width:1000px)').matches;
 matchMedia('(max-width:1000px)').addEventListener?.('change', () => { if (!isMobile() && tab === 'dark') tab = 'game'; if (S && session) render(); });
 
-const saved = () => { try { return JSON.parse(sessionStorage.getItem('dn-session') || 'null'); } catch { return null; } };
 const urlCode = () => (new URLSearchParams(location.search).get('room') || '').toUpperCase();
+// The seat token lives in localStorage, keyed by room code, so it survives a closed tab or a phone browser killing the page
+// (a seat can only be re-entered with its token once the game has started). `?tab=NAME` namespaces the keys, so several tabs on
+// one machine can still play as different players (testing).
+const TAB = new URLSearchParams(location.search).get('tab') || '';
+const sessKey = code => 'dn-session:' + (TAB ? TAB + ':' : '') + code, lastKey = 'dn-last' + (TAB ? ':' + TAB : '');
+const saved = () => { try { const c = urlCode() || localStorage.getItem(lastKey); return c ? JSON.parse(localStorage.getItem(sessKey(c)) || 'null') : null; } catch { return null; } };
+const saveSession = s => { try { localStorage.setItem(sessKey(s.code), JSON.stringify(s)); localStorage.setItem(lastKey, s.code); } catch { /* private mode: seat only lives until the page closes */ } };
+const forgetSession = code => { try { localStorage.removeItem(sessKey(code)); if (localStorage.getItem(lastKey) === code) localStorage.removeItem(lastKey); } catch {} };
 
 socket.on('connect', async () => {
   const s = saved();
-  if (s && (!urlCode() || urlCode() === s.code)) { const r = await emit(socket, 'player:join', { code: s.code, token: s.token, name: s.name }); if (r.ok) session = s; else { sessionStorage.removeItem('dn-session'); } }
+  if (s && (!urlCode() || urlCode() === s.code)) { const r = await emit(socket, 'player:join', { code: s.code, token: s.token, name: s.name }); if (r.ok) session = s; else { forgetSession(s.code); } }
   render();
 });
 socket.on('state', st => {
@@ -43,13 +50,13 @@ socket.on('state', st => {
   setTimerFrom(st); render();
   if (st.me || st.phase === 'LOBBY') DNAudio.onState(st);
 });
-socket.on('kicked', () => { sessionStorage.removeItem('dn-session'); session = null; S = null; error = 'คุณถูกเชิญออกจากห้อง'; render(); });
+socket.on('kicked', () => { if (session) forgetSession(session.code); session = null; S = null; error = 'คุณถูกเชิญออกจากห้อง'; render(); });
 
 async function join() {
   const code = ($('#jcode').value || '').trim().toUpperCase(), name = ($('#jname').value || '').trim();
   const r = await emit(socket, 'player:join', { code, name });
   if (!r.ok) { error = r.error; return render(); }
-  session = { code: r.code, token: r.token, name: r.name }; sessionStorage.setItem('dn-session', JSON.stringify(session)); error = '';
+  session = { code: r.code, token: r.token, name: r.name }; saveSession(session); error = '';
 }
 async function act(ev, data) { const r = await emit(socket, ev, data); if (!r.ok) { error = r.error; } else error = ''; render(); }
 const me = () => S.me;
@@ -236,7 +243,7 @@ function nightHTML() {
   const m = me(), s = m.spec, dk = S.dark;
   const need = Math.max(s?.t || 0, 0);
   const banned = m.skillsBanned, snack = m.snack, skillOK = m.skillOK;
-  const skillLabel = `✨ ใช้สกิล: ${esc(s ? s.skill : '—')}${m.role === 'mystery_intern' && m.copy ? ` (ก๊อปจาก ${esc(m.copyFrom)} → ${esc(m.copyName)})` : ''}${m.once && m.used ? ' (ใช้แล้ว)' : ''}`;
+  const skillLabel = `✨ ใช้สกิล: ${esc(s ? s.skill : '—')}${m.role === 'mystery_intern' && m.copy ? ` (ก๊อป → ${esc(m.copyName)})` : ''}${m.once && m.used ? ' (ใช้แล้ว)' : ''}`;
   const restLabel = snack ? '🍩 พักกินขนม (คุ้มกันจากคำสาป)' : banned ? '🚨 แก้บั๊ก Production ร่วมกัน (ห้ามใช้สกิล)' : '😴 ' + (skillOK ? 'เก็บสกิลไว้' : (m.locked ? 'บาเรียแตก — ใช้สกิลไม่ได้คืนนี้' : 'ไม่มีสกิลให้ใช้'));
   const tpick = UI.choice === 'SKILL' && need > 0 ? `<p class="hint">เลือกเป้าหมาย ${need} คน (เลือกแล้ว ${UI.sel.length}/${need})</p><div class="targets">${m.candidates.map(id => `<button class="btn ${UI.sel.includes(id) ? 'sel' : ''}" onclick="toggleT(${id})">${esc(pname(id))}${id === m.id ? ' (ตัวเอง)' : ''}</button>`).join('')}${(m.repeatBlocked || []).map(id => `<button class="btn" disabled title="ห้ามเป้าเดิมติดกัน">${esc(pname(id))} (ซ้ำเมื่อคืน)</button>`).join('')}</div>` : '';
   const recruiter = UI.choice === 'SKILL' && m.role === 'soul_recruiter' ? `<div class="opts">${opt(!UI.plus1, false, 'chooseMode(false)', '👁️ ส่องเป้าหมายลับ', `ดูว่า ${esc(m.targetName)} โดนใครโหวตในรอบล่าสุด`)}${opt(UI.plus1, m.plus1Used, 'chooseMode(true)', '🎯 ยัดคะแนน +1 ใส่เป้าหมายลับ', m.plus1Used ? 'ใช้สิทธิ์แล้ว' : `ใส่ ${esc(m.targetName)} ในรอบโหวตพรุ่งนี้ (1 ครั้ง/เกม)`)}</div>` : '';
