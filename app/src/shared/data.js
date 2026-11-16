@@ -78,4 +78,30 @@ const TRAPTHUMB = '/thumbs/traps/';
 const EVTHUMB = '/thumbs/events/';
 const ROLETHUMB = '/thumbs/roles/';        // 300px
 const ROLETHUMB_MD = '/thumbs/roles-md/';  // 600px   // ภาพย่อ 300px สร้างด้วย tools/make_thumbs.py
-if (typeof module !== 'undefined') module.exports = { IMG, EVIMG, TRAPIMG, TRAPTHUMB, BOOSTERIMG, BOOSTERTHUMB, EVTHUMB, ROLETHUMB, ROLETHUMB_MD, DAYS, FNAME, ROLES, useLimit, LIGHT, DARK, INDIE, EVENTS, TRAPS, BOOSTERS };
+// Quick-reply chat phrases (single source; index 12 = Skip phrase). Sent as plain p:chat text.
+const QUICK_REPLIES = [
+  'ซัสสส ชัดเจน',
+  'เงียบแบบนี้ ฝ่ายมืดชัวร์',
+  'พูดเยอะผิดปกตินะ',
+  'แก้ตัวน้ำขุ่นๆ',
+  'เมื่อคืนแอบไปไหนมา?',
+  'รีบโหวตจัง กลัวอะไร?',
+  'เล่นเนียนเกินไปแล้ว',
+  'ไม่ต้องเนียน รู้หมดแล้ว',
+  'ฉันใสซื่อที่สุดในห้อง',
+  'เชื่อฉัน รอดทั้งห้อง',
+  'ใครตามน้ำ คนนั้นซัส',
+  'โหวตผิดอย่าร้องนะ',
+  'ขอโหวต Skip รอบนี้',
+  'ฉันเห็นนะ อย่าคิดว่าไม่เห็น',
+  'อ้าว เมื่อกี้พูดอีกอย่างนี่',
+  'ปกป้องกันจัง ทีมเดียวกันป่าว?',
+  'เดดไลน์จ่อคอ ยังจะเนียนอีก',
+  'ลองเคลมมาดิ กล้าไหม',
+  'ฟังดูดีนะ แต่ไม่เชื่อ',
+  'โหวตแรงขนาดนี้ มีอะไรป่าว',
+  'งานไม่เดินเพราะใครกันน้า',
+  'ขอหลักฐานด้วย อย่ามโน',
+  'ฝ่ายมืดคืนนี้นอนไม่หลับแน่',
+];
+if (typeof module !== 'undefined') module.exports = { IMG, EVIMG, TRAPIMG, TRAPTHUMB, BOOSTERIMG, BOOSTERTHUMB, EVTHUMB, ROLETHUMB, ROLETHUMB_MD, DAYS, FNAME, ROLES, useLimit, LIGHT, DARK, INDIE, EVENTS, TRAPS, BOOSTERS, QUICK_REPLIES };
