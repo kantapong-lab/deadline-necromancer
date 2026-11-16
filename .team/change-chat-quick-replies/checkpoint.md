@@ -1,5 +1,5 @@
 # Checkpoint: change-chat-quick-replies
-Updated: step 7 · round 1
+Updated: step 7 · round 2
 
 ## Goal
 ปรับแก้หน้า player ในส่วนของ chat
@@ -30,12 +30,14 @@ gate 3c passed · user: "อนุมัติ (Recommended); server: ไม่�
 ## Decisions in force
 
 ## Loop counters
-7:qa-tester 1/3
+7:qa-tester 2/3
 
 ## Open blockers
-- B-1 · - · FE · rounds open 1
+- B-2 · - · BE · rounds open 1
 
 ## History
 - step 7 r1: QA fail: AC 14/14 pass, B-1 chatBusy stuck on lost ack (FE) [7-r1]
+- step 7 r2: B-1 closed (28/28); B-2 stale http-parity re-recorded by Orchestrator (only /, /?room, /index.html changed), npm test exit 0 [7-r2]
 
 [7-r1]: rounds/7-r1.md
+[7-r2]: rounds/7-r2.md
