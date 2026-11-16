@@ -99,7 +99,7 @@ function chatErrText(er, len) {
 }
 // p:chat emit raced against a 5s timeout so a lost ack cannot leave chatBusy stuck; the draft is kept on timeout
 function chatEmit(text) {
-  return Promise.race([emit(socket, 'p:chat', { text }), new Promise(res => setTimeout(() => res({ ok: false, error: 'ส่งไม่สำเร็จ ลองอีกครั้ง' }), 5000))]);
+  return Promise.race([emit(socket, 'p:chat', { text }), new Promise(res => setTimeout(() => res({ ok: false, error: 'ยังไม่ได้รับการยืนยัน อาจส่งแล้ว ดูในแชทก่อนส่งซ้ำ' }), 5000))]);
 }
 async function sendChat(e) {
   e.preventDefault(); if (chatBusy) return;
@@ -114,7 +114,7 @@ async function sendChat(e) {
   if (r.ok) { if (chatDraft === raw) chatDraft = ''; setChatErr(''); error = ''; }   // keep text typed while the send was in flight
   else { error = ''; setChatErr(chatErrText(r.error, len)); }                        // reject: text stays (chatDraft untouched)
   render();
-  const n = $('#chatIn'); if (n) n.value = chatDraft;                                // `i` is detached after a mid-send re-render
+  const n = $('#chatIn'); if (n) { n.value = chatDraft; if (r.ok && !n.disabled) n.focus({ preventScroll: true }); }   // `i` is detached after a mid-send re-render; refocus so ส่ง by click keeps typing flow
 }
 async function quick(i) {
   const t = qrList()[i]; if (!t || chatBusy) return;
