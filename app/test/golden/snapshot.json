@@ -5,14 +5,14 @@
    "key": "6:6000",
    "n": 6,
    "seed": 6000,
-   "steps": 157,
-   "final": "87eadf2cde17e1f0ba491ff40201b04c0267a0a67eb24a31ae1bdc9dbf188f36",
+   "steps": 122,
+   "final": "c2c29f7ada1c84bd8fc3f1111bbd89fe22289f53bfe378798982f96178225517",
    "over": {
     "side": "dark",
     "why": "ฝ่ายมืดมีจำนวนมากกว่าหรือเท่ากับฝ่ายแสงแล้ว — บริษัทล่มสลาย",
     "winners": [
      0,
-     4
+     3
     ]
    },
    "day": 4
@@ -21,14 +21,14 @@
    "key": "6:6001",
    "n": 6,
    "seed": 6001,
-   "steps": 170,
-   "final": "be9f11469cfd7d6536bd88c8d9d6a02ad3015d476f67b9aa8550aa82f27e949f",
+   "steps": 167,
+   "final": "22c3b09bb356b3015212c0c43dea94cd17e2c10d688016c67c0cb93ef03754a2",
    "over": {
     "side": "dark",
     "why": "หมดวันศุกร์แล้ว โปรเจกต์ยังไม่เสร็จ — ลัทธิอู้งานยื้อสำเร็จ",
     "winners": [
      2,
-     3
+     4
     ]
    },
    "day": 5
@@ -37,30 +37,30 @@
    "key": "6:6002",
    "n": 6,
    "seed": 6002,
-   "steps": 76,
-   "final": "3dd0085c9269e01b3ad2367b4aa9ebeb2a7a4a28ecabc6bb74a5877c5eb4e356",
+   "steps": 97,
+   "final": "e24d800777663cdd79a0954637289f162c06f2d1d120bd1514f43186b2e4fdb7",
    "over": {
     "side": "dark",
     "why": "ฝ่ายมืดมีจำนวนมากกว่าหรือเท่ากับฝ่ายแสงแล้ว — บริษัทล่มสลาย",
     "winners": [
-     2,
-     5
+     1,
+     4
     ]
    },
-   "day": 2
+   "day": 3
   },
   {
    "key": "6:6003",
    "n": 6,
    "seed": 6003,
-   "steps": 169,
-   "final": "6196c834cfa23febe81c6ff5a28545591f58111d82d8dc0650c2e5e0513697ec",
+   "steps": 176,
+   "final": "691ad269957243ae9c5ea734a779d710b749e0b04e2736a811d541aeec838752",
    "over": {
     "side": "dark",
     "why": "หมดวันศุกร์แล้ว โปรเจกต์ยังไม่เสร็จ — ลัทธิอู้งานยื้อสำเร็จ",
     "winners": [
      0,
-     3
+     1
     ]
    },
    "day": 5
@@ -70,14 +70,14 @@
    "n": 6,
    "seed": 6004,
    "steps": 24,
-   "final": "a882fa3981dc1ce0665b206d324e69a7e6dd34c6e4c7372f922ffef05d6c0541",
+   "final": "ee25f751fd06a7915d06a401ae86bca30ccace8cccae96c5ca2ed2e777c21b64",
    "over": {
     "side": "light",
     "why": "Mana Task เต็ม 100% — ส่งงานทัน Deadline!",
     "winners": [
      0,
+     1,
      2,
-     3,
      4
     ]
    },
@@ -87,26 +87,26 @@
    "key": "6:6005",
    "n": 6,
    "seed": 6005,
-   "steps": 57,
-   "final": "facb883618a5defe4f1b64a1a2fbe688bcc72358858bd6a3c5fee277c4b07603",
+   "steps": 26,
+   "final": "423d34df8e24808beac36cc69b231d265bdf9806fcccdc279a6762daf161ea42",
    "over": {
     "side": "light",
     "why": "Mana Task เต็ม 100% — ส่งงานทัน Deadline!",
     "winners": [
-     2,
+     0,
+     1,
      3,
-     4,
-     5
+     4
     ]
    },
-   "day": 2
+   "day": 1
   },
   {
    "key": "6:6006",
    "n": 6,
    "seed": 6006,
-   "steps": 105,
-   "final": "a29706cabbc01a34d3acc6bbfbbcd928f290c4d3a0f9eb1c6f73613515d2a9db",
+   "steps": 102,
+   "final": "f91040d76c43da99f299bf5b7987bfc6da17bc058ff4cf1b50f5027f5c8ca50b",
    "over": {
     "side": "light",
     "why": "Mana Task เต็ม 100% — ส่งงานทัน Deadline!",
@@ -123,30 +123,98 @@
    "key": "6:6007",
    "n": 6,
    "seed": 6007,
-   "steps": 179,
-   "final": "8e194033b951fabc60a9b2ee22888585225d189e70cdfd9a18ab8dc1bc27a1a1",
+   "steps": 114,
+   "final": "253a9bcdf59138ff5a97d8e0571811d74d36ce1cccb11e293941148edaa34fe7",
    "over": {
     "side": "dark",
-    "why": "หมดวันศุกร์แล้ว โปรเจกต์ยังไม่เสร็จ — ลัทธิอู้งานยื้อสำเร็จ",
+    "why": "ฝ่ายมืดมีจำนวนมากกว่าหรือเท่ากับฝ่ายแสงแล้ว — บริษัทล่มสลาย",
     "winners": [
-     0,
+     1,
      3
     ]
    },
-   "day": 5
+   "day": 3
   },
   {
    "key": "6:6008",
    "n": 6,
    "seed": 6008,
-   "steps": 26,
-   "final": "6a90396f1a1df6197912f3eb1c9a9c73ae626f2c957e78151a80c520796705ed",
+   "steps": 70,
+   "final": "821aac8055d7f9b1bc0a19587bb79846f56e58b8670061726edf44c5b7311127",
+   "over": {
+    "side": "dark",
+    "why": "ฝ่ายมืดมีจำนวนมากกว่าหรือเท่ากับฝ่ายแสงแล้ว — บริษัทล่มสลาย",
+    "winners": [
+     1,
+     4
+    ]
+   },
+   "day": 2
+  },
+  {
+   "key": "6:6009",
+   "n": 6,
+   "seed": 6009,
+   "steps": 106,
+   "final": "f18cf32154c0e69dddf71e656d4ec96b91806a224dd29cbf5b45fb7c813f0682",
    "over": {
     "side": "light",
     "why": "Mana Task เต็ม 100% — ส่งงานทัน Deadline!",
     "winners": [
+     0,
+     3,
+     4,
+     5
+    ]
+   },
+   "day": 3
+  },
+  {
+   "key": "6:6010",
+   "n": 6,
+   "seed": 6010,
+   "steps": 137,
+   "final": "f6d2bbfa558fd601fb6b42252b8870c38a1ce9bc0c88f70b421a9ab5b5545330",
+   "over": {
+    "side": "dark",
+    "why": "ฝ่ายมืดมีจำนวนมากกว่าหรือเท่ากับฝ่ายแสงแล้ว — บริษัทล่มสลาย",
+    "winners": [
+     2,
+     5
+    ]
+   },
+   "day": 4
+  },
+  {
+   "key": "6:6011",
+   "n": 6,
+   "seed": 6011,
+   "steps": 77,
+   "final": "427b984dcae2f4c598dbef05f6dc3502f5e5492f7603122e283b0ea4331415a2",
+   "over": {
+    "side": "light",
+    "why": "Mana Task เต็ม 100% — ส่งงานทัน Deadline!",
+    "winners": [
+     0,
      1,
      2,
+     3
+    ]
+   },
+   "day": 3
+  },
+  {
+   "key": "6:6012",
+   "n": 6,
+   "seed": 6012,
+   "steps": 24,
+   "final": "b9d57636d28acd66e556028bcbd7c77093eba64ef2599e37b0b67e6bf8feb0fb",
+   "over": {
+    "side": "light",
+    "why": "Mana Task เต็ม 100% — ส่งงานทัน Deadline!",
+    "winners": [
+     0,
+     1,
      3,
      5
     ]
@@ -154,84 +222,18 @@
    "day": 1
   },
   {
-   "key": "6:6009",
-   "n": 6,
-   "seed": 6009,
-   "steps": 137,
-   "final": "ab090e4ddcbe81c4a6602b5880b2f041138a840e6cbd67d2aa5996f4270c0fc6",
-   "over": {
-    "side": "light",
-    "why": "Mana Task เต็ม 100% — ส่งงานทัน Deadline!",
-    "winners": [
-     0,
-     2,
-     3,
-     4
-    ]
-   },
-   "day": 4
-  },
-  {
-   "key": "6:6010",
-   "n": 6,
-   "seed": 6010,
-   "steps": 58,
-   "final": "187039886f95d040fadf654605da2d7f12b79f3c7490cfe68f1fa7e12fab5951",
-   "over": {
-    "side": "dark",
-    "why": "ฝ่ายมืดมีจำนวนมากกว่าหรือเท่ากับฝ่ายแสงแล้ว — บริษัทล่มสลาย",
-    "winners": [
-     2,
-     3
-    ]
-   },
-   "day": 2
-  },
-  {
-   "key": "6:6011",
-   "n": 6,
-   "seed": 6011,
-   "steps": 68,
-   "final": "31de61e1e0602f319a6a5c81c6576d57630ffdd15f88a10c1bdeb8430bdf2467",
-   "over": {
-    "side": "dark",
-    "why": "ฝ่ายมืดมีจำนวนมากกว่าหรือเท่ากับฝ่ายแสงแล้ว — บริษัทล่มสลาย",
-    "winners": [
-     0,
-     2
-    ]
-   },
-   "day": 2
-  },
-  {
-   "key": "6:6012",
-   "n": 6,
-   "seed": 6012,
-   "steps": 134,
-   "final": "5874d2d842d65a9f83021440c4e57693c1e9c80985adeae410c3555eef47f702",
-   "over": {
-    "side": "light",
-    "why": "Mana Task เต็ม 100% — ส่งงานทัน Deadline!",
-    "winners": [
-     0,
-     1,
-     4,
-     5
-    ]
-   },
-   "day": 4
-  },
-  {
    "key": "6:6013",
    "n": 6,
    "seed": 6013,
-   "steps": 70,
-   "final": "498852c00d4a3bd9556a94f5869d8a3de209412cff13cf1e63f8198695ef3593",
+   "steps": 39,
+   "final": "b7c004a62070da278815000e74b5da7a7eb04f61f0f1a8c8a0e42daa95fafd89",
    "over": {
-    "side": "dark",
-    "why": "ฝ่ายมืดมีจำนวนมากกว่าหรือเท่ากับฝ่ายแสงแล้ว — บริษัทล่มสลาย",
+    "side": "light",
+    "why": "Mana Task เต็ม 100% — ส่งงานทัน Deadline!",
     "winners": [
+     0,
      1,
+     2,
      5
     ]
    },
@@ -241,48 +243,44 @@
    "key": "6:6014",
    "n": 6,
    "seed": 6014,
-   "steps": 202,
-   "final": "cb27b0081cbb0f2d2dd5e0fab7d7df0d91992f81b88262200c9dee1734605155",
+   "steps": 72,
+   "final": "d0a778e9a13f98b908b58e0a260f7f1e9267af7bbeac1f5d2cf9673d3d55a4f6",
    "over": {
     "side": "dark",
-    "why": "หมดวันศุกร์แล้ว โปรเจกต์ยังไม่เสร็จ — ลัทธิอู้งานยื้อสำเร็จ",
+    "why": "ฝ่ายมืดมีจำนวนมากกว่าหรือเท่ากับฝ่ายแสงแล้ว — บริษัทล่มสลาย",
     "winners": [
      0,
-     4
+     5
     ]
    },
-   "day": 5
+   "day": 2
   },
   {
    "key": "6:6015",
    "n": 6,
    "seed": 6015,
-   "steps": 118,
-   "final": "43f8a12c29fad42254a4605f2b0e980b35aef13dc00d4513f1d4cc8d44269c15",
+   "steps": 68,
+   "final": "d24e671d88f20e9b5ca31c8def93a1acf1ad067ae184fd55f112900ca6cc4ce0",
    "over": {
-    "side": "light",
-    "why": "Mana Task เต็ม 100% — ส่งงานทัน Deadline!",
+    "side": "dark",
+    "why": "ฝ่ายมืดมีจำนวนมากกว่าหรือเท่ากับฝ่ายแสงแล้ว — บริษัทล่มสลาย",
     "winners": [
-     1,
-     3,
-     4,
-     5
+     0,
+     1
     ]
    },
-   "day": 4
+   "day": 2
   },
   {
    "key": "6:6016",
    "n": 6,
    "seed": 6016,
-   "steps": 147,
-   "final": "a046456875c86e6f724f98aaf1f68fa6d1bb1d9fb30bf4e4b9030612a0a11a1b",
+   "steps": 163,
+   "final": "3542d0d50385b0ad9029cff33c15bddd34593d8f5e8537712eff124c0940e7f6",
    "over": {
-    "side": "light",
-    "why": "Mana Task เต็ม 100% — ส่งงานทัน Deadline!",
+    "side": "dark",
+    "why": "หมดวันศุกร์แล้ว โปรเจกต์ยังไม่เสร็จ — ลัทธิอู้งานยื้อสำเร็จ",
     "winners": [
-     0,
-     2,
      3,
      5
     ]
@@ -293,50 +291,46 @@
    "key": "6:6017",
    "n": 6,
    "seed": 6017,
-   "steps": 90,
-   "final": "72821cb8aebfc6a5512a36e5219804b4226eadefe0178e28e22e675b6ab30a56",
+   "steps": 158,
+   "final": "d55b1b5c9031782c38dedbf67ee3730328f02e4e5fe8aef858b7f3add6583c65",
    "over": {
-    "side": "light",
-    "why": "Mana Task เต็ม 100% — ส่งงานทัน Deadline!",
+    "side": "dark",
+    "why": "หมดวันศุกร์แล้ว โปรเจกต์ยังไม่เสร็จ — ลัทธิอู้งานยื้อสำเร็จ",
     "winners": [
-     1,
-     2,
-     3,
+     0,
      4
     ]
    },
-   "day": 3
+   "day": 5
   },
   {
    "key": "6:6018",
    "n": 6,
    "seed": 6018,
-   "steps": 26,
-   "final": "6199d0da3da04c71ca3af558bd272e334df7cbc994bb35b813a0b1ce2b95029d",
+   "steps": 107,
+   "final": "f3c9e9b15d9a54e744222d60dbb03ad4ff5542a5ea40d4817fcf44caca1bfbba",
    "over": {
-    "side": "light",
-    "why": "Mana Task เต็ม 100% — ส่งงานทัน Deadline!",
+    "side": "dark",
+    "why": "ฝ่ายมืดมีจำนวนมากกว่าหรือเท่ากับฝ่ายแสงแล้ว — บริษัทล่มสลาย",
     "winners": [
-     1,
      2,
-     3,
-     4
+     5
     ]
    },
-   "day": 1
+   "day": 3
   },
   {
    "key": "6:6019",
    "n": 6,
    "seed": 6019,
-   "steps": 179,
-   "final": "bc4ec1f74774792b8b7b088f21f7ce07e5d99653cb0055abe934f954811586fc",
+   "steps": 170,
+   "final": "8abba40e4bb84d49b21becec9a6c2843d6c1e8d1c9e15aeb93b1c9aa5a6dc26e",
    "over": {
     "side": "dark",
     "why": "หมดวันศุกร์แล้ว โปรเจกต์ยังไม่เสร็จ — ลัทธิอู้งานยื้อสำเร็จ",
     "winners": [
      1,
-     4
+     2
     ]
    },
    "day": 5
@@ -345,13 +339,13 @@
    "key": "6:6020",
    "n": 6,
    "seed": 6020,
-   "steps": 172,
-   "final": "c89a3b5b0b0b78b62f07797fc117b6b6757c8d1a855aa1f19d036249451ec4ab",
+   "steps": 179,
+   "final": "b1f70c1febb7c268b1017894213bc597ac17dfd7a09332a9dd425cbf1ea8f3b0",
    "over": {
     "side": "dark",
     "why": "หมดวันศุกร์แล้ว โปรเจกต์ยังไม่เสร็จ — ลัทธิอู้งานยื้อสำเร็จ",
     "winners": [
-     1,
+     3,
      4
     ]
    },
@@ -361,48 +355,46 @@
    "key": "6:6021",
    "n": 6,
    "seed": 6021,
-   "steps": 72,
-   "final": "abb07da9adda8b0e7aadef7e493e295c252b3b757af2966fef71362649adbda5",
+   "steps": 123,
+   "final": "2ee50a6459cde2b29c6f4031dfd0752aa9cbfa07e494ae0c37a78f18c1e89982",
    "over": {
     "side": "dark",
     "why": "ฝ่ายมืดมีจำนวนมากกว่าหรือเท่ากับฝ่ายแสงแล้ว — บริษัทล่มสลาย",
     "winners": [
-     0,
+     1,
      2
     ]
    },
-   "day": 2
+   "day": 3
   },
   {
    "key": "6:6022",
    "n": 6,
    "seed": 6022,
-   "steps": 26,
-   "final": "e42ccd670ee0e8e7f40fb0b77395e8f98bb0a694860b7ab05272199e3204e790",
+   "steps": 118,
+   "final": "571f066fecb565d2e6f18cc1aac753c02c8fd03d15b333cd7d1aadd5ac97caa1",
    "over": {
-    "side": "light",
-    "why": "Mana Task เต็ม 100% — ส่งงานทัน Deadline!",
+    "side": "dark",
+    "why": "ฝ่ายมืดมีจำนวนมากกว่าหรือเท่ากับฝ่ายแสงแล้ว — บริษัทล่มสลาย",
     "winners": [
-     0,
      1,
-     3,
-     4
+     5
     ]
    },
-   "day": 1
+   "day": 4
   },
   {
    "key": "6:6023",
    "n": 6,
    "seed": 6023,
    "steps": 74,
-   "final": "535127a19e088e59584833b375144b491c643424c1de54aa06654f3809076332",
+   "final": "1820e72e141c67156590e18344bcb035012825159b34ccba2585cc572e59e74d",
    "over": {
     "side": "dark",
     "why": "ฝ่ายมืดมีจำนวนมากกว่าหรือเท่ากับฝ่ายแสงแล้ว — บริษัทล่มสลาย",
     "winners": [
-     1,
-     2
+     2,
+     4
     ]
    },
    "day": 2
@@ -411,66 +403,64 @@
    "key": "6:6024",
    "n": 6,
    "seed": 6024,
-   "steps": 25,
-   "final": "0459347b4c723093546563de7990006b97f4f893b2339d01082dbbca3b7d4bf9",
+   "steps": 119,
+   "final": "71ff13619280311af322a2a48a0325bd6a079406a04ce4720af3df25a90c9da8",
    "over": {
-    "side": "light",
-    "why": "Mana Task เต็ม 100% — ส่งงานทัน Deadline!",
+    "side": "dark",
+    "why": "ฝ่ายมืดมีจำนวนมากกว่าหรือเท่ากับฝ่ายแสงแล้ว — บริษัทล่มสลาย",
     "winners": [
-     0,
-     2,
-     4,
-     5
+     1,
+     4
     ]
    },
-   "day": 1
+   "day": 3
   },
   {
    "key": "6:6025",
    "n": 6,
    "seed": 6025,
-   "steps": 70,
-   "final": "3c0f82c38cceeb8de3fefdd50d3c50b37c017cfcab26762b904e9a9d50ea521a",
+   "steps": 126,
+   "final": "cc8656286889abba19fed5ff5e134816435c67719f6a0e721c018ee1e142b926",
    "over": {
     "side": "dark",
     "why": "ฝ่ายมืดมีจำนวนมากกว่าหรือเท่ากับฝ่ายแสงแล้ว — บริษัทล่มสลาย",
     "winners": [
-     3,
-     5
+     2,
+     3
     ]
    },
-   "day": 2
+   "day": 4
   },
   {
    "key": "6:6026",
    "n": 6,
    "seed": 6026,
-   "steps": 194,
-   "final": "e7ebcd44c2edddcc17d6c85ab3cea62e526b70d8cb2a6b169a480ba769b0c24b",
+   "steps": 64,
+   "final": "77f2a1e07f039b14b854b32dbbbaae30bc6b658a6eaabccc8d33431fc810ce19",
    "over": {
     "side": "dark",
-    "why": "หมดวันศุกร์แล้ว โปรเจกต์ยังไม่เสร็จ — ลัทธิอู้งานยื้อสำเร็จ",
+    "why": "ฝ่ายมืดมีจำนวนมากกว่าหรือเท่ากับฝ่ายแสงแล้ว — บริษัทล่มสลาย",
     "winners": [
      0,
-     3
+     2
     ]
    },
-   "day": 5
+   "day": 2
   },
   {
    "key": "6:6027",
    "n": 6,
    "seed": 6027,
-   "steps": 70,
-   "final": "95d74e27af5d6bbc088b061a20aa1501c6b0ce29c7d91046df5bf1fc98a11ee3",
+   "steps": 71,
+   "final": "e4ada4978fcb301ee8a5769893bcbfa2ffec94dc53c92ac2f4048c7719bb8655",
    "over": {
     "side": "light",
     "why": "Mana Task เต็ม 100% — ส่งงานทัน Deadline!",
     "winners": [
      0,
-     1,
      3,
-     4
+     4,
+     5
     ]
    },
    "day": 2
@@ -479,8 +469,40 @@
    "key": "6:6028",
    "n": 6,
    "seed": 6028,
-   "steps": 134,
-   "final": "49e13a4dc502c3cd5f73820a83418d955177c4e87b55fe24d94a3a93c81cf828",
+   "steps": 169,
+   "final": "0bb7b28ac16aa05c16e87462bc9f22facbea6552899692bd954ac88dba619429",
+   "over": {
+    "side": "dark",
+    "why": "หมดวันศุกร์แล้ว โปรเจกต์ยังไม่เสร็จ — ลัทธิอู้งานยื้อสำเร็จ",
+    "winners": [
+     3,
+     5
+    ]
+   },
+   "day": 5
+  },
+  {
+   "key": "6:6029",
+   "n": 6,
+   "seed": 6029,
+   "steps": 78,
+   "final": "48e0a0a465034fb1bc38d98b406f2bbe271fbd618f165130309d0b88ae431597",
+   "over": {
+    "side": "dark",
+    "why": "ฝ่ายมืดมีจำนวนมากกว่าหรือเท่ากับฝ่ายแสงแล้ว — บริษัทล่มสลาย",
+    "winners": [
+     1,
+     3
+    ]
+   },
+   "day": 2
+  },
+  {
+   "key": "6:6030",
+   "n": 6,
+   "seed": 6030,
+   "steps": 53,
+   "final": "db5699c9dcbc7c7f632901fed9c4b15a9d9f33933e625527ac5dc5e5cb9c1872",
    "over": {
     "side": "light",
     "why": "Mana Task เต็ม 100% — ส่งงานทัน Deadline!",
@@ -488,38 +510,6 @@
      0,
      2,
      3,
-     4
-    ]
-   },
-   "day": 4
-  },
-  {
-   "key": "6:6029",
-   "n": 6,
-   "seed": 6029,
-   "steps": 88,
-   "final": "3a5d54a0b4325c4f6d697764b629dc0c0a9c4f7ce3c1822f2b9b08e0eab9ace3",
-   "over": {
-    "side": "dark",
-    "why": "ฝ่ายมืดมีจำนวนมากกว่าหรือเท่ากับฝ่ายแสงแล้ว — บริษัทล่มสลาย",
-    "winners": [
-     3,
-     4
-    ]
-   },
-   "day": 3
-  },
-  {
-   "key": "6:6030",
-   "n": 6,
-   "seed": 6030,
-   "steps": 67,
-   "final": "5744deaeccfd8d3a9fd1f901243ed4852c54e39a99d73f238224bc7c5f9bcfd8",
-   "over": {
-    "side": "dark",
-    "why": "ฝ่ายมืดมีจำนวนมากกว่าหรือเท่ากับฝ่ายแสงแล้ว — บริษัทล่มสลาย",
-    "winners": [
-     2,
      5
     ]
    },
@@ -529,74 +519,92 @@
    "key": "6:6031",
    "n": 6,
    "seed": 6031,
-   "steps": 49,
-   "final": "ca3c6073c459fa0f862ca4b3f26d3417d075d08dbc99456aa8f6f29d4a84a9be",
+   "steps": 146,
+   "final": "bbecb232bb93410cce33219115a6e8269d366475885020a1c4753eadeebbf54b",
    "over": {
     "side": "dark",
     "why": "ฝ่ายมืดมีจำนวนมากกว่าหรือเท่ากับฝ่ายแสงแล้ว — บริษัทล่มสลาย",
     "winners": [
-     2,
+     0,
      4
     ]
    },
-   "day": 2
+   "day": 5
   },
   {
    "key": "6:6032",
    "n": 6,
    "seed": 6032,
-   "steps": 60,
-   "final": "eca310ef19b765d29f624155889b7885ca738a3e1514f0399cc5244775ca2b1e",
+   "steps": 97,
+   "final": "11b61bdf79a67723ff2a3d0a334ea111dab341836d2df3b5c57702228ad3e341",
    "over": {
-    "side": "dark",
-    "why": "ฝ่ายมืดมีจำนวนมากกว่าหรือเท่ากับฝ่ายแสงแล้ว — บริษัทล่มสลาย",
+    "side": "light",
+    "why": "Mana Task เต็ม 100% — ส่งงานทัน Deadline!",
     "winners": [
+     0,
      2,
+     3,
      4
     ]
    },
-   "day": 2
+   "day": 3
   },
   {
    "key": "6:6033",
    "n": 6,
    "seed": 6033,
-   "steps": 67,
-   "final": "f610119aea299a2700d16fba98d1d34c2fea4f1977e26bc372d1df4c1d4e0f75",
+   "steps": 166,
+   "final": "a3852f870f5200458fa487ea49fb405d1bb76115f6771123a8348ea549773c00",
    "over": {
     "side": "dark",
-    "why": "ฝ่ายมืดมีจำนวนมากกว่าหรือเท่ากับฝ่ายแสงแล้ว — บริษัทล่มสลาย",
+    "why": "หมดวันศุกร์แล้ว โปรเจกต์ยังไม่เสร็จ — ลัทธิอู้งานยื้อสำเร็จ",
     "winners": [
      0,
-     2
+     4
     ]
    },
-   "day": 2
+   "day": 5
   },
   {
    "key": "6:6034",
    "n": 6,
    "seed": 6034,
-   "steps": 54,
-   "final": "7e7c64a4606460b037f979c486b4c58e3429f3dab9f472ed7c0abd71c5635635",
+   "steps": 24,
+   "final": "586b5863e5af3f368876c95a1ee537751c99c4a296bfda5c4785f394b199820a",
    "over": {
     "side": "light",
     "why": "Mana Task เต็ม 100% — ส่งงานทัน Deadline!",
     "winners": [
+     0,
      1,
-     3,
-     4,
-     5
+     2,
+     4
     ]
    },
-   "day": 2
+   "day": 1
   },
   {
    "key": "6:6035",
    "n": 6,
    "seed": 6035,
-   "steps": 57,
-   "final": "b2f977011ac527033164177d3db534b2e1ecf4b080911ec6442753a447dbffba",
+   "steps": 101,
+   "final": "117ab697d69be17dd2740b14669878bbb1715d5f706b4f8430f591521a2f73c1",
+   "over": {
+    "side": "dark",
+    "why": "ฝ่ายมืดมีจำนวนมากกว่าหรือเท่ากับฝ่ายแสงแล้ว — บริษัทล่มสลาย",
+    "winners": [
+     1,
+     2
+    ]
+   },
+   "day": 3
+  },
+  {
+   "key": "6:6036",
+   "n": 6,
+   "seed": 6036,
+   "steps": 92,
+   "final": "18bc906fd13d086fc9c891ecb8b373b3c37178a8357d01d791dc68615a7b2fd4",
    "over": {
     "side": "light",
     "why": "Mana Task เต็ม 100% — ส่งงานทัน Deadline!",
@@ -604,25 +612,7 @@
      0,
      2,
      3,
-     5
-    ]
-   },
-   "day": 2
-  },
-  {
-   "key": "6:6036",
-   "n": 6,
-   "seed": 6036,
-   "steps": 77,
-   "final": "4f2e24650e7afee2033870eb3e90fa4f075425707f854505e5909f979982bfd2",
-   "over": {
-    "side": "light",
-    "why": "Mana Task เต็ม 100% — ส่งงานทัน Deadline!",
-    "winners": [
-     0,
-     1,
-     3,
-     5
+     4
     ]
    },
    "day": 3
@@ -631,14 +621,14 @@
    "key": "6:6037",
    "n": 6,
    "seed": 6037,
-   "steps": 161,
-   "final": "24e5df0db0457553e78ec167b2e920e12bde505c4ab095ec750cc478646ceee8",
+   "steps": 148,
+   "final": "49bc2174cb1193ede743501efa13d5524f87150b2f8cf59025a04d1371f63622",
    "over": {
     "side": "dark",
     "why": "หมดวันศุกร์แล้ว โปรเจกต์ยังไม่เสร็จ — ลัทธิอู้งานยื้อสำเร็จ",
     "winners": [
-     1,
-     2
+     3,
+     5
     ]
    },
    "day": 5
@@ -647,63 +637,65 @@
    "key": "6:6038",
    "n": 6,
    "seed": 6038,
-   "steps": 169,
-   "final": "8f0e40f76ac7bb33bc7d2d9572abb0a1111f84239d31b49eaa6d33c271450b5c",
-   "over": {
-    "side": "dark",
-    "why": "หมดวันศุกร์แล้ว โปรเจกต์ยังไม่เสร็จ — ลัทธิอู้งานยื้อสำเร็จ",
-    "winners": [
-     0,
-     3
-    ]
-   },
-   "day": 5
-  },
-  {
-   "key": "6:6039",
-   "n": 6,
-   "seed": 6039,
-   "steps": 56,
-   "final": "2bfb45c5332e2c2806548194a07f7072ea06d8c82ff5dc848c61605e955cffdf",
-   "over": {
-    "side": "light",
-    "why": "Mana Task เต็ม 100% — ส่งงานทัน Deadline!",
-    "winners": [
-     0,
-     1,
-     4,
-     5
-    ]
-   },
-   "day": 2
-  },
-  {
-   "key": "6:6040",
-   "n": 6,
-   "seed": 6040,
-   "steps": 70,
-   "final": "3d534ca4ade2959b8c7ab91f2be67996a367cfddaf8991958a44e618448cdfab",
+   "steps": 66,
+   "final": "0c280fdf60b2ccd6582253024e630b2acfec362ddebbb1b555bc4748945db5b3",
    "over": {
     "side": "dark",
     "why": "ฝ่ายมืดมีจำนวนมากกว่าหรือเท่ากับฝ่ายแสงแล้ว — บริษัทล่มสลาย",
     "winners": [
      0,
-     3
+     2
     ]
    },
    "day": 2
+  },
+  {
+   "key": "6:6039",
+   "n": 6,
+   "seed": 6039,
+   "steps": 128,
+   "final": "ae7fe5f1f1d5cbc33e60680b013bb632d3b4ab24996adf9d7730db1a3a2df6ef",
+   "over": {
+    "side": "dark",
+    "why": "ฝ่ายมืดมีจำนวนมากกว่าหรือเท่ากับฝ่ายแสงแล้ว — บริษัทล่มสลาย",
+    "winners": [
+     3,
+     5
+    ]
+   },
+   "day": 4
+  },
+  {
+   "key": "6:6040",
+   "n": 6,
+   "seed": 6040,
+   "steps": 87,
+   "final": "c3741e342c4aa894b22c619667582ac7ccbd8b95abc1c70384216586abbfe620",
+   "over": {
+    "side": "light",
+    "why": "Mana Task เต็ม 100% — ส่งงานทัน Deadline!",
+    "winners": [
+     2,
+     3,
+     4,
+     5
+    ]
+   },
+   "day": 3
   },
   {
    "key": "6:6041",
    "n": 6,
    "seed": 6041,
    "steps": 89,
-   "final": "fad4fda5aad1da69d1df84160ded8e64ecd995a971c7390b70c4ca15d2e1f842",
+   "final": "3b523306c03ee22f8e16875c6f2e69e46e62e892fd659d5da369bb06c94823d3",
    "over": {
-    "side": "dark",
-    "why": "ฝ่ายมืดมีจำนวนมากกว่าหรือเท่ากับฝ่ายแสงแล้ว — บริษัทล่มสลาย",
+    "side": "light",
+    "why": "Mana Task เต็ม 100% — ส่งงานทัน Deadline!",
     "winners": [
+     0,
      1,
+     3,
      4
     ]
    },
@@ -713,13 +705,13 @@
    "key": "6:6042",
    "n": 6,
    "seed": 6042,
-   "steps": 166,
-   "final": "8c9d79e2e1a4093748b56659d1aa7749ea6e955b89cd2af6c2f0c0e00c30c6a4",
+   "steps": 152,
+   "final": "a6f69c75d7b624c126e65d926d7517dbef55d325bfca9d40f54bb7195e00a9b8",
    "over": {
     "side": "dark",
     "why": "หมดวันศุกร์แล้ว โปรเจกต์ยังไม่เสร็จ — ลัทธิอู้งานยื้อสำเร็จ",
     "winners": [
-     2,
+     1,
      4
     ]
    },
@@ -729,16 +721,14 @@
    "key": "6:6043",
    "n": 6,
    "seed": 6043,
-   "steps": 148,
-   "final": "012f1332755a1c0355fb83eadcaaa4b61befe3a0113a9ed2fd81a8698306ef5d",
+   "steps": 123,
+   "final": "8dbc9bd229b52027606cd0062123bf596b7371236f8e1fe438bbf07651582bf5",
    "over": {
-    "side": "light",
-    "why": "Mana Task เต็ม 100% — ส่งงานทัน Deadline!",
+    "side": "dark",
+    "why": "ฝ่ายมืดมีจำนวนมากกว่าหรือเท่ากับฝ่ายแสงแล้ว — บริษัทล่มสลาย",
     "winners": [
-     0,
-     1,
      2,
-     3
+     5
     ]
    },
    "day": 4
@@ -747,16 +737,14 @@
    "key": "6:6044",
    "n": 6,
    "seed": 6044,
-   "steps": 151,
-   "final": "b90e92d077b72cd1b30ef66b011cdaf71bad0700c3f2f9aedb5447dbba642f27",
+   "steps": 162,
+   "final": "cb7e5e8e787e5ebf818bde3a4fd331aa5200f407f4c070a4cbb56b0a42ec7afc",
    "over": {
-    "side": "light",
-    "why": "Mana Task เต็ม 100% — ส่งงานทัน Deadline!",
+    "side": "dark",
+    "why": "หมดวันศุกร์แล้ว โปรเจกต์ยังไม่เสร็จ — ลัทธิอู้งานยื้อสำเร็จ",
     "winners": [
-     1,
-     3,
-     4,
-     5
+     2,
+     3
     ]
    },
    "day": 5
@@ -765,33 +753,33 @@
    "key": "7:7000",
    "n": 7,
    "seed": 7000,
-   "steps": 63,
-   "final": "fada83573da8e13c2725ec1c4f8426cfdae297dc6878fd35bc59e8c9bc59fe5b",
+   "steps": 30,
+   "final": "920ac26cb45b416dfe3bc8287e14ab8d6947b6f8e4369472a63d50725d0f43dd",
    "over": {
     "side": "light",
     "why": "Mana Task เต็ม 100% — ส่งงานทัน Deadline!",
     "winners": [
-     1,
-     3,
+     0,
+     2,
      4,
      5
     ]
    },
-   "day": 2
+   "day": 1
   },
   {
    "key": "7:7001",
    "n": 7,
    "seed": 7001,
-   "steps": 64,
-   "final": "869d81f7856a9c9998cd073c49d2f7659dd7a02a7ee56fe5a5713f86c8cea182",
+   "steps": 65,
+   "final": "35f3213975b0904ac42635f7a445fb5d1575ef16e3ffe38211619d44088acc61",
    "over": {
     "side": "light",
     "why": "Mana Task เต็ม 100% — ส่งงานทัน Deadline!",
     "winners": [
+     2,
      3,
      4,
-     5,
      6
     ]
    },
@@ -801,16 +789,14 @@
    "key": "7:7002",
    "n": 7,
    "seed": 7002,
-   "steps": 86,
-   "final": "b75c086e36ed37e30c35a721ecba7b3dcb5748b4e42cb45a73ad3e63e36d7d82",
+   "steps": 96,
+   "final": "0db89aa53f27718837bd57fcf0df83a79de654a3d5b731cff62be3ec22d84b16",
    "over": {
-    "side": "light",
-    "why": "Mana Task เต็ม 100% — ส่งงานทัน Deadline!",
+    "side": "dark",
+    "why": "ฝ่ายมืดมีจำนวนมากกว่าหรือเท่ากับฝ่ายแสงแล้ว — บริษัทล่มสลาย",
     "winners": [
      0,
-     1,
-     2,
-     6
+     4
     ]
    },
    "day": 3
@@ -819,30 +805,31 @@
    "key": "7:7003",
    "n": 7,
    "seed": 7003,
-   "steps": 159,
-   "final": "ba5d26a52b65cc8fd4a68dc86cb8cf785334aade8d8d29ec71c528fbd6fab5c3",
+   "steps": 139,
+   "final": "8ad4ff62b7fefb318cfb4a920720de723e0f26ea85d5910118751530e508f447",
    "over": {
     "side": "dark",
     "why": "ฝ่ายมืดมีจำนวนมากกว่าหรือเท่ากับฝ่ายแสงแล้ว — บริษัทล่มสลาย",
     "winners": [
-     0,
-     2
+     3,
+     6
     ]
    },
-   "day": 5
+   "day": 4
   },
   {
    "key": "7:7004",
    "n": 7,
    "seed": 7004,
-   "steps": 187,
-   "final": "09611f2aba38b1d1462653520f531fe4dfe6506c15e939e456a8140bf2ebe69a",
+   "steps": 179,
+   "final": "06899fa2a6fd036ee4a6fc44b1e8c84c507b1a8834d8fb8e508f0d573d5858f7",
    "over": {
     "side": "dark",
     "why": "หมดวันศุกร์แล้ว โปรเจกต์ยังไม่เสร็จ — ลัทธิอู้งานยื้อสำเร็จ",
     "winners": [
      1,
-     2
+     4,
+     5
     ]
    },
    "day": 5
@@ -851,26 +838,24 @@
    "key": "7:7005",
    "n": 7,
    "seed": 7005,
-   "steps": 109,
-   "final": "bce7592f34a89552ae6c894344ff12a98bf561ae9df6a39a574dd8b16f122294",
+   "steps": 196,
+   "final": "b832ec4b4afe91ee088b4257d44ff10311c4a1e4d80de0e39252b17fdcf36f00",
    "over": {
-    "side": "light",
-    "why": "Mana Task เต็ม 100% — ส่งงานทัน Deadline!",
+    "side": "dark",
+    "why": "หมดวันศุกร์แล้ว โปรเจกต์ยังไม่เสร็จ — ลัทธิอู้งานยื้อสำเร็จ",
     "winners": [
-     0,
-     2,
-     3,
-     5
+     4,
+     6
     ]
    },
-   "day": 3
+   "day": 5
   },
   {
    "key": "7:7006",
    "n": 7,
    "seed": 7006,
-   "steps": 156,
-   "final": "408c2791b01a21d4a5e62ce478e985a0eeb7e796508a8b7521aa9f4e9ebcaf51",
+   "steps": 174,
+   "final": "95cdf9e0941f6c39da431b9624260691c97b3adbf904b8c05089cdcf45624c6a",
    "over": {
     "side": "dark",
     "why": "ฝ่ายมืดมีจำนวนมากกว่าหรือเท่ากับฝ่ายแสงแล้ว — บริษัทล่มสลาย",
@@ -879,21 +864,21 @@
      6
     ]
    },
-   "day": 4
+   "day": 5
   },
   {
    "key": "7:7007",
    "n": 7,
    "seed": 7007,
-   "steps": 25,
-   "final": "2b00496b64593c15e6343349ecb73cd1b12c660f2df29153cbc684b5640bf98d",
+   "steps": 27,
+   "final": "9cf2413e9eb31648aab769d922b2ed058196ea9f44bb09ebeb151f1a5b04e529",
    "over": {
     "side": "light",
     "why": "Mana Task เต็ม 100% — ส่งงานทัน Deadline!",
     "winners": [
-     0,
+     2,
      3,
-     4,
+     5,
      6
     ]
    },
@@ -903,17 +888,15 @@
    "key": "7:7008",
    "n": 7,
    "seed": 7008,
-   "steps": 166,
-   "final": "b9a26f2779e51596deb7cd4b5fd29eeaf77b5a27335c8e9fc941cdd0a00daf84",
+   "steps": 189,
+   "final": "e1b106f87c1ed23607c2bb9b363d3a7f93336d6334114acbecbd7fb575dbd0c5",
    "over": {
-    "side": "light",
-    "why": "Mana Task เต็ม 100% — ส่งงานทัน Deadline!",
+    "side": "dark",
+    "why": "หมดวันศุกร์แล้ว โปรเจกต์ยังไม่เสร็จ — ลัทธิอู้งานยื้อสำเร็จ",
     "winners": [
      0,
-     2,
-     3,
      4,
-     6
+     5
     ]
    },
    "day": 5
@@ -922,47 +905,51 @@
    "key": "7:7009",
    "n": 7,
    "seed": 7009,
-   "steps": 184,
-   "final": "3bdb65c3d7082f9c19195d924faf9fedb2c518c47c40af30936185a162f74f46",
-   "over": {
-    "side": "dark",
-    "why": "หมดวันศุกร์แล้ว โปรเจกต์ยังไม่เสร็จ — ลัทธิอู้งานยื้อสำเร็จ",
-    "winners": [
-     1,
-     5
-    ]
-   },
-   "day": 5
-  },
-  {
-   "key": "7:7010",
-   "n": 7,
-   "seed": 7010,
-   "steps": 112,
-   "final": "5c53d4b1aa24d20f4a02d79d9de2c612ad4675ec86dcf03210ac134950f9bd0b",
+   "steps": 104,
+   "final": "4b544bf96d5e5bd4228818be8659cbe3d7d3b46fd00f884873d29e4079104a58",
    "over": {
     "side": "dark",
     "why": "ฝ่ายมืดมีจำนวนมากกว่าหรือเท่ากับฝ่ายแสงแล้ว — บริษัทล่มสลาย",
     "winners": [
      0,
-     3,
-     5
+     4
     ]
    },
    "day": 3
   },
   {
+   "key": "7:7010",
+   "n": 7,
+   "seed": 7010,
+   "steps": 26,
+   "final": "0305eaf1043bbc04683724d517ac14416d39cc6a0792b4c90ffe9c284eec09dc",
+   "over": {
+    "side": "light",
+    "why": "Mana Task เต็ม 100% — ส่งงานทัน Deadline!",
+    "winners": [
+     2,
+     3,
+     4,
+     5
+    ]
+   },
+   "day": 1
+  },
+  {
    "key": "7:7011",
    "n": 7,
    "seed": 7011,
-   "steps": 117,
-   "final": "db9687c7cb93b422867b3248412b2f88e38d5612706e82dfe913bec84a6dfd17",
+   "steps": 100,
+   "final": "24cb804e9c7e1886cf500f0e332b589e4f5c6bb6a9c6e8dedd23f33171c2b4fd",
    "over": {
-    "side": "dark",
-    "why": "ฝ่ายมืดมีจำนวนมากกว่าหรือเท่ากับฝ่ายแสงแล้ว — บริษัทล่มสลาย",
+    "side": "light",
+    "why": "Mana Task เต็ม 100% — ส่งงานทัน Deadline!",
     "winners": [
+     0,
      1,
-     5
+     3,
+     5,
+     6
     ]
    },
    "day": 3
@@ -971,32 +958,30 @@
    "key": "7:7012",
    "n": 7,
    "seed": 7012,
-   "steps": 28,
-   "final": "06e4c9f8a628409bdfc91ef321bb9dc3d7731acad01f4c5e0340acd3588ca680",
+   "steps": 192,
+   "final": "fad455673de06d5bca4b4d356587c66d8d40acb356d672699df27cd7523a17d1",
    "over": {
-    "side": "light",
-    "why": "Mana Task เต็ม 100% — ส่งงานทัน Deadline!",
+    "side": "dark",
+    "why": "ฝ่ายมืดมีจำนวนมากกว่าหรือเท่ากับฝ่ายแสงแล้ว — บริษัทล่มสลาย",
     "winners": [
-     0,
-     1,
      2,
-     6
+     5
     ]
    },
-   "day": 1
+   "day": 5
   },
   {
    "key": "7:7013",
    "n": 7,
    "seed": 7013,
-   "steps": 175,
-   "final": "8d14bbcfe17f46f93afc67dfa415edc1942338f96b1c26a5edecbaab65472d9e",
+   "steps": 164,
+   "final": "12511e66787330404afc301a32021c506afef8e6f7e8eed5f2e7ae64177a519c",
    "over": {
     "side": "dark",
     "why": "หมดวันศุกร์แล้ว โปรเจกต์ยังไม่เสร็จ — ลัทธิอู้งานยื้อสำเร็จ",
     "winners": [
-     4,
-     6
+     1,
+     2
     ]
    },
    "day": 5
@@ -1005,46 +990,46 @@
    "key": "7:7014",
    "n": 7,
    "seed": 7014,
-   "steps": 172,
-   "final": "cebd3ac76912207e423dd79d1a43c392bfe9583eda86002fda1ac1f3dd0601bb",
+   "steps": 78,
+   "final": "c77dee1d0a6cbf127b24b6bf11079c75c8c92e89eb17b0fc77ad76b878e1c9d5",
    "over": {
     "side": "dark",
     "why": "ฝ่ายมืดมีจำนวนมากกว่าหรือเท่ากับฝ่ายแสงแล้ว — บริษัทล่มสลาย",
     "winners": [
-     1,
-     3
-    ]
-   },
-   "day": 5
-  },
-  {
-   "key": "7:7015",
-   "n": 7,
-   "seed": 7015,
-   "steps": 63,
-   "final": "7514ef6f7b4ea39fd710f0943ae9219012fcba9c7ae98e1eee3949dc1383fcd6",
-   "over": {
-    "side": "dark",
-    "why": "ฝ่ายมืดมีจำนวนมากกว่าหรือเท่ากับฝ่ายแสงแล้ว — บริษัทล่มสลาย",
-    "winners": [
-     0,
-     3
+     4,
+     6
     ]
    },
    "day": 2
   },
   {
+   "key": "7:7015",
+   "n": 7,
+   "seed": 7015,
+   "steps": 113,
+   "final": "ab1bbbe1cd7bfbeafedd11691e5ff8d6ded7b2e98a8ee94d34bf5222747fe653",
+   "over": {
+    "side": "dark",
+    "why": "ฝ่ายมืดมีจำนวนมากกว่าหรือเท่ากับฝ่ายแสงแล้ว — บริษัทล่มสลาย",
+    "winners": [
+     5,
+     6
+    ]
+   },
+   "day": 3
+  },
+  {
    "key": "7:7016",
    "n": 7,
    "seed": 7016,
-   "steps": 202,
-   "final": "7b858e63bac4c09c67e1fa9ab1547d9e8ec3905891cb61b60efe6ca9fbb830f0",
+   "steps": 190,
+   "final": "329331227dfebd49e8e8b29f0f4f392066f749c22f9b98e81b2d12b018fbd1f3",
    "over": {
     "side": "dark",
     "why": "หมดวันศุกร์แล้ว โปรเจกต์ยังไม่เสร็จ — ลัทธิอู้งานยื้อสำเร็จ",
     "winners": [
      2,
-     3
+     4
     ]
    },
    "day": 5
@@ -1053,32 +1038,33 @@
    "key": "7:7017",
    "n": 7,
    "seed": 7017,
-   "steps": 110,
-   "final": "d94c5d46a2dfab38f2d813e56f2d126f8c131daa53ffa5c1341e61694672be55",
+   "steps": 80,
+   "final": "fc532507210ef15191a7cdc66a5afc019d5f42765f139611e0e773af0c774355",
    "over": {
     "side": "light",
     "why": "Mana Task เต็ม 100% — ส่งงานทัน Deadline!",
     "winners": [
      0,
+     2,
      3,
-     4,
+     5,
      6
     ]
    },
-   "day": 3
+   "day": 2
   },
   {
    "key": "7:7018",
    "n": 7,
    "seed": 7018,
-   "steps": 181,
-   "final": "cfb8da423e5ab05bd5daa1710a3b7e573cdeb391ddd660840e181cc1aa004535",
+   "steps": 172,
+   "final": "484776c70f86533e39d0587c8ccf0f55024079e141472fc8a3887f159d470f0f",
    "over": {
     "side": "dark",
     "why": "หมดวันศุกร์แล้ว โปรเจกต์ยังไม่เสร็จ — ลัทธิอู้งานยื้อสำเร็จ",
     "winners": [
-     1,
-     3
+     4,
+     6
     ]
    },
    "day": 5
@@ -1087,15 +1073,13 @@
    "key": "7:7019",
    "n": 7,
    "seed": 7019,
-   "steps": 61,
-   "final": "7b83322882ae43625301b853365624dbe6f2b677b5572f29a1cff1b02574bad8",
+   "steps": 76,
+   "final": "3e7672478f9ed0fb8f392ce836bd4aa06f28c87620a6494c9482a6b363d5c770",
    "over": {
-    "side": "light",
-    "why": "Mana Task เต็ม 100% — ส่งงานทัน Deadline!",
+    "side": "dark",
+    "why": "ฝ่ายมืดมีจำนวนมากกว่าหรือเท่ากับฝ่ายแสงแล้ว — บริษัทล่มสลาย",
     "winners": [
-     2,
-     3,
-     4,
+     0,
      6
     ]
    },
@@ -1105,63 +1089,62 @@
    "key": "7:7020",
    "n": 7,
    "seed": 7020,
-   "steps": 109,
-   "final": "11f304df239200dcfe3c9b6668fe46000bacb88a5cc88796a3f35e87ef422f5e",
+   "steps": 174,
+   "final": "d9b134c7f35bb814c13d1dfd888262cb9423954d4c7f42134f2841da10cf8e1c",
    "over": {
     "side": "dark",
     "why": "ฝ่ายมืดมีจำนวนมากกว่าหรือเท่ากับฝ่ายแสงแล้ว — บริษัทล่มสลาย",
     "winners": [
-     3,
-     6
+     2,
+     4
     ]
    },
-   "day": 3
+   "day": 5
   },
   {
    "key": "7:7021",
    "n": 7,
    "seed": 7021,
-   "steps": 110,
-   "final": "5f2591bf65e62ad591ebf2f93cdb235db943432e07861fc8286ae0e782c5b950",
+   "steps": 186,
+   "final": "a4a06c91db95533989756bcff6961fdba000a04c3d5dcf0534b7d6ec715581d4",
    "over": {
     "side": "dark",
     "why": "ฝ่ายมืดมีจำนวนมากกว่าหรือเท่ากับฝ่ายแสงแล้ว — บริษัทล่มสลาย",
     "winners": [
-     0,
+     2,
      3
     ]
    },
-   "day": 3
+   "day": 5
   },
   {
    "key": "7:7022",
    "n": 7,
    "seed": 7022,
-   "steps": 125,
-   "final": "a3f1b1fae93a911229a33a8ab8e5ad768d8b05e8072937d44e9eda587d92d8fb",
+   "steps": 85,
+   "final": "31f2e883c434629c6fc62aaffd2f7920f9253d7d3bf0eabaa1a0a14ebaf19e66",
    "over": {
     "side": "dark",
     "why": "ฝ่ายมืดมีจำนวนมากกว่าหรือเท่ากับฝ่ายแสงแล้ว — บริษัทล่มสลาย",
     "winners": [
-     2,
-     5
+     0,
+     1
     ]
    },
-   "day": 3
+   "day": 2
   },
   {
    "key": "7:7023",
    "n": 7,
    "seed": 7023,
-   "steps": 167,
-   "final": "c122fa19f2fc20cc09f5a976d2dffba292c4bd7d6a9849444db8992a7ecf3835",
+   "steps": 163,
+   "final": "d2b7c6c476d32cf21b6395067577740c6720badf61a454f37a8b5b3d4c9c4c30",
    "over": {
     "side": "dark",
     "why": "หมดวันศุกร์แล้ว โปรเจกต์ยังไม่เสร็จ — ลัทธิอู้งานยื้อสำเร็จ",
     "winners": [
-     1,
-     2,
-     3
+     0,
+     1
     ]
    },
    "day": 5
@@ -1170,48 +1153,48 @@
    "key": "7:7024",
    "n": 7,
    "seed": 7024,
-   "steps": 175,
-   "final": "08545129ba5197f1b1cda5dab4a77cf6547e21b8a2eb8e8a59c975b671c67321",
+   "steps": 154,
+   "final": "e2be2c4f348379236f53cb6e15a432dc5248c3f5f80faeb9b5ac0b835de0c78d",
    "over": {
     "side": "dark",
-    "why": "หมดวันศุกร์แล้ว โปรเจกต์ยังไม่เสร็จ — ลัทธิอู้งานยื้อสำเร็จ",
+    "why": "ฝ่ายมืดมีจำนวนมากกว่าหรือเท่ากับฝ่ายแสงแล้ว — บริษัทล่มสลาย",
     "winners": [
-     2,
-     4
+     4,
+     6
     ]
    },
-   "day": 5
+   "day": 4
   },
   {
    "key": "7:7025",
    "n": 7,
    "seed": 7025,
-   "steps": 78,
-   "final": "5a515f0e5e5cf8c8fbec711c85c214fc2a1bbb5884f4b6e070a84df40b3c74b1",
+   "steps": 107,
+   "final": "8918bfec27c13d8221fa1f6c2aa383dedce0e74a035d0f55d6b216a072c1bc9f",
    "over": {
     "side": "light",
     "why": "Mana Task เต็ม 100% — ส่งงานทัน Deadline!",
     "winners": [
-     1,
      2,
      4,
+     5,
      6
     ]
    },
-   "day": 2
+   "day": 3
   },
   {
    "key": "7:7026",
    "n": 7,
    "seed": 7026,
-   "steps": 190,
-   "final": "8b11e1eacf3e818171492eb088f543742fea0ec76c4cdf8b94c81254450fbfb0",
+   "steps": 170,
+   "final": "aa5ea01a385f83e5fc57cc4dc6a73e9f81464959402977c8ce2142103a295474",
    "over": {
     "side": "dark",
     "why": "หมดวันศุกร์แล้ว โปรเจกต์ยังไม่เสร็จ — ลัทธิอู้งานยื้อสำเร็จ",
     "winners": [
-     0,
-     6
+     3,
+     4
     ]
    },
    "day": 5
@@ -1220,32 +1203,32 @@
    "key": "7:7027",
    "n": 7,
    "seed": 7027,
-   "steps": 70,
-   "final": "c18e412f53ff1507865e3b56612794cb2257af8df2815b3e92ae00c059626a3c",
+   "steps": 29,
+   "final": "ec349843cc3fddbacbeb7cf84b98a291a1a92206dbc8d23b7972d96252c8b766",
    "over": {
     "side": "light",
     "why": "Mana Task เต็ม 100% — ส่งงานทัน Deadline!",
     "winners": [
+     0,
      1,
      4,
-     5,
      6
     ]
    },
-   "day": 2
+   "day": 1
   },
   {
    "key": "7:7028",
    "n": 7,
    "seed": 7028,
-   "steps": 172,
-   "final": "4c0df3df11737e9f28bf0a967823837eef11a07fae12dcfabef126aa1ddbf4df",
+   "steps": 173,
+   "final": "dca37469f273e10d99b76b9423575f4c8f1b94bb0652a5a3f26039e059541943",
    "over": {
     "side": "dark",
     "why": "ฝ่ายมืดมีจำนวนมากกว่าหรือเท่ากับฝ่ายแสงแล้ว — บริษัทล่มสลาย",
     "winners": [
      0,
-     1
+     3
     ]
    },
    "day": 5
@@ -1254,8 +1237,76 @@
    "key": "7:7029",
    "n": 7,
    "seed": 7029,
-   "steps": 25,
-   "final": "2101147a66d9f1466d62e0f88e6ee897717bdfc9a20903abb41edcdc5720ee40",
+   "steps": 128,
+   "final": "3a79348aeeaf1c8473d0485c6bac3dd009ae02c3a8c85a08d10fc2b317372292",
+   "over": {
+    "side": "light",
+    "why": "Mana Task เต็ม 100% — ส่งงานทัน Deadline!",
+    "winners": [
+     0,
+     2,
+     4,
+     6
+    ]
+   },
+   "day": 3
+  },
+  {
+   "key": "7:7030",
+   "n": 7,
+   "seed": 7030,
+   "steps": 97,
+   "final": "78df1e0eee08ef746c4888f9d14e00f877fed0b66b50eaaf20764797e6a9dd2d",
+   "over": {
+    "side": "dark",
+    "why": "ฝ่ายมืดมีจำนวนมากกว่าหรือเท่ากับฝ่ายแสงแล้ว — บริษัทล่มสลาย",
+    "winners": [
+     2,
+     5,
+     6
+    ]
+   },
+   "day": 3
+  },
+  {
+   "key": "7:7031",
+   "n": 7,
+   "seed": 7031,
+   "steps": 132,
+   "final": "6dc146c984b585f0e5368266f0de237c8999caa62e11f8d4734d3c991a47bf18",
+   "over": {
+    "side": "dark",
+    "why": "ฝ่ายมืดมีจำนวนมากกว่าหรือเท่ากับฝ่ายแสงแล้ว — บริษัทล่มสลาย",
+    "winners": [
+     0,
+     2
+    ]
+   },
+   "day": 4
+  },
+  {
+   "key": "7:7032",
+   "n": 7,
+   "seed": 7032,
+   "steps": 71,
+   "final": "69b2cbb059a62297e5bd69986c7fefa3a169c46c326d12f3ed7059933ff4ce35",
+   "over": {
+    "side": "dark",
+    "why": "ฝ่ายมืดมีจำนวนมากกว่าหรือเท่ากับฝ่ายแสงแล้ว — บริษัทล่มสลาย",
+    "winners": [
+     3,
+     4,
+     5
+    ]
+   },
+   "day": 2
+  },
+  {
+   "key": "7:7033",
+   "n": 7,
+   "seed": 7033,
+   "steps": 159,
+   "final": "ad8a49e38c85bd50f3fe4b36fda937c0bea1ed0c87262aa8c802015fc4fbeb59",
    "over": {
     "side": "light",
     "why": "Mana Task เต็ม 100% — ส่งงานทัน Deadline!",
@@ -1263,72 +1314,7 @@
      0,
      1,
      2,
-     3,
-     5
-    ]
-   },
-   "day": 1
-  },
-  {
-   "key": "7:7030",
-   "n": 7,
-   "seed": 7030,
-   "steps": 136,
-   "final": "9c70dab6982eb1b3af7f7f8b10c5cefa604df247a99bce7ca64d369fb9d5df54",
-   "over": {
-    "side": "dark",
-    "why": "ฝ่ายมืดมีจำนวนมากกว่าหรือเท่ากับฝ่ายแสงแล้ว — บริษัทล่มสลาย",
-    "winners": [
-     1,
      4
-    ]
-   },
-   "day": 4
-  },
-  {
-   "key": "7:7031",
-   "n": 7,
-   "seed": 7031,
-   "steps": 115,
-   "final": "d9318cc0baa2216726a118cf22540c5ae94846cb0f997ac624409583d0eb254b",
-   "over": {
-    "side": "dark",
-    "why": "ฝ่ายมืดมีจำนวนมากกว่าหรือเท่ากับฝ่ายแสงแล้ว — บริษัทล่มสลาย",
-    "winners": [
-     0,
-     3
-    ]
-   },
-   "day": 3
-  },
-  {
-   "key": "7:7032",
-   "n": 7,
-   "seed": 7032,
-   "steps": 205,
-   "final": "40f04a6cb0984530a2a7ee9b09a00ca71bb33e45c2fb36c6391516ef12b0e266",
-   "over": {
-    "side": "dark",
-    "why": "หมดวันศุกร์แล้ว โปรเจกต์ยังไม่เสร็จ — ลัทธิอู้งานยื้อสำเร็จ",
-    "winners": [
-     2,
-     5
-    ]
-   },
-   "day": 5
-  },
-  {
-   "key": "7:7033",
-   "n": 7,
-   "seed": 7033,
-   "steps": 213,
-   "final": "03f8f24ade7926da92c321d780f62c27c49f843d96522615dee86c8eb9516aeb",
-   "over": {
-    "side": "dark",
-    "why": "หมดวันศุกร์แล้ว โปรเจกต์ยังไม่เสร็จ — ลัทธิอู้งานยื้อสำเร็จ",
-    "winners": [
-     2,
-     5
     ]
    },
    "day": 5
@@ -1337,31 +1323,32 @@
    "key": "7:7034",
    "n": 7,
    "seed": 7034,
-   "steps": 133,
-   "final": "f297dea3c84285917ad0fffde816dac57bccca4fbd471ed3c98ff09dc3ea99c5",
+   "steps": 66,
+   "final": "323d42047a88ee78d60eae9896920727d48d4e8f2afc084dc246990353f21d42",
    "over": {
-    "side": "dark",
-    "why": "ฝ่ายมืดมีจำนวนมากกว่าหรือเท่ากับฝ่ายแสงแล้ว — บริษัทล่มสลาย",
+    "side": "light",
+    "why": "Mana Task เต็ม 100% — ส่งงานทัน Deadline!",
     "winners": [
-     3,
+     0,
+     2,
      4,
      5
     ]
    },
-   "day": 4
+   "day": 2
   },
   {
    "key": "7:7035",
    "n": 7,
    "seed": 7035,
-   "steps": 112,
-   "final": "9a37436da4edf907012d3eba286d0d91e1bde1fe98e95d08c097074b1891ab09",
+   "steps": 110,
+   "final": "4750a9feca62b15a68a1d19ac18c849eb334506b599731a06500d2451f50a87a",
    "over": {
     "side": "dark",
     "why": "ฝ่ายมืดมีจำนวนมากกว่าหรือเท่ากับฝ่ายแสงแล้ว — บริษัทล่มสลาย",
     "winners": [
-     0,
-     1
+     5,
+     6
     ]
    },
    "day": 3
@@ -1370,16 +1357,14 @@
    "key": "7:7036",
    "n": 7,
    "seed": 7036,
-   "steps": 82,
-   "final": "c59725a513fb7611ed38c5bb9491bf81ba21fef6325a850ef587b19a4387e2eb",
+   "steps": 75,
+   "final": "4a189f32a38a5cdd9091b8102aff9e19ee3c10ba69f35e73d30013d6a9cf5a6d",
    "over": {
-    "side": "light",
-    "why": "Mana Task เต็ม 100% — ส่งงานทัน Deadline!",
+    "side": "dark",
+    "why": "ฝ่ายมืดมีจำนวนมากกว่าหรือเท่ากับฝ่ายแสงแล้ว — บริษัทล่มสลาย",
     "winners": [
-     0,
-     1,
-     2,
-     3
+     3,
+     4
     ]
    },
    "day": 2
@@ -1388,32 +1373,30 @@
    "key": "7:7037",
    "n": 7,
    "seed": 7037,
-   "steps": 155,
-   "final": "ee249aa85f3d9de832d0785837f87d85ee71688e0d5244dcea7ad7fb6e5c56a6",
+   "steps": 77,
+   "final": "c319d32f1682611c0b0dca74f2da6473c8ddfc2fd20ad973c5ea8fe7c8254c9c",
    "over": {
-    "side": "light",
-    "why": "Mana Task เต็ม 100% — ส่งงานทัน Deadline!",
+    "side": "dark",
+    "why": "ฝ่ายมืดมีจำนวนมากกว่าหรือเท่ากับฝ่ายแสงแล้ว — บริษัทล่มสลาย",
     "winners": [
-     1,
      2,
-     3,
-     5
+     4
     ]
    },
-   "day": 4
+   "day": 2
   },
   {
    "key": "7:7038",
    "n": 7,
    "seed": 7038,
-   "steps": 29,
-   "final": "db50ba41cb967012a0df298dc21e561223bcf3bbe2f16fc539edbf93b63758c4",
+   "steps": 27,
+   "final": "4698d21aa1b248b5b5c14864d03c06ccf8a83c086289f30063a05f64e89a6288",
    "over": {
     "side": "light",
     "why": "Mana Task เต็ม 100% — ส่งงานทัน Deadline!",
     "winners": [
+     0,
      3,
-     4,
      5,
      6
     ]
@@ -1424,31 +1407,29 @@
    "key": "7:7039",
    "n": 7,
    "seed": 7039,
-   "steps": 66,
-   "final": "09291541d43dd142fa2ba8e8f06f27fcc9666326c1aeeb2633328f6e7b99ed4d",
+   "steps": 185,
+   "final": "31feeb6f12bc0be7ed392c4edb8494df0177595bf1437d35391a7302944657a5",
    "over": {
-    "side": "light",
-    "why": "Mana Task เต็ม 100% — ส่งงานทัน Deadline!",
+    "side": "dark",
+    "why": "ฝ่ายมืดมีจำนวนมากกว่าหรือเท่ากับฝ่ายแสงแล้ว — บริษัทล่มสลาย",
     "winners": [
-     0,
-     1,
-     3,
+     2,
      5
     ]
    },
-   "day": 2
+   "day": 5
   },
   {
    "key": "7:7040",
    "n": 7,
    "seed": 7040,
-   "steps": 68,
-   "final": "47a14ccb73ca973526bdf7be7af2e63d7b5680ab2c2254bdf712ba3fc027f1d4",
+   "steps": 58,
+   "final": "8f3820a7659a5936a69251db41b9b229a7928c7a510cb6a03f13ce7171dead9a",
    "over": {
     "side": "light",
     "why": "Mana Task เต็ม 100% — ส่งงานทัน Deadline!",
     "winners": [
-     1,
+     0,
      3,
      4,
      5
@@ -1460,13 +1441,13 @@
    "key": "7:7041",
    "n": 7,
    "seed": 7041,
-   "steps": 198,
-   "final": "0faaa17a2d15ff8a63f852c3adf153c89a94d2068c1f10db3d85916e64b05af6",
+   "steps": 192,
+   "final": "b98359f681daa943ea12b895f5acc2dc2f9eee099f4baf645825d9019e02e76e",
    "over": {
     "side": "dark",
     "why": "หมดวันศุกร์แล้ว โปรเจกต์ยังไม่เสร็จ — ลัทธิอู้งานยื้อสำเร็จ",
     "winners": [
-     3,
+     1,
      4
     ]
    },
@@ -1476,30 +1457,32 @@
    "key": "7:7042",
    "n": 7,
    "seed": 7042,
-   "steps": 103,
-   "final": "48290c0bd4ba71e77c5e59523af103a6440c9eeb5ce25a651f41bc629e23ad27",
+   "steps": 28,
+   "final": "1400a45005460ef72d9ad357416fcea514a196dd788c3444ec3cb33ef2a97503",
    "over": {
-    "side": "dark",
-    "why": "ฝ่ายมืดมีจำนวนมากกว่าหรือเท่ากับฝ่ายแสงแล้ว — บริษัทล่มสลาย",
+    "side": "light",
+    "why": "Mana Task เต็ม 100% — ส่งงานทัน Deadline!",
     "winners": [
-     3,
-     4
+     0,
+     1,
+     4,
+     6
     ]
    },
-   "day": 3
+   "day": 1
   },
   {
    "key": "7:7043",
    "n": 7,
    "seed": 7043,
-   "steps": 164,
-   "final": "5a88d941835d76cc05c12b17e058b96c40c04edd7218266516f0174beaf114be",
+   "steps": 171,
+   "final": "b8e19a3e92d3dbfaee38dc7ae8e62b944e639c8d7d2eca8beaed1076baea64c3",
    "over": {
     "side": "dark",
-    "why": "ฝ่ายมืดมีจำนวนมากกว่าหรือเท่ากับฝ่ายแสงแล้ว — บริษัทล่มสลาย",
+    "why": "หมดวันศุกร์แล้ว โปรเจกต์ยังไม่เสร็จ — ลัทธิอู้งานยื้อสำเร็จ",
     "winners": [
-     2,
-     3
+     0,
+     6
     ]
    },
    "day": 5
@@ -1508,80 +1491,97 @@
    "key": "7:7044",
    "n": 7,
    "seed": 7044,
-   "steps": 98,
-   "final": "69d9ab88a92b48216c9d2cba4eb6df45dfd9eb44760b6fdcae7c19ed2b212801",
+   "steps": 186,
+   "final": "fbdea5ad08445d6e8d991e2d6718763275c6d97c2a6a53ca4a09359c6e651615",
    "over": {
     "side": "light",
     "why": "Mana Task เต็ม 100% — ส่งงานทัน Deadline!",
     "winners": [
      0,
      1,
-     3,
-     5
+     2,
+     4
     ]
    },
-   "day": 3
+   "day": 5
   },
   {
    "key": "8:8000",
    "n": 8,
    "seed": 8000,
-   "steps": 142,
-   "final": "c61e09eec2bb667e543ffcf7cc21262fef9c54b4cb11b105fac8525e94d90f5d",
+   "steps": 85,
+   "final": "b08eb6366f826cfc4be4eeb486748276cc4a323199ac3319d86b8d81373314aa",
    "over": {
     "side": "light",
-    "why": "ไล่ฝ่ายมืดออกจากบริษัทจนหมดแล้ว!",
+    "why": "Mana Task เต็ม 100% — ส่งงานทัน Deadline!",
     "winners": [
      0,
-     2,
-     3,
+     1,
+     5,
      6,
      7
     ]
    },
-   "day": 4
+   "day": 2
   },
   {
    "key": "8:8001",
    "n": 8,
    "seed": 8001,
-   "steps": 197,
-   "final": "db46547d96e546d169d0ab82d9764470c7471400a6aaecafdd24e81cb14b5b87",
+   "steps": 171,
+   "final": "cd86d7174a80c6552fdf99a81107f953875111c5b2ad90aea043f43b394bbfa7",
    "over": {
     "side": "dark",
-    "why": "หมดวันศุกร์แล้ว โปรเจกต์ยังไม่เสร็จ — ลัทธิอู้งานยื้อสำเร็จ",
+    "why": "ฝ่ายมืดมีจำนวนมากกว่าหรือเท่ากับฝ่ายแสงแล้ว — บริษัทล่มสลาย",
     "winners": [
+     2,
+     6
+    ]
+   },
+   "day": 4
+  },
+  {
+   "key": "8:8002",
+   "n": 8,
+   "seed": 8002,
+   "steps": 193,
+   "final": "0c919e5ad1f29ed5b9ad9c2650c7688667e410321bf80db79d4b04f1f6cc6a54",
+   "over": {
+    "side": "light",
+    "why": "ไล่ฝ่ายมืดออกจากบริษัทจนหมดแล้ว!",
+    "winners": [
+     2,
      3,
+     4,
+     5,
      6
     ]
    },
    "day": 5
   },
   {
-   "key": "8:8002",
-   "n": 8,
-   "seed": 8002,
-   "steps": 78,
-   "final": "2bdd3d008af337796e0d752fa1b8974c410fd52cbb1b400c4102ccaddf408259",
-   "over": {
-    "side": "light",
-    "why": "Mana Task เต็ม 100% — ส่งงานทัน Deadline!",
-    "winners": [
-     0,
-     2,
-     3,
-     5,
-     6
-    ]
-   },
-   "day": 2
-  },
-  {
    "key": "8:8003",
    "n": 8,
    "seed": 8003,
-   "steps": 41,
-   "final": "99e588452188fabfd2436ea3a11c0ecd16bf9fa6be2c8772b7beff64fd5728b2",
+   "steps": 213,
+   "final": "c83abd0c03a0a4e5222f6187b6cc60396099dcb325c64f31a088323b9b8bc245",
+   "over": {
+    "side": "dark",
+    "why": "ฝ่ายมืดมีจำนวนมากกว่าหรือเท่ากับฝ่ายแสงแล้ว — บริษัทล่มสลาย",
+    "winners": [
+     1,
+     2,
+     7
+    ]
+   },
+   "day": 5
+  },
+  {
+   "key": "8:8004",
+   "n": 8,
+   "seed": 8004,
+   "steps": 81,
+   "final": "76e5de1f2ead8ab51a9b9bf0104b50d38784068b9369bd2ee83bffe06b5bcdc9",
    "over": {
     "side": "light",
     "why": "Mana Task เต็ม 100% — ส่งงานทัน Deadline!",
@@ -1589,24 +1589,8 @@
      0,
      1,
      2,
-     3,
-     6
-    ]
-   },
-   "day": 1
-  },
-  {
-   "key": "8:8004",
-   "n": 8,
-   "seed": 8004,
-   "steps": 127,
-   "final": "5032224580b69165f5075657c71d7f779d347bb05b0f201a129dd314314023e8",
-   "over": {
-    "side": "dark",
-    "why": "ฝ่ายมืดมีจำนวนมากกว่าหรือเท่ากับฝ่ายแสงแล้ว — บริษัทล่มสลาย",
-    "winners": [
-     5,
-     6
+     6,
+     7
     ]
    },
    "day": 3
@@ -1615,14 +1599,14 @@
    "key": "8:8005",
    "n": 8,
    "seed": 8005,
-   "steps": 177,
-   "final": "1ff4bb126009cddca8e1597c972da9592fc7bb1ef449bf580a239918ba66de1c",
+   "steps": 158,
+   "final": "bd5ed23035ec0ed11eb23be7e860217e60b079bb828f544630693adda157ffd0",
    "over": {
     "side": "dark",
     "why": "ฝ่ายมืดมีจำนวนมากกว่าหรือเท่ากับฝ่ายแสงแล้ว — บริษัทล่มสลาย",
     "winners": [
      0,
-     6
+     7
     ]
    },
    "day": 4
@@ -1631,14 +1615,34 @@
    "key": "8:8006",
    "n": 8,
    "seed": 8006,
-   "steps": 110,
-   "final": "8a37e8b9dded7ed17b0c2716b89a1ef5415a952d716d6623cf926cc3628a83b7",
+   "steps": 148,
+   "final": "22c383d279f839222875eb33c2bb82b82de91b52b56981288683be0f4342eed5",
    "over": {
     "side": "light",
     "why": "Mana Task เต็ม 100% — ส่งงานทัน Deadline!",
     "winners": [
      1,
      2,
+     4,
+     5,
+     6,
+     7
+    ]
+   },
+   "day": 4
+  },
+  {
+   "key": "8:8007",
+   "n": 8,
+   "seed": 8007,
+   "steps": 98,
+   "final": "4ad8d5570f6c14df9e00458fb4e313dc8e44c76848df4f22d5abc28593430bda",
+   "over": {
+    "side": "light",
+    "why": "Mana Task เต็ม 100% — ส่งงานทัน Deadline!",
+    "winners": [
+     0,
+     4,
      5,
      6,
      7
@@ -1647,51 +1651,38 @@
    "day": 3
   },
   {
-   "key": "8:8007",
-   "n": 8,
-   "seed": 8007,
-   "steps": 187,
-   "final": "54d58916a508b43e231a832b8952830edd1eaa1bc724ddac0897d15e8ed80aff",
-   "over": {
-    "side": "dark",
-    "why": "หมดวันศุกร์แล้ว โปรเจกต์ยังไม่เสร็จ — ลัทธิอู้งานยื้อสำเร็จ",
-    "winners": [
-     1,
-     4
-    ]
-   },
-   "day": 5
-  },
-  {
    "key": "8:8008",
    "n": 8,
    "seed": 8008,
-   "steps": 168,
-   "final": "b6f0e0f10b4445abf3b9f68f99ff572f00b74adb717d74fc9d5f6ddc53e49e93",
-   "over": {
-    "side": "dark",
-    "why": "ฝ่ายมืดมีจำนวนมากกว่าหรือเท่ากับฝ่ายแสงแล้ว — บริษัทล่มสลาย",
-    "winners": [
-     0,
-     1
-    ]
-   },
-   "day": 4
-  },
-  {
-   "key": "8:8009",
-   "n": 8,
-   "seed": 8009,
-   "steps": 152,
-   "final": "99e9693ae84dc87955f75f8483e048ba8bc4a584043591d47c315f355be441ae",
+   "steps": 40,
+   "final": "b850bf1177780fcfc360135e853092bcb59906d4a8e1a69e734b806def377cd5",
    "over": {
     "side": "light",
     "why": "Mana Task เต็ม 100% — ส่งงานทัน Deadline!",
     "winners": [
      0,
      1,
-     4,
+     3,
      5,
+     7
+    ]
+   },
+   "day": 1
+  },
+  {
+   "key": "8:8009",
+   "n": 8,
+   "seed": 8009,
+   "steps": 144,
+   "final": "5997a10a6c2d8a7c87ac944cde9997cdc9b3a34e84231a6ba1115727a9a577ae",
+   "over": {
+    "side": "light",
+    "why": "Mana Task เต็ม 100% — ส่งงานทัน Deadline!",
+    "winners": [
+     1,
+     2,
+     3,
+     4,
      6
     ]
    },
@@ -1701,8 +1692,8 @@
    "key": "8:8010",
    "n": 8,
    "seed": 8010,
-   "steps": 133,
-   "final": "5f9b1ef8e6180733a3d2346b809d4ec5d594154fc0228af45ca61a68cf145aaf",
+   "steps": 126,
+   "final": "f98d4fc3fa17cc0091d9fd7b4ac7b45c7d39d23e611da89734972014bf5c9159",
    "over": {
     "side": "dark",
     "why": "ฝ่ายมืดมีจำนวนมากกว่าหรือเท่ากับฝ่ายแสงแล้ว — บริษัทล่มสลาย",
@@ -1711,20 +1702,20 @@
      6
     ]
    },
-   "day": 4
+   "day": 3
   },
   {
    "key": "8:8011",
    "n": 8,
    "seed": 8011,
-   "steps": 182,
-   "final": "82647b9a6eaede598261c70daf92f5fa225fde47b7ca2e3182f2217c0fd25176",
+   "steps": 192,
+   "final": "a2c4193b8180affe85cc6bdea68e188569294b6635164d354a3a84fec002527b",
    "over": {
     "side": "dark",
     "why": "หมดวันศุกร์แล้ว โปรเจกต์ยังไม่เสร็จ — ลัทธิอู้งานยื้อสำเร็จ",
     "winners": [
-     3,
-     7
+     4,
+     6
     ]
    },
    "day": 5
@@ -1733,14 +1724,15 @@
    "key": "8:8012",
    "n": 8,
    "seed": 8012,
-   "steps": 209,
-   "final": "7974af74901614a62e0adf58ab219131da99ebaef614add00cc33fa98398f277",
+   "steps": 214,
+   "final": "e7e503d809d8be9e4ad4eebfd6f0b3587e26173166f4b37e064a7cc440d2064e",
    "over": {
     "side": "dark",
     "why": "หมดวันศุกร์แล้ว โปรเจกต์ยังไม่เสร็จ — ลัทธิอู้งานยื้อสำเร็จ",
     "winners": [
      0,
-     5
+     5,
+     6
     ]
    },
    "day": 5
@@ -1749,59 +1741,203 @@
    "key": "8:8013",
    "n": 8,
    "seed": 8013,
-   "steps": 36,
-   "final": "e661b975e0c887a60694ecd624a675878ef1d49118c3e93a057b6d2a275de8ce",
+   "steps": 188,
+   "final": "76562c9ffe5f0ddd34b1ad828272feb7f1b6aea87e3c756fb17a503b3e8018a3",
    "over": {
-    "side": "light",
-    "why": "Mana Task เต็ม 100% — ส่งงานทัน Deadline!",
+    "side": "dark",
+    "why": "หมดวันศุกร์แล้ว โปรเจกต์ยังไม่เสร็จ — ลัทธิอู้งานยื้อสำเร็จ",
     "winners": [
-     1,
-     3,
-     4,
      5,
+     6,
      7
     ]
    },
-   "day": 1
+   "day": 5
   },
   {
    "key": "8:8014",
    "n": 8,
    "seed": 8014,
-   "steps": 152,
-   "final": "38e6dfa8226fc9ae3320594a56d1e5ec6a51027dcae3e39fc0f4b75962181a67",
+   "steps": 195,
+   "final": "95394b157c303754a5a3581f14a230b9a098cff53f159f692e260ec6b8e03966",
+   "over": {
+    "side": "light",
+    "why": "Mana Task เต็ม 100% — ส่งงานทัน Deadline!",
+    "winners": [
+     0,
+     2,
+     4,
+     5,
+     6,
+     7
+    ]
+   },
+   "day": 5
+  },
+  {
+   "key": "8:8015",
+   "n": 8,
+   "seed": 8015,
+   "steps": 162,
+   "final": "88e19c6167c140eee9cc8dae88dc727a55d51f0ff88fd03db3bef30ad5d56252",
    "over": {
     "side": "dark",
     "why": "ฝ่ายมืดมีจำนวนมากกว่าหรือเท่ากับฝ่ายแสงแล้ว — บริษัทล่มสลาย",
     "winners": [
+     2,
+     4
+    ]
+   },
+   "day": 4
+  },
+  {
+   "key": "8:8016",
+   "n": 8,
+   "seed": 8016,
+   "steps": 113,
+   "final": "e2b76e5621598b9ee5318a642d522879cbd9ca8ad46ce458a22b4b48a6554f71",
+   "over": {
+    "side": "light",
+    "why": "Mana Task เต็ม 100% — ส่งงานทัน Deadline!",
+    "winners": [
      1,
+     2,
+     3,
+     4,
+     6
+    ]
+   },
+   "day": 3
+  },
+  {
+   "key": "8:8017",
+   "n": 8,
+   "seed": 8017,
+   "steps": 178,
+   "final": "e8d11b1664604f11252418cc70768657ea6241cddf112757c15a27d1b1aa0bea",
+   "over": {
+    "side": "light",
+    "why": "Mana Task เต็ม 100% — ส่งงานทัน Deadline!",
+    "winners": [
+     0,
+     1,
+     4,
+     5,
+     6
+    ]
+   },
+   "day": 4
+  },
+  {
+   "key": "8:8018",
+   "n": 8,
+   "seed": 8018,
+   "steps": 193,
+   "final": "9660ad2eac61ce54644ada51cb41594c2d3a08755b77d13314666b449a1490e5",
+   "over": {
+    "side": "dark",
+    "why": "หมดวันศุกร์แล้ว โปรเจกต์ยังไม่เสร็จ — ลัทธิอู้งานยื้อสำเร็จ",
+    "winners": [
+     5,
+     7
+    ]
+   },
+   "day": 5
+  },
+  {
+   "key": "8:8019",
+   "n": 8,
+   "seed": 8019,
+   "steps": 144,
+   "final": "30846d186ea4f399968c28960a333391f9d481743b1d2659410982bd3648d250",
+   "over": {
+    "side": "light",
+    "why": "Mana Task เต็ม 100% — ส่งงานทัน Deadline!",
+    "winners": [
+     0,
+     3,
+     4,
+     6,
      7
     ]
    },
    "day": 4
   },
   {
-   "key": "8:8015",
+   "key": "8:8020",
    "n": 8,
-   "seed": 8015,
-   "steps": 208,
-   "final": "0733ebf1df51b7f7c2f7cd6c08effce5e4eae0b45b7d3cc9271c65de9a085ab8",
+   "seed": 8020,
+   "steps": 40,
+   "final": "dfabf6b57fc33daa2e7adc6a1d8d9df560b3702ef029271cef1d38dc45a0f128",
+   "over": {
+    "side": "light",
+    "why": "Mana Task เต็ม 100% — ส่งงานทัน Deadline!",
+    "winners": [
+     0,
+     1,
+     2,
+     5,
+     6
+    ]
+   },
+   "day": 1
+  },
+  {
+   "key": "8:8021",
+   "n": 8,
+   "seed": 8021,
+   "steps": 179,
+   "final": "fa3ade03b415c2718aa88dcd619ce511b29b02c7adc53ba5b83c1f4ca91f5583",
    "over": {
     "side": "dark",
     "why": "หมดวันศุกร์แล้ว โปรเจกต์ยังไม่เสร็จ — ลัทธิอู้งานยื้อสำเร็จ",
     "winners": [
-     4,
+     2,
+     3,
      6
     ]
    },
    "day": 5
   },
   {
-   "key": "8:8016",
+   "key": "8:8022",
    "n": 8,
-   "seed": 8016,
-   "steps": 119,
-   "final": "0abca0e548e59a5963c6c9ff18e8660c311e32a1f3cce154edfff9777f8d316c",
+   "seed": 8022,
+   "steps": 181,
+   "final": "d488be45f8825e37823fb36671d65f7ce52d51a7fc8310705f9f9edc206235f4",
+   "over": {
+    "side": "dark",
+    "why": "หมดวันศุกร์แล้ว โปรเจกต์ยังไม่เสร็จ — ลัทธิอู้งานยื้อสำเร็จ",
+    "winners": [
+     3,
+     6,
+     7
+    ]
+   },
+   "day": 5
+  },
+  {
+   "key": "8:8023",
+   "n": 8,
+   "seed": 8023,
+   "steps": 160,
+   "final": "d26f7185dc3c527de7afe7f3b1b0561cc65a9f64cd6f5555f30cc007e33adf46",
+   "over": {
+    "side": "dark",
+    "why": "หมดวันศุกร์แล้ว โปรเจกต์ยังไม่เสร็จ — ลัทธิอู้งานยื้อสำเร็จ",
+    "winners": [
+     4,
+     5
+    ]
+   },
+   "day": 5
+  },
+  {
+   "key": "8:8024",
+   "n": 8,
+   "seed": 8024,
+   "steps": 136,
+   "final": "e126cda7445eed58f5d41f3c8014a36c01cc437f5156314ba80436a2d990fab0",
    "over": {
     "side": "dark",
     "why": "ฝ่ายมืดมีจำนวนมากกว่าหรือเท่ากับฝ่ายแสงแล้ว — บริษัทล่มสลาย",
@@ -1813,208 +1949,68 @@
    "day": 3
   },
   {
-   "key": "8:8017",
-   "n": 8,
-   "seed": 8017,
-   "steps": 213,
-   "final": "bbcae5dd3dc91823905fd2ca1c60561c163ccbca6de919d74480f2e0e9dce59f",
-   "over": {
-    "side": "dark",
-    "why": "หมดวันศุกร์แล้ว โปรเจกต์ยังไม่เสร็จ — ลัทธิอู้งานยื้อสำเร็จ",
-    "winners": [
-     2,
-     7
-    ]
-   },
-   "day": 5
-  },
-  {
-   "key": "8:8018",
-   "n": 8,
-   "seed": 8018,
-   "steps": 192,
-   "final": "638cff2e9028cbfead66e3725ea0134668a3005a07f0406d5b46aaea6623a04c",
-   "over": {
-    "side": "dark",
-    "why": "หมดวันศุกร์แล้ว โปรเจกต์ยังไม่เสร็จ — ลัทธิอู้งานยื้อสำเร็จ",
-    "winners": [
-     2,
-     4
-    ]
-   },
-   "day": 5
-  },
-  {
-   "key": "8:8019",
-   "n": 8,
-   "seed": 8019,
-   "steps": 184,
-   "final": "a0082f21c77713043de831f44ea8f5fb9753cc2f2e51ec4ddcfce6bc09f6c48b",
-   "over": {
-    "side": "light",
-    "why": "Mana Task เต็ม 100% — ส่งงานทัน Deadline!",
-    "winners": [
-     1,
-     3,
-     4,
-     6,
-     7
-    ]
-   },
-   "day": 5
-  },
-  {
-   "key": "8:8020",
-   "n": 8,
-   "seed": 8020,
-   "steps": 176,
-   "final": "222d994b6231c2d0a4e25d42f20dcbfb805d69ec3cbe7c86d3617b5b168dff8a",
-   "over": {
-    "side": "dark",
-    "why": "ฝ่ายมืดมีจำนวนมากกว่าหรือเท่ากับฝ่ายแสงแล้ว — บริษัทล่มสลาย",
-    "winners": [
-     4,
-     5
-    ]
-   },
-   "day": 4
-  },
-  {
-   "key": "8:8021",
-   "n": 8,
-   "seed": 8021,
-   "steps": 156,
-   "final": "131d631a96f00edd00385f2715a9ac62e385390df856516241634361fed94c50",
-   "over": {
-    "side": "light",
-    "why": "Mana Task เต็ม 100% — ส่งงานทัน Deadline!",
-    "winners": [
-     0,
-     1,
-     2,
-     5,
-     7
-    ]
-   },
-   "day": 4
-  },
-  {
-   "key": "8:8022",
-   "n": 8,
-   "seed": 8022,
-   "steps": 207,
-   "final": "203ee8d632d05e7931d402c21b83a2f12cc00b3ce551dfb777fcd873ed64f692",
-   "over": {
-    "side": "dark",
-    "why": "หมดวันศุกร์แล้ว โปรเจกต์ยังไม่เสร็จ — ลัทธิอู้งานยื้อสำเร็จ",
-    "winners": [
-     5,
-     6
-    ]
-   },
-   "day": 5
-  },
-  {
-   "key": "8:8023",
-   "n": 8,
-   "seed": 8023,
-   "steps": 188,
-   "final": "7f7fa46b985e5842a9a24a4be79764e3765c4d32b9b62d70f92cf3d61fb5b17e",
-   "over": {
-    "side": "light",
-    "why": "Mana Task เต็ม 100% — ส่งงานทัน Deadline!",
-    "winners": [
-     0,
-     1,
-     3,
-     5,
-     7
-    ]
-   },
-   "day": 5
-  },
-  {
-   "key": "8:8024",
-   "n": 8,
-   "seed": 8024,
-   "steps": 165,
-   "final": "fe1c4f5440989cafe8b2ec612800d775bcb2fb90bf1acef9e5eb4a214a3ff274",
-   "over": {
-    "side": "dark",
-    "why": "ฝ่ายมืดมีจำนวนมากกว่าหรือเท่ากับฝ่ายแสงแล้ว — บริษัทล่มสลาย",
-    "winners": [
-     2,
-     6
-    ]
-   },
-   "day": 4
-  },
-  {
    "key": "8:8025",
    "n": 8,
    "seed": 8025,
-   "steps": 223,
-   "final": "10c9ef5c7dc13826f63caeb17ea498aeb4c0905ab3a97d8d65a7d2e1084f4191",
+   "steps": 42,
+   "final": "14bbccee0401fb8dc464355117d2c752eb5a5cca9fb358a9639cf1598eb23c8d",
    "over": {
-    "side": "dark",
-    "why": "หมดวันศุกร์แล้ว โปรเจกต์ยังไม่เสร็จ — ลัทธิอู้งานยื้อสำเร็จ",
+    "side": "light",
+    "why": "Mana Task เต็ม 100% — ส่งงานทัน Deadline!",
     "winners": [
      1,
-     6
+     2,
+     4,
+     5,
+     7
     ]
    },
-   "day": 5
+   "day": 1
   },
   {
    "key": "8:8026",
    "n": 8,
    "seed": 8026,
-   "steps": 189,
-   "final": "65bb5bbbca94944563a7bff2d5a2508a3cacb3182b3900d363ae234d093d6281",
+   "steps": 125,
+   "final": "b6535e11c2dda2680becffc18db3365ccff5481a04820da1b24affbd637a0d4e",
    "over": {
-    "side": "light",
-    "why": "Mana Task เต็ม 100% — ส่งงานทัน Deadline!",
+    "side": "dark",
+    "why": "ฝ่ายมืดมีจำนวนมากกว่าหรือเท่ากับฝ่ายแสงแล้ว — บริษัทล่มสลาย",
     "winners": [
      0,
      1,
+     7
+    ]
+   },
+   "day": 3
+  },
+  {
+   "key": "8:8027",
+   "n": 8,
+   "seed": 8027,
+   "steps": 220,
+   "final": "8ba89c3e3c16c40bccd2e91df9e207c5d588ceb759727620bddb8ca77ee6c9fc",
+   "over": {
+    "side": "dark",
+    "why": "หมดวันศุกร์แล้ว โปรเจกต์ยังไม่เสร็จ — ลัทธิอู้งานยื้อสำเร็จ",
+    "winners": [
      2,
-     3,
      5
     ]
    },
    "day": 5
   },
   {
-   "key": "8:8027",
-   "n": 8,
-   "seed": 8027,
-   "steps": 83,
-   "final": "4a63190711ef5a5169892f6a6488e6f41ede967e093b964633320ca9e9ee8823",
-   "over": {
-    "side": "light",
-    "why": "Mana Task เต็ม 100% — ส่งงานทัน Deadline!",
-    "winners": [
-     1,
-     3,
-     4,
-     5,
-     7
-    ]
-   },
-   "day": 2
-  },
-  {
    "key": "8:8028",
    "n": 8,
    "seed": 8028,
-   "steps": 195,
-   "final": "12c321f0bdf72aa4e842c44a68cb26c58c772650f56c4541174b57ab217ddc7c",
+   "steps": 184,
+   "final": "3a1b356c6cb18404533a8b6aaa1120384da6cafde61f624e4fd24894a05c51c7",
    "over": {
     "side": "dark",
     "why": "ฝ่ายมืดมีจำนวนมากกว่าหรือเท่ากับฝ่ายแสงแล้ว — บริษัทล่มสลาย",
     "winners": [
-     0,
-     4,
+     6,
      7
     ]
    },
@@ -2024,66 +2020,66 @@
    "key": "8:8029",
    "n": 8,
    "seed": 8029,
-   "steps": 85,
-   "final": "b3c206080532c7c86e31c83976c81698afce7744776a2b3ade5bcfbfd376511e",
+   "steps": 41,
+   "final": "9fb47e80a743b3dde8d83ca3267ca4c757eeb5df829c5b6e6667addb1109a602",
    "over": {
     "side": "light",
     "why": "Mana Task เต็ม 100% — ส่งงานทัน Deadline!",
     "winners": [
      0,
      1,
-     3,
+     2,
      5,
      6
     ]
    },
-   "day": 2
+   "day": 1
   },
   {
    "key": "8:8030",
    "n": 8,
    "seed": 8030,
-   "steps": 184,
-   "final": "856eebaa1ff9024aa8e2669fb98f3328feb8a836332c120b737e4e1860f417e7",
+   "steps": 151,
+   "final": "759a6121f2c93020ea446a400685fae70dc53400e6580368b50eb0f9b918b2b1",
    "over": {
     "side": "dark",
-    "why": "หมดวันศุกร์แล้ว โปรเจกต์ยังไม่เสร็จ — ลัทธิอู้งานยื้อสำเร็จ",
+    "why": "ฝ่ายมืดมีจำนวนมากกว่าหรือเท่ากับฝ่ายแสงแล้ว — บริษัทล่มสลาย",
     "winners": [
-     0,
-     3
+     2,
+     6
     ]
    },
-   "day": 5
+   "day": 4
   },
   {
    "key": "8:8031",
    "n": 8,
    "seed": 8031,
-   "steps": 204,
-   "final": "d2504b68c5e35eff124dd7f24178070ce15f4dea294d90a4558cb18176711144",
+   "steps": 129,
+   "final": "da5db490ca0b1aec9b7faa05ea24ea2e737ca4ccfdab7f163e0e02e7c8e0037b",
    "over": {
     "side": "dark",
-    "why": "หมดวันศุกร์แล้ว โปรเจกต์ยังไม่เสร็จ — ลัทธิอู้งานยื้อสำเร็จ",
+    "why": "ฝ่ายมืดมีจำนวนมากกว่าหรือเท่ากับฝ่ายแสงแล้ว — บริษัทล่มสลาย",
     "winners": [
-     0,
-     2
+     4,
+     5
     ]
    },
-   "day": 5
+   "day": 3
   },
   {
    "key": "8:8032",
    "n": 8,
    "seed": 8032,
-   "steps": 216,
-   "final": "078dbb4d9ca6bc44523d6c2b08a13b7bc2c7f41417eff63a7733ab4f5ddaea70",
+   "steps": 213,
+   "final": "dbb661be5e9fa7ffda65a8d8803f50a1ff199a037d3717d17b431720dd1c5bf4",
    "over": {
     "side": "dark",
     "why": "หมดวันศุกร์แล้ว โปรเจกต์ยังไม่เสร็จ — ลัทธิอู้งานยื้อสำเร็จ",
     "winners": [
-     0,
      1,
-     5
+     5,
+     7
     ]
    },
    "day": 5
@@ -2092,82 +2088,85 @@
    "key": "8:8033",
    "n": 8,
    "seed": 8033,
-   "steps": 214,
-   "final": "6acbdbfeefbf189f3220c73021322462ae35b846415b87690b7fb1ab80e8f352",
+   "steps": 40,
+   "final": "01016e865af897d85f641879b13b317ccb172862df43f8c9f4493a675c17367e",
    "over": {
-    "side": "dark",
-    "why": "หมดวันศุกร์แล้ว โปรเจกต์ยังไม่เสร็จ — ลัทธิอู้งานยื้อสำเร็จ",
+    "side": "light",
+    "why": "Mana Task เต็ม 100% — ส่งงานทัน Deadline!",
     "winners": [
-     4,
-     5
+     0,
+     1,
+     3,
+     5,
+     7
     ]
    },
-   "day": 5
+   "day": 1
   },
   {
    "key": "8:8034",
    "n": 8,
    "seed": 8034,
-   "steps": 157,
-   "final": "1278e5a1449614c68f4132947d582836babd4f0e6289dbb2cb9f9bd14237bf95",
-   "over": {
-    "side": "dark",
-    "why": "ฝ่ายมืดมีจำนวนมากกว่าหรือเท่ากับฝ่ายแสงแล้ว — บริษัทล่มสลาย",
-    "winners": [
-     2,
-     4
-    ]
-   },
-   "day": 4
-  },
-  {
-   "key": "8:8035",
-   "n": 8,
-   "seed": 8035,
-   "steps": 83,
-   "final": "2bdfca4f661edeb12b874a04f1866c7078cbe33ff7d8693358ec3e918e37d888",
-   "over": {
-    "side": "light",
-    "why": "Mana Task เต็ม 100% — ส่งงานทัน Deadline!",
-    "winners": [
-     2,
-     3,
-     4,
-     5,
-     6,
-     7
-    ]
-   },
-   "day": 2
-  },
-  {
-   "key": "8:8036",
-   "n": 8,
-   "seed": 8036,
-   "steps": 195,
-   "final": "9dc9aff9880da1448fc953f98c85e468e7aefb6f20273663e44e9007ce349b5a",
+   "steps": 192,
+   "final": "5e97b83f3be47ac89ce971c34a9837861c174b0e301edfc54eee8e378cdb0c47",
    "over": {
     "side": "dark",
     "why": "หมดวันศุกร์แล้ว โปรเจกต์ยังไม่เสร็จ — ลัทธิอู้งานยื้อสำเร็จ",
     "winners": [
-     5,
-     6
+     0,
+     2,
+     3
     ]
    },
    "day": 5
   },
   {
+   "key": "8:8035",
+   "n": 8,
+   "seed": 8035,
+   "steps": 41,
+   "final": "6be82e2a39f7f9bb706fa36e9b9fd88a0ef6376a2f9a8e0594f2f36347a3117f",
+   "over": {
+    "side": "light",
+    "why": "Mana Task เต็ม 100% — ส่งงานทัน Deadline!",
+    "winners": [
+     0,
+     3,
+     5,
+     6,
+     7
+    ]
+   },
+   "day": 1
+  },
+  {
+   "key": "8:8036",
+   "n": 8,
+   "seed": 8036,
+   "steps": 155,
+   "final": "6b3b1edb5515c1f357863fef5c5d73702145c93c30ef81b6a6fa43780a4f2695",
+   "over": {
+    "side": "dark",
+    "why": "ฝ่ายมืดมีจำนวนมากกว่าหรือเท่ากับฝ่ายแสงแล้ว — บริษัทล่มสลาย",
+    "winners": [
+     3,
+     6
+    ]
+   },
+   "day": 4
+  },
+  {
    "key": "8:8037",
    "n": 8,
    "seed": 8037,
-   "steps": 221,
-   "final": "d9198a747b0fefc7c6266f3046a08d6a70639ebe0ffdc12d54d0b1c6376ddf4b",
+   "steps": 199,
+   "final": "3a1918734a9a5391673df8522a2c35aa3d9cdc4cc84ea1908691a9c6fdb3734e",
    "over": {
     "side": "dark",
     "why": "หมดวันศุกร์แล้ว โปรเจกต์ยังไม่เสร็จ — ลัทธิอู้งานยื้อสำเร็จ",
     "winners": [
-     1,
-     5
+     3,
+     7
     ]
    },
    "day": 5
@@ -2176,14 +2175,14 @@
    "key": "8:8038",
    "n": 8,
    "seed": 8038,
-   "steps": 144,
-   "final": "202bc7ab30464f7b7aae0740826847baed067d95e36383f18786d023e8dbfd5a",
+   "steps": 112,
+   "final": "e686758af191b09956581b562151a4be976ca8c0cc29b74876c106a43f37740b",
    "over": {
     "side": "dark",
     "why": "ฝ่ายมืดมีจำนวนมากกว่าหรือเท่ากับฝ่ายแสงแล้ว — บริษัทล่มสลาย",
     "winners": [
-     0,
-     4
+     4,
+     6
     ]
    },
    "day": 3
@@ -2192,47 +2191,16 @@
    "key": "8:8039",
    "n": 8,
    "seed": 8039,
-   "steps": 191,
-   "final": "f1bf15e1f458fe719061bd58f88a5c3c27b27df13825dc495614d1dadcec4395",
-   "over": {
-    "side": "dark",
-    "why": "หมดวันศุกร์แล้ว โปรเจกต์ยังไม่เสร็จ — ลัทธิอู้งานยื้อสำเร็จ",
-    "winners": [
-     0,
-     6
-    ]
-   },
-   "day": 5
-  },
-  {
-   "key": "8:8040",
-   "n": 8,
-   "seed": 8040,
-   "steps": 120,
-   "final": "fe12200b942edf8025e6e743c317a0c052e7776e9aef83f08dbea7396a17b67f",
-   "over": {
-    "side": "dark",
-    "why": "ฝ่ายมืดมีจำนวนมากกว่าหรือเท่ากับฝ่ายแสงแล้ว — บริษัทล่มสลาย",
-    "winners": [
-     6,
-     7
-    ]
-   },
-   "day": 3
-  },
-  {
-   "key": "8:8041",
-   "n": 8,
-   "seed": 8041,
-   "steps": 142,
-   "final": "57f7b876b798de647fb48114d91e17658f21e9fffc12f6de6e1779159cfea09c",
+   "steps": 170,
+   "final": "2cd1126143a8cf58de4fb3aa833dbf525bd217d70a9c0bd2a072732010890181",
    "over": {
     "side": "light",
     "why": "Mana Task เต็ม 100% — ส่งงานทัน Deadline!",
     "winners": [
      0,
      1,
-     5,
+     3,
+     4,
      6,
      7
     ]
@@ -2240,33 +2208,68 @@
    "day": 4
   },
   {
-   "key": "8:8042",
+   "key": "8:8040",
    "n": 8,
-   "seed": 8042,
-   "steps": 187,
-   "final": "cebf9943e78002693a418c22ce001caaea671c08280edbb6aacc96ee59e319de",
+   "seed": 8040,
+   "steps": 199,
+   "final": "d6acb873026c4dc3afe550035d296ab45f494439735b9453e8d7dd825a66f504",
    "over": {
     "side": "dark",
     "why": "ฝ่ายมืดมีจำนวนมากกว่าหรือเท่ากับฝ่ายแสงแล้ว — บริษัทล่มสลาย",
     "winners": [
-     2,
-     6
+     1,
+     2
     ]
    },
    "day": 5
   },
   {
+   "key": "8:8041",
+   "n": 8,
+   "seed": 8041,
+   "steps": 115,
+   "final": "541bb8484c2f0d9736bd78668b597922b3e2dc0f7c1507e2ad56255a9a120721",
+   "over": {
+    "side": "light",
+    "why": "Mana Task เต็ม 100% — ส่งงานทัน Deadline!",
+    "winners": [
+     1,
+     2,
+     4,
+     6,
+     7
+    ]
+   },
+   "day": 3
+  },
+  {
+   "key": "8:8042",
+   "n": 8,
+   "seed": 8042,
+   "steps": 114,
+   "final": "89f35fd3091dfdefed6faa5c662dcfb095d82acc1fa931d7a33613173802b811",
+   "over": {
+    "side": "dark",
+    "why": "ฝ่ายมืดมีจำนวนมากกว่าหรือเท่ากับฝ่ายแสงแล้ว — บริษัทล่มสลาย",
+    "winners": [
+     5,
+     6
+    ]
+   },
+   "day": 3
+  },
+  {
    "key": "8:8043",
    "n": 8,
    "seed": 8043,
-   "steps": 213,
-   "final": "c3ff646df7826b087429c001f6aa3fbe4595b89ec8796dcaa04fad9f7ce1565f",
+   "steps": 197,
+   "final": "3311c3691571d603a106f99f53b4213563f2ea220e0680116cee9255367e1822",
    "over": {
     "side": "dark",
     "why": "หมดวันศุกร์แล้ว โปรเจกต์ยังไม่เสร็จ — ลัทธิอู้งานยื้อสำเร็จ",
     "winners": [
-     6,
-     7
+     2,
+     4
     ]
    },
    "day": 5
@@ -2275,30 +2278,30 @@
    "key": "8:8044",
    "n": 8,
    "seed": 8044,
-   "steps": 143,
-   "final": "969fd1a580ee67a095f622516afd57362005fda517f03a7a86c93ce46b9d034d",
+   "steps": 121,
+   "final": "78511939ebab48855e508f12807ca74d7013c37e5712df6e4466a4988d31dac2",
    "over": {
     "side": "dark",
     "why": "ฝ่ายมืดมีจำนวนมากกว่าหรือเท่ากับฝ่ายแสงแล้ว — บริษัทล่มสลาย",
     "winners": [
-     0,
-     1
+     5,
+     6
     ]
    },
-   "day": 4
+   "day": 3
   },
   {
    "key": "9:9000",
    "n": 9,
    "seed": 9000,
-   "steps": 227,
-   "final": "b50fff5746c06d6376b22bd1cc1824c209c383865b8cde219a56f5330010680e",
+   "steps": 215,
+   "final": "b197284f310378bf40e2646af7cf6b3bbe2e1a664c29ffe5e79042f124dcb865",
    "over": {
     "side": "dark",
-    "why": "หมดวันศุกร์แล้ว โปรเจกต์ยังไม่เสร็จ — ลัทธิอู้งานยื้อสำเร็จ",
+    "why": "ฝ่ายมืดมีจำนวนมากกว่าหรือเท่ากับฝ่ายแสงแล้ว — บริษัทล่มสลาย",
     "winners": [
-     0,
-     8
+     4,
+     7
     ]
    },
    "day": 5
@@ -2307,49 +2310,50 @@
    "key": "9:9001",
    "n": 9,
    "seed": 9001,
-   "steps": 45,
-   "final": "1c9a785fe2d3fb6ebcd7dcaad1487dd0a120c27b04de606192e9fc5e99f59ae2",
+   "steps": 228,
+   "final": "ba60a4380e61166d8a92cf14b12d5adf7d898a1261d7962b8c9f0191549e72bd",
    "over": {
-    "side": "light",
-    "why": "Mana Task เต็ม 100% — ส่งงานทัน Deadline!",
+    "side": "dark",
+    "why": "หมดวันศุกร์แล้ว โปรเจกต์ยังไม่เสร็จ — ลัทธิอู้งานยื้อสำเร็จ",
     "winners": [
-     0,
-     3,
+     2,
      4,
-     5,
      8
     ]
    },
-   "day": 1
+   "day": 5
   },
   {
    "key": "9:9002",
    "n": 9,
    "seed": 9002,
-   "steps": 174,
-   "final": "2cf2ef6658a982ebc1006d55b5f40f52e4e4bcb9f0e045a88c987e841fc06a73",
+   "steps": 202,
+   "final": "75b4aa5cf761836f21876d6eb4fa0a19b2286417836a1bb19bb52da1458736a5",
    "over": {
     "side": "dark",
     "why": "ฝ่ายมืดมีจำนวนมากกว่าหรือเท่ากับฝ่ายแสงแล้ว — บริษัทล่มสลาย",
     "winners": [
-     0,
-     7
+     3,
+     5
     ]
    },
-   "day": 4
+   "day": 5
   },
   {
    "key": "9:9003",
    "n": 9,
    "seed": 9003,
-   "steps": 219,
-   "final": "3e30200beeb8eecf559b46e56341867060c7aa93788fd465a04670c7ad18ce8b",
+   "steps": 240,
+   "final": "5497e4140c71391b4ae387cd67868248e5f6a60f2bcc95cb068bcaa0f954eb49",
    "over": {
-    "side": "dark",
-    "why": "ฝ่ายมืดมีจำนวนมากกว่าหรือเท่ากับฝ่ายแสงแล้ว — บริษัทล่มสลาย",
+    "side": "light",
+    "why": "Mana Task เต็ม 100% — ส่งงานทัน Deadline!",
     "winners": [
-     1,
-     7
+     2,
+     4,
+     6,
+     7,
+     8
     ]
    },
    "day": 5
@@ -2358,13 +2362,13 @@
    "key": "9:9004",
    "n": 9,
    "seed": 9004,
-   "steps": 227,
-   "final": "18f43e66091aefa55864ad5f889461924dc51bf0be555f034291f696f8062c24",
+   "steps": 254,
+   "final": "ce0e53bbec7ccdaec2a0b324b388ac7d1e75642fe9fbf27dcf8e4610ed1b5823",
    "over": {
     "side": "dark",
     "why": "หมดวันศุกร์แล้ว โปรเจกต์ยังไม่เสร็จ — ลัทธิอู้งานยื้อสำเร็จ",
     "winners": [
-     2,
+     5,
      8
     ]
    },
@@ -2374,111 +2378,8 @@
    "key": "9:9005",
    "n": 9,
    "seed": 9005,
-   "steps": 210,
-   "final": "e9fba24657b2cbc4492d65e516627fe57c6c913e2ddded9ed6068b1df5d64b02",
-   "over": {
-    "side": "dark",
-    "why": "หมดวันศุกร์แล้ว โปรเจกต์ยังไม่เสร็จ — ลัทธิอู้งานยื้อสำเร็จ",
-    "winners": [
-     0,
-     5
-    ]
-   },
-   "day": 5
-  },
-  {
-   "key": "9:9006",
-   "n": 9,
-   "seed": 9006,
-   "steps": 164,
-   "final": "6b0c253f64e643b4a66b7138d12bfdf6538a4786516cfa6e83063fee651c5e30",
-   "over": {
-    "side": "light",
-    "why": "Mana Task เต็ม 100% — ส่งงานทัน Deadline!",
-    "winners": [
-     2,
-     3,
-     5,
-     6,
-     8
-    ]
-   },
-   "day": 4
-  },
-  {
-   "key": "9:9007",
-   "n": 9,
-   "seed": 9007,
-   "steps": 218,
-   "final": "c082f2f16d39c0ad406bc728332547063f361e738dced2411c3ecc7402e9fd19",
-   "over": {
-    "side": "dark",
-    "why": "หมดวันศุกร์แล้ว โปรเจกต์ยังไม่เสร็จ — ลัทธิอู้งานยื้อสำเร็จ",
-    "winners": [
-     2,
-     4,
-     8
-    ]
-   },
-   "day": 5
-  },
-  {
-   "key": "9:9008",
-   "n": 9,
-   "seed": 9008,
-   "steps": 163,
-   "final": "07d8d68e0a270bb2f2203317f48b32de190aa92f1c562ae03bd63ff178d33f44",
-   "over": {
-    "side": "dark",
-    "why": "ฝ่ายมืดมีจำนวนมากกว่าหรือเท่ากับฝ่ายแสงแล้ว — บริษัทล่มสลาย",
-    "winners": [
-     3,
-     5
-    ]
-   },
-   "day": 4
-  },
-  {
-   "key": "9:9009",
-   "n": 9,
-   "seed": 9009,
-   "steps": 250,
-   "final": "3930c95259bbf6227698c9e5d6f9782740296ca538c245b9fef30a30077fac4f",
-   "over": {
-    "side": "dark",
-    "why": "ฝ่ายมืดมีจำนวนมากกว่าหรือเท่ากับฝ่ายแสงแล้ว — บริษัทล่มสลาย",
-    "winners": [
-     0,
-     6
-    ]
-   },
-   "day": 5
-  },
-  {
-   "key": "9:9010",
-   "n": 9,
-   "seed": 9010,
-   "steps": 83,
-   "final": "8f965e35d9025878ffd359d72145f3e79366b57030d54bf8ff1d564f7cc45cd0",
-   "over": {
-    "side": "light",
-    "why": "Mana Task เต็ม 100% — ส่งงานทัน Deadline!",
-    "winners": [
-     0,
-     1,
-     2,
-     6,
-     7
-    ]
-   },
-   "day": 2
-  },
-  {
-   "key": "9:9011",
-   "n": 9,
-   "seed": 9011,
-   "steps": 245,
-   "final": "d54414a12068080d1d2a77e0ddb20c268a6f3b10ad45d6d12523defccce5b93f",
+   "steps": 220,
+   "final": "becd15ccdc2647295e463cc0027ca3b7b914253072aeb58b3ad943b464216473",
    "over": {
     "side": "dark",
     "why": "หมดวันศุกร์แล้ว โปรเจกต์ยังไม่เสร็จ — ลัทธิอู้งานยื้อสำเร็จ",
@@ -2490,37 +2391,140 @@
    "day": 5
   },
   {
-   "key": "9:9012",
+   "key": "9:9006",
    "n": 9,
-   "seed": 9012,
-   "steps": 44,
-   "final": "aa48f467f919429e645bd23e12f18ed7db17086626333a77f3d6992e3256afe8",
+   "seed": 9006,
+   "steps": 89,
+   "final": "8c40b1a8f21c8b56f8f9def093e963b62a79d9067b95435368890c5b17094e3d",
    "over": {
     "side": "light",
     "why": "Mana Task เต็ม 100% — ส่งงานทัน Deadline!",
     "winners": [
+     1,
+     2,
      3,
      4,
-     5,
-     6,
-     7,
-     8
+     6
     ]
    },
-   "day": 1
+   "day": 2
+  },
+  {
+   "key": "9:9007",
+   "n": 9,
+   "seed": 9007,
+   "steps": 224,
+   "final": "b4a7b3734d527ae07ccdb7ab6f7029604208a7a69f015884755762b51d767efc",
+   "over": {
+    "side": "dark",
+    "why": "หมดวันศุกร์แล้ว โปรเจกต์ยังไม่เสร็จ — ลัทธิอู้งานยื้อสำเร็จ",
+    "winners": [
+     1,
+     4,
+     7
+    ]
+   },
+   "day": 5
+  },
+  {
+   "key": "9:9008",
+   "n": 9,
+   "seed": 9008,
+   "steps": 143,
+   "final": "d504fb6055b3b2b2422ce92eb9c84bd8d1146b6efab14d824441256109cbef74",
+   "over": {
+    "side": "light",
+    "why": "Mana Task เต็ม 100% — ส่งงานทัน Deadline!",
+    "winners": [
+     0,
+     3,
+     5,
+     6,
+     7
+    ]
+   },
+   "day": 3
+  },
+  {
+   "key": "9:9009",
+   "n": 9,
+   "seed": 9009,
+   "steps": 229,
+   "final": "76d450635b99d1e4f490c734db64b5add287317b7e65e592854efb7a87f3dc3b",
+   "over": {
+    "side": "dark",
+    "why": "หมดวันศุกร์แล้ว โปรเจกต์ยังไม่เสร็จ — ลัทธิอู้งานยื้อสำเร็จ",
+    "winners": [
+     1,
+     7
+    ]
+   },
+   "day": 5
+  },
+  {
+   "key": "9:9010",
+   "n": 9,
+   "seed": 9010,
+   "steps": 225,
+   "final": "44e3c88666346aace85408fa01ee15173bc8ce2d19c8c5217c5aecaeafd498ba",
+   "over": {
+    "side": "dark",
+    "why": "หมดวันศุกร์แล้ว โปรเจกต์ยังไม่เสร็จ — ลัทธิอู้งานยื้อสำเร็จ",
+    "winners": [
+     1,
+     3
+    ]
+   },
+   "day": 5
+  },
+  {
+   "key": "9:9011",
+   "n": 9,
+   "seed": 9011,
+   "steps": 217,
+   "final": "d113ba9a5177e5e709c073cc7d727f774d2a4206691ef239aa44cee76df8b920",
+   "over": {
+    "side": "dark",
+    "why": "หมดวันศุกร์แล้ว โปรเจกต์ยังไม่เสร็จ — ลัทธิอู้งานยื้อสำเร็จ",
+    "winners": [
+     0,
+     5
+    ]
+   },
+   "day": 5
+  },
+  {
+   "key": "9:9012",
+   "n": 9,
+   "seed": 9012,
+   "steps": 201,
+   "final": "bdad9b321b33708cff0af0b77c66e24eaab37b3f3120feac934253254545a997",
+   "over": {
+    "side": "light",
+    "why": "Mana Task เต็ม 100% — ส่งงานทัน Deadline!",
+    "winners": [
+     0,
+     2,
+     3,
+     5,
+     6,
+     7
+    ]
+   },
+   "day": 5
   },
   {
    "key": "9:9013",
    "n": 9,
    "seed": 9013,
-   "steps": 201,
-   "final": "611b462c75c98872cb8cf5d89a5b50d829691f7cc576ba0e832a0846df40b4f6",
+   "steps": 204,
+   "final": "fb8ec2fba5f2ff19b3edc0277f9e668fa53e58c68e7101a9a5d7d802b64d3f01",
    "over": {
     "side": "dark",
     "why": "หมดวันศุกร์แล้ว โปรเจกต์ยังไม่เสร็จ — ลัทธิอู้งานยื้อสำเร็จ",
     "winners": [
-     2,
-     3
+     3,
+     6
     ]
    },
    "day": 5
@@ -2529,11 +2533,11 @@
    "key": "9:9014",
    "n": 9,
    "seed": 9014,
-   "steps": 222,
-   "final": "c1ef69e8323bacc57799e2b652768be2f1a2cab39fef74c4280bf2947e18707b",
+   "steps": 203,
+   "final": "33e375f96ffae143e83b614506ce60c5e53fea2c592a3599f40ae506810a4a3e",
    "over": {
     "side": "dark",
-    "why": "ฝ่ายมืดมีจำนวนมากกว่าหรือเท่ากับฝ่ายแสงแล้ว — บริษัทล่มสลาย",
+    "why": "หมดวันศุกร์แล้ว โปรเจกต์ยังไม่เสร็จ — ลัทธิอู้งานยื้อสำเร็จ",
     "winners": [
      0,
      6
@@ -2545,96 +2549,100 @@
    "key": "9:9015",
    "n": 9,
    "seed": 9015,
-   "steps": 149,
-   "final": "8d63575eb72102a17310204e26100b6d03ccb24809e5fb5de96164cf7d9c2bc4",
+   "steps": 247,
+   "final": "961614a48f2e2319c1679dc0567d4e5ec9c83ffb75b09620e9dfc10f3fc72e03",
    "over": {
     "side": "dark",
-    "why": "ฝ่ายมืดมีจำนวนมากกว่าหรือเท่ากับฝ่ายแสงแล้ว — บริษัทล่มสลาย",
+    "why": "หมดวันศุกร์แล้ว โปรเจกต์ยังไม่เสร็จ — ลัทธิอู้งานยื้อสำเร็จ",
     "winners": [
-     1,
-     6
+     0,
+     4
     ]
    },
-   "day": 3
+   "day": 5
   },
   {
    "key": "9:9016",
    "n": 9,
    "seed": 9016,
-   "steps": 189,
-   "final": "ea59d875cb8bb57212b01c014661a47192b2d209aee13c9443b6c0a76d964ab0",
+   "steps": 90,
+   "final": "7c49ce76f8f90d759630a640f8931eac58f0524239c397eb4288f719e64d73a2",
+   "over": {
+    "side": "light",
+    "why": "Mana Task เต็ม 100% — ส่งงานทัน Deadline!",
+    "winners": [
+     0,
+     2,
+     3,
+     6,
+     7,
+     8
+    ]
+   },
+   "day": 2
+  },
+  {
+   "key": "9:9017",
+   "n": 9,
+   "seed": 9017,
+   "steps": 247,
+   "final": "77cfa562bb26024924cb59d7d594b2fd74f73e4bfd2c5ab11982cc686bf62571",
    "over": {
     "side": "dark",
-    "why": "ฝ่ายมืดมีจำนวนมากกว่าหรือเท่ากับฝ่ายแสงแล้ว — บริษัทล่มสลาย",
+    "why": "หมดวันศุกร์แล้ว โปรเจกต์ยังไม่เสร็จ — ลัทธิอู้งานยื้อสำเร็จ",
     "winners": [
      3,
+     4,
      5
     ]
    },
    "day": 5
   },
   {
-   "key": "9:9017",
+   "key": "9:9018",
    "n": 9,
-   "seed": 9017,
-   "steps": 157,
-   "final": "fcf4c43eb0eae5605144989cd7e5dd8613ccacc007af3954cb964e591b4b0b26",
+   "seed": 9018,
+   "steps": 137,
+   "final": "0e4708fdfa4cf513df0c24258bb0c4dbf990829f908e6694873f5916d7141988",
    "over": {
     "side": "dark",
     "why": "ฝ่ายมืดมีจำนวนมากกว่าหรือเท่ากับฝ่ายแสงแล้ว — บริษัทล่มสลาย",
     "winners": [
-     0,
-     2
+     4,
+     5
     ]
    },
    "day": 3
-  },
-  {
-   "key": "9:9018",
-   "n": 9,
-   "seed": 9018,
-   "steps": 218,
-   "final": "c3a85bae1701059644b45a7058501e448048682df5a0ea73433be79a05ae17ca",
-   "over": {
-    "side": "dark",
-    "why": "หมดวันศุกร์แล้ว โปรเจกต์ยังไม่เสร็จ — ลัทธิอู้งานยื้อสำเร็จ",
-    "winners": [
-     0,
-     3
-    ]
-   },
-   "day": 5
   },
   {
    "key": "9:9019",
    "n": 9,
    "seed": 9019,
-   "steps": 138,
-   "final": "fcf15ad67f9d832eb9fee2fe3706ab0faef10e48e74ed0a860b8a3dfe19c6730",
+   "steps": 225,
+   "final": "8717823cd4636c99f2db1a3fe728d5b22ac61c80d5a350db11428cd4e750c87b",
    "over": {
     "side": "dark",
     "why": "ฝ่ายมืดมีจำนวนมากกว่าหรือเท่ากับฝ่ายแสงแล้ว — บริษัทล่มสลาย",
     "winners": [
      3,
-     4,
-     6
+     7
     ]
    },
-   "day": 3
+   "day": 5
   },
   {
    "key": "9:9020",
    "n": 9,
    "seed": 9020,
-   "steps": 227,
-   "final": "929b9fa854e0f8271bf85fb671795fa29c589b01d4a31ba8c56a3dd662c2a84d",
+   "steps": 220,
+   "final": "5b729f2a06d167cab6faaca5674d6d9b09c493a3341b10a34670cb1b791f04bb",
    "over": {
     "side": "dark",
     "why": "หมดวันศุกร์แล้ว โปรเจกต์ยังไม่เสร็จ — ลัทธิอู้งานยื้อสำเร็จ",
     "winners": [
-     1,
-     5,
-     6
+     3,
+     4,
+     8
     ]
    },
    "day": 5
@@ -2643,51 +2651,49 @@
    "key": "9:9021",
    "n": 9,
    "seed": 9021,
-   "steps": 209,
-   "final": "b78f16c760346de9ded61db7e9f55af06a6f451b8a6c2a7e65b8cffbebb92d81",
+   "steps": 180,
+   "final": "4a6a12d2dbc8b15a13a4645f35b9e5333e28fab17adf94b7e2da8a1508804463",
    "over": {
     "side": "light",
     "why": "Mana Task เต็ม 100% — ส่งงานทัน Deadline!",
     "winners": [
-     0,
-     1,
+     2,
+     4,
      5,
      7,
+     8
+    ]
+   },
+   "day": 4
+  },
+  {
+   "key": "9:9022",
+   "n": 9,
+   "seed": 9022,
+   "steps": 216,
+   "final": "759a8171c6d87f644948d0cec6cdcbcc7c4ebac8ec46345acb4853e1a1eed6dc",
+   "over": {
+    "side": "dark",
+    "why": "หมดวันศุกร์แล้ว โปรเจกต์ยังไม่เสร็จ — ลัทธิอู้งานยื้อสำเร็จ",
+    "winners": [
+     4,
      8
     ]
    },
    "day": 5
   },
   {
-   "key": "9:9022",
-   "n": 9,
-   "seed": 9022,
-   "steps": 124,
-   "final": "37ce1d544ba5b1dfb41b19f22b2ac152752335f56b9eb3bc673f01a402ea1a47",
-   "over": {
-    "side": "dark",
-    "why": "ฝ่ายมืดมีจำนวนมากกว่าหรือเท่ากับฝ่ายแสงแล้ว — บริษัทล่มสลาย",
-    "winners": [
-     1,
-     4,
-     5
-    ]
-   },
-   "day": 3
-  },
-  {
    "key": "9:9023",
    "n": 9,
    "seed": 9023,
-   "steps": 211,
-   "final": "8c20cd7f9e6df738df3b9c55c7797232a550f9604bbd11221cd22956ea11008c",
+   "steps": 243,
+   "final": "ddc8f4367a6742e563e2f1f285d710fc921987cc7363a3556b5b9e73847a6292",
    "over": {
     "side": "dark",
     "why": "หมดวันศุกร์แล้ว โปรเจกต์ยังไม่เสร็จ — ลัทธิอู้งานยื้อสำเร็จ",
     "winners": [
      3,
-     5,
-     7
+     5
     ]
    },
    "day": 5
@@ -2696,13 +2702,13 @@
    "key": "9:9024",
    "n": 9,
    "seed": 9024,
-   "steps": 78,
-   "final": "4375a1a28ed872a43229607b40e33ae2c8eb6a600753fa1f0c0015be7956531d",
+   "steps": 63,
+   "final": "0fb5fd2a6b16d77d9a9c5aa16ecad9c5e03561cbded8d76ca26b03de0bc1f14d",
    "over": {
     "side": "light",
     "why": "Mana Task เต็ม 100% — ส่งงานทัน Deadline!",
     "winners": [
-     1,
+     0,
      2,
      4,
      7,
@@ -2715,17 +2721,17 @@
    "key": "9:9025",
    "n": 9,
    "seed": 9025,
-   "steps": 167,
-   "final": "7f5bf07ab9d9e4f1270a86ced9094b41087fe86ba6b04bff549fe7d2c0d75616",
+   "steps": 136,
+   "final": "4a0d48f60949770258fe4ad90ba2d10895b506ef2f75f7307706402984e7f28f",
    "over": {
     "side": "light",
     "why": "Mana Task เต็ม 100% — ส่งงานทัน Deadline!",
     "winners": [
-     0,
      1,
      4,
      5,
-     6
+     6,
+     7
     ]
    },
    "day": 4
@@ -2734,14 +2740,15 @@
    "key": "9:9026",
    "n": 9,
    "seed": 9026,
-   "steps": 207,
-   "final": "be67251ba9208a17c72dab5c0a745e2f3dfead344da41e1fd1e57cdfe3d272d7",
+   "steps": 216,
+   "final": "0ed144ba10904aefb2c2a9ca28e675399a5b623e71a40b8625521c68f216a7d4",
    "over": {
     "side": "dark",
     "why": "หมดวันศุกร์แล้ว โปรเจกต์ยังไม่เสร็จ — ลัทธิอู้งานยื้อสำเร็จ",
     "winners": [
-     2,
-     7
+     1,
+     3,
+     8
     ]
    },
    "day": 5
@@ -2750,30 +2757,30 @@
    "key": "9:9027",
    "n": 9,
    "seed": 9027,
-   "steps": 233,
-   "final": "e40b12266324b06b4bda121d63dc64cc311967a8658c678212b271cff9b0765e",
+   "steps": 196,
+   "final": "77fca1293aa591f095374e21ab785fa963a8f66415b4e8f10acbdc4a0915c022",
    "over": {
     "side": "dark",
     "why": "ฝ่ายมืดมีจำนวนมากกว่าหรือเท่ากับฝ่ายแสงแล้ว — บริษัทล่มสลาย",
     "winners": [
-     0,
-     1
+     2,
+     8
     ]
    },
-   "day": 5
+   "day": 4
   },
   {
    "key": "9:9028",
    "n": 9,
    "seed": 9028,
-   "steps": 202,
-   "final": "8e3fe532b0a2d294d108c3ebecca847da6826b0f0e3dc684e16d802797de15f7",
+   "steps": 230,
+   "final": "a7ae5f6412507ee6d005bf6048f586d63d599c9fda31f955415197a347085ec3",
    "over": {
     "side": "dark",
     "why": "หมดวันศุกร์แล้ว โปรเจกต์ยังไม่เสร็จ — ลัทธิอู้งานยื้อสำเร็จ",
     "winners": [
-     0,
-     3
+     1,
+     5
     ]
    },
    "day": 5
@@ -2782,33 +2789,33 @@
    "key": "9:9029",
    "n": 9,
    "seed": 9029,
-   "steps": 47,
-   "final": "92954f6528be64d191d841ab8a683ee4aac1389929761503b53757d32386742c",
+   "steps": 186,
+   "final": "0f1aca900d185f9c6928066959f31989e33e477c19fae89ab94207f99dbe4125",
    "over": {
     "side": "light",
     "why": "Mana Task เต็ม 100% — ส่งงานทัน Deadline!",
     "winners": [
+     0,
      1,
      2,
-     3,
-     4,
-     6
+     7,
+     8
     ]
    },
-   "day": 1
+   "day": 5
   },
   {
    "key": "9:9030",
    "n": 9,
    "seed": 9030,
-   "steps": 221,
-   "final": "25b492ea30f821912a2ec15c055b51283e357fd4bd94d3300c01dbc82c577884",
+   "steps": 219,
+   "final": "625fa026f6bd1c376487395280ff5ccf45abf260d20dbe60113c8a15ae9ad799",
    "over": {
     "side": "dark",
     "why": "หมดวันศุกร์แล้ว โปรเจกต์ยังไม่เสร็จ — ลัทธิอู้งานยื้อสำเร็จ",
     "winners": [
-     4,
-     8
+     1,
+     4
     ]
    },
    "day": 5
@@ -2817,35 +2824,34 @@
    "key": "9:9031",
    "n": 9,
    "seed": 9031,
-   "steps": 143,
-   "final": "9c4dab22bfb1d53728601070768e08a67b7637cf501a6dfc24f6ee309750e24f",
+   "steps": 158,
+   "final": "81e4dfaad5deeac06b4b0031afac8ae58000c66087e248550abc80afc5c41c33",
    "over": {
     "side": "light",
     "why": "Mana Task เต็ม 100% — ส่งงานทัน Deadline!",
     "winners": [
      0,
-     1,
+     2,
      4,
-     5,
      6,
-     7
+     7,
+     8
     ]
    },
-   "day": 3
+   "day": 4
   },
   {
    "key": "9:9032",
    "n": 9,
    "seed": 9032,
-   "steps": 208,
-   "final": "3e238a44098898bfbbbaa76cc46bfb748ec9081ecfafeb1f5893655769e25d2d",
+   "steps": 202,
+   "final": "f83fba9e556685ade0767c0e8c1c924c7260bb0e5706e4c28d30ccbba14b4751",
    "over": {
     "side": "dark",
     "why": "หมดวันศุกร์แล้ว โปรเจกต์ยังไม่เสร็จ — ลัทธิอู้งานยื้อสำเร็จ",
     "winners": [
-     3,
-     4,
-     8
+     2,
+     3
     ]
    },
    "day": 5
@@ -2854,50 +2860,49 @@
    "key": "9:9033",
    "n": 9,
    "seed": 9033,
-   "steps": 176,
-   "final": "b52e0e54e41829f625eadddeb558515972e569bfe3686309e32cb79d2d74ce43",
+   "steps": 44,
+   "final": "a77840698f9374b03e9d1cdd28ed65ac78b94f65b18d9510e90639b1e61fc7dc",
    "over": {
     "side": "light",
     "why": "Mana Task เต็ม 100% — ส่งงานทัน Deadline!",
     "winners": [
-     0,
-     1,
-     3,
      4,
+     5,
      6,
-     7
+     7,
+     8
     ]
    },
-   "day": 4
+   "day": 1
   },
   {
    "key": "9:9034",
    "n": 9,
    "seed": 9034,
-   "steps": 196,
-   "final": "967a5ff3dbf2c7dee9373658e0715d0586eb9767febbee6f2945bdf24db19a6d",
-   "over": {
-    "side": "dark",
-    "why": "หมดวันศุกร์แล้ว โปรเจกต์ยังไม่เสร็จ — ลัทธิอู้งานยื้อสำเร็จ",
-    "winners": [
-     0,
-     5
-    ]
-   },
-   "day": 5
-  },
-  {
-   "key": "9:9035",
-   "n": 9,
-   "seed": 9035,
-   "steps": 166,
-   "final": "6d199b7535773cb7cb3f67426264552b1798981959222e0cd241f274f4dd37ff",
+   "steps": 114,
+   "final": "68e872d9bc3da427fa9ff1b3118dd0dcb90fc30fe3850b193e6012c64669ac9e",
    "over": {
     "side": "dark",
     "why": "ฝ่ายมืดมีจำนวนมากกว่าหรือเท่ากับฝ่ายแสงแล้ว — บริษัทล่มสลาย",
     "winners": [
      0,
-     5
+     3
+    ]
+   },
+   "day": 3
+  },
+  {
+   "key": "9:9035",
+   "n": 9,
+   "seed": 9035,
+   "steps": 169,
+   "final": "f54a20cbe6b5ace0aff1031741870a4a58aa35170bc25871752328ba0b570481",
+   "over": {
+    "side": "dark",
+    "why": "ฝ่ายมืดมีจำนวนมากกว่าหรือเท่ากับฝ่ายแสงแล้ว — บริษัทล่มสลาย",
+    "winners": [
+     1,
+     4
     ]
    },
    "day": 4
@@ -2906,16 +2911,16 @@
    "key": "9:9036",
    "n": 9,
    "seed": 9036,
-   "steps": 45,
-   "final": "00250f0c7e604b4fa609efdad62b8f96b3bd8f7268fae4dfd87c798c726d0cf3",
+   "steps": 46,
+   "final": "8db954fadf9506da13a31065df7cdaa8a766f119fe97c894eca77d95c44bf066",
    "over": {
     "side": "light",
     "why": "Mana Task เต็ม 100% — ส่งงานทัน Deadline!",
     "winners": [
+     0,
      1,
      2,
-     5,
-     6,
+     7,
      8
     ]
    },
@@ -2925,14 +2930,14 @@
    "key": "9:9037",
    "n": 9,
    "seed": 9037,
-   "steps": 216,
-   "final": "43a3d4edbcdba50e3f38fa4721ffecf091c2dad0cb417617bae27fb23d3bde8c",
+   "steps": 193,
+   "final": "94221d2e89d795a35c2664975c8d6b58f2d975f182310d33db467f72ee2ec14c",
    "over": {
     "side": "dark",
     "why": "ฝ่ายมืดมีจำนวนมากกว่าหรือเท่ากับฝ่ายแสงแล้ว — บริษัทล่มสลาย",
     "winners": [
-     5,
-     8
+     1,
+     7
     ]
    },
    "day": 5
@@ -2941,31 +2946,33 @@
    "key": "9:9038",
    "n": 9,
    "seed": 9038,
-   "steps": 176,
-   "final": "834b66ac3bd986e72f3266983e1585f13ac7584e656bd2a50a1af44c7c13f4d3",
+   "steps": 159,
+   "final": "5305778b3101c913c2fc46c0102c661e2b52e3b97dfb724dd674883ff3498066",
    "over": {
     "side": "dark",
-    "why": "หมดวันศุกร์แล้ว โปรเจกต์ยังไม่เสร็จ — ลัทธิอู้งานยื้อสำเร็จ",
+    "why": "ฝ่ายมืดมีจำนวนมากกว่าหรือเท่ากับฝ่ายแสงแล้ว — บริษัทล่มสลาย",
     "winners": [
-     5,
-     6
+     2,
+     5
     ]
    },
-   "day": 5
+   "day": 4
   },
   {
    "key": "9:9039",
    "n": 9,
    "seed": 9039,
-   "steps": 213,
-   "final": "ab251853ed5cdd70ebe8e5c791bed9a633f193862b9554c17100f9db5f868d4e",
+   "steps": 176,
+   "final": "93d6efe022169de843147a6ff40d27db85fc1d3880433c8a8be22c807df39751",
    "over": {
-    "side": "dark",
-    "why": "หมดวันศุกร์แล้ว โปรเจกต์ยังไม่เสร็จ — ลัทธิอู้งานยื้อสำเร็จ",
+    "side": "light",
+    "why": "Mana Task เต็ม 100% — ส่งงานทัน Deadline!",
     "winners": [
      0,
-     2,
-     5
+     1,
+     3,
+     5,
+     7
     ]
    },
    "day": 5
@@ -2974,40 +2981,24 @@
    "key": "9:9040",
    "n": 9,
    "seed": 9040,
-   "steps": 126,
-   "final": "1bf37a75b8551adbf9c5786da258e43c22658450f07b7d11bf1c632a17fcf14a",
+   "steps": 234,
+   "final": "dceabb53e3d5aff4bc0e9d00f228993733b484fff4f720b0fa7f782105db1ec4",
    "over": {
     "side": "dark",
-    "why": "ฝ่ายมืดมีจำนวนมากกว่าหรือเท่ากับฝ่ายแสงแล้ว — บริษัทล่มสลาย",
+    "why": "หมดวันศุกร์แล้ว โปรเจกต์ยังไม่เสร็จ — ลัทธิอู้งานยื้อสำเร็จ",
     "winners": [
      4,
-     5
+     6
     ]
    },
-   "day": 3
+   "day": 5
   },
   {
    "key": "9:9041",
    "n": 9,
    "seed": 9041,
-   "steps": 182,
-   "final": "3b364553460e5b33c586f8913261c996c4b3ca4c0480bfc6ef8f9c8340ca2a92",
-   "over": {
-    "side": "dark",
-    "why": "ฝ่ายมืดมีจำนวนมากกว่าหรือเท่ากับฝ่ายแสงแล้ว — บริษัทล่มสลาย",
-    "winners": [
-     6,
-     8
-    ]
-   },
-   "day": 4
-  },
-  {
-   "key": "9:9042",
-   "n": 9,
-   "seed": 9042,
-   "steps": 227,
-   "final": "2cc5d585dff36a8c133a38c5dfcbd6b0d4120d3515e9e385366eb999fa36a128",
+   "steps": 234,
+   "final": "f9e039fc417ce1c38aff1135dd6786446fa9173a2a3f9f8ff53c2ad794c5b64b",
    "over": {
     "side": "dark",
     "why": "หมดวันศุกร์แล้ว โปรเจกต์ยังไม่เสร็จ — ลัทธิอู้งานยื้อสำเร็จ",
@@ -3019,17 +3010,33 @@
    "day": 5
   },
   {
+   "key": "9:9042",
+   "n": 9,
+   "seed": 9042,
+   "steps": 211,
+   "final": "b3600ef4003815d26aba17d2043fc3827acb1d95c0f038a404e33f1b84b3aa79",
+   "over": {
+    "side": "dark",
+    "why": "ฝ่ายมืดมีจำนวนมากกว่าหรือเท่ากับฝ่ายแสงแล้ว — บริษัทล่มสลาย",
+    "winners": [
+     6,
+     8
+    ]
+   },
+   "day": 5
+  },
+  {
    "key": "9:9043",
    "n": 9,
    "seed": 9043,
-   "steps": 236,
-   "final": "d69b1910c5e0d163cdcb4c80af939343f6e5dd91ede450e86fa0ee2b5fad964b",
+   "steps": 222,
+   "final": "18a3f407f1717de31af86f003e3bf48e029d4ebc1af5549101e2c76ef20d9bbd",
    "over": {
     "side": "dark",
     "why": "หมดวันศุกร์แล้ว โปรเจกต์ยังไม่เสร็จ — ลัทธิอู้งานยื้อสำเร็จ",
     "winners": [
-     2,
-     6,
+     0,
+     5,
      7
     ]
    },
@@ -3039,15 +3046,14 @@
    "key": "9:9044",
    "n": 9,
    "seed": 9044,
-   "steps": 208,
-   "final": "467e160538ed1e7855c942996a2f8b38c23073415e35f6e3f60ab29cdf4be517",
+   "steps": 222,
+   "final": "fb88c923588f8002b676810f9278c9bf9b35e89ed757be1722cc63bea4823e73",
    "over": {
     "side": "dark",
     "why": "หมดวันศุกร์แล้ว โปรเจกต์ยังไม่เสร็จ — ลัทธิอู้งานยื้อสำเร็จ",
     "winners": [
-     1,
-     6,
-     7
+     0,
+     8
     ]
    },
    "day": 5
@@ -3056,15 +3062,14 @@
    "key": "10:10000",
    "n": 10,
    "seed": 10000,
-   "steps": 253,
-   "final": "0f6b1019be37cb66c3c6b53acac93df522a7c9599a44b9cda04c67d277c266c8",
+   "steps": 229,
+   "final": "f6ea7f971cdec54dcee567ff591b49c90082eb36a5f0dfd6088cb8fc63c0c65e",
    "over": {
     "side": "dark",
     "why": "หมดวันศุกร์แล้ว โปรเจกต์ยังไม่เสร็จ — ลัทธิอู้งานยื้อสำเร็จ",
     "winners": [
-     5,
-     8,
-     9
+     0,
+     3
     ]
    },
    "day": 5
@@ -3073,14 +3078,15 @@
    "key": "10:10001",
    "n": 10,
    "seed": 10001,
-   "steps": 241,
-   "final": "4b4fa41aa831c8df74f16cf6cd13275df242671068e416684f06ce392a36e1b9",
+   "steps": 213,
+   "final": "37c22f28f478675b7e6f19ea3aaaade4cc62edcf9f65966ee45231db82a00f0c",
    "over": {
     "side": "dark",
     "why": "หมดวันศุกร์แล้ว โปรเจกต์ยังไม่เสร็จ — ลัทธิอู้งานยื้อสำเร็จ",
     "winners": [
-     2,
-     3
+     0,
+     6,
+     8
     ]
    },
    "day": 5
@@ -3089,34 +3095,35 @@
    "key": "10:10002",
    "n": 10,
    "seed": 10002,
-   "steps": 79,
-   "final": "cf1c30b2bfd141cbd95d9e8d233936f955b42a7f4a97c716c8e677cd87dc1f97",
+   "steps": 259,
+   "final": "bd83448195c0a020b60191b2b4cb228780e354e75d5e400298971271e1545071",
    "over": {
-    "side": "light",
-    "why": "Mana Task เต็ม 100% — ส่งงานทัน Deadline!",
+    "side": "dark",
+    "why": "หมดวันศุกร์แล้ว โปรเจกต์ยังไม่เสร็จ — ลัทธิอู้งานยื้อสำเร็จ",
     "winners": [
-     0,
-     4,
-     5,
-     7,
+     1,
      8,
      9
     ]
    },
-   "day": 2
+   "day": 5
   },
   {
    "key": "10:10003",
    "n": 10,
    "seed": 10003,
-   "steps": 234,
-   "final": "13ac76eb195058d5c7be90ca8ee0a74e62049b02e1becd8851d7b2233a4052bc",
+   "steps": 243,
+   "final": "866046af3cad2aefd19d6153b7065557fdec213bc9343addc58bab314214c1d0",
    "over": {
-    "side": "dark",
-    "why": "ฝ่ายมืดมีจำนวนมากกว่าหรือเท่ากับฝ่ายแสงแล้ว — บริษัทล่มสลาย",
+    "side": "light",
+    "why": "Mana Task เต็ม 100% — ส่งงานทัน Deadline!",
     "winners": [
      0,
-     4
+     1,
+     3,
+     5,
+     7,
+     8
     ]
    },
    "day": 5
@@ -3125,35 +3132,38 @@
    "key": "10:10004",
    "n": 10,
    "seed": 10004,
-   "steps": 177,
-   "final": "4033f48fd8587f5b02dadcfe938af9428a945ad5d026321b9b611a64791783ea",
+   "steps": 210,
+   "final": "8fcc62237572a682609f4e500bda4d92d5c3ec2bde6711c98a8fe3c4aab2ad6a",
+   "over": {
+    "side": "light",
+    "why": "ไล่ฝ่ายมืดออกจากบริษัทจนหมดแล้ว!",
+    "winners": [
+     1,
+     3,
+     4,
+     5,
+     6,
+     9
+    ]
+   },
+   "day": 5
+  },
+  {
+   "key": "10:10005",
+   "n": 10,
+   "seed": 10005,
+   "steps": 186,
+   "final": "276dc74d486f66597b6539db915c4be7fc53dbcff4080d44d48f4367237ef753",
    "over": {
     "side": "light",
     "why": "Mana Task เต็ม 100% — ส่งงานทัน Deadline!",
     "winners": [
      0,
      1,
-     5,
+     3,
      6,
      7,
-     8,
      9
-    ]
-   },
-   "day": 4
-  },
-  {
-   "key": "10:10005",
-   "n": 10,
-   "seed": 10005,
-   "steps": 217,
-   "final": "75a6bcd12bb34d339d943b670dc22e60df3b6cfc44dce67ecd60591adbb6026c",
-   "over": {
-    "side": "dark",
-    "why": "หมดวันศุกร์แล้ว โปรเจกต์ยังไม่เสร็จ — ลัทธิอู้งานยื้อสำเร็จ",
-    "winners": [
-     2,
-     5
     ]
    },
    "day": 5
@@ -3162,13 +3172,14 @@
    "key": "10:10006",
    "n": 10,
    "seed": 10006,
-   "steps": 247,
-   "final": "eaae346d27e6ff29544f9395ac53309714ba7e1e41ad3375f3ed67cd04a61edb",
+   "steps": 206,
+   "final": "a48cd547acbe79c85fb394c4f5bf85375baf1de90c58ee44eac939ed5752e1bd",
    "over": {
     "side": "dark",
     "why": "หมดวันศุกร์แล้ว โปรเจกต์ยังไม่เสร็จ — ลัทธิอู้งานยื้อสำเร็จ",
     "winners": [
-     3,
+     0,
+     2,
      9
     ]
    },
@@ -3178,32 +3189,36 @@
    "key": "10:10007",
    "n": 10,
    "seed": 10007,
-   "steps": 240,
-   "final": "00afda30ed683d0feb113ff1b28559e392a3d044ee3a2de9565668c9e4995e70",
+   "steps": 131,
+   "final": "822eeb01aed409b7d7f96184b96a6220a2f3695024ab5d45a9a614af89b6fb9d",
    "over": {
-    "side": "dark",
-    "why": "หมดวันศุกร์แล้ว โปรเจกต์ยังไม่เสร็จ — ลัทธิอู้งานยื้อสำเร็จ",
+    "side": "light",
+    "why": "Mana Task เต็ม 100% — ส่งงานทัน Deadline!",
     "winners": [
+     0,
      1,
+     2,
      3,
-     7
+     5,
+     7,
+     8
     ]
    },
-   "day": 5
+   "day": 3
   },
   {
    "key": "10:10008",
    "n": 10,
    "seed": 10008,
-   "steps": 260,
-   "final": "66b1ba6625265775ad84667c4b7523e17ae6c664d56cbd6509ab022d35ca76a1",
+   "steps": 224,
+   "final": "adf0e1bb5216c25798a0f4c6394e273ea7c84c7689e5d6772ebddd811fe76566",
    "over": {
     "side": "dark",
     "why": "หมดวันศุกร์แล้ว โปรเจกต์ยังไม่เสร็จ — ลัทธิอู้งานยื้อสำเร็จ",
     "winners": [
-     0,
-     1,
-     5
+     3,
+     7,
+     8
     ]
    },
    "day": 5
@@ -3212,35 +3227,34 @@
    "key": "10:10009",
    "n": 10,
    "seed": 10009,
-   "steps": 139,
-   "final": "4dda57b84d45f12317ca00dd76c21fc5fa6e5096f1cf59c2dd6b9144f4400098",
+   "steps": 182,
+   "final": "d3a5c91904cbe5da1d792818a6dd15b7c2baf5209e3a46cbaa5f412297e1f9cb",
    "over": {
     "side": "light",
-    "why": "Mana Task เต็ม 100% — ส่งงานทัน Deadline!",
+    "why": "ไล่ฝ่ายมืดออกจากบริษัทจนหมดแล้ว!",
     "winners": [
-     1,
-     3,
-     5,
+     0,
+     2,
+     4,
      6,
-     7,
-     8
+     8,
+     9
     ]
    },
-   "day": 3
+   "day": 5
   },
   {
    "key": "10:10010",
    "n": 10,
    "seed": 10010,
-   "steps": 228,
-   "final": "384f47b72111108859a2b01217dd8afc206a2bad907f76b6b569d0adb9f8a2eb",
+   "steps": 231,
+   "final": "a60433cf475e37d8e96ddf55d2504c47c2b6fc0e1c14c711fb4f9f1640b6894b",
    "over": {
     "side": "dark",
     "why": "หมดวันศุกร์แล้ว โปรเจกต์ยังไม่เสร็จ — ลัทธิอู้งานยื้อสำเร็จ",
     "winners": [
      4,
-     6,
-     8
+     7
     ]
    },
    "day": 5
@@ -3249,14 +3263,14 @@
    "key": "10:10011",
    "n": 10,
    "seed": 10011,
-   "steps": 196,
-   "final": "01150b7b6e2ac6ddd32da92cc090b04a6cbf75efe68fc212a83b630395ae341b",
+   "steps": 197,
+   "final": "bd61c7b8e96fd69317b906997df77014c9a317f0ec960d70269d61345cd445f6",
    "over": {
     "side": "dark",
     "why": "หมดวันศุกร์แล้ว โปรเจกต์ยังไม่เสร็จ — ลัทธิอู้งานยื้อสำเร็จ",
     "winners": [
-     2,
-     7
+     3,
+     6
     ]
    },
    "day": 5
@@ -3265,35 +3279,32 @@
    "key": "10:10012",
    "n": 10,
    "seed": 10012,
-   "steps": 232,
-   "final": "4488527795f5839ddcfd685f61c1d22575af11c2ac33dec78916eeebf4a6795c",
+   "steps": 171,
+   "final": "4f6389af75df6e4e2bfca5292a47d16a9c6f6d9eb8a5805d07fe7dbb3100e621",
    "over": {
     "side": "dark",
-    "why": "หมดวันศุกร์แล้ว โปรเจกต์ยังไม่เสร็จ — ลัทธิอู้งานยื้อสำเร็จ",
+    "why": "ฝ่ายมืดมีจำนวนมากกว่าหรือเท่ากับฝ่ายแสงแล้ว — บริษัทล่มสลาย",
     "winners": [
-     1,
-     2,
-     6
+     4,
+     6,
+     7
     ]
    },
-   "day": 5
+   "day": 4
   },
   {
    "key": "10:10013",
    "n": 10,
    "seed": 10013,
-   "steps": 234,
-   "final": "9632b147305fb0898affb8703f7f3ca3571e21e6a4ae5317048b83c1926a5d8f",
+   "steps": 233,
+   "final": "c795b77d9f7206b853ffbffb4c1927b99f48a1b9782f3b09ed1ab53bad340507",
    "over": {
-    "side": "light",
-    "why": "ไล่ฝ่ายมืดออกจากบริษัทจนหมดแล้ว!",
+    "side": "dark",
+    "why": "หมดวันศุกร์แล้ว โปรเจกต์ยังไม่เสร็จ — ลัทธิอู้งานยื้อสำเร็จ",
     "winners": [
-     0,
-     1,
      4,
-     5,
-     8,
-     9
+     6,
+     7
     ]
    },
    "day": 5
@@ -3302,14 +3313,14 @@
    "key": "10:10014",
    "n": 10,
    "seed": 10014,
-   "steps": 243,
-   "final": "5f8e1a8ab80494a1ae671c588b292a6a1ff748da503f90addb36468a37eeba68",
+   "steps": 220,
+   "final": "71b07128d6177666814fb779129fef584227deb96824e1f53fdd5329610dec5b",
    "over": {
     "side": "dark",
     "why": "หมดวันศุกร์แล้ว โปรเจกต์ยังไม่เสร็จ — ลัทธิอู้งานยื้อสำเร็จ",
     "winners": [
-     1,
-     2,
+     0,
+     4,
      9
     ]
    },
@@ -3319,32 +3330,31 @@
    "key": "10:10015",
    "n": 10,
    "seed": 10015,
-   "steps": 242,
-   "final": "b3e68ffc8dd3b10a9606676072bf23fc55d1b00973e7020734ac0f2909b75c19",
+   "steps": 192,
+   "final": "163625c54786d1e1c0d19592a6982b16c59c10e6184a22a9c97be64a06145dfd",
    "over": {
     "side": "dark",
-    "why": "หมดวันศุกร์แล้ว โปรเจกต์ยังไม่เสร็จ — ลัทธิอู้งานยื้อสำเร็จ",
+    "why": "ฝ่ายมืดมีจำนวนมากกว่าหรือเท่ากับฝ่ายแสงแล้ว — บริษัทล่มสลาย",
     "winners": [
-     3,
-     4,
-     9
+     0,
+     2,
+     5
     ]
    },
-   "day": 5
+   "day": 4
   },
   {
    "key": "10:10016",
    "n": 10,
    "seed": 10016,
-   "steps": 257,
-   "final": "925a9b7e723e688b7a35c998f633c41bce61b7cb080e014b70ddee159c3bca2e",
+   "steps": 255,
+   "final": "519465ff6a91412ac917e33dc8d6f20de5295747173db63665df9b2f8945e609",
    "over": {
     "side": "dark",
     "why": "หมดวันศุกร์แล้ว โปรเจกต์ยังไม่เสร็จ — ลัทธิอู้งานยื้อสำเร็จ",
     "winners": [
-     0,
-     2,
-     3
+     8,
+     9
     ]
    },
    "day": 5
@@ -3353,14 +3363,14 @@
    "key": "10:10017",
    "n": 10,
    "seed": 10017,
-   "steps": 237,
-   "final": "5d93d5d209c24fe05ba13ffab3ab8d32020211750fd6d6b6e428fe53d2768040",
+   "steps": 278,
+   "final": "d3eca35cdb0d6a9fd3d53531bfbaf6bd644b3d1ecb698c9543a1b2d607b85806",
    "over": {
     "side": "dark",
     "why": "หมดวันศุกร์แล้ว โปรเจกต์ยังไม่เสร็จ — ลัทธิอู้งานยื้อสำเร็จ",
     "winners": [
-     1,
-     5,
+     3,
+     8,
      9
     ]
    },
@@ -3370,13 +3380,13 @@
    "key": "10:10018",
    "n": 10,
    "seed": 10018,
-   "steps": 237,
-   "final": "d5bb403454feeece817b5f106ddc22ad16ab99b10ecbdd1b4c6faba2ce2a3597",
+   "steps": 234,
+   "final": "c4447cf4b27a96639180555560b4a05aa7908ff9856ef626ff70591c25d9bbfd",
    "over": {
     "side": "dark",
-    "why": "ฝ่ายมืดมีจำนวนมากกว่าหรือเท่ากับฝ่ายแสงแล้ว — บริษัทล่มสลาย",
+    "why": "หมดวันศุกร์แล้ว โปรเจกต์ยังไม่เสร็จ — ลัทธิอู้งานยื้อสำเร็จ",
     "winners": [
-     1,
+     0,
      3
     ]
    },
@@ -3386,14 +3396,15 @@
    "key": "10:10019",
    "n": 10,
    "seed": 10019,
-   "steps": 245,
-   "final": "0e1cec29a7a91e16ca4d65c98e21ea18ad6127369cacea334bd00505b02bee78",
+   "steps": 222,
+   "final": "7a662f732a8517e32d12e667d39c659f3119fcca0244ad4621ab7ffb5e74fe58",
    "over": {
     "side": "dark",
     "why": "หมดวันศุกร์แล้ว โปรเจกต์ยังไม่เสร็จ — ลัทธิอู้งานยื้อสำเร็จ",
     "winners": [
-     2,
-     3
+     5,
+     6,
+     7
     ]
    },
    "day": 5
@@ -3402,30 +3413,32 @@
    "key": "10:10020",
    "n": 10,
    "seed": 10020,
-   "steps": 129,
-   "final": "999d83148d8607b8ab49d34d30e6cb02e84c3855870906967cdb88c8b2647421",
+   "steps": 228,
+   "final": "61c018942cb9c4c878e7dc1633e91fc834b755dba4ad8c3e7185fc033aa920c3",
    "over": {
     "side": "dark",
-    "why": "ฝ่ายมืดมีจำนวนมากกว่าหรือเท่ากับฝ่ายแสงแล้ว — บริษัทล่มสลาย",
+    "why": "หมดวันศุกร์แล้ว โปรเจกต์ยังไม่เสร็จ — ลัทธิอู้งานยื้อสำเร็จ",
     "winners": [
-     2,
-     3
+     4,
+     6,
+     8
     ]
    },
-   "day": 3
+   "day": 5
   },
   {
    "key": "10:10021",
    "n": 10,
    "seed": 10021,
-   "steps": 218,
-   "final": "75e5663957f75dc25efd2f5eb3fabd6283aea8257ba66df54dca743c71e0a5b9",
+   "steps": 224,
+   "final": "8202a9f0795404b3d2e91eab8d491d3b1f20e22ed3e51696f103488628d966b4",
    "over": {
     "side": "dark",
     "why": "หมดวันศุกร์แล้ว โปรเจกต์ยังไม่เสร็จ — ลัทธิอู้งานยื้อสำเร็จ",
     "winners": [
-     0,
-     1
+     1,
+     2,
+     4
     ]
    },
    "day": 5
@@ -3434,35 +3447,34 @@
    "key": "10:10022",
    "n": 10,
    "seed": 10022,
-   "steps": 215,
-   "final": "e46336647deea01fd618805c727bfa115a8ec29c185d82e3c807b33db505cbf5",
+   "steps": 127,
+   "final": "cf1ed36a64a48bfd82a663d773bbae8881488f5aedf27abd3167c3325358f777",
    "over": {
     "side": "light",
     "why": "Mana Task เต็ม 100% — ส่งงานทัน Deadline!",
     "winners": [
      1,
-     2,
+     3,
      4,
      5,
-     6,
-     8
+     7,
+     9
     ]
    },
-   "day": 5
+   "day": 3
   },
   {
    "key": "10:10023",
    "n": 10,
    "seed": 10023,
    "steps": 249,
-   "final": "aeaac31b9f8b1280097836d6e45dbb4a12588595859ec7a2d68598e489e08fd3",
+   "final": "a7efe23fc0d6a8c04bac6a7651e2c22480aaf75dfbd1d5deab961914f56d97b9",
    "over": {
     "side": "dark",
     "why": "หมดวันศุกร์แล้ว โปรเจกต์ยังไม่เสร็จ — ลัทธิอู้งานยื้อสำเร็จ",
     "winners": [
-     2,
-     4,
-     7
+     8,
+     9
     ]
    },
    "day": 5
@@ -3471,14 +3483,13 @@
    "key": "10:10024",
    "n": 10,
    "seed": 10024,
-   "steps": 247,
-   "final": "e161a5c82926231933384889fa7b01f4d926b7828c56c7704da957a4e495ac5a",
+   "steps": 236,
+   "final": "9c0dbac2acfdc8fd8518808cd2f2254aec1e19ae1cddca515987bf2b94df918f",
    "over": {
     "side": "dark",
     "why": "หมดวันศุกร์แล้ว โปรเจกต์ยังไม่เสร็จ — ลัทธิอู้งานยื้อสำเร็จ",
     "winners": [
-     0,
-     3,
+     5,
      6,
      9
     ]
@@ -3489,15 +3500,15 @@
    "key": "10:10025",
    "n": 10,
    "seed": 10025,
-   "steps": 233,
-   "final": "ebdc2eed0d9be0ec59b4283587718bd4a91086b3b56229aae85e593a15e2327a",
+   "steps": 234,
+   "final": "3d92f30fd43c8fc27b6c60f770ed17989654392c20e624d395aa61f585029248",
    "over": {
     "side": "dark",
     "why": "หมดวันศุกร์แล้ว โปรเจกต์ยังไม่เสร็จ — ลัทธิอู้งานยื้อสำเร็จ",
     "winners": [
-     0,
-     2,
-     8
+     1,
+     4,
+     9
     ]
    },
    "day": 5
@@ -3506,14 +3517,14 @@
    "key": "10:10026",
    "n": 10,
    "seed": 10026,
-   "steps": 225,
-   "final": "d3625f6954e2985b7001355fdb027158e874a28c774e545cc233cbc823d5b87a",
+   "steps": 247,
+   "final": "b5bb7b14413b1c5860dd7ae754c48ee9d37195f879014563bc83ac86d9cc7c5d",
    "over": {
     "side": "dark",
     "why": "หมดวันศุกร์แล้ว โปรเจกต์ยังไม่เสร็จ — ลัทธิอู้งานยื้อสำเร็จ",
     "winners": [
-     3,
-     5
+     5,
+     9
     ]
    },
    "day": 5
@@ -3522,14 +3533,15 @@
    "key": "10:10027",
    "n": 10,
    "seed": 10027,
-   "steps": 235,
-   "final": "9dabbcf4d7a5b5635d401d5a81644843377a365337ea9708272d4bf843ba86ac",
+   "steps": 241,
+   "final": "dedc193a7c830158049a9a1d8fc97b11324da4664fe0d809be477f184f0aaadb",
    "over": {
     "side": "dark",
     "why": "หมดวันศุกร์แล้ว โปรเจกต์ยังไม่เสร็จ — ลัทธิอู้งานยื้อสำเร็จ",
     "winners": [
-     5,
-     6
+     2,
+     3,
+     4
     ]
    },
    "day": 5
@@ -3538,14 +3550,14 @@
    "key": "10:10028",
    "n": 10,
    "seed": 10028,
-   "steps": 237,
-   "final": "5455fd636f40bae66c5f4a5977d608359e4ece30b742e617ae2d955929133627",
+   "steps": 234,
+   "final": "da89012ce58a5dc3d1b88d81b52f6a4cdd6efb6c0d33f83c1ff40b18e5f98a8e",
    "over": {
     "side": "dark",
     "why": "หมดวันศุกร์แล้ว โปรเจกต์ยังไม่เสร็จ — ลัทธิอู้งานยื้อสำเร็จ",
     "winners": [
-     1,
-     5
+     0,
+     1
     ]
    },
    "day": 5
@@ -3554,14 +3566,15 @@
    "key": "10:10029",
    "n": 10,
    "seed": 10029,
-   "steps": 249,
-   "final": "4485455b071fd8a437f327802e2a692982404407ad636bb434893f29e962f4ed",
+   "steps": 251,
+   "final": "4448fd96968c141cbb6536c662fdfa2eddc2a3dd4754140f9dc5063d29f3478a",
    "over": {
     "side": "dark",
     "why": "หมดวันศุกร์แล้ว โปรเจกต์ยังไม่เสร็จ — ลัทธิอู้งานยื้อสำเร็จ",
     "winners": [
-     6,
-     9
+     0,
+     2,
+     4
     ]
    },
    "day": 5
@@ -3570,35 +3583,34 @@
    "key": "10:10030",
    "n": 10,
    "seed": 10030,
-   "steps": 227,
-   "final": "a9b4e5dca00d5ab6e01f6c7953b9e19bd9a7b7e600a5b878adb720f1e948b917",
+   "steps": 75,
+   "final": "ec7a3e64fac69a5cdb64172b0781d68a34509cbb65e8e55497bf2a85d8531fda",
    "over": {
-    "side": "dark",
-    "why": "หมดวันศุกร์แล้ว โปรเจกต์ยังไม่เสร็จ — ลัทธิอู้งานยื้อสำเร็จ",
+    "side": "light",
+    "why": "Mana Task เต็ม 100% — ส่งงานทัน Deadline!",
     "winners": [
+     0,
      1,
+     4,
      5,
+     6,
      7
     ]
    },
-   "day": 5
+   "day": 2
   },
   {
    "key": "10:10031",
    "n": 10,
    "seed": 10031,
-   "steps": 238,
-   "final": "09a7e969781c933c0f1d300b055928bde3e29a4e665d95f1c8977a372e5d5153",
+   "steps": 233,
+   "final": "ce7b1471541d6e0a22d9b32fc57865d356f5e74bdc80d1b182eedb56581189a5",
    "over": {
-    "side": "light",
-    "why": "ไล่ฝ่ายมืดออกจากบริษัทจนหมดแล้ว!",
+    "side": "dark",
+    "why": "หมดวันศุกร์แล้ว โปรเจกต์ยังไม่เสร็จ — ลัทธิอู้งานยื้อสำเร็จ",
     "winners": [
      0,
-     1,
-     2,
-     3,
-     7,
-     8,
+     6,
      9
     ]
    },
@@ -3608,14 +3620,18 @@
    "key": "10:10032",
    "n": 10,
    "seed": 10032,
-   "steps": 259,
-   "final": "e1adfa6048604752d27c5dbdd436ab785c94e7e91b84b2141e49fa9451daf4cf",
+   "steps": 210,
+   "final": "c9e683fe28c152578e4d307483ca6ea2505a4f35febc2f1b7a9c892a45208cfb",
    "over": {
-    "side": "dark",
-    "why": "หมดวันศุกร์แล้ว โปรเจกต์ยังไม่เสร็จ — ลัทธิอู้งานยื้อสำเร็จ",
+    "side": "light",
+    "why": "Mana Task เต็ม 100% — ส่งงานทัน Deadline!",
     "winners": [
-     5,
-     8
+     0,
+     1,
+     2,
+     3,
+     6,
+     9
     ]
    },
    "day": 5
@@ -3624,46 +3640,52 @@
    "key": "10:10033",
    "n": 10,
    "seed": 10033,
-   "steps": 204,
-   "final": "8227c56cd0ad73d8bfc8115fb377b573dbdfe7efa377159a2f7a3657793bc9a0",
+   "steps": 132,
+   "final": "a0660541411eead93c86b6960279c63b6769f8ce4355cbd8b0bd808f7a41247d",
    "over": {
-    "side": "dark",
-    "why": "ฝ่ายมืดมีจำนวนมากกว่าหรือเท่ากับฝ่ายแสงแล้ว — บริษัทล่มสลาย",
+    "side": "light",
+    "why": "Mana Task เต็ม 100% — ส่งงานทัน Deadline!",
     "winners": [
      2,
-     6
+     3,
+     4,
+     5,
+     6,
+     8
     ]
    },
-   "day": 4
+   "day": 3
   },
   {
    "key": "10:10034",
    "n": 10,
    "seed": 10034,
-   "steps": 256,
-   "final": "7ccc35877a796bf92d244b0becde39216d498d9c810d2330c22c22464c1f5adb",
+   "steps": 208,
+   "final": "5b9c259343a744aa0d0fb9be92df3a07f13b3d2d4545fa491debde983f953be3",
    "over": {
     "side": "dark",
-    "why": "หมดวันศุกร์แล้ว โปรเจกต์ยังไม่เสร็จ — ลัทธิอู้งานยื้อสำเร็จ",
+    "why": "ฝ่ายมืดมีจำนวนมากกว่าหรือเท่ากับฝ่ายแสงแล้ว — บริษัทล่มสลาย",
     "winners": [
-     6,
-     9
+     0,
+     5,
+     7
     ]
    },
-   "day": 5
+   "day": 4
   },
   {
    "key": "10:10035",
    "n": 10,
    "seed": 10035,
-   "steps": 240,
-   "final": "737ff672bebca36f962fdccb712d56057f6b0cef0a9f043b323d265769c599af",
+   "steps": 234,
+   "final": "12d1759bd4c192b8cc8614db9082cf79c0b83c82a5748f1402f3e946123aaea0",
    "over": {
     "side": "dark",
     "why": "หมดวันศุกร์แล้ว โปรเจกต์ยังไม่เสร็จ — ลัทธิอู้งานยื้อสำเร็จ",
     "winners": [
-     7,
-     8
+     0,
+     4,
+     5
     ]
    },
    "day": 5
@@ -3672,14 +3694,14 @@
    "key": "10:10036",
    "n": 10,
    "seed": 10036,
-   "steps": 229,
-   "final": "3005f6c1ab42f3a3743dfde11137ac5538b324728c0ee5735c75aa0e2677966b",
+   "steps": 196,
+   "final": "0b69ac5ce38ca42788f7030c13f74d0c6bbe2f55a97dddfaf9cc7243c8109b65",
    "over": {
     "side": "dark",
     "why": "หมดวันศุกร์แล้ว โปรเจกต์ยังไม่เสร็จ — ลัทธิอู้งานยื้อสำเร็จ",
     "winners": [
-     1,
-     5,
+     2,
+     6,
      8
     ]
    },
@@ -3689,14 +3711,15 @@
    "key": "10:10037",
    "n": 10,
    "seed": 10037,
-   "steps": 264,
-   "final": "c5f2a88c69d23633db240e7ea4415540622fc6e64896ee455334bc3ea8ea9509",
+   "steps": 222,
+   "final": "2092736734fb22711c95b0eed85c0def97f23bcb176242378b8b9be6a888545e",
    "over": {
     "side": "dark",
     "why": "หมดวันศุกร์แล้ว โปรเจกต์ยังไม่เสร็จ — ลัทธิอู้งานยื้อสำเร็จ",
     "winners": [
+     0,
      2,
-     8
+     5
     ]
    },
    "day": 5
@@ -3705,189 +3728,8 @@
    "key": "10:10038",
    "n": 10,
    "seed": 10038,
-   "steps": 183,
-   "final": "9f48648e265a077946c0abf895bed18e2da4b3cfdbdd89b124de02e767320b1d",
-   "over": {
-    "side": "dark",
-    "why": "ฝ่ายมืดมีจำนวนมากกว่าหรือเท่ากับฝ่ายแสงแล้ว — บริษัทล่มสลาย",
-    "winners": [
-     1,
-     2,
-     6
-    ]
-   },
-   "day": 4
-  },
-  {
-   "key": "10:10039",
-   "n": 10,
-   "seed": 10039,
-   "steps": 236,
-   "final": "e5f8f8ec0e83ad86f62c04bb545b3dc387f31d16b2952ca894cbb109dddf00ce",
-   "over": {
-    "side": "dark",
-    "why": "หมดวันศุกร์แล้ว โปรเจกต์ยังไม่เสร็จ — ลัทธิอู้งานยื้อสำเร็จ",
-    "winners": [
-     2,
-     3,
-     9
-    ]
-   },
-   "day": 5
-  },
-  {
-   "key": "10:10040",
-   "n": 10,
-   "seed": 10040,
-   "steps": 225,
-   "final": "f6152b4601a5298a0817b7fca79f6ddfca84ebb50ae2f3d9b9b506994ee3c6ba",
-   "over": {
-    "side": "dark",
-    "why": "หมดวันศุกร์แล้ว โปรเจกต์ยังไม่เสร็จ — ลัทธิอู้งานยื้อสำเร็จ",
-    "winners": [
-     6,
-     7
-    ]
-   },
-   "day": 5
-  },
-  {
-   "key": "10:10041",
-   "n": 10,
-   "seed": 10041,
-   "steps": 247,
-   "final": "0444be51533f256158db9cab53387fe2cfb338eee555606de488cbab9b180928",
-   "over": {
-    "side": "dark",
-    "why": "หมดวันศุกร์แล้ว โปรเจกต์ยังไม่เสร็จ — ลัทธิอู้งานยื้อสำเร็จ",
-    "winners": [
-     4,
-     6,
-     8
-    ]
-   },
-   "day": 5
-  },
-  {
-   "key": "10:10042",
-   "n": 10,
-   "seed": 10042,
-   "steps": 257,
-   "final": "55ae81864f54f0ab2ac128efed1ca4fdb145c09b15327c0ab9ddc732fa181e96",
-   "over": {
-    "side": "dark",
-    "why": "หมดวันศุกร์แล้ว โปรเจกต์ยังไม่เสร็จ — ลัทธิอู้งานยื้อสำเร็จ",
-    "winners": [
-     1,
-     2
-    ]
-   },
-   "day": 5
-  },
-  {
-   "key": "10:10043",
-   "n": 10,
-   "seed": 10043,
-   "steps": 255,
-   "final": "d84c369f5fe18206dc0c7762e53bea51c3cbe9c80c789b2409e3c9e77bbee0dd",
-   "over": {
-    "side": "dark",
-    "why": "หมดวันศุกร์แล้ว โปรเจกต์ยังไม่เสร็จ — ลัทธิอู้งานยื้อสำเร็จ",
-    "winners": [
-     2,
-     6
-    ]
-   },
-   "day": 5
-  },
-  {
-   "key": "10:10044",
-   "n": 10,
-   "seed": 10044,
-   "steps": 264,
-   "final": "09b7394a24c4f9f4d06e69f273a7701d44a34ae08a37aff5f9bca0da66e02068",
-   "over": {
-    "side": "dark",
-    "why": "หมดวันศุกร์แล้ว โปรเจกต์ยังไม่เสร็จ — ลัทธิอู้งานยื้อสำเร็จ",
-    "winners": [
-     6,
-     9
-    ]
-   },
-   "day": 5
-  },
-  {
-   "key": "11:11000",
-   "n": 11,
-   "seed": 11000,
-   "steps": 260,
-   "final": "234f0ec66f4c7d92a05d466c0d2f4c141a4b01e02d1452fe6ccbad9747319d91",
-   "over": {
-    "side": "dark",
-    "why": "หมดวันศุกร์แล้ว โปรเจกต์ยังไม่เสร็จ — ลัทธิอู้งานยื้อสำเร็จ",
-    "winners": [
-     8,
-     10
-    ]
-   },
-   "day": 5
-  },
-  {
-   "key": "11:11001",
-   "n": 11,
-   "seed": 11001,
-   "steps": 242,
-   "final": "01314802a4a86235fa00aa0e02a3819af21e44675197129a4f8937ce80efe0eb",
-   "over": {
-    "side": "dark",
-    "why": "ฝ่ายมืดมีจำนวนมากกว่าหรือเท่ากับฝ่ายแสงแล้ว — บริษัทล่มสลาย",
-    "winners": [
-     3,
-     6
-    ]
-   },
-   "day": 5
-  },
-  {
-   "key": "11:11002",
-   "n": 11,
-   "seed": 11002,
-   "steps": 259,
-   "final": "abce75d970f045c0d9354087218873628ed07fba0bc70a95ae0e79061ec5aae5",
-   "over": {
-    "side": "dark",
-    "why": "ฝ่ายมืดมีจำนวนมากกว่าหรือเท่ากับฝ่ายแสงแล้ว — บริษัทล่มสลาย",
-    "winners": [
-     1,
-     3
-    ]
-   },
-   "day": 5
-  },
-  {
-   "key": "11:11003",
-   "n": 11,
-   "seed": 11003,
-   "steps": 271,
-   "final": "607fba6df03737ee763ad8d79dc6d6b14db4c7a23772222bf10a6608f6903df7",
-   "over": {
-    "side": "dark",
-    "why": "หมดวันศุกร์แล้ว โปรเจกต์ยังไม่เสร็จ — ลัทธิอู้งานยื้อสำเร็จ",
-    "winners": [
-     1,
-     6,
-     7,
-     9
-    ]
-   },
-   "day": 5
-  },
-  {
-   "key": "11:11004",
-   "n": 11,
-   "seed": 11004,
-   "steps": 289,
-   "final": "0d838ce8e5648c18fde6e05bd1053f726a424b6f5df873909ecd0bd0b5eacd61",
+   "steps": 196,
+   "final": "6b3c7342d5b1d5e1f594ba93c968933ac33f4c82b239e042b123b6f7d4aa8d8d",
    "over": {
     "side": "dark",
     "why": "หมดวันศุกร์แล้ว โปรเจกต์ยังไม่เสร็จ — ลัทธิอู้งานยื้อสำเร็จ",
@@ -3900,18 +3742,207 @@
    "day": 5
   },
   {
-   "key": "11:11005",
+   "key": "10:10039",
+   "n": 10,
+   "seed": 10039,
+   "steps": 221,
+   "final": "8d00a5069811f5fc7e2670d95915d1213f7205758b721a8ab7fa8f41f13b9013",
+   "over": {
+    "side": "dark",
+    "why": "หมดวันศุกร์แล้ว โปรเจกต์ยังไม่เสร็จ — ลัทธิอู้งานยื้อสำเร็จ",
+    "winners": [
+     1,
+     3
+    ]
+   },
+   "day": 5
+  },
+  {
+   "key": "10:10040",
+   "n": 10,
+   "seed": 10040,
+   "steps": 228,
+   "final": "3041f327983d4787f9d706b6a621447df93637b5e01ecf36a96f8410c659e44f",
+   "over": {
+    "side": "dark",
+    "why": "หมดวันศุกร์แล้ว โปรเจกต์ยังไม่เสร็จ — ลัทธิอู้งานยื้อสำเร็จ",
+    "winners": [
+     1,
+     7,
+     8
+    ]
+   },
+   "day": 5
+  },
+  {
+   "key": "10:10041",
+   "n": 10,
+   "seed": 10041,
+   "steps": 235,
+   "final": "663426573116e37301d481dc865cf4babf34d8dd351e7f6eb8e8381f02be750f",
+   "over": {
+    "side": "dark",
+    "why": "หมดวันศุกร์แล้ว โปรเจกต์ยังไม่เสร็จ — ลัทธิอู้งานยื้อสำเร็จ",
+    "winners": [
+     7,
+     9
+    ]
+   },
+   "day": 5
+  },
+  {
+   "key": "10:10042",
+   "n": 10,
+   "seed": 10042,
+   "steps": 253,
+   "final": "80cda47e6bf098ad62b3ca01b320acac328730228c709047e664fc0b4cc9112d",
+   "over": {
+    "side": "dark",
+    "why": "หมดวันศุกร์แล้ว โปรเจกต์ยังไม่เสร็จ — ลัทธิอู้งานยื้อสำเร็จ",
+    "winners": [
+     0,
+     7
+    ]
+   },
+   "day": 5
+  },
+  {
+   "key": "10:10043",
+   "n": 10,
+   "seed": 10043,
+   "steps": 244,
+   "final": "9b8183dfbed417b126357907a5d38c8f17292c53dc6beec413b96e46155db8c3",
+   "over": {
+    "side": "dark",
+    "why": "หมดวันศุกร์แล้ว โปรเจกต์ยังไม่เสร็จ — ลัทธิอู้งานยื้อสำเร็จ",
+    "winners": [
+     0,
+     4,
+     5,
+     9
+    ]
+   },
+   "day": 5
+  },
+  {
+   "key": "10:10044",
+   "n": 10,
+   "seed": 10044,
+   "steps": 81,
+   "final": "6621755073d88b91072394040cb67b719f60d9b1d6d6640d9791535ea66d7495",
+   "over": {
+    "side": "light",
+    "why": "Mana Task เต็ม 100% — ส่งงานทัน Deadline!",
+    "winners": [
+     0,
+     1,
+     2,
+     5,
+     6,
+     8
+    ]
+   },
+   "day": 2
+  },
+  {
+   "key": "11:11000",
    "n": 11,
-   "seed": 11005,
-   "steps": 250,
-   "final": "6328768258c9800e954bbe29b57a100ae38b78ec8c3f81e6dafc6cb65632ffcb",
+   "seed": 11000,
+   "steps": 248,
+   "final": "4b462e0e427c8e78488b426d92e3474b3a2387a339ba584f7de6cd5365ada8c8",
+   "over": {
+    "side": "dark",
+    "why": "หมดวันศุกร์แล้ว โปรเจกต์ยังไม่เสร็จ — ลัทธิอู้งานยื้อสำเร็จ",
+    "winners": [
+     1,
+     2,
+     6
+    ]
+   },
+   "day": 5
+  },
+  {
+   "key": "11:11001",
+   "n": 11,
+   "seed": 11001,
+   "steps": 249,
+   "final": "abfa734f26ee87f7ab7310139bb24da03990ee09393ca4ac99fe44de35769014",
+   "over": {
+    "side": "dark",
+    "why": "หมดวันศุกร์แล้ว โปรเจกต์ยังไม่เสร็จ — ลัทธิอู้งานยื้อสำเร็จ",
+    "winners": [
+     1,
+     3,
+     6,
+     9
+    ]
+   },
+   "day": 5
+  },
+  {
+   "key": "11:11002",
+   "n": 11,
+   "seed": 11002,
+   "steps": 258,
+   "final": "abafb02687e6b843c4444491e3ee26652e6f32da35a4b903c3a28152f4a0d136",
    "over": {
     "side": "dark",
     "why": "หมดวันศุกร์แล้ว โปรเจกต์ยังไม่เสร็จ — ลัทธิอู้งานยื้อสำเร็จ",
     "winners": [
      2,
      3,
-     5
+     7
+    ]
+   },
+   "day": 5
+  },
+  {
+   "key": "11:11003",
+   "n": 11,
+   "seed": 11003,
+   "steps": 264,
+   "final": "f92a5738ed9cb9a5fc4f9af3e42bfb4d64bbc87beff873626943f49d6db6d51e",
+   "over": {
+    "side": "dark",
+    "why": "หมดวันศุกร์แล้ว โปรเจกต์ยังไม่เสร็จ — ลัทธิอู้งานยื้อสำเร็จ",
+    "winners": [
+     2,
+     5,
+     6
+    ]
+   },
+   "day": 5
+  },
+  {
+   "key": "11:11004",
+   "n": 11,
+   "seed": 11004,
+   "steps": 257,
+   "final": "da47e2d01a530851f929937b80ef35d74de0ce58783dd6d1b95ae42c7a669599",
+   "over": {
+    "side": "dark",
+    "why": "หมดวันศุกร์แล้ว โปรเจกต์ยังไม่เสร็จ — ลัทธิอู้งานยื้อสำเร็จ",
+    "winners": [
+     0,
+     1,
+     4
+    ]
+   },
+   "day": 5
+  },
+  {
+   "key": "11:11005",
+   "n": 11,
+   "seed": 11005,
+   "steps": 248,
+   "final": "4af338bced2654a95aba6feff7f89350da0c94b0ba7a5d76a89871d8504046f8",
+   "over": {
+    "side": "dark",
+    "why": "หมดวันศุกร์แล้ว โปรเจกต์ยังไม่เสร็จ — ลัทธิอู้งานยื้อสำเร็จ",
+    "winners": [
+     0,
+     2,
+     9
     ]
    },
    "day": 5
@@ -3920,15 +3951,15 @@
    "key": "11:11006",
    "n": 11,
    "seed": 11006,
-   "steps": 244,
-   "final": "fcce11a2422899a7b824dfb4410f1feae31d8ac8bb2cd4f9c7021224b4efaf81",
+   "steps": 283,
+   "final": "f8f445c8864cbcfaad64e5661139a0300c25af143cd033b56f92e93cc74d4bc9",
    "over": {
     "side": "dark",
     "why": "หมดวันศุกร์แล้ว โปรเจกต์ยังไม่เสร็จ — ลัทธิอู้งานยื้อสำเร็จ",
     "winners": [
-     4,
+     5,
      6,
-     9
+     8
     ]
    },
    "day": 5
@@ -3937,35 +3968,32 @@
    "key": "11:11007",
    "n": 11,
    "seed": 11007,
-   "steps": 255,
-   "final": "30a1fda82744f549391e0d5343473494865b4b8af2aa7499fcb6e93c80758361",
+   "steps": 183,
+   "final": "6e2d2ff813c198e71cc4e31a006aa5c4abd2fdd0d8f658ebcff5326d7fd8f719",
    "over": {
     "side": "light",
     "why": "Mana Task เต็ม 100% — ส่งงานทัน Deadline!",
     "winners": [
      1,
-     2,
-     4,
      5,
      6,
-     7,
-     8
+     8,
+     9,
+     10
     ]
    },
-   "day": 5
+   "day": 4
   },
   {
    "key": "11:11008",
    "n": 11,
    "seed": 11008,
-   "steps": 263,
-   "final": "82f297a268d09124b73460f130fe4f348f2d27f4169e6f449bcef41da5d776e7",
+   "steps": 260,
+   "final": "da64adbf1d6e7723529a9ba111c16248a1a640724146b231ef91375964c6b7c3",
    "over": {
     "side": "dark",
     "why": "หมดวันศุกร์แล้ว โปรเจกต์ยังไม่เสร็จ — ลัทธิอู้งานยื้อสำเร็จ",
     "winners": [
-     1,
-     3,
      8,
      9
     ]
@@ -3976,31 +4004,32 @@
    "key": "11:11009",
    "n": 11,
    "seed": 11009,
-   "steps": 211,
-   "final": "5167189ed5e9343a752b0393963885278ed107e886699d63787d2f23c58874c4",
+   "steps": 257,
+   "final": "545a78ea6390c861b14a11c55c41e3d1636a0d3a3cb7157da68033c2d22dcc1d",
    "over": {
     "side": "dark",
-    "why": "ฝ่ายมืดมีจำนวนมากกว่าหรือเท่ากับฝ่ายแสงแล้ว — บริษัทล่มสลาย",
+    "why": "หมดวันศุกร์แล้ว โปรเจกต์ยังไม่เสร็จ — ลัทธิอู้งานยื้อสำเร็จ",
     "winners": [
-     3,
-     4
+     4,
+     7,
+     9
     ]
    },
-   "day": 4
+   "day": 5
   },
   {
    "key": "11:11010",
    "n": 11,
    "seed": 11010,
-   "steps": 221,
-   "final": "2fdae776adb40fc92c52262dfe5359f8596ecbcfeb3d2e9b352560e38667b33c",
+   "steps": 225,
+   "final": "70ede4921073e7adc04e372720b1ecea5165433ec723efeb3427a4ad25ea51b7",
    "over": {
     "side": "dark",
     "why": "หมดวันศุกร์แล้ว โปรเจกต์ยังไม่เสร็จ — ลัทธิอู้งานยื้อสำเร็จ",
     "winners": [
-     3,
-     7,
-     10
+     0,
+     5,
+     7
     ]
    },
    "day": 5
@@ -4009,15 +4038,15 @@
    "key": "11:11011",
    "n": 11,
    "seed": 11011,
-   "steps": 276,
-   "final": "a6d38a9c9dc86543ed345d002abef86405a7507df247a261310ec84f36c3a0f9",
+   "steps": 267,
+   "final": "7b869050f87e46055e5293e025cada39f507a3bc4faff2197f6db75f07fcb08c",
    "over": {
     "side": "dark",
     "why": "หมดวันศุกร์แล้ว โปรเจกต์ยังไม่เสร็จ — ลัทธิอู้งานยื้อสำเร็จ",
     "winners": [
-     8,
-     9,
-     10
+     5,
+     6,
+     8
     ]
    },
    "day": 5
@@ -4026,15 +4055,14 @@
    "key": "11:11012",
    "n": 11,
    "seed": 11012,
-   "steps": 248,
-   "final": "743895d6a15d81ccfa41cf5d3e62d54166b1ea668b4ada4c2cd804dc07e7dd6a",
+   "steps": 249,
+   "final": "b107be400850acc0d23ece9b14d145ffcaf5cfe8e9d4b9649cc8863c4b658123",
    "over": {
     "side": "dark",
     "why": "หมดวันศุกร์แล้ว โปรเจกต์ยังไม่เสร็จ — ลัทธิอู้งานยื้อสำเร็จ",
     "winners": [
-     3,
-     4,
-     9
+     1,
+     2
     ]
    },
    "day": 5
@@ -4043,15 +4071,14 @@
    "key": "11:11013",
    "n": 11,
    "seed": 11013,
-   "steps": 249,
-   "final": "4b12abcb90ff18c70aea247a87f3f8b662c606fad95e10dc73712f7e64578e3c",
+   "steps": 274,
+   "final": "af4c7ce282650b753ea141b4e8a808fedf17a7f4d263617ca7c53422f59cfabc",
    "over": {
     "side": "dark",
     "why": "หมดวันศุกร์แล้ว โปรเจกต์ยังไม่เสร็จ — ลัทธิอู้งานยื้อสำเร็จ",
     "winners": [
-     1,
-     2,
-     8
+     9,
+     10
     ]
    },
    "day": 5
@@ -4060,15 +4087,15 @@
    "key": "11:11014",
    "n": 11,
    "seed": 11014,
-   "steps": 239,
-   "final": "120b0d97db10bc7b3e4e9955d7224e1599a3871ccbb0af52e413066b80f9dbb0",
+   "steps": 248,
+   "final": "1b68f2193ab0a390f1a063a873cdb2a9bfe1aaffa5bede6c6aeff89c32aaa2ff",
    "over": {
     "side": "dark",
     "why": "หมดวันศุกร์แล้ว โปรเจกต์ยังไม่เสร็จ — ลัทธิอู้งานยื้อสำเร็จ",
     "winners": [
-     3,
-     8,
-     10
+     1,
+     4,
+     6
     ]
    },
    "day": 5
@@ -4077,15 +4104,15 @@
    "key": "11:11015",
    "n": 11,
    "seed": 11015,
-   "steps": 269,
-   "final": "bc19c113252b069058d9e0668efb7de0d128d6dc23066caf246cdee32e6e0047",
+   "steps": 277,
+   "final": "ad6a90ce677d8e3c4349ca4deb023d06460dbe2ac01c5360f6c4c40b248a2eff",
    "over": {
     "side": "dark",
     "why": "หมดวันศุกร์แล้ว โปรเจกต์ยังไม่เสร็จ — ลัทธิอู้งานยื้อสำเร็จ",
     "winners": [
      1,
-     2,
-     4
+     3,
+     8
     ]
    },
    "day": 5
@@ -4094,35 +4121,31 @@
    "key": "11:11016",
    "n": 11,
    "seed": 11016,
-   "steps": 132,
-   "final": "8f450511bfa9bb13e3297b726cc0c5949d8f7eb648e06e13900a1e6e2fe97805",
+   "steps": 220,
+   "final": "9ed32d17743df919e55be3e1111f535fcf3eef940d74d3b7d0bcfc42158a9440",
    "over": {
-    "side": "light",
-    "why": "Mana Task เต็ม 100% — ส่งงานทัน Deadline!",
+    "side": "dark",
+    "why": "หมดวันศุกร์แล้ว โปรเจกต์ยังไม่เสร็จ — ลัทธิอู้งานยื้อสำเร็จ",
     "winners": [
-     0,
-     1,
      3,
-     5,
-     6,
-     9
+     10
     ]
    },
-   "day": 3
+   "day": 5
   },
   {
    "key": "11:11017",
    "n": 11,
    "seed": 11017,
-   "steps": 285,
-   "final": "6f302fda5567e32213a591ba630486655afb9634a2a054ebb825af7505e85746",
+   "steps": 267,
+   "final": "812671bbbf1e27ccfc6490a156b2fcd15346727a339a183b57674f7f483ccb5d",
    "over": {
     "side": "dark",
     "why": "หมดวันศุกร์แล้ว โปรเจกต์ยังไม่เสร็จ — ลัทธิอู้งานยื้อสำเร็จ",
     "winners": [
-     1,
-     9,
-     10
+     2,
+     6,
+     7
     ]
    },
    "day": 5
@@ -4131,713 +4154,8 @@
    "key": "11:11018",
    "n": 11,
    "seed": 11018,
-   "steps": 218,
-   "final": "8110681096dc884db5b226a6eba1c8728e6bbbf813a388c6eab4294041bb1310",
-   "over": {
-    "side": "dark",
-    "why": "หมดวันศุกร์แล้ว โปรเจกต์ยังไม่เสร็จ — ลัทธิอู้งานยื้อสำเร็จ",
-    "winners": [
-     2,
-     7,
-     9
-    ]
-   },
-   "day": 5
-  },
-  {
-   "key": "11:11019",
-   "n": 11,
-   "seed": 11019,
-   "steps": 254,
-   "final": "30ecacc8f9b6e56959877a12f5601fb3579a6d308f5b145bbdf5dba9b35064f6",
-   "over": {
-    "side": "dark",
-    "why": "หมดวันศุกร์แล้ว โปรเจกต์ยังไม่เสร็จ — ลัทธิอู้งานยื้อสำเร็จ",
-    "winners": [
-     0,
-     3,
-     10
-    ]
-   },
-   "day": 5
-  },
-  {
-   "key": "11:11020",
-   "n": 11,
-   "seed": 11020,
-   "steps": 258,
-   "final": "8ebd86550753d060d01de386b7e4cde88143a37023cd7ffd5242a272666137c1",
-   "over": {
-    "side": "dark",
-    "why": "หมดวันศุกร์แล้ว โปรเจกต์ยังไม่เสร็จ — ลัทธิอู้งานยื้อสำเร็จ",
-    "winners": [
-     5,
-     8
-    ]
-   },
-   "day": 5
-  },
-  {
-   "key": "11:11021",
-   "n": 11,
-   "seed": 11021,
-   "steps": 252,
-   "final": "d36cf6dbac87df3f6a46cfec6fe6643745b398237ebff319330677f258f125c1",
-   "over": {
-    "side": "dark",
-    "why": "หมดวันศุกร์แล้ว โปรเจกต์ยังไม่เสร็จ — ลัทธิอู้งานยื้อสำเร็จ",
-    "winners": [
-     1,
-     2,
-     10
-    ]
-   },
-   "day": 5
-  },
-  {
-   "key": "11:11022",
-   "n": 11,
-   "seed": 11022,
-   "steps": 240,
-   "final": "458c965581db762425964604b8a5554a64fbc35c29ab90e244cfde266f85530a",
-   "over": {
-    "side": "dark",
-    "why": "หมดวันศุกร์แล้ว โปรเจกต์ยังไม่เสร็จ — ลัทธิอู้งานยื้อสำเร็จ",
-    "winners": [
-     7,
-     8
-    ]
-   },
-   "day": 5
-  },
-  {
-   "key": "11:11023",
-   "n": 11,
-   "seed": 11023,
-   "steps": 256,
-   "final": "a7d67f643961d5687bec95c9cf0d917e9dae764c1c1b74c558e08b083d522a73",
-   "over": {
-    "side": "light",
-    "why": "Mana Task เต็ม 100% — ส่งงานทัน Deadline!",
-    "winners": [
-     1,
-     3,
-     5,
-     7,
-     8,
-     9,
-     10
-    ]
-   },
-   "day": 5
-  },
-  {
-   "key": "11:11024",
-   "n": 11,
-   "seed": 11024,
-   "steps": 231,
-   "final": "7a83f9043f3bca3b68bed30b369013063eca20b2f8bfafdb52994e340927a1d3",
-   "over": {
-    "side": "dark",
-    "why": "หมดวันศุกร์แล้ว โปรเจกต์ยังไม่เสร็จ — ลัทธิอู้งานยื้อสำเร็จ",
-    "winners": [
-     0,
-     5,
-     6
-    ]
-   },
-   "day": 5
-  },
-  {
-   "key": "11:11025",
-   "n": 11,
-   "seed": 11025,
-   "steps": 274,
-   "final": "cf413aee10819ec5fbb9535d050af084c405712d2d4137b9ece2636fdbe0a991",
-   "over": {
-    "side": "dark",
-    "why": "หมดวันศุกร์แล้ว โปรเจกต์ยังไม่เสร็จ — ลัทธิอู้งานยื้อสำเร็จ",
-    "winners": [
-     0,
-     1,
-     5
-    ]
-   },
-   "day": 5
-  },
-  {
-   "key": "11:11026",
-   "n": 11,
-   "seed": 11026,
-   "steps": 245,
-   "final": "d80f4acaad2255f0aae78c1405c1cb135776be710620468bd4c326dbeffb5c71",
-   "over": {
-    "side": "light",
-    "why": "Mana Task เต็ม 100% — ส่งงานทัน Deadline!",
-    "winners": [
-     0,
-     2,
-     4,
-     8,
-     9,
-     10
-    ]
-   },
-   "day": 5
-  },
-  {
-   "key": "11:11027",
-   "n": 11,
-   "seed": 11027,
-   "steps": 240,
-   "final": "926d5fea408313aa2aee23fee3fa2b50e611cd29137fc67a1420a4e3f475789c",
-   "over": {
-    "side": "dark",
-    "why": "ฝ่ายมืดมีจำนวนมากกว่าหรือเท่ากับฝ่ายแสงแล้ว — บริษัทล่มสลาย",
-    "winners": [
-     2,
-     3,
-     4
-    ]
-   },
-   "day": 5
-  },
-  {
-   "key": "11:11028",
-   "n": 11,
-   "seed": 11028,
-   "steps": 236,
-   "final": "df83c08ce2bc9b70fca429bfc62fcc709c68ad7401fb0a0d5f21203ac5d4cc44",
-   "over": {
-    "side": "dark",
-    "why": "หมดวันศุกร์แล้ว โปรเจกต์ยังไม่เสร็จ — ลัทธิอู้งานยื้อสำเร็จ",
-    "winners": [
-     1,
-     3,
-     7
-    ]
-   },
-   "day": 5
-  },
-  {
-   "key": "11:11029",
-   "n": 11,
-   "seed": 11029,
-   "steps": 251,
-   "final": "c18a1c4833c4982ef5e9aee6eceff3dd20bc8002c11cc6d2ca451f3bf9ee3d58",
-   "over": {
-    "side": "dark",
-    "why": "หมดวันศุกร์แล้ว โปรเจกต์ยังไม่เสร็จ — ลัทธิอู้งานยื้อสำเร็จ",
-    "winners": [
-     1,
-     4,
-     10
-    ]
-   },
-   "day": 5
-  },
-  {
-   "key": "11:11030",
-   "n": 11,
-   "seed": 11030,
-   "steps": 249,
-   "final": "406146aebb721e5f9807f284c11ab815d787a2ecf8fc10f746bc3315fc0184a1",
-   "over": {
-    "side": "dark",
-    "why": "หมดวันศุกร์แล้ว โปรเจกต์ยังไม่เสร็จ — ลัทธิอู้งานยื้อสำเร็จ",
-    "winners": [
-     6,
-     7,
-     9
-    ]
-   },
-   "day": 5
-  },
-  {
-   "key": "11:11031",
-   "n": 11,
-   "seed": 11031,
-   "steps": 245,
-   "final": "a4fb6655ef5b7dd69adadece61828794387e5949036dc8a402e75f7f69145e25",
-   "over": {
-    "side": "dark",
-    "why": "ฝ่ายมืดมีจำนวนมากกว่าหรือเท่ากับฝ่ายแสงแล้ว — บริษัทล่มสลาย",
-    "winners": [
-     4,
-     8
-    ]
-   },
-   "day": 5
-  },
-  {
-   "key": "11:11032",
-   "n": 11,
-   "seed": 11032,
-   "steps": 132,
-   "final": "5f95c84aec51fa59938f859adbd093a3f8880a09c8d3754f9a58c9e5a4383d94",
-   "over": {
-    "side": "light",
-    "why": "Mana Task เต็ม 100% — ส่งงานทัน Deadline!",
-    "winners": [
-     1,
-     2,
-     7,
-     8,
-     9,
-     10
-    ]
-   },
-   "day": 3
-  },
-  {
-   "key": "11:11033",
-   "n": 11,
-   "seed": 11033,
-   "steps": 237,
-   "final": "f4da686efe63f634c6123fe7feccbdb30df2afe8fbfd1281d0c187719797a726",
-   "over": {
-    "side": "dark",
-    "why": "หมดวันศุกร์แล้ว โปรเจกต์ยังไม่เสร็จ — ลัทธิอู้งานยื้อสำเร็จ",
-    "winners": [
-     3,
-     4,
-     6
-    ]
-   },
-   "day": 5
-  },
-  {
-   "key": "11:11034",
-   "n": 11,
-   "seed": 11034,
-   "steps": 278,
-   "final": "f76c70ed5b81ad1be61a53cf845768db6e1bba41892243bbde7d50b56033ea96",
-   "over": {
-    "side": "dark",
-    "why": "หมดวันศุกร์แล้ว โปรเจกต์ยังไม่เสร็จ — ลัทธิอู้งานยื้อสำเร็จ",
-    "winners": [
-     1,
-     4,
-     10
-    ]
-   },
-   "day": 5
-  },
-  {
-   "key": "11:11035",
-   "n": 11,
-   "seed": 11035,
-   "steps": 90,
-   "final": "616ba5e9dbecfabc5cb8a671725e858404a2bbad278442bc5277c037c0ac9e12",
-   "over": {
-    "side": "light",
-    "why": "Mana Task เต็ม 100% — ส่งงานทัน Deadline!",
-    "winners": [
-     1,
-     2,
-     3,
-     5,
-     6,
-     9,
-     10
-    ]
-   },
-   "day": 2
-  },
-  {
-   "key": "11:11036",
-   "n": 11,
-   "seed": 11036,
-   "steps": 101,
-   "final": "2b46aae7b2b938ace548413485db7ade5227dfd2eadf435e91122695e77933be",
-   "over": {
-    "side": "light",
-    "why": "Mana Task เต็ม 100% — ส่งงานทัน Deadline!",
-    "winners": [
-     2,
-     3,
-     4,
-     5,
-     8,
-     9,
-     10
-    ]
-   },
-   "day": 2
-  },
-  {
-   "key": "11:11037",
-   "n": 11,
-   "seed": 11037,
-   "steps": 231,
-   "final": "d6ed56513f6c66cacfa0a6a73764bb236453bcfb0b9666bb4e24e67a9f74740a",
-   "over": {
-    "side": "dark",
-    "why": "หมดวันศุกร์แล้ว โปรเจกต์ยังไม่เสร็จ — ลัทธิอู้งานยื้อสำเร็จ",
-    "winners": [
-     0,
-     3,
-     8
-    ]
-   },
-   "day": 5
-  },
-  {
-   "key": "11:11038",
-   "n": 11,
-   "seed": 11038,
-   "steps": 189,
-   "final": "f5875cefa3cce006b613ca7c2f840819ea15cb4dde8d479d8c2834c62afbe8e0",
-   "over": {
-    "side": "light",
-    "why": "Mana Task เต็ม 100% — ส่งงานทัน Deadline!",
-    "winners": [
-     0,
-     3,
-     6,
-     7,
-     8,
-     9
-    ]
-   },
-   "day": 4
-  },
-  {
-   "key": "11:11039",
-   "n": 11,
-   "seed": 11039,
-   "steps": 276,
-   "final": "60b1d0071767bc0b8bb88e4ef621cf585f710b270ae54ea5a88e53948ec02a2e",
-   "over": {
-    "side": "dark",
-    "why": "หมดวันศุกร์แล้ว โปรเจกต์ยังไม่เสร็จ — ลัทธิอู้งานยื้อสำเร็จ",
-    "winners": [
-     0,
-     4,
-     10
-    ]
-   },
-   "day": 5
-  },
-  {
-   "key": "11:11040",
-   "n": 11,
-   "seed": 11040,
-   "steps": 250,
-   "final": "b9b9d96cd544bbf37cb68d3744e597085ff8da8f7c8eeba68024295b8613a16d",
-   "over": {
-    "side": "dark",
-    "why": "หมดวันศุกร์แล้ว โปรเจกต์ยังไม่เสร็จ — ลัทธิอู้งานยื้อสำเร็จ",
-    "winners": [
-     2,
-     9,
-     10
-    ]
-   },
-   "day": 5
-  },
-  {
-   "key": "11:11041",
-   "n": 11,
-   "seed": 11041,
-   "steps": 273,
-   "final": "022ec983e133bdbef5bea19cb6c286593db39e6d689c5b25d5c0f9d7e01ea1fb",
-   "over": {
-    "side": "dark",
-    "why": "หมดวันศุกร์แล้ว โปรเจกต์ยังไม่เสร็จ — ลัทธิอู้งานยื้อสำเร็จ",
-    "winners": [
-     1,
-     9,
-     10
-    ]
-   },
-   "day": 5
-  },
-  {
-   "key": "11:11042",
-   "n": 11,
-   "seed": 11042,
-   "steps": 242,
-   "final": "dd774d5498ffc6678f9098b177a5e0ebae341d47a4fd5d5334e55da0c3478fff",
-   "over": {
-    "side": "dark",
-    "why": "หมดวันศุกร์แล้ว โปรเจกต์ยังไม่เสร็จ — ลัทธิอู้งานยื้อสำเร็จ",
-    "winners": [
-     0,
-     4,
-     9,
-     10
-    ]
-   },
-   "day": 5
-  },
-  {
-   "key": "11:11043",
-   "n": 11,
-   "seed": 11043,
-   "steps": 265,
-   "final": "9ee3c284fdace10602e9d38852876ffd80066da878dab5caee7190dbef6e948f",
-   "over": {
-    "side": "dark",
-    "why": "หมดวันศุกร์แล้ว โปรเจกต์ยังไม่เสร็จ — ลัทธิอู้งานยื้อสำเร็จ",
-    "winners": [
-     0,
-     1,
-     2
-    ]
-   },
-   "day": 5
-  },
-  {
-   "key": "11:11044",
-   "n": 11,
-   "seed": 11044,
-   "steps": 140,
-   "final": "8fab5aba5fbac6402a7f109355d3d0be0fb26c0ab920e8fbb894c58768aad730",
-   "over": {
-    "side": "light",
-    "why": "Mana Task เต็ม 100% — ส่งงานทัน Deadline!",
-    "winners": [
-     0,
-     1,
-     2,
-     4,
-     6,
-     7
-    ]
-   },
-   "day": 3
-  },
-  {
-   "key": "12:12000",
-   "n": 12,
-   "seed": 12000,
-   "steps": 296,
-   "final": "9d5e2fdcaae7b6b70790430a582c0a4835b4b84dac8b3d481eece14f72949d01",
-   "over": {
-    "side": "dark",
-    "why": "หมดวันศุกร์แล้ว โปรเจกต์ยังไม่เสร็จ — ลัทธิอู้งานยื้อสำเร็จ",
-    "winners": [
-     1,
-     4,
-     6
-    ]
-   },
-   "day": 5
-  },
-  {
-   "key": "12:12001",
-   "n": 12,
-   "seed": 12001,
-   "steps": 260,
-   "final": "c280c1d8fb9afc634db9fbc547d830ccb6a1a86357e4e6d416d4d79449918133",
-   "over": {
-    "side": "light",
-    "why": "Mana Task เต็ม 100% — ส่งงานทัน Deadline!",
-    "winners": [
-     1,
-     3,
-     4,
-     5,
-     6,
-     7,
-     8,
-     10
-    ]
-   },
-   "day": 5
-  },
-  {
-   "key": "12:12002",
-   "n": 12,
-   "seed": 12002,
-   "steps": 264,
-   "final": "0669d6aa999b45d68d05715bb42007b2e10c15e13402937557daf07f2f80ad49",
-   "over": {
-    "side": "dark",
-    "why": "หมดวันศุกร์แล้ว โปรเจกต์ยังไม่เสร็จ — ลัทธิอู้งานยื้อสำเร็จ",
-    "winners": [
-     4,
-     5,
-     9
-    ]
-   },
-   "day": 5
-  },
-  {
-   "key": "12:12003",
-   "n": 12,
-   "seed": 12003,
-   "steps": 282,
-   "final": "f36e645adf5b232250405e563788776801bbe24c49a383e1ec19c39de1095686",
-   "over": {
-    "side": "dark",
-    "why": "หมดวันศุกร์แล้ว โปรเจกต์ยังไม่เสร็จ — ลัทธิอู้งานยื้อสำเร็จ",
-    "winners": [
-     5,
-     7,
-     9
-    ]
-   },
-   "day": 5
-  },
-  {
-   "key": "12:12004",
-   "n": 12,
-   "seed": 12004,
-   "steps": 274,
-   "final": "7fac5d60e2d9d0227492f5187ac1b29d3fa01dd8886765bdbea026e8fb32114d",
-   "over": {
-    "side": "dark",
-    "why": "หมดวันศุกร์แล้ว โปรเจกต์ยังไม่เสร็จ — ลัทธิอู้งานยื้อสำเร็จ",
-    "winners": [
-     3,
-     9,
-     10
-    ]
-   },
-   "day": 5
-  },
-  {
-   "key": "12:12005",
-   "n": 12,
-   "seed": 12005,
-   "steps": 242,
-   "final": "1dc210bc931d66f3a3068d481ddc5c5c63dd508fc844e050d1fac39c65343e5a",
-   "over": {
-    "side": "dark",
-    "why": "หมดวันศุกร์แล้ว โปรเจกต์ยังไม่เสร็จ — ลัทธิอู้งานยื้อสำเร็จ",
-    "winners": [
-     3,
-     5,
-     9,
-     10
-    ]
-   },
-   "day": 5
-  },
-  {
-   "key": "12:12006",
-   "n": 12,
-   "seed": 12006,
-   "steps": 269,
-   "final": "9e47be15627c1cd3af2be9c794d68c4d54c75c841b0ca928eb69916b422decc8",
-   "over": {
-    "side": "dark",
-    "why": "หมดวันศุกร์แล้ว โปรเจกต์ยังไม่เสร็จ — ลัทธิอู้งานยื้อสำเร็จ",
-    "winners": [
-     0,
-     1,
-     9
-    ]
-   },
-   "day": 5
-  },
-  {
-   "key": "12:12007",
-   "n": 12,
-   "seed": 12007,
-   "steps": 290,
-   "final": "6433ebc7182419ec63961010c5de88ec545cab8c2275709da9350913a5662d5f",
-   "over": {
-    "side": "dark",
-    "why": "หมดวันศุกร์แล้ว โปรเจกต์ยังไม่เสร็จ — ลัทธิอู้งานยื้อสำเร็จ",
-    "winners": [
-     1,
-     5,
-     8
-    ]
-   },
-   "day": 5
-  },
-  {
-   "key": "12:12008",
-   "n": 12,
-   "seed": 12008,
-   "steps": 256,
-   "final": "afa1cf1fef82e56cd100e5fb5e7fcece47b58bb48bb34df0f9ed1cd0ceee3674",
-   "over": {
-    "side": "dark",
-    "why": "หมดวันศุกร์แล้ว โปรเจกต์ยังไม่เสร็จ — ลัทธิอู้งานยื้อสำเร็จ",
-    "winners": [
-     3,
-     4
-    ]
-   },
-   "day": 5
-  },
-  {
-   "key": "12:12009",
-   "n": 12,
-   "seed": 12009,
-   "steps": 266,
-   "final": "38b5d74680df87ee2bbecf1018182068cf663106cc89208a047c1933ab4aeee7",
-   "over": {
-    "side": "dark",
-    "why": "หมดวันศุกร์แล้ว โปรเจกต์ยังไม่เสร็จ — ลัทธิอู้งานยื้อสำเร็จ",
-    "winners": [
-     6,
-     7,
-     8
-    ]
-   },
-   "day": 5
-  },
-  {
-   "key": "12:12010",
-   "n": 12,
-   "seed": 12010,
-   "steps": 272,
-   "final": "7fe184901aa1770ca2f37479d4d3d707f3e392a1064d3464908efeb68a3bfcde",
-   "over": {
-    "side": "dark",
-    "why": "หมดวันศุกร์แล้ว โปรเจกต์ยังไม่เสร็จ — ลัทธิอู้งานยื้อสำเร็จ",
-    "winners": [
-     10,
-     11
-    ]
-   },
-   "day": 5
-  },
-  {
-   "key": "12:12011",
-   "n": 12,
-   "seed": 12011,
-   "steps": 256,
-   "final": "d84ce2f9289e59010a1b155e63b8c60ff28cc7852f7f9e26818b7507f6bec88d",
-   "over": {
-    "side": "dark",
-    "why": "หมดวันศุกร์แล้ว โปรเจกต์ยังไม่เสร็จ — ลัทธิอู้งานยื้อสำเร็จ",
-    "winners": [
-     4,
-     6
-    ]
-   },
-   "day": 5
-  },
-  {
-   "key": "12:12012",
-   "n": 12,
-   "seed": 12012,
-   "steps": 273,
-   "final": "3d3b286eebebd165b7a3c3a3df1f0e380a4faadb8bdc41a989aa876cc3a4eb7a",
-   "over": {
-    "side": "dark",
-    "why": "หมดวันศุกร์แล้ว โปรเจกต์ยังไม่เสร็จ — ลัทธิอู้งานยื้อสำเร็จ",
-    "winners": [
-     0,
-     1,
-     6
-    ]
-   },
-   "day": 5
-  },
-  {
-   "key": "12:12013",
-   "n": 12,
-   "seed": 12013,
-   "steps": 267,
-   "final": "d26037ee91174c954ae2d8bb48a325ca4703b7bfbf343cf60f8d8af607664842",
+   "steps": 243,
+   "final": "b6306dd3db686a0c027580fe8984a12f56e081649bc52649e4b49a4a89577e5b",
    "over": {
     "side": "dark",
     "why": "หมดวันศุกร์แล้ว โปรเจกต์ยังไม่เสร็จ — ลัทธิอู้งานยื้อสำเร็จ",
@@ -4850,16 +4168,549 @@
    "day": 5
   },
   {
-   "key": "12:12014",
-   "n": 12,
-   "seed": 12014,
-   "steps": 263,
-   "final": "04dc6d7720737f79e0440d507195ce00facf4e0f3bec426a5d1129e2d86801de",
+   "key": "11:11019",
+   "n": 11,
+   "seed": 11019,
+   "steps": 269,
+   "final": "bb33c874983fc275146a71853ac30830d22611ed4dd7b9e97312c4ea25494ba7",
+   "over": {
+    "side": "dark",
+    "why": "หมดวันศุกร์แล้ว โปรเจกต์ยังไม่เสร็จ — ลัทธิอู้งานยื้อสำเร็จ",
+    "winners": [
+     5,
+     6
+    ]
+   },
+   "day": 5
+  },
+  {
+   "key": "11:11020",
+   "n": 11,
+   "seed": 11020,
+   "steps": 283,
+   "final": "63b3d643adabdba3d9d5240fe6840c86c1e638ea953a3c0411dd68f90412aed8",
+   "over": {
+    "side": "dark",
+    "why": "หมดวันศุกร์แล้ว โปรเจกต์ยังไม่เสร็จ — ลัทธิอู้งานยื้อสำเร็จ",
+    "winners": [
+     4,
+     7,
+     8
+    ]
+   },
+   "day": 5
+  },
+  {
+   "key": "11:11021",
+   "n": 11,
+   "seed": 11021,
+   "steps": 267,
+   "final": "539410078f0f0151201074796e51d5198ceb763005cc2bca112eb85a0bdfcd66",
+   "over": {
+    "side": "dark",
+    "why": "หมดวันศุกร์แล้ว โปรเจกต์ยังไม่เสร็จ — ลัทธิอู้งานยื้อสำเร็จ",
+    "winners": [
+     1,
+     7,
+     9,
+     10
+    ]
+   },
+   "day": 5
+  },
+  {
+   "key": "11:11022",
+   "n": 11,
+   "seed": 11022,
+   "steps": 234,
+   "final": "0c8b0c427640f756edf0e0e148e14831e54488a2522f9b7fe09fdf1072681748",
+   "over": {
+    "side": "dark",
+    "why": "หมดวันศุกร์แล้ว โปรเจกต์ยังไม่เสร็จ — ลัทธิอู้งานยื้อสำเร็จ",
+    "winners": [
+     1,
+     8
+    ]
+   },
+   "day": 5
+  },
+  {
+   "key": "11:11023",
+   "n": 11,
+   "seed": 11023,
+   "steps": 270,
+   "final": "ffeb0e95b40ff54b1b652b7fcd8fa6f3992555d05bcc7889f0882d077761e359",
+   "over": {
+    "side": "dark",
+    "why": "หมดวันศุกร์แล้ว โปรเจกต์ยังไม่เสร็จ — ลัทธิอู้งานยื้อสำเร็จ",
+    "winners": [
+     1,
+     2,
+     4
+    ]
+   },
+   "day": 5
+  },
+  {
+   "key": "11:11024",
+   "n": 11,
+   "seed": 11024,
+   "steps": 195,
+   "final": "11630a19becf01f349c8ad92d49b6f6bd15579cc7cc1c64fe4045ebdadd4fef6",
+   "over": {
+    "side": "light",
+    "why": "Mana Task เต็ม 100% — ส่งงานทัน Deadline!",
+    "winners": [
+     0,
+     1,
+     2,
+     3,
+     4,
+     6,
+     8,
+     10
+    ]
+   },
+   "day": 4
+  },
+  {
+   "key": "11:11025",
+   "n": 11,
+   "seed": 11025,
+   "steps": 216,
+   "final": "8e7d4fa663ab666f1a4520de0f60d668d5426d49192421bd3bf489fa4f904dfa",
+   "over": {
+    "side": "dark",
+    "why": "ฝ่ายมืดมีจำนวนมากกว่าหรือเท่ากับฝ่ายแสงแล้ว — บริษัทล่มสลาย",
+    "winners": [
+     2,
+     9
+    ]
+   },
+   "day": 4
+  },
+  {
+   "key": "11:11026",
+   "n": 11,
+   "seed": 11026,
+   "steps": 211,
+   "final": "f85ec356421b8f9b2f462f6c7a197a1a1ee6ee01a10dd922ec223ed627db3fc1",
+   "over": {
+    "side": "light",
+    "why": "ไล่ฝ่ายมืดออกจากบริษัทจนหมดแล้ว!",
+    "winners": [
+     0,
+     1,
+     4,
+     5,
+     6,
+     7,
+     8
+    ]
+   },
+   "day": 4
+  },
+  {
+   "key": "11:11027",
+   "n": 11,
+   "seed": 11027,
+   "steps": 94,
+   "final": "bd5bf76fbdb8ca556b7306db7cf3e977db4efa81b7608231f0a7714f96e24e23",
+   "over": {
+    "side": "light",
+    "why": "Mana Task เต็ม 100% — ส่งงานทัน Deadline!",
+    "winners": [
+     2,
+     3,
+     4,
+     6,
+     8,
+     9
+    ]
+   },
+   "day": 2
+  },
+  {
+   "key": "11:11028",
+   "n": 11,
+   "seed": 11028,
+   "steps": 271,
+   "final": "0c6bfb19552cf29ec94afcc143670c291f473f8220b32523d8bdfb06062c4d5d",
+   "over": {
+    "side": "dark",
+    "why": "หมดวันศุกร์แล้ว โปรเจกต์ยังไม่เสร็จ — ลัทธิอู้งานยื้อสำเร็จ",
+    "winners": [
+     5,
+     6,
+     10
+    ]
+   },
+   "day": 5
+  },
+  {
+   "key": "11:11029",
+   "n": 11,
+   "seed": 11029,
+   "steps": 215,
+   "final": "bc75fede4821d6e0a4e90be5d760d6fe819c0305b3148115ad8b4383ff1793c4",
+   "over": {
+    "side": "light",
+    "why": "Mana Task เต็ม 100% — ส่งงานทัน Deadline!",
+    "winners": [
+     0,
+     4,
+     5,
+     6,
+     8,
+     9
+    ]
+   },
+   "day": 4
+  },
+  {
+   "key": "11:11030",
+   "n": 11,
+   "seed": 11030,
+   "steps": 231,
+   "final": "f71b01d29d9805c57b30c5c50350a07e84d47dd8eb254951f4b6d3d1225dd867",
+   "over": {
+    "side": "dark",
+    "why": "หมดวันศุกร์แล้ว โปรเจกต์ยังไม่เสร็จ — ลัทธิอู้งานยื้อสำเร็จ",
+    "winners": [
+     1,
+     2,
+     9
+    ]
+   },
+   "day": 5
+  },
+  {
+   "key": "11:11031",
+   "n": 11,
+   "seed": 11031,
+   "steps": 228,
+   "final": "86c99f0c4145703d50944ee2ca1bd773dc5de83c2dace23f0b2023c933b9796b",
+   "over": {
+    "side": "light",
+    "why": "Mana Task เต็ม 100% — ส่งงานทัน Deadline!",
+    "winners": [
+     2,
+     4,
+     5,
+     7,
+     8,
+     9,
+     10
+    ]
+   },
+   "day": 5
+  },
+  {
+   "key": "11:11032",
+   "n": 11,
+   "seed": 11032,
+   "steps": 182,
+   "final": "c297db9ab3de820cd4c02dbd91dfbdd43d4873f58f973c4849b837d2ed8e06f3",
+   "over": {
+    "side": "light",
+    "why": "Mana Task เต็ม 100% — ส่งงานทัน Deadline!",
+    "winners": [
+     0,
+     1,
+     3,
+     4,
+     5,
+     6,
+     8,
+     10
+    ]
+   },
+   "day": 4
+  },
+  {
+   "key": "11:11033",
+   "n": 11,
+   "seed": 11033,
+   "steps": 264,
+   "final": "513038aa2f203974e3295cd9fd072fdee59feb6dee0b89bf48de04a365aa663e",
+   "over": {
+    "side": "dark",
+    "why": "หมดวันศุกร์แล้ว โปรเจกต์ยังไม่เสร็จ — ลัทธิอู้งานยื้อสำเร็จ",
+    "winners": [
+     5,
+     7,
+     10
+    ]
+   },
+   "day": 5
+  },
+  {
+   "key": "11:11034",
+   "n": 11,
+   "seed": 11034,
+   "steps": 88,
+   "final": "69a60eb64bf047bd2d948d249737944133945323669c5684b4668094f5e351b1",
+   "over": {
+    "side": "light",
+    "why": "Mana Task เต็ม 100% — ส่งงานทัน Deadline!",
+    "winners": [
+     0,
+     4,
+     6,
+     7,
+     8,
+     9
+    ]
+   },
+   "day": 2
+  },
+  {
+   "key": "11:11035",
+   "n": 11,
+   "seed": 11035,
+   "steps": 215,
+   "final": "fe397b83225effeadb7bd912600f2d36c7a0a568309b69781f49ef057d08b401",
+   "over": {
+    "side": "dark",
+    "why": "ฝ่ายมืดมีจำนวนมากกว่าหรือเท่ากับฝ่ายแสงแล้ว — บริษัทล่มสลาย",
+    "winners": [
+     4,
+     6
+    ]
+   },
+   "day": 4
+  },
+  {
+   "key": "11:11036",
+   "n": 11,
+   "seed": 11036,
+   "steps": 151,
+   "final": "0a421bbefb4f5f761718fb4775f5d0f6127a4663e9748af177872b6f2e054721",
+   "over": {
+    "side": "light",
+    "why": "Mana Task เต็ม 100% — ส่งงานทัน Deadline!",
+    "winners": [
+     0,
+     1,
+     4,
+     5,
+     6,
+     7,
+     10
+    ]
+   },
+   "day": 3
+  },
+  {
+   "key": "11:11037",
+   "n": 11,
+   "seed": 11037,
+   "steps": 233,
+   "final": "373892029ea6a1a778f5f908c387e2efedb3419073165b7c1cd2a7f073851675",
    "over": {
     "side": "dark",
     "why": "หมดวันศุกร์แล้ว โปรเจกต์ยังไม่เสร็จ — ลัทธิอู้งานยื้อสำเร็จ",
     "winners": [
      0,
+     6,
+     9
+    ]
+   },
+   "day": 5
+  },
+  {
+   "key": "11:11038",
+   "n": 11,
+   "seed": 11038,
+   "steps": 249,
+   "final": "8a3401db230bb813b4d4e6fb32d480b0e761be9c8a3a0cae2bf4b05c6e1affcb",
+   "over": {
+    "side": "dark",
+    "why": "หมดวันศุกร์แล้ว โปรเจกต์ยังไม่เสร็จ — ลัทธิอู้งานยื้อสำเร็จ",
+    "winners": [
+     0,
+     5,
+     8,
+     9
+    ]
+   },
+   "day": 5
+  },
+  {
+   "key": "11:11039",
+   "n": 11,
+   "seed": 11039,
+   "steps": 269,
+   "final": "21ba530caf7b0720d74728452aaa3fd85df0fe275de8e7d0a2e9a47d1c28ac04",
+   "over": {
+    "side": "dark",
+    "why": "ฝ่ายมืดมีจำนวนมากกว่าหรือเท่ากับฝ่ายแสงแล้ว — บริษัทล่มสลาย",
+    "winners": [
+     2,
+     9
+    ]
+   },
+   "day": 5
+  },
+  {
+   "key": "11:11040",
+   "n": 11,
+   "seed": 11040,
+   "steps": 262,
+   "final": "c6407e29a5dfae600d0c165871878f6a4479b4288ec9f45a98261c4e065ecffc",
+   "over": {
+    "side": "dark",
+    "why": "หมดวันศุกร์แล้ว โปรเจกต์ยังไม่เสร็จ — ลัทธิอู้งานยื้อสำเร็จ",
+    "winners": [
+     0,
+     4,
+     9
+    ]
+   },
+   "day": 5
+  },
+  {
+   "key": "11:11041",
+   "n": 11,
+   "seed": 11041,
+   "steps": 269,
+   "final": "fe12e081415ce28291f5885ed3c96a244e90ae878ed049e14894c65a37c7a31b",
+   "over": {
+    "side": "dark",
+    "why": "หมดวันศุกร์แล้ว โปรเจกต์ยังไม่เสร็จ — ลัทธิอู้งานยื้อสำเร็จ",
+    "winners": [
+     2,
+     4,
+     7
+    ]
+   },
+   "day": 5
+  },
+  {
+   "key": "11:11042",
+   "n": 11,
+   "seed": 11042,
+   "steps": 134,
+   "final": "1c7b4793b5bf1e49d6e6dfd6df92991a857e5bb3502217a40856942363621162",
+   "over": {
+    "side": "light",
+    "why": "Mana Task เต็ม 100% — ส่งงานทัน Deadline!",
+    "winners": [
+     0,
+     1,
+     2,
+     4,
+     7,
+     10
+    ]
+   },
+   "day": 3
+  },
+  {
+   "key": "11:11043",
+   "n": 11,
+   "seed": 11043,
+   "steps": 199,
+   "final": "61471c21bf038bf374db770c544d02a395a48b3191916bbedb7c9762354d4376",
+   "over": {
+    "side": "light",
+    "why": "ไล่ฝ่ายมืดออกจากบริษัทจนหมดแล้ว!",
+    "winners": [
+     0,
+     2,
+     3,
+     5,
+     7,
+     8,
+     9
+    ]
+   },
+   "day": 4
+  },
+  {
+   "key": "11:11044",
+   "n": 11,
+   "seed": 11044,
+   "steps": 55,
+   "final": "2ddde1f17bf1656ee10aefdd7eb5149f3886ac5bcd4e70407ae1add35367db20",
+   "over": {
+    "side": "light",
+    "why": "Mana Task เต็ม 100% — ส่งงานทัน Deadline!",
+    "winners": [
+     0,
+     3,
+     4,
+     7,
+     8,
+     9,
+     10
+    ]
+   },
+   "day": 1
+  },
+  {
+   "key": "12:12000",
+   "n": 12,
+   "seed": 12000,
+   "steps": 273,
+   "final": "55af5d2340d277ecdf52c15102a7b4f278d5f900b186002521ab504844aa9f39",
+   "over": {
+    "side": "dark",
+    "why": "หมดวันศุกร์แล้ว โปรเจกต์ยังไม่เสร็จ — ลัทธิอู้งานยื้อสำเร็จ",
+    "winners": [
+     8,
+     9,
+     10
+    ]
+   },
+   "day": 5
+  },
+  {
+   "key": "12:12001",
+   "n": 12,
+   "seed": 12001,
+   "steps": 252,
+   "final": "35e83ef537251374f106e82d77ec6e3a3b2fb88ec749baa698302ba63dbb3418",
+   "over": {
+    "side": "dark",
+    "why": "หมดวันศุกร์แล้ว โปรเจกต์ยังไม่เสร็จ — ลัทธิอู้งานยื้อสำเร็จ",
+    "winners": [
+     0,
+     4,
+     7
+    ]
+   },
+   "day": 5
+  },
+  {
+   "key": "12:12002",
+   "n": 12,
+   "seed": 12002,
+   "steps": 273,
+   "final": "aaf6c89124f043896cbd148af286012eb696d05d3db4aaf924474b065c882db2",
+   "over": {
+    "side": "dark",
+    "why": "หมดวันศุกร์แล้ว โปรเจกต์ยังไม่เสร็จ — ลัทธิอู้งานยื้อสำเร็จ",
+    "winners": [
+     1,
+     2,
+     10
+    ]
+   },
+   "day": 5
+  },
+  {
+   "key": "12:12003",
+   "n": 12,
+   "seed": 12003,
+   "steps": 275,
+   "final": "ae8a15e3ab2dd4899080e8205b60c4e3fcbc166d95b35176bd820fe410f31ae4",
+   "over": {
+    "side": "dark",
+    "why": "หมดวันศุกร์แล้ว โปรเจกต์ยังไม่เสร็จ — ลัทธิอู้งานยื้อสำเร็จ",
+    "winners": [
+     0,
+     2,
      3,
      11
     ]
@@ -4867,63 +4718,61 @@
    "day": 5
   },
   {
-   "key": "12:12015",
+   "key": "12:12004",
    "n": 12,
-   "seed": 12015,
-   "steps": 286,
-   "final": "87b4d47f14615b025c2496e4abb2fcb6713c259a99825dc83b983262efef369c",
+   "seed": 12004,
+   "steps": 252,
+   "final": "9233c84bedd580e222aae3b06418b3b6e199f92004685a6932acd50c4667353a",
    "over": {
     "side": "dark",
     "why": "หมดวันศุกร์แล้ว โปรเจกต์ยังไม่เสร็จ — ลัทธิอู้งานยื้อสำเร็จ",
     "winners": [
-     2,
-     3,
-     4,
-     8
+     0,
+     8,
+     11
     ]
    },
    "day": 5
   },
   {
-   "key": "12:12016",
+   "key": "12:12005",
    "n": 12,
-   "seed": 12016,
-   "steps": 255,
-   "final": "62137b3adf62f7998b94d8dc24c40dd609c1a1dcbf9fbe57f7be2d42ba08323e",
+   "seed": 12005,
+   "steps": 270,
+   "final": "dceeb9255644f44a707c54eb57248337dce7f23d766aac7786eeb4602f088720",
+   "over": {
+    "side": "dark",
+    "why": "หมดวันศุกร์แล้ว โปรเจกต์ยังไม่เสร็จ — ลัทธิอู้งานยื้อสำเร็จ",
+    "winners": [
+     3,
+     7
+    ]
+   },
+   "day": 5
+  },
+  {
+   "key": "12:12006",
+   "n": 12,
+   "seed": 12006,
+   "steps": 286,
+   "final": "4cc033be3b0a2ef435d680921cdeb30c28547ffd8e06baccb03d8f4b473d5216",
    "over": {
     "side": "dark",
     "why": "หมดวันศุกร์แล้ว โปรเจกต์ยังไม่เสร็จ — ลัทธิอู้งานยื้อสำเร็จ",
     "winners": [
      1,
-     4
+     6,
+     9
     ]
    },
    "day": 5
   },
   {
-   "key": "12:12017",
+   "key": "12:12007",
    "n": 12,
-   "seed": 12017,
-   "steps": 286,
-   "final": "55295c547ae9d075a0b6039e4e20e80604f6b459c47e8c945b79f070971fee01",
-   "over": {
-    "side": "dark",
-    "why": "หมดวันศุกร์แล้ว โปรเจกต์ยังไม่เสร็จ — ลัทธิอู้งานยื้อสำเร็จ",
-    "winners": [
-     1,
-     2,
-     3,
-     6
-    ]
-   },
-   "day": 5
-  },
-  {
-   "key": "12:12018",
-   "n": 12,
-   "seed": 12018,
-   "steps": 250,
-   "final": "15988e9f603128bbf609144a11bf6d3ef0dd1ae81bad724571777e74eeb4c990",
+   "seed": 12007,
+   "steps": 264,
+   "final": "2c85d7da6ab32c65e72db388dd8ce5d7dcbf1668955a406d85b8181764836c2e",
    "over": {
     "side": "dark",
     "why": "หมดวันศุกร์แล้ว โปรเจกต์ยังไม่เสร็จ — ลัทธิอู้งานยื้อสำเร็จ",
@@ -4936,22 +4785,215 @@
    "day": 5
   },
   {
-   "key": "12:12019",
+   "key": "12:12008",
    "n": 12,
-   "seed": 12019,
-   "steps": 200,
-   "final": "76e95fa938a56f77b2ca5679af8f4480e11a5baade017e8c0c34a71c3eaf9d32",
+   "seed": 12008,
+   "steps": 223,
+   "final": "769ecd99e423bd5dec24a1e9d9ce690dbec3322c83d7fae86db82af73151afcb",
+   "over": {
+    "side": "dark",
+    "why": "หมดวันศุกร์แล้ว โปรเจกต์ยังไม่เสร็จ — ลัทธิอู้งานยื้อสำเร็จ",
+    "winners": [
+     3,
+     7
+    ]
+   },
+   "day": 5
+  },
+  {
+   "key": "12:12009",
+   "n": 12,
+   "seed": 12009,
+   "steps": 275,
+   "final": "bc87dee2fe0b7ef06a7db11012d9b977a33a2ffbfb2f72437720e025280c5e48",
+   "over": {
+    "side": "dark",
+    "why": "หมดวันศุกร์แล้ว โปรเจกต์ยังไม่เสร็จ — ลัทธิอู้งานยื้อสำเร็จ",
+    "winners": [
+     1,
+     5,
+     10
+    ]
+   },
+   "day": 5
+  },
+  {
+   "key": "12:12010",
+   "n": 12,
+   "seed": 12010,
+   "steps": 256,
+   "final": "f913f12a10644fb25be21da3de281042ea9f09eb7c4186361b91d48121b65f56",
+   "over": {
+    "side": "dark",
+    "why": "หมดวันศุกร์แล้ว โปรเจกต์ยังไม่เสร็จ — ลัทธิอู้งานยื้อสำเร็จ",
+    "winners": [
+     2,
+     7,
+     10
+    ]
+   },
+   "day": 5
+  },
+  {
+   "key": "12:12011",
+   "n": 12,
+   "seed": 12011,
+   "steps": 236,
+   "final": "004e9d6427f47ad38349d233daa2b363f020cef2929dde5e1ea4013ca6027918",
+   "over": {
+    "side": "light",
+    "why": "ไล่ฝ่ายมืดออกจากบริษัทจนหมดแล้ว!",
+    "winners": [
+     0,
+     1,
+     2,
+     3,
+     6,
+     10,
+     11
+    ]
+   },
+   "day": 5
+  },
+  {
+   "key": "12:12012",
+   "n": 12,
+   "seed": 12012,
+   "steps": 196,
+   "final": "0ecac0b4f2a8bd3a48e2b530fbbede8c9f01608ed110d90c1cdeffbbbc566c75",
    "over": {
     "side": "light",
     "why": "ไล่ฝ่ายมืดออกจากบริษัทจนหมดแล้ว!",
     "winners": [
      1,
+     4,
+     6,
+     7,
+     8,
+     9,
+     10
+    ]
+   },
+   "day": 4
+  },
+  {
+   "key": "12:12013",
+   "n": 12,
+   "seed": 12013,
+   "steps": 268,
+   "final": "dee4f733e59aeb9e3117c4858a0fda527c5fe039c0899f0780dd051108b43cf9",
+   "over": {
+    "side": "dark",
+    "why": "หมดวันศุกร์แล้ว โปรเจกต์ยังไม่เสร็จ — ลัทธิอู้งานยื้อสำเร็จ",
+    "winners": [
+     6,
+     8,
+     10
+    ]
+   },
+   "day": 5
+  },
+  {
+   "key": "12:12014",
+   "n": 12,
+   "seed": 12014,
+   "steps": 269,
+   "final": "ece6478b371c32d5ff044955307fe6eb12419bfac73bdf04168e3488ca044468",
+   "over": {
+    "side": "dark",
+    "why": "หมดวันศุกร์แล้ว โปรเจกต์ยังไม่เสร็จ — ลัทธิอู้งานยื้อสำเร็จ",
+    "winners": [
+     0,
+     4,
+     5,
+     8,
+     9
+    ]
+   },
+   "day": 5
+  },
+  {
+   "key": "12:12015",
+   "n": 12,
+   "seed": 12015,
+   "steps": 263,
+   "final": "91a1a3b650f4f448e2e2048ba5df9c297dbd2614b0f848c928e33d24aee1dfa0",
+   "over": {
+    "side": "dark",
+    "why": "หมดวันศุกร์แล้ว โปรเจกต์ยังไม่เสร็จ — ลัทธิอู้งานยื้อสำเร็จ",
+    "winners": [
+     2,
+     9
+    ]
+   },
+   "day": 5
+  },
+  {
+   "key": "12:12016",
+   "n": 12,
+   "seed": 12016,
+   "steps": 295,
+   "final": "17b0efcb5e0de9a1db8b32220e161f62059a93167e6b07f2e02c10a7c57af04a",
+   "over": {
+    "side": "dark",
+    "why": "หมดวันศุกร์แล้ว โปรเจกต์ยังไม่เสร็จ — ลัทธิอู้งานยื้อสำเร็จ",
+    "winners": [
+     2,
+     11
+    ]
+   },
+   "day": 5
+  },
+  {
+   "key": "12:12017",
+   "n": 12,
+   "seed": 12017,
+   "steps": 236,
+   "final": "4dc9bc5135a3ca0f9335aa7896b482d3d83adb9a79737e60567182d8637f3c94",
+   "over": {
+    "side": "light",
+    "why": "Mana Task เต็ม 100% — ส่งงานทัน Deadline!",
+    "winners": [
+     0,
      2,
      3,
-     4,
      5,
      6,
      7,
+     8,
+     11
+    ]
+   },
+   "day": 4
+  },
+  {
+   "key": "12:12018",
+   "n": 12,
+   "seed": 12018,
+   "steps": 283,
+   "final": "48fa97d4c1ef89149c07d27bf17fe68d3c9e9745c6f88b8aa34ef97042a16cce",
+   "over": {
+    "side": "dark",
+    "why": "หมดวันศุกร์แล้ว โปรเจกต์ยังไม่เสร็จ — ลัทธิอู้งานยื้อสำเร็จ",
+    "winners": [
+     0,
+     3,
+     9
+    ]
+   },
+   "day": 5
+  },
+  {
+   "key": "12:12019",
+   "n": 12,
+   "seed": 12019,
+   "steps": 231,
+   "final": "275649538bda0027a36b7222b206b51fdedde2080d3f804335d3e284a0b31465",
+   "over": {
+    "side": "dark",
+    "why": "หมดวันศุกร์แล้ว โปรเจกต์ยังไม่เสร็จ — ลัทธิอู้งานยื้อสำเร็จ",
+    "winners": [
+     2,
      9
     ]
    },
@@ -4961,15 +5003,15 @@
    "key": "12:12020",
    "n": 12,
    "seed": 12020,
-   "steps": 248,
-   "final": "c186ce8a87bbcb1298fba0ed6f1eddfdb1c46e79f33870f3b0e40013bd7617c0",
+   "steps": 271,
+   "final": "bcf361079ecc35c2c65aa151107d5f4d9aab0fdaabb6e96a112cdcbb5c000451",
    "over": {
     "side": "dark",
     "why": "หมดวันศุกร์แล้ว โปรเจกต์ยังไม่เสร็จ — ลัทธิอู้งานยื้อสำเร็จ",
     "winners": [
-     0,
      2,
-     7
+     4,
+     10
     ]
    },
    "day": 5
@@ -4978,14 +5020,14 @@
    "key": "12:12021",
    "n": 12,
    "seed": 12021,
-   "steps": 290,
-   "final": "c98ee06d3caaed70585fe987c5e3c9566ea8fe2806f674017ac451539dd106d2",
+   "steps": 247,
+   "final": "2b34e66b2ea3a9093feb7de1923ffd80907603455576be38ba273fdb7bef7fe2",
    "over": {
     "side": "dark",
     "why": "หมดวันศุกร์แล้ว โปรเจกต์ยังไม่เสร็จ — ลัทธิอู้งานยื้อสำเร็จ",
     "winners": [
-     0,
-     4,
+     5,
+     7,
      11
     ]
    },
@@ -4995,36 +5037,36 @@
    "key": "12:12022",
    "n": 12,
    "seed": 12022,
-   "steps": 88,
-   "final": "0957e7f4128e4ff61a481ef5eb62e011351ce407b18141b4d70b744ae5065ce9",
+   "steps": 227,
+   "final": "24cfa15a5f917aebc1cac168451821d97c86d5069fa05da07495eda5821e49e5",
    "over": {
     "side": "light",
-    "why": "ไล่ฝ่ายมืดออกจากบริษัทจนหมดแล้ว!",
+    "why": "Mana Task เต็ม 100% — ส่งงานทัน Deadline!",
     "winners": [
-     0,
      1,
      2,
      3,
      4,
      7,
-     8
+     10,
+     11
     ]
    },
-   "day": 2
+   "day": 4
   },
   {
    "key": "12:12023",
    "n": 12,
    "seed": 12023,
-   "steps": 253,
-   "final": "36c462c87c6118dc492258ae46f0a3018b0b604285fead113ec5913b093d45b0",
+   "steps": 269,
+   "final": "ffcdf37885149b475a83cb7dfb5c73ce4bd926661e62fbeb974cca769318a7aa",
    "over": {
     "side": "dark",
     "why": "หมดวันศุกร์แล้ว โปรเจกต์ยังไม่เสร็จ — ลัทธิอู้งานยื้อสำเร็จ",
     "winners": [
-     1,
-     4,
-     11
+     7,
+     8,
+     9
     ]
    },
    "day": 5
@@ -5033,19 +5075,14 @@
    "key": "12:12024",
    "n": 12,
    "seed": 12024,
-   "steps": 266,
-   "final": "eeb9ab2f430e212edcc5ec801d74f4dbb228d1a30e8b48b7a7853006556dd89b",
+   "steps": 277,
+   "final": "4dc522fc376d4751e9d22c906bfb3dbce1be2e51be02efb151a70c2d18f77973",
    "over": {
-    "side": "light",
-    "why": "ไล่ฝ่ายมืดออกจากบริษัทจนหมดแล้ว!",
+    "side": "dark",
+    "why": "หมดวันศุกร์แล้ว โปรเจกต์ยังไม่เสร็จ — ลัทธิอู้งานยื้อสำเร็จ",
     "winners": [
-     0,
-     1,
-     2,
-     4,
      5,
-     6,
-     9
+     11
     ]
    },
    "day": 5
@@ -5054,20 +5091,19 @@
    "key": "12:12025",
    "n": 12,
    "seed": 12025,
-   "steps": 263,
-   "final": "3966583c19dae7ce3df58d8c50f8d3f913ff241e4933284e817bd1254f19a2fd",
+   "steps": 251,
+   "final": "b0ee9c7838353a45be6ac3a584c5e52eb5d54396395c13cc3a3a5ad6ff53c307",
    "over": {
     "side": "light",
     "why": "ไล่ฝ่ายมืดออกจากบริษัทจนหมดแล้ว!",
     "winners": [
      1,
-     2,
-     3,
      4,
      5,
      6,
      8,
-     10
+     10,
+     11
     ]
    },
    "day": 5
@@ -5076,18 +5112,39 @@
    "key": "12:12026",
    "n": 12,
    "seed": 12026,
-   "steps": 217,
-   "final": "0035009dcc6f1cffa6b965554b302f9a47392980026972146b3d5959fa21b8b7",
+   "steps": 92,
+   "final": "81e6ee789464327bbafb9bf73994d4af462a3d440c1fa391e4f4cb157f6a97a1",
    "over": {
     "side": "light",
     "why": "Mana Task เต็ม 100% — ส่งงานทัน Deadline!",
     "winners": [
      1,
+     4,
      5,
      6,
+     8,
+     10,
+     11
+    ]
+   },
+   "day": 2
+  },
+  {
+   "key": "12:12027",
+   "n": 12,
+   "seed": 12027,
+   "steps": 255,
+   "final": "2a7801a201e99e23cb1a99fbbdca76f7547c5b3dcda6830d36f5efb8865e7427",
+   "over": {
+    "side": "light",
+    "why": "ไล่ฝ่ายมืดออกจากบริษัทจนหมดแล้ว!",
+    "winners": [
+     1,
+     3,
+     4,
+     5,
      7,
      8,
-     9,
      10,
      11
     ]
@@ -5095,39 +5152,18 @@
    "day": 5
   },
   {
-   "key": "12:12027",
-   "n": 12,
-   "seed": 12027,
-   "steps": 157,
-   "final": "39aa2f50040070a6878ca866c470000fc81b7c3f3d4d9923408ccc5da4ba0986",
-   "over": {
-    "side": "light",
-    "why": "ไล่ฝ่ายมืดออกจากบริษัทจนหมดแล้ว!",
-    "winners": [
-     0,
-     1,
-     3,
-     8,
-     9,
-     10,
-     11
-    ]
-   },
-   "day": 3
-  },
-  {
    "key": "12:12028",
    "n": 12,
    "seed": 12028,
-   "steps": 284,
-   "final": "2af97adae48668d5ba22923abcaca90b11d168736efe2103124c7b69992daccd",
+   "steps": 280,
+   "final": "ca7164c6852a6c11b8c04f754f8f9f3596a4b8f3a57207add68dea5daabc4210",
    "over": {
     "side": "dark",
     "why": "หมดวันศุกร์แล้ว โปรเจกต์ยังไม่เสร็จ — ลัทธิอู้งานยื้อสำเร็จ",
     "winners": [
-     8,
-     10,
-     11
+     3,
+     4,
+     6
     ]
    },
    "day": 5
@@ -5136,15 +5172,15 @@
    "key": "12:12029",
    "n": 12,
    "seed": 12029,
-   "steps": 270,
-   "final": "95e232b841e0f9972c39b87148a2d50d3e3724d75407ad2a3a207c3dcaf56c6d",
+   "steps": 261,
+   "final": "8e0240798fba4c36c1f923280bcb6511e125731574b4a20e6d1d778b960ee7d9",
    "over": {
     "side": "dark",
     "why": "หมดวันศุกร์แล้ว โปรเจกต์ยังไม่เสร็จ — ลัทธิอู้งานยื้อสำเร็จ",
     "winners": [
-     0,
-     7,
-     9
+     2,
+     10,
+     11
     ]
    },
    "day": 5
@@ -5153,14 +5189,15 @@
    "key": "12:12030",
    "n": 12,
    "seed": 12030,
-   "steps": 271,
-   "final": "9b9a289e11fd3ae71601c5d8d100730370346ff914c21a753b51c44416eabe44",
+   "steps": 297,
+   "final": "615460a5619e553910ec55b1f95c67bf54d1f97f9bd761396d01078ed4b6cf50",
    "over": {
     "side": "dark",
     "why": "หมดวันศุกร์แล้ว โปรเจกต์ยังไม่เสร็จ — ลัทธิอู้งานยื้อสำเร็จ",
     "winners": [
-     0,
-     5
+     5,
+     8,
+     9
     ]
    },
    "day": 5
@@ -5169,15 +5206,15 @@
    "key": "12:12031",
    "n": 12,
    "seed": 12031,
-   "steps": 258,
-   "final": "46c3cbb0bba80d7bd658aee53dff5668f6c654504683a7d4d8d988e52bae9e79",
+   "steps": 260,
+   "final": "1be5e9a0e5d612afc79ee936c5195e83f8bd7de6a945d1cd4f20758d3f262ed9",
    "over": {
     "side": "dark",
     "why": "หมดวันศุกร์แล้ว โปรเจกต์ยังไม่เสร็จ — ลัทธิอู้งานยื้อสำเร็จ",
     "winners": [
-     4,
      6,
-     9
+     8,
+     10
     ]
    },
    "day": 5
@@ -5186,19 +5223,19 @@
    "key": "12:12032",
    "n": 12,
    "seed": 12032,
-   "steps": 267,
-   "final": "788f7aacb1b91dc09d3f572fb67cd5f25662b27218da6d5607975b5c2ce8fb07",
+   "steps": 268,
+   "final": "01b3ec6269ee467388858dd6d1690c9f330bb5705e1314d8aa80757dbb35bee7",
    "over": {
     "side": "light",
-    "why": "ไล่ฝ่ายมืดออกจากบริษัทจนหมดแล้ว!",
+    "why": "Mana Task เต็ม 100% — ส่งงานทัน Deadline!",
     "winners": [
      0,
      2,
      3,
      4,
      5,
-     9,
-     10,
+     7,
+     8,
      11
     ]
    },
@@ -5208,14 +5245,15 @@
    "key": "12:12033",
    "n": 12,
    "seed": 12033,
-   "steps": 247,
-   "final": "1845ecf14d67b0f3d1081299253825fec9d2509862729a64fd3c332db1f7032c",
+   "steps": 250,
+   "final": "d956564b7314e9205adb79dff28c6fb67f6bd528bdad0a0c4ea6b247c89b9775",
    "over": {
     "side": "dark",
     "why": "หมดวันศุกร์แล้ว โปรเจกต์ยังไม่เสร็จ — ลัทธิอู้งานยื้อสำเร็จ",
     "winners": [
-     2,
-     10
+     5,
+     7,
+     8
     ]
    },
    "day": 5
@@ -5224,15 +5262,15 @@
    "key": "12:12034",
    "n": 12,
    "seed": 12034,
-   "steps": 265,
-   "final": "d4f710e725724019a9003a77656c85b8bb53b92c428bcf854524e1e569296c04",
+   "steps": 277,
+   "final": "8ffbaca33d1a3ab3fe15bc8bec20b1f417dc74f45220b43dd3533a64c2901f8b",
    "over": {
     "side": "dark",
     "why": "หมดวันศุกร์แล้ว โปรเจกต์ยังไม่เสร็จ — ลัทธิอู้งานยื้อสำเร็จ",
     "winners": [
-     1,
-     3,
-     6
+     0,
+     5,
+     7
     ]
    },
    "day": 5
@@ -5241,15 +5279,15 @@
    "key": "12:12035",
    "n": 12,
    "seed": 12035,
-   "steps": 282,
-   "final": "3734371b2b6b1e29c53e2065e05e8b27faaccf712f5103add94cd75f5ee71468",
+   "steps": 278,
+   "final": "fce7217ebc766c806d41dda6ced04ea618a80ea1f847a7bc2a053b27cee8480b",
    "over": {
     "side": "dark",
     "why": "หมดวันศุกร์แล้ว โปรเจกต์ยังไม่เสร็จ — ลัทธิอู้งานยื้อสำเร็จ",
     "winners": [
      1,
      4,
-     11
+     8
     ]
    },
    "day": 5
@@ -5258,15 +5296,14 @@
    "key": "12:12036",
    "n": 12,
    "seed": 12036,
-   "steps": 261,
-   "final": "facd144b06bdafafd621b32dbc7dd575205f92e5cdf5694a783278dc9c5518b3",
+   "steps": 223,
+   "final": "1218c0752e89ec42b5dbed51205f38608b6c9cc3be05ebc67e7efa8bbc6e5bd8",
    "over": {
     "side": "dark",
     "why": "หมดวันศุกร์แล้ว โปรเจกต์ยังไม่เสร็จ — ลัทธิอู้งานยื้อสำเร็จ",
     "winners": [
      2,
-     7,
-     10
+     11
     ]
    },
    "day": 5
@@ -5275,13 +5312,14 @@
    "key": "12:12037",
    "n": 12,
    "seed": 12037,
-   "steps": 273,
-   "final": "59325369eea321d466395e3db881db44eaf43d51a2e50a561e7de4c609ed5894",
+   "steps": 293,
+   "final": "48b9730c50b8e9a71a1164c518a4f4ce8374f030a047431e4295ca52dc07ad7d",
    "over": {
     "side": "dark",
     "why": "หมดวันศุกร์แล้ว โปรเจกต์ยังไม่เสร็จ — ลัทธิอู้งานยื้อสำเร็จ",
     "winners": [
-     7,
+     0,
+     10,
      11
     ]
    },
@@ -5291,15 +5329,14 @@
    "key": "12:12038",
    "n": 12,
    "seed": 12038,
-   "steps": 269,
-   "final": "f3ce90380d64a2da99571848a3826e32a8e31aa64034e33d4db77f2a81b28c21",
+   "steps": 283,
+   "final": "20684c16c9bf821fe98a1efa395bcc635bd48d215a5a323e59984c576521d51b",
    "over": {
     "side": "dark",
     "why": "หมดวันศุกร์แล้ว โปรเจกต์ยังไม่เสร็จ — ลัทธิอู้งานยื้อสำเร็จ",
     "winners": [
-     1,
-     8,
-     11
+     4,
+     7
     ]
    },
    "day": 5
@@ -5308,14 +5345,14 @@
    "key": "12:12039",
    "n": 12,
    "seed": 12039,
-   "steps": 280,
-   "final": "de891dcd6a0c3585c79ecdc35f815e2dba81a99af6c102d0bf6310b486440d8f",
+   "steps": 301,
+   "final": "03bca449626f3c3319c57f307ef5481cf4533c6adf556f367f158a77d09aef2d",
    "over": {
     "side": "dark",
     "why": "หมดวันศุกร์แล้ว โปรเจกต์ยังไม่เสร็จ — ลัทธิอู้งานยื้อสำเร็จ",
     "winners": [
-     1,
-     10
+     4,
+     7
     ]
    },
    "day": 5
@@ -5324,14 +5361,13 @@
    "key": "12:12040",
    "n": 12,
    "seed": 12040,
-   "steps": 285,
-   "final": "8dfdcd365a0cb4c0f85ca4ca6278871aa968738867d2be52461c7ff0f159a84c",
+   "steps": 282,
+   "final": "4760e99bc418a54784a4314509a54a58ae27967a69415cdd7f06675e4d718197",
    "over": {
     "side": "dark",
     "why": "หมดวันศุกร์แล้ว โปรเจกต์ยังไม่เสร็จ — ลัทธิอู้งานยื้อสำเร็จ",
     "winners": [
-     2,
-     7,
+     4,
      9
     ]
    },
@@ -5341,15 +5377,15 @@
    "key": "12:12041",
    "n": 12,
    "seed": 12041,
-   "steps": 229,
-   "final": "32ed85090713e264cafca9d59cab1a2bb579552c9e0bb767a4b6b95af35fa89c",
+   "steps": 239,
+   "final": "94e39ba341c8593f03d0ced7b2e9d53816434c7cfc3e6830227e4ef5a420dda0",
    "over": {
     "side": "dark",
     "why": "หมดวันศุกร์แล้ว โปรเจกต์ยังไม่เสร็จ — ลัทธิอู้งานยื้อสำเร็จ",
     "winners": [
+     3,
      4,
-     5,
-     8
+     7
     ]
    },
    "day": 5
@@ -5358,14 +5394,15 @@
    "key": "12:12042",
    "n": 12,
    "seed": 12042,
-   "steps": 274,
-   "final": "5c425058256bbd976d2169aba9cb94e035557644949de15cbe7582423b5ed223",
+   "steps": 278,
+   "final": "2020beaa906aeedc600d9060f0066d97951002efa16a43bb75cd01d48eea5ee4",
    "over": {
     "side": "dark",
     "why": "หมดวันศุกร์แล้ว โปรเจกต์ยังไม่เสร็จ — ลัทธิอู้งานยื้อสำเร็จ",
     "winners": [
+     5,
      7,
-     8
+     11
     ]
    },
    "day": 5
@@ -5374,14 +5411,14 @@
    "key": "12:12043",
    "n": 12,
    "seed": 12043,
-   "steps": 267,
-   "final": "7142cfd0b72386b00af9a2996560d277bf8bf01e3d3c81ba8c9cb96bcf839699",
+   "steps": 283,
+   "final": "19f54885f3d16c7a277ffbd07d4b1bc53cbe5bd8e099b848a021db0eaae12f62",
    "over": {
     "side": "dark",
     "why": "หมดวันศุกร์แล้ว โปรเจกต์ยังไม่เสร็จ — ลัทธิอู้งานยื้อสำเร็จ",
     "winners": [
-     2,
-     4
+     4,
+     9
     ]
    },
    "day": 5
@@ -5390,14 +5427,15 @@
    "key": "12:12044",
    "n": 12,
    "seed": 12044,
-   "steps": 281,
-   "final": "f9b7f2b6ef5f327f7bf338fc5dea2e9f8e81a32f96e4142339484bd0b95d6e80",
+   "steps": 270,
+   "final": "653a7e72c90c6a10b074203e98f5ff54f0452f9d1eb32e486ea353ebb89d2ae7",
    "over": {
     "side": "dark",
     "why": "หมดวันศุกร์แล้ว โปรเจกต์ยังไม่เสร็จ — ลัทธิอู้งานยื้อสำเร็จ",
     "winners": [
-     9,
-     11
+     0,
+     2,
+     9
     ]
    },
    "day": 5

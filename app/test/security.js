@@ -26,9 +26,10 @@ function engineChecks() {
   // copy is random among living Light players, not the next seat to the right
   const seen = new Set();
   for (let i = 0; i < 300; i++) { G.setCopies(); assert(intern.copy, 'intern copy set'); seen.add(intern.copyFrom); }
-  const pool = G.players.filter(q => q.faction === 'light' && !require('../src/shared/data').ROLES[q.role].once);
+  const { ROLES, useLimit } = require('../src/shared/data');
+  const pool = G.players.filter(q => q.faction === 'light' && !useLimit(ROLES[q.role]));
   assert(pool.length >= 2 && seen.size >= 2, `copy source never varied (${[...seen]})`);
-  seen.forEach(n => assert(pool.some(q => q.name === n), 'copy source must be a Light, non-once player'));
+  seen.forEach(n => assert(pool.some(q => q.name === n), 'copy source must be a Light player without a use limit'));
 
   // the player view shows the skill but never who it came from
   const v = G.viewFor(intern.id);

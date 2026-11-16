@@ -1,6 +1,6 @@
 'use strict';
 // Night resolution (one ordered pipeline; the order is rule-critical).
-const { ROLES, TRAPS, FNAME } = require('../shared/data');
+const { ROLES, TRAPS, FNAME, useLimit } = require('../shared/data');
 const { shuffle, rnd } = require('./random');
 
 // Night resolution
@@ -19,7 +19,11 @@ module.exports = {
     });
     const act = pid => A.find(a => a.p.id === pid && !a.side);
     const skills = role => A.filter(a => a.type === 'SKILL' && er(a.p) === role && a.targets !== undefined);
-    A.forEach(a => { if (a.type === 'SKILL' && ROLES[a.p.role].once) a.p.used = true; });
+    // limited-use skills (once / uses:N) count a use the night they are submitted
+    A.forEach(a => { if (a.type === 'SKILL') { const lim = useLimit(ROLES[a.p.role]); if (lim) { a.p.usedN++; a.p.used = a.p.usedN >= lim; } } });
+    // Lantern Keeper's target is a dead player: keep it out of Hot Desking / Scope Creep swaps so a dead player's
+    // role can never end up as another skill's target (and nobody else's target lands on the Keeper)
+    const swappable = a => er(a.p) !== 'lantern_keeper';
 
     // Trap Card
     G.fixNotes = []; let placedNow = 0;
@@ -37,7 +41,7 @@ module.exports = {
     if (G.skillsBanned()) A.forEach(a => { if (a.type === 'SKILL') { a.type = 'REST'; a.targets = []; } });
     // Hot Desking
     if (G.evIs('hotdesk')) {
-      const base = A.filter(a => !a.side), withT = base.filter(a => a.type === 'SKILL' && a.targets.length);
+      const base = A.filter(a => !a.side && swappable(a)), withT = base.filter(a => a.type === 'SKILL' && a.targets.length);
       const pool = withT.length >= 2 ? withT : base;
       if (pool.length >= 2) {
         const [x, y] = shuffle(pool).slice(0, 2);
@@ -51,7 +55,7 @@ module.exports = {
       if (sc.targets.length !== 2) return;
       fxs('chaos_scrum', sc.p.id, { targets: sc.targets.slice() });
       const x = act(sc.targets[0]), y = act(sc.targets[1]);
-      if (x && y) { [x.targets, y.targets] = [y.targets || [], x.targets || []]; add(sc.p.id, `Scope Creep: สลับเป้าหมายของ ${nm(x.p.id)} กับ ${nm(y.p.id)} แล้ว`); }
+      if (x && y) { if (swappable(x) && swappable(y)) [x.targets, y.targets] = [y.targets || [], x.targets || []]; add(sc.p.id, `Scope Creep: สลับเป้าหมายของ ${nm(x.p.id)} กับ ${nm(y.p.id)} แล้ว`); }
     });
     // 2. Locks
     const evId = G.event?.id, evYes = G.event?.accepted === true;
@@ -133,9 +137,14 @@ module.exports = {
     if (chrono && insurance) insurance.triggered = true;
     const bugCount = (chrono && !insurance) ? 0 : A.filter(a => a.type === 'SABOTAGE').length;
     const bugs = evId === 'bonus' && evYes ? (bugCount ? 2 : 0) : Math.min(bugCap, bugCount);
+    // Release Alchemist's Overclock Deploy: +1 after the bug deduction, so Hotfix Rollback / Sabotage Insurance don't touch it
+    const overclock = skills('release_alchemist').length ? 1 : 0;
+    skills('release_alchemist').forEach(a => fxs('release_alchemist', a.p.id, {}));
     const before = G.mana;
-    G.mana = Math.max(0, Math.min(G.manaMax, G.mana + passive - bugs));
-    rep.push(`📊 Mana Task ${G.mana >= before ? '+' : ''}${G.mana - before} (ตอนนี้ ${G.mana}/${G.manaMax}) — ปั่นงานปกติ ${passive >= 0 ? '+' : ''}${passive}${passive < 1 ? ' (ประชุมเสียเวลา)' : ''}${bugs ? `, บั๊ก −${bugs}` : ''}`);
+    G.mana = Math.max(0, Math.min(G.manaMax, G.mana + passive - bugs + overclock));
+    // Public line shows the net change only: a "work +1, bug −1" split would make Overclock's +1 impossible to hide
+    // (and would announce the exact bug count). The net is what the table can always compute from the bar anyway.
+    rep.push(`📊 Mana Task ${G.mana >= before ? '+' : ''}${G.mana - before} (ตอนนี้ ${G.mana}/${G.manaMax})${passive < 1 ? ' — ประชุมเสียเวลา' : ''}`);
     // intel
     const shown = a => {
       const p = a.p;
@@ -188,6 +197,21 @@ module.exports = {
       add(a.p.id, mk(who));
       fxs('rune_ux', a.p.id, { targets: [tid], result: { reveal: (hp ? all.filter(p => p.faction !== 'dark') : all).map(p => p.id) } });
       if (hp && who.length !== all.length) G.fixNotes.push({ pid: a.p.id, text: '(Debug Scanner แก้ข้อมูล) ' + mk(all.map(p => p.name)) });
+    });
+    // Ledger Sage: who the target voted for in the last vote (not a faction reader, so Honeypot / Alibi / Power Outage don't apply)
+    skills('ledger_sage').forEach(a => {
+      const tid = a.targets[0]; if (tid == null) return;
+      const v = G.lastVotes[tid];
+      add(a.p.id, `Open the Ledger: เมื่อวาน ${nm(tid)} โหวต → ${v === undefined ? 'ไม่ได้ลงคะแนน' : v === 'SKIP' ? 'Skip' : nm(+v)}`);
+      fxs('ledger_sage', a.p.id, { targets: [tid], result: { vote: v === undefined ? null : v } });
+    });
+    // Lantern Keeper (once): the true role and side of one night-Burnout victim
+    skills('lantern_keeper').forEach(a => {
+      const tid = a.targets[0]; if (tid == null) return;
+      const t = P(tid);
+      if (t.alive || t.cause !== 'burnout') { add(a.p.id, 'Post-mortem Light: ไม่ได้ข้อมูล (เป้าหมายไม่ใช่ผู้ติด Burnout)'); return; }
+      add(a.p.id, `Post-mortem Light: ${t.name} คือ ${ROLES[t.role].n} (${FNAME[t.faction]})`);
+      fxs('lantern_keeper', a.p.id, { targets: [tid], result: { role: t.role } });
     });
     skills('glory_thief').forEach(a => {
       const tid = a.targets[0]; if (tid == null) return;

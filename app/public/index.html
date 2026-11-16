@@ -243,9 +243,9 @@ function nightHTML() {
   const m = me(), s = m.spec, dk = S.dark;
   const need = Math.max(s?.t || 0, 0);
   const banned = m.skillsBanned, snack = m.snack, skillOK = m.skillOK;
-  const skillLabel = `✨ ใช้สกิล: ${esc(s ? s.skill : '—')}${m.role === 'mystery_intern' && m.copy ? ` (ก๊อป → ${esc(m.copyName)})` : ''}${m.once && m.used ? ' (ใช้แล้ว)' : ''}`;
+  const skillLabel = `✨ ใช้สกิล: ${esc(s ? s.skill : '—')}${m.role === 'mystery_intern' && m.copy ? ` (ก๊อป → ${esc(m.copyName)})` : ''}${m.usesMax > 1 ? ` (เหลือ ${m.usesLeft}/${m.usesMax} ครั้ง)` : m.once && m.used ? ' (ใช้แล้ว)' : ''}`;
   const restLabel = snack ? '🍩 พักกินขนม (คุ้มกันจากคำสาป)' : banned ? '🚨 แก้บั๊ก Production ร่วมกัน (ห้ามใช้สกิล)' : '😴 ' + (skillOK ? 'เก็บสกิลไว้' : (m.locked ? 'บาเรียแตก — ใช้สกิลไม่ได้คืนนี้' : 'ไม่มีสกิลให้ใช้'));
-  const tpick = UI.choice === 'SKILL' && need > 0 ? `<p class="hint">เลือกเป้าหมาย ${need} คน (เลือกแล้ว ${UI.sel.length}/${need})</p><div class="targets">${m.candidates.map(id => `<button class="btn ${UI.sel.includes(id) ? 'sel' : ''}" onclick="toggleT(${id})">${esc(pname(id))}${id === m.id ? ' (ตัวเอง)' : ''}</button>`).join('')}${(m.repeatBlocked || []).map(id => `<button class="btn" disabled title="ห้ามเป้าเดิมติดกัน">${esc(pname(id))} (ซ้ำเมื่อคืน)</button>`).join('')}</div>` : '';
+  const tpick = UI.choice === 'SKILL' && need > 0 ? `<p class="hint">${m.candidates.length ? `เลือกเป้าหมาย ${need} คน (เลือกแล้ว ${UI.sel.length}/${need})` : s?.pool === 'burned' ? 'ยังไม่มีผู้ติด Burnout กลางคืนให้ส่องตะเกียง — เก็บสกิลไว้คืนหน้าได้' : 'ไม่มีเป้าหมายให้เลือก'}</p><div class="targets">${m.candidates.map(id => `<button class="btn ${UI.sel.includes(id) ? 'sel' : ''}" onclick="toggleT(${id})">${esc(pname(id))}${id === m.id ? ' (ตัวเอง)' : ''}</button>`).join('')}${(m.repeatBlocked || []).map(id => `<button class="btn" disabled title="ห้ามเป้าเดิมติดกัน">${esc(pname(id))} (ซ้ำเมื่อคืน)</button>`).join('')}</div>` : '';
   const recruiter = UI.choice === 'SKILL' && m.role === 'soul_recruiter' ? `<div class="opts">${opt(!UI.plus1, false, 'chooseMode(false)', '👁️ ส่องเป้าหมายลับ', `ดูว่า ${esc(m.targetName)} โดนใครโหวตในรอบล่าสุด`)}${opt(UI.plus1, m.plus1Used, 'chooseMode(true)', '🎯 ยัดคะแนน +1 ใส่เป้าหมายลับ', m.plus1Used ? 'ใช้สิทธิ์แล้ว' : `ใส่ ${esc(m.targetName)} ในรอบโหวตพรุ่งนี้ (1 ครั้ง/เกม)`)}</div>` : '';
 
   let side = '', sideOK = true, sideSum = '';
@@ -291,7 +291,7 @@ function nightHTML() {
   if (dk) chips.push(`🪤 Trap ว่าง <b>${dk.trapFree}/${dk.trapCharges}</b>`);
   return `<div class="card stage"><h2>🌙 Night Work — คืนวัน${S.dayName}</h2>${chips.length ? `<div class="chips">${chips.map(c => `<span class="chip">${c}</span>`).join('')}</div>` : ''}${sent}
     ${S.event ? `<div class="report" style="border-color:var(--light)">📞 ${esc(S.event.t)}${S.event.choice && S.event.accepted !== null ? ' (' + esc(S.event.accepted ? S.event.yes : S.event.no) + ')' : ''} — ${esc(S.event.d)}</div>` : ''}
-    <p class="hint">ทีมปั่นงานพื้นฐานให้อัตโนมัติ <b>Mana +1</b> ทุกคืน (บั๊กฝ่ายมืดหักได้สูงสุด −1/คืน · ถ้ารอบโหวตเสียเวลา จะได้น้อยลง) — ทุกคนต้อง<b>ใช้สกิล</b>${m.canRest && m.once && skillOK ? ' (สกิลครั้งเดียวเก็บไว้ได้)' : ''}</p>
+    <p class="hint">ทีมปั่นงานพื้นฐานให้อัตโนมัติ <b>Mana +1</b> ทุกคืน (บั๊กฝ่ายมืดหักได้สูงสุด −1/คืน · ถ้ารอบโหวตเสียเวลา จะได้น้อยลง) — ทุกคนต้อง<b>ใช้สกิล</b>${m.canRest && m.once && skillOK ? ' (สกิลที่จำกัดจำนวนครั้งเก็บไว้ได้)' : ''}</p>
     <h3 class="step-h">${dk ? '① ' : ''}สกิลประจำตัว</h3>
     <div class="opts">${opt(UI.choice === 'SKILL', !(skillOK && !banned), "chooseAction('SKILL')", skillLabel, s ? esc(s.d) : '')}
       ${m.canRest ? opt(UI.choice === 'REST', false, "chooseAction('REST')", restLabel, '') : ''}</div>

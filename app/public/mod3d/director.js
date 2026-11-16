@@ -159,6 +159,12 @@ export function createDirector(env) {
       priv(c, `📊 จริง ${r.real ?? 0} · บั๊ก ${r.bugs ?? 0}`); await timed(3200, (u, dt, t) => bars.forEach(b => { const h = Math.max(.02, b.v*.35*Math.min(1, u*3)); b.m.scale.y = h; b.m.position.set(base.x + b.dx, base.y + h/2, base.z); b.m.visible = u < .94; })); bars.forEach(b => scene.remove(b.m)); },
     async chrono_tech_lead({ caster:c }) { pulse(0, 0, 0xf5c451, 9); pulse(0, 0, 0xffffff, 6); ui.flash(.3, '#fff4c0'); const clk = clockProp(); await prop(clk.g, 3200, (u, t) => { clk.hand.rotation.z = u*Math.PI*12; clk.g.scale.setScalar(Math.min(1, u*6, (1 - u)*6)); clk.g.position.set(0, 4.6, 0); clk.g.rotation.y = Math.atan2(camera.position.x, camera.position.z); }); },
     async coffee_admin({ caster:c, targets:[t] }) { await fly('☕', wp(c, 1.1), wp(t, 1.1), 900, .6); ringUp(t, 0x7dff9a); burst('💚', wp(t, 1), { n:8, r:1.2 }); ui.badge(t, '☕×2'); },
+    // result:{ vote:deskIndex|'SKIP'|null }  (who the target voted for yesterday)
+    async ledger_sage({ caster:c, targets:[t], result:r = {} }) { await shoot(c, t, 0xd8b050); ringUp(t, 0xd8b050); hover('📖', wp(t, 2.1)); const v = r.vote; priv(c, `📖 ${nm(t)} โหวต → ${v == null ? 'ไม่ได้ลงคะแนน' : v === 'SKIP' ? 'Skip' : nm(D_(v))}`); },
+    // result:{ role:roleKey }  (the Burnout victim's true role)
+    async lantern_keeper({ caster:c, targets:[t], result:r = {} }) { await shoot(c, t, 0x8ff0ff); ringUp(t, 0x8ff0ff); hover('🏮', wp(t, 2.1), 1800); priv(c, `🏮 ${nm(t)} = ${ROLE[r.role || t.role].n}`, 'n'); },
+    // +1 Mana (the table only ever sees the net change in the morning report)
+    async release_alchemist({ caster:c }) { ringUp(c, 0x4fd0ff); burst('⚗️', wp(c, 1.2), { n:8, r:1.3 }); pulse(0, 0, 0x4fd0ff, 6); priv(c, '⚗️ Overclock Deploy +1', 'y'); },
     // result:{ role:roleKey }  (HR sees the target's real role)
     async shadow_hr({ caster:c, targets:[t], result:r = {} }) { await shoot(c, t, 0xb05cff); ringUp(t, 0xb05cff); hover('👁', wp(t, 2.1), 1800); ui.badge(t, '0️⃣'); priv(c, `👁 ${nm(t)} = ${ROLE[r.role || t.role].n}`, 'n'); },
     // payload extra: result:{ copied:roleKey, source:desk, targets:[…], result:{…} }  (right-hand light neighbour's skill, run by the intern)

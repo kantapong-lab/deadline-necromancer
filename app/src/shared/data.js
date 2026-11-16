@@ -3,7 +3,8 @@ const IMG = '/docs/deadline_necromancer_role_cards/';
 const DAYS = ['จันทร์','อังคาร','พุธ','พฤหัสบดี','ศุกร์'];
 const FNAME = {light:'Team Deliver', dark:'Cult of Burnout', indie:'Severance Seekers'};
 
-// t = จำนวนเป้าหมายสกิล, pool = ใครเลือกได้, once = 1 ครั้ง/เกม
+// t = จำนวนเป้าหมายสกิล, pool = ใครเลือกได้ ('others' | 'any' | 'nondark' | 'burned' = ผู้ติด Burnout กลางคืนที่ตายแล้ว)
+// once = 1 ครั้ง/เกม, uses = N ครั้ง/เกม (บทบาทที่จำกัดการใช้ พักได้และ Mystery Intern ก๊อปไม่ได้)
 const ROLES = {
   senior_dev:        {n:'Senior Dev', sub:'จอมขมังเวทย์', f:'light', img:'team_deliver/01_senior_dev.png', skill:'Code Review', t:1, pool:'others', d:'ส่อง Log เพื่อน 1 คนว่า "ส่งงานจริง" หรือ "แอบวางบั๊ก"'},
   oracle_pm:         {n:'Oracle PM', sub:'ผู้หยั่งรู้', f:'light', img:'team_deliver/02_oracle_pm.png', skill:'Stand-up Shield', t:1, pool:'others', d:'กางบาเรียกันเพื่อน 1 คนจาก Burnout (กันโดนฝ่ายมืด = บาเรียสะท้อนใส่ตัวเอง)'},
@@ -12,6 +13,9 @@ const ROLES = {
   data_oracle:       {n:'Data Oracle', sub:'หมอดู', f:'light', img:'team_deliver/05_data_oracle.png', skill:'KPI Forecast', t:0, d:'รู้ว่าเมื่อคืนมีงานเสร็จจริงกี่ชิ้น vs บั๊กแฝงกี่ชิ้น'},
   chrono_tech_lead:  {n:'Chrono Tech Lead', sub:'กาลเวลา', f:'light', img:'team_deliver/06_chrono_tech_lead.png', skill:'Hotfix Rollback', t:0, once:true, d:'(1 ครั้ง/เกม) ยกเลิกคำสาปและบั๊กทั้งหมดของคืนนั้น'},
   coffee_admin:      {n:'Coffee Admin', sub:'สายชงกาแฟ', f:'light', img:'team_deliver/07_coffee_admin.png', skill:'Espresso Elixir', t:1, pool:'any', d:'ฮีลเพื่อน 1 คนไม่ให้ Burnout และเพิ่มพลังโหวตเป็น 2 เท่าเช้าวันถัดไป'},
+  ledger_sage:       {n:'Ledger Sage', sub:'นักปราชญ์สมุดบัญชี', f:'light', img:'team_deliver/09_ledger_sage.jpg', skill:'Open the Ledger', t:1, pool:'others', d:'เปิดสมุดบัญชีดูเพื่อน 1 คน เช้าถัดไปรู้ว่าเมื่อวานเขาโหวตใครหรือ Skip (ไม่บอกฝั่ง)'},
+  lantern_keeper:    {n:'Lantern Keeper', sub:'ผู้ถือตะเกียงบันทึก', f:'light', img:'team_deliver/10_lantern_keeper.jpg', skill:'Post-mortem Light', t:1, pool:'burned', once:true, d:'(1 ครั้ง/เกม) ส่องตะเกียงที่ผู้ติด Burnout กลางคืน 1 คน รู้บทบาทและฝั่งที่แท้จริงของเขา'},
+  release_alchemist: {n:'Release Alchemist', sub:'นักเล่นแร่แปรธาตุ', f:'light', img:'team_deliver/11_release_alchemist.jpg', skill:'Overclock Deploy', t:0, uses:2, d:'(2 ครั้ง/เกม) เร่งงานคืนนั้น Mana +1 เพิ่ม (คิดหลังหักบั๊ก ไม่ถูก Hotfix Rollback ยกเลิก)'},
   shadow_hr:         {n:'Shadow HR', sub:'แห่งเงามืด', f:'dark', img:'cult_of_burnout/01_shadow_hr.png', skill:'PIP Curse', t:1, pool:'nondark', d:'สาป 1 คนให้คะแนนโหวตวันถัดไปเหลือ 0 และแอบเห็นบทบาทจริง'},
   mystery_intern:    {n:'Mystery Intern', sub:'ปริศนา', f:'dark', img:'cult_of_burnout/02_mystery_intern.png', skill:'Copy-Paste Illusion', t:-1, d:'ก๊อปสกิลของฝ่ายแสงที่อยู่ถัดไปทางขวามาใช้คืนนี้'},
   illusionist_sales: {n:'Illusionist Sales', sub:'มนต์มายา', f:'dark', img:'cult_of_burnout/03_illusionist_sales.png', skill:'Overpromise', t:1, pool:'nondark', d:'ทำให้ Log ของเป้าหมายคืนนี้ดูเหมือน "วางบั๊ก"'},
@@ -23,6 +27,8 @@ const ROLES = {
   glory_thief:       {n:'Glory Thief', sub:'จอมโจรเคลมงาน', f:'indie', img:'severance_seekers/03_glory_thief.png', skill:'Take Credit', t:1, pool:'others', win:'ฝ่ายแสงต้องชนะ และตัวเองต้องรอดจนจบเกม + เก็บครบ 2 Credit', d:'เกาะติดเพื่อน 1 คน ถ้าเป็นฝ่ายแสงที่ใช้สกิลสำเร็จ คุณได้ +1 Credit และขโมยแจ้งเตือนลับของเขาแทน (เจ้าของจะไม่ได้รับคืนนั้น)'},
   chaos_intern:      {n:'Chaos Intern', sub:'สายป่วน', f:'indie', img:'severance_seekers/04_chaos_intern.png', skill:'Reply All', t:0, win:'ยื้อเกมถึงศุกร์โดยไม่มีฝั่งไหนปิดเกมได้ (และต้องยังไม่โดนไล่ออก)', d:'สุ่มดึงแจ้งเตือนส่วนตัวของใครสักคนไปป่าวประกาศในแชทกลางแบบไม่ระบุชื่อ และได้พลังโหวต 2 เท่าในวันพฤหัสบดี–ศุกร์'},
 };
+// จำนวนครั้งที่ใช้สกิลได้ต่อเกม (0 = ไม่จำกัด)
+const useLimit = r => r.once ? 1 : (r.uses || 0);
 const LIGHT = Object.keys(ROLES).filter(k => ROLES[k].f==='light');
 const DARK  = Object.keys(ROLES).filter(k => ROLES[k].f==='dark');
 const INDIE = Object.keys(ROLES).filter(k => ROLES[k].f==='indie');
@@ -72,4 +78,4 @@ const TRAPTHUMB = '/thumbs/traps/';
 const EVTHUMB = '/thumbs/events/';
 const ROLETHUMB = '/thumbs/roles/';        // 300px
 const ROLETHUMB_MD = '/thumbs/roles-md/';  // 600px   // ภาพย่อ 300px สร้างด้วย tools/make_thumbs.py
-if (typeof module !== 'undefined') module.exports = { IMG, EVIMG, TRAPIMG, TRAPTHUMB, BOOSTERIMG, BOOSTERTHUMB, EVTHUMB, ROLETHUMB, ROLETHUMB_MD, DAYS, FNAME, ROLES, LIGHT, DARK, INDIE, EVENTS, TRAPS, BOOSTERS };
+if (typeof module !== 'undefined') module.exports = { IMG, EVIMG, TRAPIMG, TRAPTHUMB, BOOSTERIMG, BOOSTERTHUMB, EVTHUMB, ROLETHUMB, ROLETHUMB_MD, DAYS, FNAME, ROLES, useLimit, LIGHT, DARK, INDIE, EVENTS, TRAPS, BOOSTERS };

@@ -580,7 +580,7 @@
    "phase": "MORNING",
    "role": "player",
    "paused": false,
-   "hash": "64b788c983f4c9a5"
+   "hash": "135bdce5108ac98c"
   }
  },
  {
@@ -616,7 +616,7 @@
    "phase": "MORNING",
    "role": "player",
    "paused": false,
-   "hash": "64b788c983f4c9a5"
+   "hash": "135bdce5108ac98c"
   }
  },
  {
@@ -693,12 +693,12 @@
    "paused": false,
    "timer": null,
    "players": [
-    "A=senior_dev",
-    "B=rune_ux",
-    "D=shadow_legal",
-    "E=shadow_hr",
-    "F=chrono_tech_lead",
-    "C=qa_hunter"
+    "A=mystery_intern",
+    "B=chrono_tech_lead",
+    "D=rune_ux",
+    "E=senior_dev",
+    "F=data_oracle",
+    "C=shadow_legal"
    ],
    "pending": {
     "booster": {
@@ -714,13 +714,13 @@
      ]
     }
    },
-   "hash": "ff829f0213630d15"
+   "hash": "6c81e41c6d9c140f"
   },
   "who": {
    "phase": "MORNING",
    "role": "player",
    "paused": false,
-   "hash": "64b788c983f4c9a5"
+   "hash": "135bdce5108ac98c"
   }
  },
  {
@@ -755,7 +755,7 @@
    "phase": "MORNING",
    "role": "player",
    "paused": false,
-   "hash": "64b788c983f4c9a5"
+   "hash": "135bdce5108ac98c"
   }
  },
  {
@@ -790,7 +790,7 @@
    "phase": "MORNING",
    "role": "player",
    "paused": true,
-   "hash": "4ef01ad4423fe49a"
+   "hash": "dd5093dcf23790a8"
   }
  },
  {
@@ -826,7 +826,7 @@
    "phase": "MORNING",
    "role": "player",
    "paused": true,
-   "hash": "4ef01ad4423fe49a"
+   "hash": "dd5093dcf23790a8"
   }
  },
  {
@@ -862,7 +862,7 @@
    "phase": "MORNING",
    "role": "player",
    "paused": true,
-   "hash": "063047cbf46f5c84"
+   "hash": "a02937397493805d"
   }
  },
  {
@@ -897,7 +897,7 @@
    "phase": "MORNING",
    "role": "player",
    "paused": false,
-   "hash": "ce866c31af794288"
+   "hash": "e88bb6e655b4c8f2"
   }
  },
  {
@@ -932,7 +932,7 @@
    "phase": "MORNING",
    "role": "player",
    "paused": false,
-   "hash": "cc8817ccf20ed8fd"
+   "hash": "f29cd22d5ad35ba9"
   }
  },
  {
@@ -970,7 +970,7 @@
    "phase": "MORNING",
    "role": "player",
    "paused": false,
-   "hash": "239c75641cfadb34"
+   "hash": "031dd3cf25e80be2"
   }
  },
  {
@@ -1005,7 +1005,7 @@
    "phase": "MORNING",
    "role": "player",
    "paused": false,
-   "hash": "cc8817ccf20ed8fd"
+   "hash": "f29cd22d5ad35ba9"
   }
  },
  {
@@ -1040,7 +1040,7 @@
    "phase": "MORNING",
    "role": "player",
    "paused": false,
-   "hash": "cc8817ccf20ed8fd"
+   "hash": "f29cd22d5ad35ba9"
   }
  },
  {
@@ -1075,7 +1075,7 @@
    "phase": "MORNING",
    "role": "player",
    "paused": false,
-   "hash": "13b7d18f3f357e74"
+   "hash": "d2f0326ed77b6189"
   }
  },
  {
@@ -1110,7 +1110,7 @@
    "phase": "MORNING",
    "role": "player",
    "paused": false,
-   "hash": "13b7d18f3f357e74"
+   "hash": "d2f0326ed77b6189"
   }
  },
  {
@@ -1145,7 +1145,7 @@
    "phase": "MORNING",
    "role": "player",
    "paused": false,
-   "hash": "c8dd9af24283966e"
+   "hash": "e108b54cd926853b"
   }
  },
  {
@@ -1181,7 +1181,7 @@
    "phase": "MORNING",
    "role": "player",
    "paused": false,
-   "hash": "c8dd9af24283966e"
+   "hash": "e108b54cd926853b"
   }
  },
  {
@@ -1217,7 +1217,7 @@
    "phase": "MORNING",
    "role": "player",
    "paused": false,
-   "hash": "c8dd9af24283966e"
+   "hash": "e108b54cd926853b"
   }
  },
  {
@@ -1253,7 +1253,7 @@
    "phase": "MORNING",
    "role": "player",
    "paused": false,
-   "hash": "c8dd9af24283966e"
+   "hash": "e108b54cd926853b"
   }
  },
  {
@@ -1289,7 +1289,7 @@
    "phase": "MORNING",
    "role": "player",
    "paused": false,
-   "hash": "c8dd9af24283966e"
+   "hash": "e108b54cd926853b"
   }
  },
  {
@@ -1325,7 +1325,7 @@
    "phase": "MORNING",
    "role": "player",
    "paused": false,
-   "hash": "c8dd9af24283966e"
+   "hash": "e108b54cd926853b"
   }
  },
  {
@@ -1361,7 +1361,7 @@
    "phase": "MORNING",
    "role": "player",
    "paused": false,
-   "hash": "c8dd9af24283966e"
+   "hash": "e108b54cd926853b"
   }
  },
  {
@@ -1397,7 +1397,7 @@
    "phase": "MORNING",
    "role": "player",
    "paused": false,
-   "hash": "c8dd9af24283966e"
+   "hash": "e108b54cd926853b"
   }
  },
  {
@@ -1432,7 +1432,7 @@
    "phase": "MORNING",
    "role": "player",
    "paused": false,
-   "hash": "405dea38d48bba95"
+   "hash": "ff3aaf5970d28785"
   }
  },
  {
@@ -1461,7 +1461,7 @@
    "phase": "MORNING",
    "role": "player",
    "paused": false,
-   "hash": "05f3e320d08f845a"
+   "hash": "797ca28098559b03"
   }
  },
  {
@@ -1491,14 +1491,14 @@
    "phase": "MORNING",
    "role": "player",
    "paused": false,
-   "hash": "05f3e320d08f845a"
+   "hash": "797ca28098559b03"
   }
  },
  {
   "step": "p:dark by anyone in day",
   "ack": {
    "ok": false,
-   "error": "ไม่มีสิทธิ์"
+   "error": "แชทลับใช้ได้เฉพาะช่วงกลางคืน"
   },
   "mod": {
    "phase": "MORNING",
@@ -1521,7 +1521,7 @@
    "phase": "MORNING",
    "role": "player",
    "paused": false,
-   "hash": "05f3e320d08f845a"
+   "hash": "797ca28098559b03"
   }
  },
  {
@@ -1550,7 +1550,7 @@
    "phase": "MORNING",
    "role": "player",
    "paused": false,
-   "hash": "05f3e320d08f845a"
+   "hash": "797ca28098559b03"
   }
  },
  {
@@ -1582,7 +1582,7 @@
    "phase": "MORNING",
    "role": "player",
    "paused": false,
-   "hash": "74145249fa80723e"
+   "hash": "29c5173161fe6b4b"
   }
  },
  {
@@ -1742,7 +1742,7 @@
    "phase": "VOTE",
    "role": "player",
    "paused": false,
-   "hash": "0083ca30452315d5"
+   "hash": "4797f920d2eb28ea"
   }
  },
  {
@@ -1778,7 +1778,7 @@
    "phase": "VOTE",
    "role": "player",
    "paused": false,
-   "hash": "0083ca30452315d5"
+   "hash": "4797f920d2eb28ea"
   }
  },
  {
@@ -1807,7 +1807,7 @@
    "phase": "VOTE_RESULT",
    "role": "player",
    "paused": false,
-   "hash": "3920c81b711797b0"
+   "hash": "acf1d6dec513768e"
   }
  },
  {
@@ -1842,7 +1842,7 @@
    "phase": "NIGHT",
    "role": "player",
    "paused": false,
-   "hash": "44d0f98adb34b0e1"
+   "hash": "74f58c222673c0e2"
   }
  },
  {
@@ -1871,13 +1871,13 @@
      "waiting": null
     }
    },
-   "hash": "f0d4bcf084e8db5b"
+   "hash": "dde3757c73bcff3b"
   },
   "who": {
    "phase": "MORNING",
    "role": "player",
    "paused": false,
-   "hash": "7ada612f5dedff40"
+   "hash": "92b5d2ba6addb0e3"
   }
  },
  {
@@ -1992,7 +1992,7 @@
    "phase": "MORNING",
    "role": "player",
    "paused": false,
-   "hash": "0f9a8861be37231b"
+   "hash": "4782b76be57b4bbc"
   }
  },
  {
@@ -2027,7 +2027,7 @@
    "phase": "MORNING",
    "role": "player",
    "paused": true,
-   "hash": "444daf11e65d7f03"
+   "hash": "5087ba4e982e0f64"
   }
  },
  {

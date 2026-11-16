@@ -3,13 +3,13 @@
   "status": 200,
   "type": "text/html; charset=utf-8",
   "cache": "no-cache",
-  "sha256": "234193238b31df0d7a37a66822fdf338399b15574d8fc3fec05b7c9d174a8514"
+  "sha256": "f61865fd489ca57dc6042396f714e4cf4d648824f6bb44e16e296ae9444730bc"
  },
  "/?room=ABCD": {
   "status": 200,
   "type": "text/html; charset=utf-8",
   "cache": "no-cache",
-  "sha256": "234193238b31df0d7a37a66822fdf338399b15574d8fc3fec05b7c9d174a8514"
+  "sha256": "f61865fd489ca57dc6042396f714e4cf4d648824f6bb44e16e296ae9444730bc"
  },
  "/mod": {
   "status": 200,
@@ -27,7 +27,7 @@
   "status": 200,
   "type": "text/javascript; charset=utf-8",
   "cache": "no-cache",
-  "sha256": "c059a48090c47f2f58cd93375e0a3f5b5e5bc4a5ec4085e844efa2b7c9c6ad55"
+  "sha256": "a0fb5f3197cd6fc896ff179955144b78822c4dcb56b228dc906e5cc21e85a032"
  },
  "/style.css": {
   "status": 200,
@@ -45,13 +45,13 @@
   "status": 200,
   "type": "text/javascript; charset=utf-8",
   "cache": "no-cache",
-  "sha256": "7aaa34d5a1298eedad467fbcd4453fc64ea77256cbb1ed29fbc4ed0a6e58ee08"
+  "sha256": "22b79c01bc5b193621c512d6997e3780e2f97e912a527f1d4ce92f331f5b5069"
  },
  "/index.html": {
   "status": 200,
   "type": "text/html; charset=utf-8",
   "cache": "no-cache",
-  "sha256": "234193238b31df0d7a37a66822fdf338399b15574d8fc3fec05b7c9d174a8514"
+  "sha256": "f61865fd489ca57dc6042396f714e4cf4d648824f6bb44e16e296ae9444730bc"
  },
  "/mod.html": {
   "status": 200,
