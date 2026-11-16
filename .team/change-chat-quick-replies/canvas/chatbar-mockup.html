@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="th"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>chat bar: ส่ง + ข้อความด่วน 23 (before / after)</title>
+<style>
+/* tokens copied from app/public/style.css :root (no new tokens) */
+:root{--bg:#0f0d1a;--panel:#181528;--panel2:#201c36;--line:#33294f;--txt:#ebe7f7;--mut:#9a92b8;--light:#f5c451;--dark:#b05cff;--indie:#4ecdc4;--bad:#ff5c7a;--good:#5fe39a}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--txt);font-family:"Segoe UI","Noto Sans Thai",Tahoma,sans-serif;padding:16px}
+h1{font-size:18px;margin:0 0 4px} h2{font-size:14px;color:var(--mut);margin:0 0 8px;font-weight:600}
+button{font:inherit;color:inherit;cursor:pointer}
+.btn{background:var(--panel2);border:1px solid var(--line);padding:8px 14px;border-radius:8px;min-height:44px}
+.btn:disabled{opacity:.35;cursor:not-allowed}
+.btn:hover:not(:disabled){border-color:var(--dark);background:#2a2447}
+.btn.primary{background:linear-gradient(135deg,#7c3aed,#b05cff);border:0;font-weight:600}
+.btn.emo{min-width:44px;padding:6px 9px}
+.btn:focus-visible,input:focus-visible{outline:2px solid var(--light);outline-offset:2px}
+.grid{display:flex;flex-wrap:wrap;gap:20px;align-items:flex-start}
+.frame{width:375px;border:1px solid var(--line);border-radius:12px;background:var(--panel);padding:12px;overflow:hidden}
+.frame>h3{font-size:12px;color:var(--light);margin:0 0 8px;letter-spacing:.3px}
+.card h4{margin:0 0 8px;font-size:15px}
+.chat{height:90px;display:flex;flex-direction:column;gap:6px;overflow:hidden}
+.msg{font-size:14px;padding:6px 10px;border-radius:8px;background:var(--panel2);max-width:90%}
+.msg b{color:var(--light)} .msg.you{align-self:flex-end;background:#2b2150}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0 10px}
+.chip{font-size:12px;padding:4px 9px;border-radius:99px;background:#1d1a33;border:1px solid var(--line)}
+.chip.bad{border-color:var(--bad);color:var(--bad)}
+.hint{font-size:12px;color:var(--mut)} .hint.bad{color:var(--bad)}
+/* chat bar. mobile layout: input + send on row 1, emoji on row 2 */
+.chatbar{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+.chatbar input{flex:1 1 0;min-width:0;padding:8px 10px;min-height:44px;border-radius:8px;border:1px solid var(--line);background:var(--panel2);color:var(--txt);font:inherit;font-size:16px}
+.chatbar input:disabled{opacity:.5}
+/* NEW: quick replies */
+.qr-toggle{display:flex;align-items:center;justify-content:space-between;width:100%;margin-top:8px;text-align:left}
+.qr-panel{margin-top:6px;padding:8px;border:1px solid var(--line);border-radius:8px;background:var(--panel2);max-height:176px;overflow-y:auto;overflow-x:hidden;display:flex;flex-wrap:wrap;gap:8px}
+.qr-panel .qr-note{flex:1 1 100%;margin:0}
+.qr{background:var(--panel);font-size:14px;padding:8px 12px;border-radius:99px}
+.lbl{font-size:11px;color:var(--mut);margin:0 0 4px}
+.before{opacity:.9}
+</style></head><body>
+<h1>แชทเช้า: ปุ่มส่ง + ข้อความด่วน 23 ข้อความ</h1>
+<p class="hint">Mockup ที่ 375px. ใช้ token/class ของ style.css เดิม. ปุ่มที่ปิดใช้ = .btn:disabled เดิม (opacity .35)</p>
+<div class="grid">
+
+<!-- BEFORE -->
+<div class="frame before"><h3>BEFORE · เดิม (ไม่มีปุ่มส่ง ไม่มีข้อความด่วน)</h3>
+<div class="card"><h4>แชทกลาง</h4><div class="chat"><div class="msg"><b>มด:</b> เมื่อคืนใครอยู่ออฟฟิศ</div></div>
+<form class="chatbar"><input placeholder="พิมพ์ข้อความ…"><button type="button" class="btn emo">😂</button><button type="button" class="btn emo">😱</button><button type="button" class="btn emo">🤔</button></form></div></div>
+
+<!-- S1 NORMAL collapsed -->
+<div class="frame"><h3>AFTER S1 · ปกติ ไม่มี Purge · แผงปิด (ค่าเริ่มต้น)</h3>
+<div class="card"><h4>แชทกลาง</h4><div class="chat"><div class="msg"><b>มด:</b> เมื่อคืนใครอยู่ออฟฟิศ</div><div class="msg you"><b>คุณ:</b> ซัสสส ชัดเจน</div></div>
+<form class="chatbar"><input placeholder="พิมพ์ข้อความ…" aria-label="พิมพ์ข้อความ"><button type="submit" class="btn primary" aria-label="ส่งข้อความ">ส่ง</button>
+<button type="button" class="btn emo">😂</button><button type="button" class="btn emo">😱</button><button type="button" class="btn emo">🤔</button></form>
+<button type="button" class="btn qr-toggle" aria-expanded="false" aria-controls="p1"><span>💬 ข้อความด่วน (23)</span><span aria-hidden="true">▾</span></button></div></div>
+
+<!-- S2 NORMAL open -->
+<div class="frame"><h3>AFTER S2 · ปกติ · แผงเปิด (เลื่อนแนวตั้งในแผง)</h3>
+<div class="card"><h4>แชทกลาง</h4><div class="chat"><div class="msg"><b>มด:</b> เมื่อคืนใครอยู่ออฟฟิศ</div></div>
+<form class="chatbar"><input placeholder="พิมพ์ข้อความ…" value="abc"><button type="submit" class="btn primary">ส่ง</button>
+<button type="button" class="btn emo">😂</button><button type="button" class="btn emo">😱</button><button type="button" class="btn emo">🤔</button></form>
+<button type="button" class="btn qr-toggle" aria-expanded="true" aria-controls="p2"><span>💬 ข้อความด่วน (23)</span><span aria-hidden="true">▴</span></button>
+<div class="qr-panel" id="p2" role="group" aria-label="ข้อความด่วน">
+<button type="button" class="btn qr">ซัสสส ชัดเจน</button><button type="button" class="btn qr">เงียบแบบนี้ ฝ่ายมืดชัวร์</button><button type="button" class="btn qr">พูดเยอะผิดปกตินะ</button><button type="button" class="btn qr">แก้ตัวน้ำขุ่นๆ</button><button type="button" class="btn qr">เมื่อคืนแอบไปไหนมา?</button><button type="button" class="btn qr">รีบโหวตจัง กลัวอะไร?</button><button type="button" class="btn qr">เล่นเนียนเกินไปแล้ว</button><button type="button" class="btn qr">ไม่ต้องเนียน รู้หมดแล้ว</button><button type="button" class="btn qr">ฉันใสซื่อที่สุดในห้อง</button><button type="button" class="btn qr">เชื่อฉัน รอดทั้งห้อง</button><button type="button" class="btn qr">ใครตามน้ำ คนนั้นซัส</button><button type="button" class="btn qr">โหวตผิดอย่าร้องนะ</button><button type="button" class="btn qr">ขอโหวต Skip รอบนี้</button><button type="button" class="btn qr">ฉันเห็นนะ อย่าคิดว่าไม่เห็น</button><button type="button" class="btn qr">อ้าว เมื่อกี้พูดอีกอย่างนี่</button><button type="button" class="btn qr">ปกป้องกันจัง ทีมเดียวกันป่าว?</button><button type="button" class="btn qr">เดดไลน์จ่อคอ ยังจะเนียนอีก</button><button type="button" class="btn qr">ลองเคลมมาดิ กล้าไหม</button><button type="button" class="btn qr">ฟังดูดีนะ แต่ไม่เชื่อ</button><button type="button" class="btn qr">โหวตแรงขนาดนี้ มีอะไรป่าว</button><button type="button" class="btn qr">งานไม่เดินเพราะใครกันน้า</button><button type="button" class="btn qr">ขอหลักฐานด้วย อย่ามโน</button><button type="button" class="btn qr">ฝ่ายมืดคืนนี้นอนไม่หลับแน่</button></div></div></div>
+
+<!-- S3 SILENCE -->
+<div class="frame"><h3>AFTER S3 · NDA Silence · ข้อความด่วน+ช่องพิมพ์+ส่ง ปิด · อีโมจิใช้ได้</h3>
+<div class="card"><h4>แชทกลาง</h4>
+<form class="chatbar"><input disabled placeholder="🤐 ถูกปิดปาก — ส่งได้แค่อีโมจิ"><button type="submit" class="btn primary" disabled>ส่ง</button>
+<button type="button" class="btn emo">😂</button><button type="button" class="btn emo">😱</button><button type="button" class="btn emo">🤔</button></form>
+<button type="button" class="btn qr-toggle" aria-expanded="true"><span>💬 ข้อความด่วน (23)</span><span aria-hidden="true">▴</span></button>
+<div class="qr-panel"><p class="hint qr-note" role="status">🤐 ถูกปิดปาก — ข้อความด่วนใช้ไม่ได้ ส่งได้แค่อีโมจิ</p>
+<button class="btn qr" disabled>ซัสสส ชัดเจน</button><button class="btn qr" disabled>เงียบแบบนี้ ฝ่ายมืดชัวร์</button><button class="btn qr" disabled>พูดเยอะผิดปกตินะ</button><button class="btn qr" disabled>แก้ตัวน้ำขุ่นๆ</button><button class="btn qr" disabled>เมื่อคืนแอบไปไหนมา?</button><button class="btn qr" disabled>… (อีก 18 ปุ่ม ปิดทั้งหมด)</button></div></div></div>
+
+<!-- S4 PURGE quota left -->
+<div class="frame"><h3>AFTER S4 · Meeting Purge · เหลือโควตา 2/3</h3>
+<div class="card"><h4>แชทกลาง</h4>
+<div class="chips" aria-live="polite"><span class="chip">✂️ พิมพ์ได้อีก 2/3 ข้อความ · ไม่เกิน 30 ตัวอักษร</span></div>
+<form class="chatbar" style="margin-top:0"><input placeholder="พิมพ์ข้อความ… (ไม่เกิน 30 ตัวอักษร)"><button type="submit" class="btn primary">ส่ง</button>
+<button type="button" class="btn emo">😂</button><button type="button" class="btn emo">😱</button><button type="button" class="btn emo">🤔</button></form>
+<button type="button" class="btn qr-toggle" aria-expanded="false"><span>💬 ข้อความด่วน (23)</span><span aria-hidden="true">▾</span></button>
+<p class="hint" style="margin:6px 0 0">กดข้อความด่วน = นับ 1 ข้อความ (ทุกข้อความ ≤ 30 ตัวอักษร)</p></div></div>
+
+<!-- S5 PURGE quota 0 -->
+<div class="frame"><h3>AFTER S5 · Meeting Purge · โควตา 0/3 · ข้อความด่วน+ช่องพิมพ์+ส่ง ปิด</h3>
+<div class="card"><h4>แชทกลาง</h4>
+<div class="chips" aria-live="polite"><span class="chip bad">✂️ โควตาข้อความหมดแล้ว (0/3) — ส่งอีโมจิได้เท่านั้น</span></div>
+<form class="chatbar" style="margin-top:0"><input disabled placeholder="โควตาหมดแล้ว — ส่งได้แค่อีโมจิ"><button type="submit" class="btn primary" disabled>ส่ง</button>
+<button type="button" class="btn emo">😂</button><button type="button" class="btn emo">😱</button><button type="button" class="btn emo">🤔</button></form>
+<button type="button" class="btn qr-toggle" aria-expanded="true"><span>💬 ข้อความด่วน (23)</span><span aria-hidden="true">▴</span></button>
+<div class="qr-panel"><p class="hint qr-note" role="status">โควตาหมดแล้ว — ข้อความด่วนใช้ไม่ได้ ส่งได้แค่อีโมจิ</p>
+<button class="btn qr" disabled>ซัสสส ชัดเจน</button><button class="btn qr" disabled>เงียบแบบนี้ ฝ่ายมืดชัวร์</button><button class="btn qr" disabled>พูดเยอะผิดปกตินะ</button><button class="btn qr" disabled>… (อีก 20 ปุ่ม ปิดทั้งหมด)</button></div></div></div>
+
+<!-- S6 error -->
+<div class="frame"><h3>AFTER S6 · ส่งไม่สำเร็จ (AC-2) · ข้อความคงอยู่ในช่อง</h3>
+<div class="card"><h4>แชทกลาง</h4>
+<form class="chatbar"><input value="ข้อความนี้ยาวเกินสามสิบตัวอักษรแน่นอนเลยนะ"><button type="submit" class="btn primary">ส่ง</button>
+<button type="button" class="btn emo">😂</button><button type="button" class="btn emo">😱</button><button type="button" class="btn emo">🤔</button></form>
+<div role="alert"><div class="hint bad">ข้อความยาวเกิน 30 ตัวอักษร (Meeting Purge) — ไม่ได้ส่ง ไม่เสียโควตา</div></div></div></div>
+
+<!-- S7 hidden -->
+<div class="frame"><h3>AFTER S7 · ตาย / เฟสอื่น (NIGHT, VOTE, ...) · ซ่อนทั้งแถบ</h3>
+<div class="card"><h4>แชทกลาง</h4><div class="chat"><div class="msg"><b>มด:</b> เมื่อคืนใครอยู่ออฟฟิศ</div></div>
+<p class="hint">chatBar() คืนค่าว่าง: ไม่มีช่องพิมพ์ ปุ่มส่ง ข้อความด่วน หรืออีโมจิ (เหมือนเดิม)</p></div></div>
+
+</div></body></html>
