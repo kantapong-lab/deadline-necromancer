@@ -6,3 +6,4 @@
 4	backend-dev	sonnet	medium	1	pass	0	QUICK_REPLIES + test tok:34029
 4	frontend-dev	sonnet	high	1	pass	0	chat bar built, headless check 23/23 tok:75710
 6	code-reviewer	sonnet	high	1	pass	0	approve, S-1 chatBusy tok:61825
+7	qa-tester	sonnet	high	1	fail	0	14/14 AC, B-1 chatBusy stuck tok:106653

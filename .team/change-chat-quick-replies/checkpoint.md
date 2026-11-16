@@ -1,5 +1,5 @@
 # Checkpoint: change-chat-quick-replies
-Updated: step 0 · round 0
+Updated: step 7 · round 1
 
 ## Goal
 ปรับแก้หน้า player ในส่วนของ chat
@@ -30,7 +30,12 @@ gate 3c passed · user: "อนุมัติ (Recommended); server: ไม่�
 ## Decisions in force
 
 ## Loop counters
+7:qa-tester 1/3
 
 ## Open blockers
+- B-1 · - · FE · rounds open 1
 
 ## History
+- step 7 r1: QA fail: AC 14/14 pass, B-1 chatBusy stuck on lost ack (FE) [7-r1]
+
+[7-r1]: rounds/7-r1.md
