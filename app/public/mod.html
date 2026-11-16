@@ -130,7 +130,7 @@ function gameHTML() {
   const interim = S.phase === 'VOTE_INTERIM';
   const g0 = S.guidance || {};
   const g = { title: g0.title || (interim ? 'พักรอบโหวต — คะแนนรอบแรก' : ''), steps: g0.steps || (interim ? ['แจกจ่ายให้ผู้เล่นคุยกันก่อน แล้วกด "เปิดโหวตรอบสอง"'] : []), next: g0.next || '' };
-  const a = S.phase === 'VOTE' && S.voteRound === 1 ? { label: 'ปิดโหวตรอบแรก (ยังไม่ไล่ใคร)', act: 'closeVote' } : ACTIONS[S.phase], pd = S.pending || {};
+  const a = S.phase === 'MORNING' && S.day === 1 ? { label: 'ข้ามโหวต (วันจันทร์ไม่มีโหวตไล่ออก) →', act: 'toVote' } : S.phase === 'VOTE' && S.voteRound === 1 ? { label: 'ปิดโหวตรอบแรก (ยังไม่ไล่ใคร)', act: 'closeVote' } : ACTIONS[S.phase], pd = S.pending || {};
   const voteLabel = S.voteRound === 1 ? 'โหวตรอบแรก' : S.voteRound === 2 ? 'โหวตรอบสอง' : 'โหวตไล่ออก';
   const statusRep = Array.isArray(S.statusReport) ? `<div class="report"><div><b>🛠️ รายงานเต็ม (เฉพาะผู้ดำเนินเกม + วิศวกรเวร):</b></div>${S.statusReport.length ? S.statusReport.map(r => `<div>${esc(r)}</div>`).join('') : '<div class="hint">เมื่อคืนไม่มีอะไรผิดปกติ</div>'}${S.onCall != null && S.players[S.onCall] ? `<div class="hint">🛠️ วิศวกรเวร: ${esc(S.players[S.onCall].name)}</div>` : ''}</div>` : '';
   const interimBox = interim ? interimVotesHTML(S) : '';
