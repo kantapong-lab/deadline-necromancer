@@ -31,10 +31,16 @@ Players on the same LAN/Wi-Fi use the host machine's IP instead of `localhost`. 
 | `app/public/` | Player, Moderator and gallery pages, styles, card thumbnails |
 | `app/test/` | `golden/` (seeded engine snapshot), `http-parity.js`, `mod-actions.js`, `simulate.js` |
 | `docs/` | Game design, player rules, event cards and the original card artwork |
-| `poc/` | Early proof-of-concept page |
+| `poc/` | Experimental prototypes (office 3D/desk/director demos) — not part of the shipped game |
+| `.team/` | Agent-team working notes: research, tasks and per-role briefs for each change |
+| `.spright/` | Spright requirement/research/journey/deck workspace for pitch material |
 
 ## Documentation
 
 - [Player rules](docs/deadline_necromancer_player_rules.md) — goals of the three factions, turn order
 - [Game design & architecture](docs/deadline_necromancer_design.md) — roles, skills, technical design (some file paths there predate the `app/src/` restructure)
 - [Event cards](docs/deadline_necromancer_event_cards.md)
+- [Strategy](docs/deadline_necromancer_strategy.md)
+- [Daily rule ideas](docs/deadline_necromancer_daily_rule_ideas.md)
+- Card sheets: [role cards](docs/deadline_necromancer_role_cards/), [trap cards](docs/deadline_necromancer_trap_cards/), [booster cards](docs/booster_cards/), [event cards (art)](docs/event_cards/)
+- Architecture decisions: [ADRs](docs/adr/) · [architecture](docs/architecture/) · [plan](docs/plan/)
