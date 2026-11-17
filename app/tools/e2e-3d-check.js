@@ -30,7 +30,7 @@
       if (!m.reveal) { m.setReveal(true); E.revealed = true; }   // the screen hides secrets by default; this check needs them shown
       if (m.day !== T.day) fail(`${tag}: day scene=${m.day} engine=${T.day}`);
       if (m.mana !== T.mana) fail(`${tag}: mana scene=${m.mana} engine=${T.mana}`);
-      const lab = document.getElementById('phase').textContent; if (lab !== PHASE_LABEL[T.phase]) fail(`${tag}: phase label "${lab}" vs engine ${T.phase}`);
+      const lab = document.getElementById('phase').getAttribute('aria-label'); if (lab !== PHASE_LABEL[T.phase]) fail(`${tag}: phase label "${lab}" vs engine ${T.phase}`);
       if (m.phase !== SCENE[T.phase]) fail(`${tag}: scene lighting phase ${m.phase} vs expected ${SCENE[T.phase]} (engine ${T.phase})`);
       if (!m.secrets) fail(tag + ': spectator screen is not in secrets mode');
       const want = p => p.alive ? 'alive' : (p.cause === 'burnout' ? 'burnout' : 'fired');

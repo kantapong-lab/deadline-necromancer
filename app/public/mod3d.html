@@ -31,6 +31,14 @@
   .mana small{color:var(--txt);font-size:1.05rem;font-weight:700;white-space:nowrap}
   #waitTxt{color:var(--mut);font-size:.95rem;white-space:nowrap}
   .phase{font-weight:800;color:var(--light);font-size:1.5rem;white-space:nowrap;line-height:1.1}
+  /* phase stepper: เช้า → โหวต → ประกาศผล → กลางคืน (done ✓ · current highlighted); #phase keeps the full phase name in aria-label / data-phase */
+  .stp{display:flex;align-items:center;gap:.2rem;font-size:.95rem;font-weight:700;white-space:nowrap}
+  .stp span{padding:.12rem .6rem;border-radius:99px;background:var(--panel2);color:var(--mut)}
+  .stp span.d{opacity:.6} .stp span.d::before{content:"✓ "}
+  .stp span.n{background:var(--sc,var(--light));color:#14092b}
+  .stp u{width:.5rem;height:1px;background:var(--line);text-decoration:none}
+  .stp.over span{background:#3a0f18;color:#ffb3bb;border:1px solid var(--cult)}
+  #cap.res{border-left-color:var(--cult)} #cap.res b{color:var(--cult)}
   .secbadge{display:none;background:#3a0f18;border:1px solid var(--cult);color:#ffb3bb;border-radius:99px;padding:.1rem .7rem;font-size:.9rem;font-weight:600;white-space:nowrap}
   body.sec .secbadge{display:inline-block}
   /* ---- team rows: HTML side columns follow the projected row positions ---- */
@@ -121,7 +129,7 @@
   #lobbyWhy{min-height:1.4em;font-size:.9rem}
   /* ---- phase transition title card (morning / night / end game): veil + drawn sun · crescent · skull seal, covers the 3D stage only ---- */
   #phaseFx{position:fixed;left:0;right:0;top:0;bottom:var(--chatH);z-index:var(--z-phase);pointer-events:none;display:grid;place-items:center;opacity:0;overflow:hidden;--pc:#f5c451;--pv:#2a1a06}
-  #phaseFx[data-k=NIGHT]{--pc:#b48cff;--pv:#07031a} #phaseFx[data-k=OVER]{--pc:#ff5c7a;--pv:#1a0408}
+  #phaseFx[data-k=NIGHT]{--pc:#b48cff;--pv:#07031a} #phaseFx[data-k=OVER],#phaseFx[data-k=RESULT]{--pc:#ff5c7a;--pv:#1a0408}
   #phaseFx::before{content:"";position:absolute;inset:0;background:radial-gradient(55% 65% at 50% 50%,color-mix(in srgb,var(--pc) 24%,transparent),transparent 72%),linear-gradient(180deg,transparent 4%,var(--pv) 34%,var(--pv) 66%,transparent 96%);opacity:.94}
   #phaseFx.go{animation:pfxVeil 2.6s ease both}
   .pfx{position:relative;text-align:center;color:var(--pc);font-family:"Palatino Linotype","Book Antiqua",Georgia,"Noto Serif Thai",serif;text-shadow:0 .15rem 1rem #000}
@@ -132,10 +140,11 @@
   [data-k=MORNING] .orb{background:radial-gradient(circle at 40% 35%,#fff6d0,#f5c451 55%,#d88a20);box-shadow:0 0 2.6rem #f5c451aa}
   [data-k=MORNING] .orb::before{content:"";position:absolute;inset:-1.7rem;border-radius:50%;background:repeating-conic-gradient(#f5c451aa 0 5deg,transparent 5deg 30deg);-webkit-mask:radial-gradient(circle,transparent 56%,#000 60%,transparent 99%);mask:radial-gradient(circle,transparent 56%,#000 60%,transparent 99%);animation:pfxSpin 14s linear infinite}
   [data-k=NIGHT] .orb{box-shadow:inset -1.5rem -.55rem 0 0 #e0d2ff;filter:drop-shadow(0 0 1.1rem #b48cffcc)}
-  [data-k=OVER] .orb{display:grid;place-items:center;border:.2rem solid var(--pc);background:#2a0710;box-shadow:0 0 2.2rem #ff5c7a88,inset 0 0 1rem #ff5c7a66}
-  [data-k=OVER] .orb::after{content:"\2620\FE0E";font:400 3.6rem/1 "Segoe UI Symbol","Apple Symbols","Noto Sans Symbols 2",serif;color:var(--pc)}
+  [data-k=OVER] .orb,[data-k=RESULT] .orb{display:grid;place-items:center;border:.2rem solid var(--pc);background:#2a0710;box-shadow:0 0 2.2rem #ff5c7a88,inset 0 0 1rem #ff5c7a66}
+  [data-k=OVER] .orb::after,[data-k=RESULT] .orb::after{content:"\2620\FE0E";font:400 3.6rem/1 "Segoe UI Symbol","Apple Symbols","Noto Sans Symbols 2",serif;color:var(--pc)}
+  [data-k=RESULT] .orb::after{content:"\2696\FE0E"}   /* scales instead of the skull */
   .go .pfx b{animation:pfxTitle 2.6s cubic-bezier(.2,.8,.2,1) both} .go .pfx small{animation:pfxSub 2.6s ease both} .go .pfx i{animation:pfxLine 2.6s cubic-bezier(.2,.8,.2,1) both}
-  .go[data-k=MORNING] .orb{animation:pfxRise 2.6s cubic-bezier(.2,.8,.2,1) both} .go[data-k=NIGHT] .orb{animation:pfxFall 2.6s cubic-bezier(.2,.8,.2,1) both} .go[data-k=OVER] .orb{animation:pfxSlam 2.6s cubic-bezier(.3,1.4,.5,1) both}
+  .go[data-k=MORNING] .orb{animation:pfxRise 2.6s cubic-bezier(.2,.8,.2,1) both} .go[data-k=NIGHT] .orb{animation:pfxFall 2.6s cubic-bezier(.2,.8,.2,1) both} .go[data-k=OVER] .orb,.go[data-k=RESULT] .orb{animation:pfxSlam 2.6s cubic-bezier(.3,1.4,.5,1) both}
   @keyframes pfxVeil{0%{opacity:0}14%,78%{opacity:1}100%{opacity:0}}
   @keyframes pfxTitle{0%{letter-spacing:.6em;opacity:0;filter:blur(.4rem)}24%,100%{letter-spacing:.08em;opacity:1;filter:none}}
   @keyframes pfxSub{0%,22%{opacity:0;transform:translateY(.6rem)}40%,100%{opacity:.9;transform:none}}
@@ -694,29 +703,45 @@ async function playFx(f) {
 }
 // ----- phase transition (morning / night / end game): title card over the stage + a kick to the rune circle and motes -----
 const pfxEl = document.getElementById('phaseFx');
-const PFX = { MORNING:['รุ่งอรุณ — ประชุมเช้า', st => `${DAY_FULL[st.day - 1] || ''} · วันที่ ${st.day}/5`], NIGHT:['ราตรีมาเยือน', () => 'ลัทธิอู้งานออกล่า…'], OVER:['จบเกม', () => 'Deadline มาถึงแล้ว'] };
+const resText = st => (st.voteResult && st.voteResult.text) || 'ผลการโหวต';
+const PFX = { MORNING:['รุ่งอรุณ — ประชุมเช้า', st => `${DAY_FULL[st.day - 1] || ''} · วันที่ ${st.day}/5`], RESULT:['ประกาศผลโหวต', resText], NIGHT:['ราตรีมาเยือน', () => 'ลัทธิอู้งานออกล่า…'], OVER:['จบเกม', () => 'Deadline มาถึงแล้ว'] };
 async function phaseFx(key, st) {
   const P = PFX[key]; if (!P) return; phaseKick = 1;
-  if (RM) { say(P[0]); return; }                                   // reduced motion: plain text toast, no title card
+  if (RM) { say(P[0]); if (key === 'RESULT') resCaption(st); return; }   // reduced motion: plain text toast, no title card
   pfxEl.dataset.k = key; pfxEl.querySelector('b').textContent = P[0]; pfxEl.querySelector('small').textContent = P[1](st);
   pfxEl.classList.remove('go'); void pfxEl.offsetWidth; pfxEl.classList.add('go');
   await wait(2600); pfxEl.classList.remove('go');
+  if (key === 'RESULT') resCaption(st);                            // after the card: the result stays readable in the caption bar until the phase moves on
 }
+const resCaption = st => { if (curSt && curSt.phase === 'VOTE_RESULT') caption('⚖ ประกาศผลโหวต', resText(st), 600000, 'res'); };
 const played = [];   // every fx the screen handled (kind/role/key + done|err) — read by the e2e check via window.__mod3d
 async function pump() { if (playing) return; playing = true; while (fxQueue.length) { const f = fxQueue.shift(); if (f.kind === 'phase') { try { await phaseFx(f.key, f.st); } catch (e) { console.error('phaseFx', e); } continue; }   // local transition — not an engine fx, so not recorded in `played`
   const rec = { kind:f.kind, role:f.role, key:f.key, caster:f.caster, pid:f.pid, out:f.out, trap:f.trap, accepted:f.accepted, t:Date.now() }; played.push(rec); try { await playFx(f); rec.done = true; } catch (e) { rec.err = String(e && e.stack || e); console.error('fx', f, e); } await wait(250); } playing = false; }
+// ----- phase stepper in the band (full name stays in aria-label + data-phase for readers/tests) -----
+const PHASE_LABEL = { MORNING:'ประชุมเช้า', VOTE:'โหวตไล่ออก', VOTE_INTERIM:'พักโหวต — ผลรอบแรก', VOTE_RESULT:'ประกาศผลโหวต', NIGHT:'กลางคืน — แอ็กชันลับ', OVER:'จบเกม' };
+const STEP_OF = { MORNING:0, VOTE:1, VOTE_INTERIM:1, VOTE_RESULT:2, NIGHT:3 };
+const STEP_COLOR = { MORNING:'var(--light)', VOTE:'var(--light)', VOTE_INTERIM:'var(--light)', VOTE_RESULT:'var(--cult)', NIGHT:'#b48cff' };
+function renderPhase(st) {
+  const el = document.getElementById('phase'), cur = STEP_OF[st.phase];
+  el.dataset.phase = st.phase; el.setAttribute('aria-label', PHASE_LABEL[st.phase] || st.phase); el.style.setProperty('--sc', STEP_COLOR[st.phase] || 'var(--light)');
+  if (cur == null) { el.className = 'phase stp over'; el.innerHTML = `<span>🏁 ${PHASE_LABEL[st.phase] || st.phase}</span>`; return; }
+  const names = ['ประชุมเช้า', st.phase === 'VOTE_INTERIM' ? 'พักโหวต' : 'โหวต', 'ประกาศผล', 'กลางคืน'];
+  el.className = 'phase stp'; el.innerHTML = names.map((s, i) => `${i ? '<u></u>' : ''}<span class="${i < cur ? 'd' : i === cur ? 'n' : ''}">${s}</span>`).join('');
+}
 // ----- engine state → scene -----
 const SCENE_PHASE = { MORNING:'MORNING', VOTE:'VOTE', VOTE_INTERIM:'VOTE', VOTE_RESULT:'VOTE', NIGHT:'NIGHT', OVER:'MORNING' };
 let hydrated = false, lastDay = null, lastPhase = null, phaseKick = 0;
 function applyState(st) {
   if (lastDay != null && st.day !== lastDay) { clearBadges(); D.clearNight(); }          // new day → last night's skill icons + shield glows are cleared (the night's fx play after this state arrives)
   lastDay = st.day;
-  { const pk = st.phase === 'OVER' ? 'OVER' : SCENE_PHASE[st.phase];   // morning → front of the queue (before last night's fx), end game → after everything still queued
+  { const pk = st.phase === 'OVER' ? 'OVER' : st.phase === 'VOTE_RESULT' ? 'RESULT' : SCENE_PHASE[st.phase];   // morning / vote result → front of the queue (before the vote fx), end game → after everything still queued
     if (hydrated && pk !== lastPhase && PFX[pk]) { const f = { kind:'phase', key:pk, st }; pk === 'OVER' ? fxQueue.push(f) : fxQueue.unshift(f); pump(); }
     lastPhase = pk; }
   curSt = st; if (!!st.secrets !== srvSecrets) applySecrets(st.secrets); renderChat(st); renderDark(st); desks.forEach(refreshLabel);
   day = st.day; mana = Math.max(0, Math.min(MANA_MAX, st.mana)); renderHud(); setPhaseQuiet(SCENE_PHASE[st.phase] || 'MORNING');
-  document.getElementById('phase').textContent = ({ MORNING:'ประชุมเช้า', VOTE:'โหวตไล่ออก', VOTE_INTERIM:'พักโหวต — ผลรอบแรก', VOTE_RESULT:'ประกาศผลโหวต', NIGHT:'กลางคืน — แอ็กชันลับ', OVER:'จบเกม' })[st.phase] || st.phase;
+  renderPhase(st);
+  if (st.phase !== 'VOTE_RESULT' && capEl.classList.contains('res')) capEl.classList.remove('show');   // leave the result caption behind when the night starts
+  if (st.phase === 'VOTE_RESULT' && !hydrated) resCaption(st);                                        // page opened mid-result: no title card, show the caption straight away
   st.players.forEach(p => { const d = desks[p.id]; if (!d) return; if (p.role) setRole(d, p.role);
     if (!hydrated && !p.alive && d.state === 'alive') { if (p.cause === 'burnout') burnDesk(d); else fireDesk(d); } });
   hydrated = true;
