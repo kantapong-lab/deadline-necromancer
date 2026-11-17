@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Journey Map</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans+Thai:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+/* theme:start */
+:root {
+  --font-sans: "IBM Plex Sans Thai", "IBM Plex Sans", "Leelawadee UI", "Thonburi", "Noto Sans Thai", system-ui, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Consolas, monospace;
+  --paper: #f5f3ee; --paper-2: #ece9e1; --ink: #1d1c1a; --muted: #6d695f;
+  --line: rgba(29, 28, 26, 0.14); --accent: #b5542c; --accent-soft: rgba(181, 84, 44, 0.12);
+  --ease: cubic-bezier(0.22, 1, 0.36, 1); --radius: 14px;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --paper: #151513; --paper-2: #1f1e1b; --ink: #ece8e0; --muted: #a19c90;
+    --line: rgba(236, 232, 224, 0.14); --accent: #e48a62; --accent-soft: rgba(228, 138, 98, 0.14);
+  }
+}
+:root[data-theme="dark"] {
+  --paper: #151513; --paper-2: #1f1e1b; --ink: #ece8e0; --muted: #a19c90;
+  --line: rgba(236, 232, 224, 0.14); --accent: #e48a62; --accent-soft: rgba(228, 138, 98, 0.14);
+}
+/* theme:end */
+*, *::before, *::after { box-sizing: border-box; }
+body { margin: 0; background: var(--paper); color: var(--ink); font-family: var(--font-sans); line-height: 1.6; word-break: keep-all; line-break: strict; overflow-wrap: anywhere; -webkit-font-smoothing: antialiased; }
+main { padding: clamp(24px, 5vw, 72px) 16px; max-width: 1440px; margin: 0 auto; padding-inline: clamp(16px, 5vw, 72px); }
+.eyebrow { font-family: var(--font-mono); font-size: 12px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--accent); margin: 0 0 8px; }
+h1 { font-size: clamp(28px, 4vw, 52px); font-weight: 600; line-height: 1.15; margin: 0 0 8px; text-wrap: balance; }
+.summary { color: var(--muted); margin: 0 0 32px; max-width: 62ch; }
+.journey { overflow-x: auto; flex-shrink: 0; }
+.j-tabs { display: flex; gap: 8px; margin-bottom: 16px; flex-wrap: wrap; }
+.j-tabs button { font: inherit; font-size: 14px; padding: 6px 14px; border-radius: 999px; border: 1px solid var(--line); background: none; color: var(--ink); cursor: pointer; }
+.j-tabs button[aria-selected="true"] { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+.j-grid { display: grid; grid-template-columns: 110px repeat(var(--n), minmax(150px, 1fr)); min-width: 860px; font-size: 14px; }
+.j-grid > div { padding: 10px 12px; border-bottom: 1px solid var(--line); }
+.j-label { font-family: var(--font-mono); font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); }
+.j-head { font-weight: 600; font-size: 15px; border-bottom: 1px solid var(--ink) !important; }
+.j-mot { background: var(--accent-soft); }
+.j-head.j-mot::after { content: "moment of truth"; display: block; font-family: var(--font-mono); font-size: 10px; font-weight: 400; color: var(--accent); text-transform: uppercase; }
+.j-curve { grid-column: 2 / -1; padding: 0 !important; }
+.j-curve svg { display: block; width: 100%; height: 96px; overflow: visible; clip-path: inset(-8px); animation: reveal 1.4s var(--ease) both; }
+@keyframes reveal { from { clip-path: inset(-8px 100% -8px -8px); } to { clip-path: inset(-8px); } }
+.j-curve path { fill: none; stroke-linecap: round; stroke-linejoin: round; }
+.j-curve .j-line { stroke: var(--accent); stroke-width: 2; }
+.j-curve .j-dot { stroke: var(--accent); stroke-width: 10; }
+.j-curve .j-dot-in { stroke: var(--paper); stroke-width: 6; }
+.j-curve line { stroke: var(--line); }
+.j-chip { display: block; border-radius: 8px; padding: 6px 8px; margin-bottom: 6px; line-height: 1.4; }
+.j-chip.pain { background: rgba(127, 127, 127, 0.1); }
+.j-chip.opp { background: var(--accent-soft); }
+@media (prefers-reduced-motion: reduce) { .j-curve svg { animation: none; } }
+</style>
+</head>
+<body>
+<main>
+  <p class="eyebrow">User journey</p>
+  <h1 id="title"></h1>
+  <p class="summary" id="summary"></p>
+  <div class="journey journey-standalone" id="journey"></div>
+</main>
+
+<!-- journey-designer: replace only the JSON below -->
+<script type="application/json" id="journey-data">
+{"title":"Deadline Necromancer — Journey ผู้เล่นและชุมชน (ไทย)","lang":"th","personas":[
+{"id":"p1","name":"ฟ้า — ผู้จัดวงเกมทีมออฟฟิศ/IT","summary":"จัดเกมให้ทีมหลังงาน ไม่อยากหาคนคุมเกมเก่ง ๆ (segment จาก requirement [assumed]; ชื่อสมมติ)","momentOfTruth":"Onboarding","stages":[
+{"stage":"Awareness","doing":"เห็นเกมธีม Sprint/Deadline ขณะหาเกมให้ทีม","touchpoints":"TikTok/YouTube, LINE กลุ่มทีม, เพื่อนร่วมงาน","thinking":"ธีมตรงชีวิตเรา แต่ต้องมีคนคุมและต้องครบคนไหม","emotion":0,"pains":["หาข้อมูลพฤติกรรมเล่นเกมของทีมออฟฟิศไทยไม่เจอ"],"opportunities":["คลิปสั้นไทยโชว์ธีมออฟฟิศ + หน้าจอ Moderator","โพลถามชุมชนเอง"]},
+{"stage":"Consideration","doing":"เทียบ Werewolf กระดาษ / ONUW ไทย / Wolfia","touchpoints":"ร้านแอป, รีวิว, เพื่อนที่เคยเล่น","thinking":"เล่นกระดาษยังต้องมีคนคุม อันนี้ต่างยังไง","emotion":0,"pains":["moderator ไม่ดี = เกมไม่สนุก","Werewolf ดั้งเดิมต้อง 7+ คน"],"opportunities":["บอกว่า 6–12 คน และหน้าจอ Moderator นำขั้นตอน (มีจริง)","พูดแบบ hedge: เราไม่พบเกมที่รวม 3 อย่างนี้"]},
+{"stage":"Onboarding","doing":"ตั้งห้อง ให้ทุกคนเข้าจากมือถือด้วยรหัสห้อง","touchpoints":"หน้าจอ Moderator (2D/3D), เบราว์เซอร์มือถือ","thinking":"ต้องรันเซิร์ฟเวอร์เอง? ต้อง Wi-Fi เดียวกัน? ใครหลุดทำไง","emotion":-2,"pains":["ปัจจุบันใช้ใน LAN เท่านั้น ไม่มี HTTPS ห้องอยู่ในหน่วยความจำ","ยังไม่ทดสอบมือถือจริงผ่าน Wi-Fi"],"opportunities":["ห้อง playtest ที่โฮสต์ให้ (ข้อเสนอ)","คู่มือโฮสต์ 5 นาที (ข้อเสนอ)","กลับที่นั่งเดิมด้วย token (มีจริง)"]},
+{"stage":"Core use","doing":"เล่นสูงสุด 5 วัน จันทร์–ศุกร์ ดู Mana Task, Event/Trap, โหวต","touchpoints":"จอกลาง + มือถือ (แท็บ เกม/ฉัน/แชทลับ/ผู้เล่น)","thinking":"ระบบประกาศผลให้ ไม่ต้องจำกติกาเอง","emotion":1,"pains":["กติกามีรายละเอียดมาก (อนุมาน)"],"opportunities":["การ์ดบทบาท/คำอธิบายบนมือถือ (มีจริง)","Quick Rules 1 หน้า (ข้อเสนอ)"]},
+{"stage":"Retention / Referral","doing":"ชวนทีมอื่นเล่นต่อ ให้ฟีดแบ็ก","touchpoints":"LINE กลุ่ม, Discord/OpenChat (ยังไม่มีลิงก์), ฟอร์ม","thinking":"อยากเล่นกับทีมอื่น แต่จะแจ้งใครถ้าเจอบั๊ก","emotion":1,"pains":["ไม่มีสถิติ/Match history (ยังไม่สร้าง)","ไม่มีช่องชุมชนที่ยืนยันได้"],"opportunities":["ฟอร์มฟีดแบ็ก/สมัครทดลอง (ข้อเสนอ)","ชุมชน Discord/LINE OpenChat (ข้อเสนอ)","ชุด Sprint session สำหรับทีม (ข้อเสนอ)"]}
+]},
+{"id":"p2","name":"ภู — นักเล่นบอร์ดเกม/สายคาเฟ่","summary":"เล่น Werewolf/ONUW ที่คาเฟ่และวงเพื่อน อยากได้เกมที่ลึกและแปลกใหม่ (segment [assumed]; ชื่อสมมติ)","momentOfTruth":"Consideration","stages":[
+{"stage":"Awareness","doing":"ตามข่าว/งานบอร์ดเกม ดูเกมใหม่","touchpoints":"Meetup กรุงเทพฯ, คาเฟ่, งาน Board Game Show/BIGF","thinking":"มีเกมไทยใหม่ ๆ อีกแล้ว","emotion":0,"pains":["ไม่พบกลุ่ม social-deduction ไทยเฉพาะ","ชุมชนคุยออนไลน์มากกว่าพบหน้า"],"opportunities":["ทดลองเล่นที่งาน/คาเฟ่/มหาวิทยาลัย (ข้อเสนอ)"]},
+{"stage":"Consideration","doing":"เทียบกับ Werewolf, ONUW ไทย, Blood on the Clocktower","touchpoints":"รีวิว, เพื่อนในวง","thinking":"ต่างจาก Werewolf ตรงไหน คุ้มเวลาไหม","emotion":-1,"pains":["ตัวเลือกไทยที่ยืนยันได้มีน้อยและต่างรูปแบบ ต้องบอกความต่างให้ชัด","หาตัวเลขจำนวนผู้เล่นไทยไม่เจอ"],"opportunities":["ชูจุดต่าง: Light/Dark/Independent, Mana Task, Event/Trap Card, Sprint Booster (มีจริงในเกม)"]},
+{"stage":"Onboarding","doing":"นั่งโต๊ะคาเฟ่ เปิดมือถือเข้าห้อง","touchpoints":"โต๊ะคาเฟ่, มือถือ, จอ Moderator","thinking":"Wi-Fi ร้านเอื้อไหม ต้องขออนุญาตร้านไหม","emotion":0,"pains":["ใช้ใน LAN เท่านั้น","ยังไม่ได้ถามคาเฟ่เรื่อง Wi-Fi และนโยบายร้าน"],"opportunities":["ชุดทดลองเล่นที่คาเฟ่ (ข้อเสนอ ต้องมีพาร์ตเนอร์)"]},
+{"stage":"Core use","doing":"เล่น เจอ Event/Trap และโหวตไล่ออก","touchpoints":"จอกลาง, มือถือ","thinking":"วันจันทร์ทุกคนได้ประชุมก่อน ไม่ถูกตัดออกทันที","emotion":1,"pains":["ถูกคัดออกเร็วแล้วเบื่อ (ทั่วไปในเกมประเภทนี้)","กติกายังไม่ระบุว่าผู้ติด Burnout ทำอะไรได้อีกบ้าง จึงยังไม่พูดถึงตรงนี้"],"opportunities":["เน้นกติกาที่มีจริง: ไม่มีโหวตไล่ออกวันจันทร์, คืนแรกสาป Burnout ไม่ได้, ไล่ Dark = Mana +1"]},
+{"stage":"Retention / Referral","doing":"ชวนเพื่อนวงบอร์ดเกม เล่นซ้ำ","touchpoints":"Meetup, LINE/Discord, งานเทศกาล","thinking":"เอาไปเล่นกับวงอื่นได้","emotion":1,"pains":["หาช่องชุมชนและตัวเลขจำนวนผู้เล่นไม่เจอ"],"opportunities":["Discord/LINE OpenChat (ถามผู้เล่นหาลิงก์)","โมเดล tool ฟรี + ชุมชนจำกัด แบบ Blood on the Clocktower (ข้อเสนอ)"]}
+]},
+{"id":"p3","name":"มินท์ — นักเล่นเกมมือถือทั่วไป","summary":"เล่นเกมมือถือ เห็นเกมจากสตรีมเมอร์ ไม่คุ้นบอร์ดเกม (segment [assumed]; ชื่อสมมติ)","momentOfTruth":"Awareness","stages":[
+{"stage":"Awareness","doing":"เลื่อน TikTok/YouTube เจอคลิปเกมวงสังคม","touchpoints":"TikTok, YouTube/Twitch/Facebook","thinking":"ดูสนุก แต่ต้องรวมเพื่อนกี่คน","emotion":-1,"pains":["ไม่พบสตรีมเมอร์ไทยที่เล่น social-deduction","หาตัวเลขจำนวนผู้เล่นไม่เจอ"],"opportunities":["คลิปสั้น/เชิญสตรีมเมอร์เล่น (ข้อเสนอ ไม่มีรายชื่อยืนยัน)"]},
+{"stage":"Consideration","doing":"ถามเพื่อน เทียบกับเกมฟรีที่เล่นอยู่","touchpoints":"แชทเพื่อน, ร้านแอป","thinking":"ฟรีไหม ยากไหม","emotion":0,"pains":["ผู้ไม่เล่นบอกแรงจูงใจคือรางวัล 41.7% และเรียนรู้ง่าย 31.3%","คู่แข่งส่วนใหญ่ฟรี"],"opportunities":["ลองเล่นฟรี (ข้อเสนอ)","Quick Rules ไทย (ข้อเสนอ)","ไม่พูดเรื่องราคา เพราะเรายังไม่ได้ตั้งราคาเกม"]},
+{"stage":"Onboarding","doing":"ชวนเพื่อนให้ครบ 6 คน เปิดเข้าห้อง","touchpoints":"แชทกลุ่ม, เบราว์เซอร์มือถือ","thinking":"ต้องครบ 6 คนถึงลองได้ เลยยังไม่ลอง","emotion":-1,"pains":["ผู้เล่นน้อยกว่า 6 คนเล่นไม่ได้ (กติกา 6–12 คน)"],"opportunities":["โหมดบอทเติมที่นั่งเพื่อทดลอง (ข้อเสนอ; play-bots ในรีโปเป็นเครื่องมือทดสอบ)","ไม่ต้องติดตั้งแอป (มีจริง)"]},
+{"stage":"Core use","doing":"เล่นรอบแรก เรียนรู้ระหว่างเล่น","touchpoints":"มือถือ (การ์ดบทบาท + คำอธิบาย), จอกลาง","thinking":"ตัวเลือกเป็นการ์ดมีคำอธิบาย เข้าใจได้","emotion":1,"pains":["บทบาท/สกิลเยอะสำหรับมือใหม่ (อนุมาน)"],"opportunities":["หน้ากลางคืนแบบขั้นตอน การ์ดพร้อมคำอธิบาย (มีจริง)"]},
+{"stage":"Retention / Referral","doing":"เล่นซ้ำ ชวนเพื่อนเพิ่ม","touchpoints":"LINE/Discord, แชร์คลิป","thinking":"สนุก ลองชวนกลุ่มอื่น","emotion":0,"pains":["ไม่มีสถิติ/Match history","ไม่มีช่องชุมชนที่ยืนยันได้"],"opportunities":["ฟอร์มสมัคร/ฟีดแบ็ก (ข้อเสนอ)","ชุมชน (ข้อเสนอ)"]}
+]}
+]}
+</script>
+
+<script>
+/* journey renderer — same as deck.html */
+window.renderJourney = function (root, data) {
+  const esc = (s) => String(s ?? '').replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+  const personas = data.personas || [];
+  function draw(p) {
+    const st = p.stages || [], n = st.length, W = n * 100, y = (e) => 48 - Math.max(-2, Math.min(2, e)) * 18;
+    const pts = st.map((s, i) => [i * 100 + 50, y(s.emotion)]);
+    const d = pts.map((q, i) => (i ? 'L' : 'M') + q.join(' ')).join(' ');
+    const mot = (s) => (s.stage === p.momentOfTruth ? ' j-mot' : '');
+    const row = (label, f) => `<div class="j-label">${label}</div>` + st.map((s) => `<div class="${mot(s).trim()}">${f(s)}</div>`).join('');
+    return `<div class="j-grid" style="--n:${n}">
+      <div class="j-label"></div>${st.map((s) => `<div class="j-head${mot(s)}">${esc(s.stage)}</div>`).join('')}
+      ${row('Doing', (s) => esc(s.doing))}
+      ${row('Touchpoints', (s) => esc(s.touchpoints))}
+      ${row('Thinking', (s) => '“' + esc(s.thinking) + '”')}
+      <div class="j-label">Feeling</div>
+      <div class="j-curve"><svg viewBox="0 0 ${W} 96" preserveAspectRatio="none" role="img" aria-label="Emotion curve">
+        <line x1="0" x2="${W}" y1="48" y2="48" vector-effect="non-scaling-stroke"/>
+        <path class="j-line" d="${d}" vector-effect="non-scaling-stroke"/>
+        ${pts.map((q, i) => `<g><title>${esc(st[i].stage)}: ${st[i].emotion}</title><path class="j-dot" d="M${q[0]} ${q[1]}h0" vector-effect="non-scaling-stroke"/><path class="j-dot-in" d="M${q[0]} ${q[1]}h0" vector-effect="non-scaling-stroke"/></g>`).join('')}
+      </svg></div>
+      ${row('Pains', (s) => (s.pains || []).map((x) => `<span class="j-chip pain">${esc(x)}</span>`).join(''))}
+      ${row('Opportunities', (s) => (s.opportunities || []).map((x) => `<span class="j-chip opp">${esc(x)}</span>`).join(''))}
+    </div>`;
+  }
+  const tabs = personas.length > 1
+    ? `<div class="j-tabs" role="tablist">${personas.map((p, i) => `<button role="tab" aria-selected="${i === 0}" data-i="${i}">${esc(p.name)}</button>`).join('')}</div>` : '';
+  root.innerHTML = tabs + `<div class="j-body">${personas[0] ? draw(personas[0]) : ''}</div>`;
+  root.querySelectorAll('.j-tabs button').forEach((b) => b.addEventListener('click', () => {
+    root.querySelectorAll('.j-tabs button').forEach((x) => x.setAttribute('aria-selected', x === b));
+    root.querySelector('.j-body').innerHTML = draw(personas[+b.dataset.i]);
+  }));
+};
+const data = JSON.parse(document.getElementById('journey-data').textContent);
+document.documentElement.lang = data.lang || 'th';
+document.title = data.title || 'Journey Map';
+document.getElementById('title').textContent = data.title || '';
+document.getElementById('summary').textContent = (data.personas || []).map((p) => `${p.name}: ${p.summary}`).join(' · ');
+window.renderJourney(document.getElementById('journey'), data);
+</script>
+</body>
+</html>

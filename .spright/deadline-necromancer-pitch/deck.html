@@ -1,0 +1,601 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Deadline Necromancer — ชวนมา Playtest</title>
+<!-- Web font is optional: without a connection the theme falls back to system Thai fonts. -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans+Thai:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+/* theme:start */
+/* palette taken from the game UI (app/public/style.css): dark purple office-necromancer */
+:root {
+  --font-sans: "IBM Plex Sans Thai", "IBM Plex Sans", "Leelawadee UI", "Thonburi", "Noto Sans Thai", system-ui, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Consolas, monospace;
+  --paper: #0f0d1a;
+  --paper-2: #201c36;
+  --ink: #ebe7f7;
+  --muted: #a79fc6;
+  --line: #33294f;
+  --accent: #b05cff;
+  --accent-soft: rgba(176, 92, 255, 0.16);
+  --pos: #5fe39a;
+  --neg: #ff5c7a;
+  --light: #f5c451;
+  --dark: #b05cff;
+  --indie: #4ecdc4;
+  --grain-opacity: 0.03;
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --dur: 520ms;
+  --radius: 14px;
+  color-scheme: dark;
+}
+/* theme:end */
+
+/* ---------- base (do not edit per deck) ---------- */
+*, *::before, *::after { box-sizing: border-box; }
+html, body { height: 100%; margin: 0; }
+body {
+  background: radial-gradient(1200px 600px at 50% -200px, #2a1f4d, var(--paper)) var(--paper) no-repeat fixed; color: var(--ink);
+  font-family: var(--font-sans); font-weight: 400; line-height: 1.6;
+  -webkit-font-smoothing: antialiased; overflow: hidden;
+  word-break: keep-all; line-break: strict; overflow-wrap: anywhere;
+}
+body::after { /* paper grain */
+  content: ""; position: fixed; inset: 0; pointer-events: none; z-index: 50; opacity: var(--grain-opacity);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+h1, h2, h3, p, blockquote, figure, ol, ul { margin: 0; }
+h1, h2, h3 { font-weight: 600; line-height: 1.15; text-wrap: balance; }
+html:not([lang="th"]) h1, html:not([lang="th"]) h2 { letter-spacing: -0.02em; }
+h1 { font-size: clamp(40px, 6.2vw, 92px); }
+h2 { font-size: clamp(28px, 3.8vw, 56px); max-width: 22ch; }
+h3 { font-size: clamp(18px, 1.6vw, 24px); }
+p { max-width: 62ch; text-wrap: pretty; }
+.eyebrow, .source, .counter, .tag, .axis {
+  font-family: var(--font-mono); font-size: 12px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted);
+}
+.eyebrow { color: var(--accent); }
+.lede { font-size: clamp(17px, 1.5vw, 22px); color: var(--muted); font-weight: 300; }
+.source { text-transform: none; letter-spacing: 0.02em; margin-top: auto; padding-top: 16px; border-top: 1px solid var(--line); max-width: none; }
+sup.ref { font-family: var(--font-mono); font-size: 0.6em; color: var(--accent); }
+.notes { display: none; }
+
+/* ---------- stage ---------- */
+.deck { position: fixed; inset: 0; }
+.slide {
+  position: absolute; inset: 0; display: flex; flex-direction: column; justify-content: safe center;
+  gap: clamp(14px, 2.4vh, 28px); padding: clamp(28px, 7vw, 120px) clamp(20px, 8vw, 140px);
+  overflow-y: auto; overflow-x: hidden;
+  opacity: 0; visibility: hidden; transform: translateY(14px);
+  transition: opacity var(--dur) var(--ease), transform calc(var(--dur) * 1.2) var(--ease), visibility 0s linear calc(var(--dur) * 1.2);
+}
+.slide.is-active { opacity: 1; visibility: visible; transform: none; transition: opacity var(--dur) var(--ease), transform calc(var(--dur) * 1.2) var(--ease); }
+.slide.is-past { transform: translateY(-14px); }
+[data-build] { opacity: 0; transform: translateY(12px); transition: opacity var(--dur) var(--ease), transform var(--dur) var(--ease); }
+[data-build].is-in { opacity: 1; transform: none; }
+
+/* ---------- layouts ---------- */
+[data-layout="hero"] { justify-content: flex-end; }
+[data-layout="hero"] h1 { max-width: 16ch; }
+[data-layout="hero"] .rule { width: 72px; height: 2px; background: var(--accent); }
+[data-layout="hero"] .meta { display: flex; gap: 24px; flex-wrap: wrap; }
+
+[data-layout="statement"] h2 { font-size: clamp(32px, 4.8vw, 72px); font-weight: 500; max-width: 20ch; }
+[data-layout="statement"] em { font-style: normal; color: var(--accent); }
+
+.stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: clamp(20px, 4vw, 64px); margin-top: 8px; }
+.stat { border-top: 1px solid var(--ink); padding-top: 16px; display: grid; gap: 6px; align-content: start; }
+.stat .num { font-size: clamp(48px, 7vw, 112px); font-weight: 300; line-height: 1; font-variant-numeric: tabular-nums; }
+.stat .unit { font-family: var(--font-mono); font-size: 13px; color: var(--muted); }
+.stat p { color: var(--muted); font-size: 15px; }
+
+.split { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(24px, 5vw, 80px); align-items: center; }
+.panel { background: var(--paper-2); border-radius: var(--radius); padding: clamp(20px, 3vw, 40px); min-height: 240px; display: grid; place-items: center; }
+
+.table-wrap { overflow-x: auto; margin-inline: -4px; }
+table.compare { width: 100%; border-collapse: collapse; font-size: clamp(13px, 1.05vw, 15px); min-width: 560px; }
+.compare th { text-align: left; font-family: var(--font-mono); font-size: 11px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); padding: 10px 12px; border-bottom: 1px solid var(--ink); }
+.compare td { padding: 12px; border-bottom: 1px solid var(--line); vertical-align: top; }
+.compare tbody tr { cursor: pointer; transition: background 200ms var(--ease); }
+.compare tbody tr:hover, .compare tbody tr.is-open { background: var(--accent-soft); }
+.compare tr.us td:first-child { color: var(--accent); font-weight: 600; }
+.yes::before { content: "●"; color: var(--ink); } .part::before { content: "◐"; color: var(--muted); } .no::before { content: "○"; color: var(--muted); }
+.detail { min-height: 3.2em; color: var(--muted); font-size: 15px; border-left: 2px solid var(--accent); padding-left: 14px; transition: opacity 240ms var(--ease); }
+
+.matrix { position: relative; aspect-ratio: 16 / 10; max-height: 56vh; width: min(100%, 860px); border-left: 1px solid var(--ink); border-bottom: 1px solid var(--ink); }
+.matrix::before, .matrix::after { content: ""; position: absolute; background: var(--line); }
+.matrix::before { left: 50%; top: 0; bottom: 0; width: 1px; }
+.matrix::after { top: 50%; left: 0; right: 0; height: 1px; }
+.matrix .dot { position: absolute; left: calc(var(--x) * 100%); bottom: calc(var(--y) * 100%); transform: translate(-50%, 50%); display: flex; align-items: center; gap: 8px; font-size: 14px; white-space: nowrap; }
+.matrix .dot::before { content: ""; width: 10px; height: 10px; border-radius: 50%; background: var(--ink); }
+.matrix .dot.us::before { background: var(--accent); box-shadow: 0 0 0 6px var(--accent-soft); }
+.matrix .dot.us { color: var(--accent); font-weight: 600; }
+.axis { position: absolute; }
+.axis.x { right: 0; bottom: -28px; } .axis.y { left: -8px; top: -26px; }
+
+.persona { display: grid; grid-template-columns: minmax(200px, 0.8fr) 2fr; gap: clamp(24px, 4vw, 64px); }
+.persona .who { display: grid; gap: 10px; align-content: start; }
+.persona .avatar { width: 72px; height: 72px; border-radius: 50%; background: var(--accent-soft); display: grid; place-items: center; font-size: 28px; color: var(--accent); font-weight: 500; }
+.persona .cols { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 24px; }
+.persona ul { padding-left: 1.1em; display: grid; gap: 6px; }
+.persona blockquote { grid-column: 1 / -1; font-size: clamp(18px, 1.8vw, 26px); font-weight: 300; border-left: 2px solid var(--accent); padding-left: 18px; }
+
+[data-layout="quote"] blockquote { font-size: clamp(26px, 3.6vw, 52px); font-weight: 300; line-height: 1.35; max-width: 24ch; }
+[data-layout="quote"] blockquote::before { content: "“"; display: block; color: var(--accent); font-size: 2em; line-height: 0.6; }
+[data-layout="quote"] cite { font-style: normal; color: var(--muted); }
+
+.cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; }
+.card { background: var(--paper-2); border-radius: var(--radius); padding: 22px; display: grid; gap: 8px; align-content: start; transition: transform 300ms var(--ease), box-shadow 300ms var(--ease); }
+.card:hover { transform: translateY(-3px); box-shadow: 0 10px 30px -18px rgba(0, 0, 0, 0.35); }
+.card .k { font-family: var(--font-mono); font-size: 12px; color: var(--accent); }
+.card p { color: var(--muted); font-size: 15px; }
+
+.priority { list-style: none; padding: 0; display: grid; gap: 2px; }
+.priority li { display: grid; grid-template-columns: 84px 1fr auto; gap: 16px; align-items: baseline; padding: 14px 0; border-bottom: 1px solid var(--line); }
+.priority li > span:nth-child(2) small { display: block; color: var(--muted); font-size: 14px; }
+.tag { font-size: 11px; padding: 3px 8px; border-radius: 999px; border: 1px solid var(--line); justify-self: start; }
+.tag.must { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+.tag.should { border-color: var(--ink); color: var(--ink); }
+.tag.roadmap { color: var(--accent); border-color: var(--accent); }
+
+.sources ol { columns: 2 320px; column-gap: 48px; font-size: 13px; color: var(--muted); padding-left: 1.4em; }
+.sources li { break-inside: avoid; margin-bottom: 8px; }
+.sources a { color: inherit; }
+
+/* ---------- journey ---------- */
+.journey { overflow-x: auto; flex-shrink: 0; }
+.j-tabs { display: flex; gap: 8px; margin-bottom: 16px; flex-wrap: wrap; }
+.j-tabs button { font: inherit; font-size: 14px; padding: 6px 14px; border-radius: 999px; border: 1px solid var(--line); background: none; color: var(--ink); cursor: pointer; }
+.j-tabs button[aria-selected="true"] { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+.j-grid { display: grid; grid-template-columns: 110px repeat(var(--n), minmax(150px, 1fr)); min-width: 860px; font-size: 13px; }
+.j-grid > div { padding: 10px 12px; border-bottom: 1px solid var(--line); }
+.j-label { font-family: var(--font-mono); font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); }
+.table-wrap { flex-shrink: 0; }
+@media (max-height: 800px) and (min-width: 700px) {
+  .slide[data-layout="compare"] { padding-top: 28px; padding-bottom: 60px; gap: 10px; }
+  table.compare th, table.compare td { padding-top: 6px; padding-bottom: 6px; font-size: 13px; }
+  .j-grid { font-size: 11.5px; }
+  .j-grid > div { padding: 5px 8px; }
+  .j-tabs { margin-bottom: 8px; }
+  .j-curve svg { height: 56px; }
+  .slide:has(.journey) { padding-top: 24px; padding-bottom: 60px; gap: 8px; }
+  .slide:has(.journey) h2 { font-size: clamp(22px, 3vw, 34px); }
+}
+.j-head { font-weight: 600; font-size: 14px; border-bottom: 1px solid var(--ink) !important; }
+.j-mot { background: var(--accent-soft); }
+.j-head.j-mot::after { content: "moment of truth"; display: block; font-family: var(--font-mono); font-size: 10px; font-weight: 400; color: var(--accent); text-transform: uppercase; }
+.j-curve { grid-column: 2 / -1; padding: 0 !important; }
+.j-curve svg { display: block; width: 100%; height: 96px; overflow: visible; clip-path: inset(-8px 100% -8px -8px); transition: clip-path 1.4s var(--ease); }
+.is-active .j-curve svg, .journey-standalone .j-curve svg { clip-path: inset(-8px); }
+.j-curve path { fill: none; stroke-linecap: round; stroke-linejoin: round; }
+.j-curve .j-line { stroke: var(--accent); stroke-width: 2; }
+.j-curve .j-dot { stroke: var(--accent); stroke-width: 10; }
+.j-curve .j-dot-in { stroke: var(--paper); stroke-width: 6; }
+.j-curve line { stroke: var(--line); }
+.j-chip { display: block; border-radius: 8px; padding: 6px 8px; margin-bottom: 6px; line-height: 1.4; }
+.j-chip.pain { background: rgba(127, 127, 127, 0.1); }
+.j-chip.opp { background: var(--accent-soft); color: var(--ink); }
+
+/* ---------- chrome ---------- */
+.progress { position: fixed; top: 0; left: 0; height: 2px; background: var(--accent); width: 0; transition: width var(--dur) var(--ease); z-index: 40; }
+.counter { position: fixed; right: clamp(16px, 3vw, 32px); bottom: clamp(14px, 2.4vw, 24px); z-index: 40; font-variant-numeric: tabular-nums; }
+.hint { position: fixed; left: clamp(16px, 3vw, 32px); bottom: clamp(14px, 2.4vw, 24px); z-index: 40; font-family: var(--font-mono); font-size: 11px; color: var(--muted); transition: opacity 600ms var(--ease); }
+.hint.is-gone { opacity: 0; }
+.navbtns { position: fixed; left: 50%; bottom: clamp(12px, 2.2vw, 22px); transform: translateX(-50%); z-index: 45; display: flex; gap: 8px; }
+.navbtns button { width: 40px; height: 40px; border-radius: 50%; border: 1px solid var(--line); background: var(--paper-2); color: var(--ink); font: inherit; font-size: 22px; line-height: 1; cursor: pointer; display: grid; place-items: center; opacity: 0.75; transition: opacity 200ms, border-color 200ms, background 200ms; }
+.navbtns button:hover, .navbtns button:focus-visible { opacity: 1; border-color: var(--accent); background: var(--accent-soft); outline: none; }
+.navbtns button:disabled { opacity: 0.25; cursor: default; }
+.navbtns button[data-nav="overview"] { font-size: 16px; }
+.notes-panel { position: fixed; left: 50%; bottom: 20px; transform: translate(-50%, 20px); width: min(720px, calc(100% - 32px)); background: var(--ink); color: var(--paper); border-radius: var(--radius); padding: 16px 20px; font-size: 15px; opacity: 0; pointer-events: none; z-index: 45; transition: opacity 260ms var(--ease), transform 260ms var(--ease); }
+.notes-panel.is-open { opacity: 1; transform: translate(-50%, 0); }
+.overview { position: fixed; inset: 0; z-index: 60; background: var(--paper); overflow-y: auto; padding: clamp(24px, 5vw, 64px); display: none; }
+.overview.is-open { display: block; }
+.overview ol { list-style: none; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 14px; }
+.overview button { width: 100%; text-align: left; font: inherit; background: var(--paper-2); color: var(--ink); border: 1px solid transparent; border-radius: var(--radius); padding: 16px; min-height: 110px; cursor: pointer; display: grid; gap: 6px; align-content: start; }
+.overview button:hover, .overview button[aria-current="true"] { border-color: var(--accent); }
+.overview .n { font-family: var(--font-mono); font-size: 11px; color: var(--accent); }
+
+@media (max-width: 720px) {
+  .split, .persona { grid-template-columns: 1fr; }
+  .priority li { grid-template-columns: 1fr; gap: 6px; }
+  .hint { display: none; }
+  .slide { justify-content: flex-start; padding-top: 56px; padding-bottom: 72px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { transition-duration: 0ms !important; animation-duration: 0ms !important; }
+  .slide, [data-build] { transform: none !important; }
+}
+@media print {
+  body { overflow: visible; } .deck { position: static; }
+  .slide { position: relative; opacity: 1; visibility: visible; transform: none; min-height: 100vh; page-break-after: always; }
+  [data-build] { opacity: 1; transform: none; }
+  .j-curve svg { clip-path: none; }
+  .progress, .counter, .hint, .navbtns, .notes-panel, .overview { display: none !important; }
+}
+</style>
+</head>
+<body>
+<div class="progress" aria-hidden="true"></div>
+
+<main class="deck" aria-live="polite">
+
+<section class="slide" data-layout="hero">
+  <p class="eyebrow" data-build>ชวนมาเล่น · Playtest</p>
+  <h1 data-build>Deadline Necromancer</h1>
+  <div class="rule" data-build></div>
+  <p class="lede" data-build>เกมปาร์ตี้จับโกหกภาษาไทย (social-deduction) ธีมออฟฟิศ ทุกคนต้องปั่นงานให้ทัน Deadline วันศุกร์ แต่ในทีมมีคนที่ไม่อยากให้งานเสร็จ มาลองเล่นด้วยกัน</p>
+  <div class="meta" data-build><span class="counter-inline eyebrow">ชวนผู้เล่นและชุมชนมาลองเล่น · พ.ย. 2026</span></div>
+  <aside class="notes">เปิดด้วยการบอกว่านี่ไม่ใช่การขายหรือหาทุน แต่เป็นการชวนมาลองเล่นและมาเป็นส่วนหนึ่งของชุมชน เกมยังอยู่ช่วงทดลอง เราอยากฟังความเห็นจากคนที่เล่นจริง</aside>
+</section>
+
+<section class="slide" data-layout="statement">
+  <p class="eyebrow" data-build>เคยเจอไหม</p>
+  <h2 data-build>เคยอยากเล่น <em>Werewolf</em> กับเพื่อนร่วมทีม แต่ติดที่ต้องมีคนคุมเกม และรวมคนไม่ครบไหม</h2>
+  <aside class="notes">Werewolf แบบดั้งเดิมมักต้องการผู้เล่นราว 7 คนขึ้นไปพร้อมผู้คุมเกม (รีวิวภาษาอังกฤษ ไม่ใช่เสียงผู้เล่นไทย) ถามผู้ฟังว่าใครเคยเป็นคนที่ต้องคุมเกมแล้วไม่ได้เล่นเอง</aside>
+</section>
+
+<section class="slide" data-layout="quote">
+  <blockquote data-build>ผู้คุมเกมที่ไม่เก่งทำให้เกมอึดอัด ผู้คุมเกมที่ดีคือจุดแข็งของเกม</blockquote>
+  <cite data-build>— ถอดความและแปลจากรีวิว Blood on the Clocktower ของ Meeple Mountain (รีวิวภาษาอังกฤษ ไม่ใช่ความเห็นผู้เล่นไทย) <sup class="ref">1</sup></cite>
+  <p class="source" data-source>1 · Meeple Mountain, Blood on the Clocktower review · ตรวจเมื่อ 16 พ.ย. 2026</p>
+  <aside class="notes">ไม่พบคำพูดจากผู้เล่นไทยในงานวิจัย จึงใช้ความเห็นจากรีวิวต่างประเทศเป็นภาพรวมเท่านั้น เราอยากเก็บเสียงของผู้เล่นไทยจากการ playtest</aside>
+</section>
+
+<section class="slide" data-layout="grid">
+  <p class="eyebrow" data-build>เกมนี้คืออะไร</p>
+  <h2 data-build>ทุกคนได้บทบาทลับ แบ่งเป็น 3 ฝ่าย เล่นได้ 6–12 คน</h2>
+  <div class="cards">
+    <div class="card" data-build><span class="k" style="color:var(--light)">Light</span><h3>Team Deliver</h3><p>ชนะเมื่อ Mana Task เต็ม 100% ก่อนหมดวันศุกร์ หรือโหวตไล่ฝ่ายมืดออกหมด</p></div>
+    <div class="card" data-build><span class="k" style="color:var(--dark)">Dark</span><h3>Cult of Burnout</h3><p>ชนะเมื่อยื้อจนหมดวันศุกร์ หรือมีจำนวนเท่ากับหรือมากกว่าฝ่ายแสง</p></div>
+    <div class="card" data-build><span class="k" style="color:var(--indie)">Independent</span><h3>Severance Seekers</h3><p>ชนะเมื่อทำภารกิจส่วนตัวของแต่ละบทบาทสำเร็จ</p></div>
+  </div>
+  <p class="source" data-source>ที่มา: กติกาเกมฉบับปัจจุบัน · ฝ่ายมืดมี 2 คนทุกขนาดห้อง</p>
+  <aside class="notes">แต่ละคนได้บทบาทลับ มีเพียงฝ่ายมืดที่รู้จักพวกเดียวกัน ฝ่ายมืดมี 2 คนทุกขนาดห้อง ตั้งแต่ 6 ถึง 12 คน</aside>
+</section>
+
+<section class="slide" data-layout="grid">
+  <p class="eyebrow" data-build>วิธีเล่น</p>
+  <h2 data-build>จอกลางดำเนินเกม ทุกคนเล่นผ่านมือถือ</h2>
+  <div class="cards">
+    <div class="card" data-build><span class="k">01</span><h3>จอ Moderator</h3><p>บอกขั้นตอนและประกาศผลให้ทั้งห้อง ไม่ต้องมีใครเป็นผู้คุมเกม</p></div>
+    <div class="card" data-build><span class="k">02</span><h3>มือถือผู้เล่น</h3><p>เปิดเบราว์เซอร์ ใส่รหัสห้อง ก็เข้าเล่นได้ ไม่ต้องติดตั้งแอป</p></div>
+    <div class="card" data-build><span class="k">03</span><h3>5 วัน จันทร์–ศุกร์</h3><p>กลางวันคุยกันและโหวตไล่ออก (วันจันทร์ยังไม่โหวต) กลางคืนทุกคนเลือกแอ็กชันลับ ถ้าไล่ฝ่ายมืดออกได้ หลอด Mana +1</p></div>
+    <div class="card" data-build><span class="k">04</span><h3>ลูกเล่นระหว่างสัปดาห์</h3><p>เหตุการณ์จากลูกค้า (Event Card 20 ใบ) กับดักของฝ่ายมืด (Trap Card) และ Sprint Booster ที่ทั้งห้องโหวตใช้ได้</p></div>
+  </div>
+  <p class="source" data-source>ที่มา: กติกาเกมฉบับปัจจุบัน</p>
+  <aside class="notes">วันจันทร์ไม่มีโหวตไล่ออก ทุกคนได้คุยกันก่อน การไล่ผู้เล่นฝ่ายมืดออกทำให้ Mana +1 อย่าลงรายละเอียดกติกามากกว่านี้ ให้ไปลองเล่นเอง</aside>
+</section>
+
+<section class="slide" data-layout="stat">
+  <p class="eyebrow" data-build>ตลาดบอร์ดเกมไทย (ประมาณการ)</p>
+  <h2 data-build>ทุกประมาณการที่เจอบอกว่าโต แต่ตัวเลขไม่ตรงกัน</h2>
+  <div class="stats">
+    <div class="stat" data-build><span class="num" data-count="74.12">74.12</span><span class="unit">ล้าน USD · 2024 · ประมาณการ</span><p>IMARC: บอร์ดเกมไทย <sup class="ref">2</sup></p></div>
+    <div class="stat" data-build><span class="num" data-count="2329">2329</span><span class="unit">ล้านบาท · 2024 · ประมาณการ</span><p>ตารางของ Marketeer <sup class="ref">3</sup></p></div>
+    <div class="stat" data-build><span class="num" data-count="272.04">272.04</span><span class="unit">ล้าน USD · 2024 · ประมาณการ</span><p>DataBridge: รวมไพ่ด้วย ขอบเขตกว้างกว่า <sup class="ref">4</sup></p></div>
+  </div>
+  <p class="source" data-source>2 · IMARC · 3 · Marketeer · 4 · DataBridge · ตรวจเมื่อ 16 พ.ย. 2026 · ตัวเลขจำนวนผู้เล่นเกมจับโกหกในไทย: ยังหาไม่เจอ</p>
+  <aside class="notes">อย่าอ้างว่าตลาดมีมูลค่าเท่านี้ แต่พูดได้ว่ามีหลายประมาณการ ขอบเขตต่างกันถึงราว 3 เท่า สิ่งที่หาข้อมูลไม่เจอเลยคือจำนวนผู้เล่น social-deduction ในไทย จึงอยากใช้การ playtest และโพลของชุมชนแทนตัวเลขตลาด</aside>
+</section>
+
+<section class="slide" data-layout="stat">
+  <p class="eyebrow" data-build>ผู้เล่น</p>
+  <h2 data-build>ผู้ตอบเล่นเกมมือถือกันเกือบหมด เกมที่เรียนรู้ง่ายช่วยดึงคนที่ยังไม่เล่น</h2>
+  <div class="stats">
+    <div class="stat" data-build><span class="num" data-count="90">90</span><span class="unit">% เล่นเกมมือถือ (เกือบทั้งหมด)</span><p>ผู้ใช้อินเทอร์เน็ตอายุ 16–60 <sup class="ref">5</sup></p></div>
+    <div class="stat" data-build><span class="num" data-count="41.7">41.7</span><span class="unit">% ของคนที่ยังไม่เล่น บอกว่ารางวัลจูงใจให้เริ่ม</span><p>ตัวอย่าง 474 คน <sup class="ref">5</sup></p></div>
+    <div class="stat" data-build><span class="num" data-count="31.3">31.3</span><span class="unit">% ของคนที่ยังไม่เล่น บอกว่าเรียนรู้ง่ายจูงใจให้เริ่ม</span><p>สำรวจออนไลน์ กลุ่มเล็ก อาจเอนเอียง <sup class="ref">5</sup></p></div>
+  </div>
+  <p class="source" data-source>5 · GMO Research &amp; AI / Z.com, ต.ค. 2025, ตัวอย่าง 474 คน · ตรวจเมื่อ 16 พ.ย. 2026</p>
+  <aside class="notes">เป็นการสำรวจกลุ่มเล็กและเอนเอียงไปทางคนออนไลน์ ไม่ใช่ข้อมูลเกม social-deduction โดยตรง ข้อสรุปคือ ความง่ายในการเข้าร่วมสำคัญ ซึ่งสอดคล้องกับการเล่นผ่านมือถือโดยไม่ต้องติดตั้งแอป</aside>
+</section>
+
+<section class="slide" data-layout="compare">
+  <p class="eyebrow" data-build>คู่แข่งและของทดแทน</p>
+  <h2 data-build>เกมภาษาไทยที่เล่นห้องเดียวกันมีอยู่ แต่เราหาไม่พบตัวที่มีจอกลางคุมเกมให้</h2>
+  <div class="table-wrap" data-build>
+    <table class="compare">
+      <thead><tr><th>เกม</th><th>ภาษาไทย</th><th>เล่นห้องเดียวกัน</th><th>ราคาอ้างอิง</th></tr></thead>
+      <tbody>
+        <tr data-detail="Wolfia (iOS): AI ทำหน้าที่คุมเกม ใน listing มีภาษาไทย ใกล้เคียงที่สุดในแอปภาษาไทยที่พบ ไม่พบข้อมูลราคา IAP และห้องกี่คน (ข้อมูลจากผลค้นหา App Store ยังไม่ได้เปิดหน้าเต็ม) [6]"><td>Wolfia</td><td>มี</td><td>AI คุมเกม ไม่มีจอกลาง</td><td>ฟรี + IAP</td></tr>
+        <tr data-detail="Wolvesville: ออนไลน์ สูงสุด 16 คน Google Play แสดง 10M+ ดาวน์โหลด เราหาไม่เจอว่ามีภาษาไทย [7]"><td>Wolvesville</td><td>หาไม่เจอ</td><td>ออนไลน์</td><td>ฟรี + โฆษณา/IAP</td></tr>
+        <tr data-detail="Werewolf Offline Party Games (iOS): แอปคุมเกมสำหรับเล่นต่อหน้า ฟรี มีสมาชิกรายเดือนเอาโฆษณาออก เราหาไม่เจอว่ามีภาษาไทย [8]"><td>Werewolf Offline Party</td><td>หาไม่เจอ</td><td>ใช่ แอปคุมเกม</td><td>ฟรี + สมาชิก</td></tr>
+        <tr data-detail="Among Us: แนวทำภารกิจสลับกับก่อกวน เกมเคลื่อนที่เรียลไทม์ ไม่ใช่เกมคุยเป็นหลัก มือถือฟรี PC ราว 5 USD เรายังไม่ได้เปิดดูว่ามีภาษาไทยหรือไม่ [9]"><td>Among Us</td><td>ยังไม่ได้เปิดดู</td><td>ออนไลน์ / ในวงเดียวกัน</td><td>ฟรี / PC ~5 USD</td></tr>
+        <tr data-detail="Blood on the Clocktower: เกมกล่อง มี Storyteller เป็นคน 5–20 คน ลึกและมีชุมชนเหนียวแน่น ราคากล่อง 136–145 USD ที่ร้านสหรัฐฯ ไม่พบฉบับไทย [10]"><td>Blood on the Clocktower</td><td>เราหาไม่พบ</td><td>ใช่ มี Storyteller</td><td>~136–145 USD</td></tr>
+        <tr data-detail="One Night Ultimate Werewolf ฉบับไทย โดย Siam Board Games 3–10 คน รอบสั้นราว 10 นาที ไม่มีผู้คุมเกม ราคา 850–950 บาท [11]"><td>ONUW ฉบับไทย</td><td>มี</td><td>ใช่ การ์ด</td><td>850–950 บาท</td></tr>
+        <tr data-detail="เล่น Werewolf ที่คาเฟ่บอร์ดเกมในกรุงเทพฯ มีคนคุมเกมและการ์ดบทบาท ตัวอย่างคิด 40–50 บาท/คน/ชั่วโมง เป็นข้อมูลจุดเดียวและอาจเก่า [12]"><td>Werewolf ที่คาเฟ่</td><td>ร้านไทย</td><td>ใช่ มีคนคุม</td><td>~40–50 บาท/ชม.</td></tr>
+        <tr class="us" data-detail="Deadline Necromancer: ภาษาไทย จอ Moderator นำเกม มือถือผู้เล่น 6–12 คน ธีมออฟฟิศ/Sprint ยังไม่ได้ตั้งราคา ข้อสรุปว่า 'เราหาไม่พบตัวที่มีจอกลางคุมเกม' มาจากการค้นหาที่จำกัด ไม่ใช่การยืนยัน"><td>Deadline Necromancer</td><td>จอ Moderator + มือถือ</td><td>มี</td><td>ยังไม่ตั้งราคา</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="detail" data-build aria-live="polite">คลิกแถวเพื่อดูรายละเอียด</p>
+  <p class="source" data-source>ที่มา: ข้อ 6–12 ในหน้า Sources · ข้อมูลจากผลค้นหา ยังไม่ได้เปิดหน้าเต็ม · ไม่พบบอทเล่น Werewolf ภาษาไทยบน Discord/LINE แต่การไม่พบไม่ได้แปลว่าไม่มี</p>
+  <aside class="notes">คลิกแถว Wolfia, ONUW และคาเฟ่ เล่าว่าคู่แข่งจริงคือ "นิสัย" คือการเล่น Werewolf กระดาษมีคนคุม ข้อสรุปว่าเราหาไม่พบเกมภาษาไทยที่มีจอกลางคุมเกม เป็นผลจากการค้นหาที่จำกัด ไม่ใช่ข้อเท็จจริงที่ยืนยันแล้ว เรายังไม่ได้ตั้งราคาเกม</aside>
+</section>
+
+<section class="slide" data-layout="grid">
+  <p class="eyebrow" data-build>ตรงกับใครไหม</p>
+  <h2 data-build>เราเดาว่าคนที่น่าจะอยากเล่นมีอยู่ 3 แบบ (สมมติจากข้อมูลบางส่วน ไม่ได้สัมภาษณ์)</h2>
+  <div class="cards">
+    <div class="card" data-build><span class="k">ฟ้า · ผู้จัดวงทีมออฟฟิศ/IT</span><h3>ไม่อยากเป็นคนคุมเกม</h3><p>ผู้คุมเกมที่ไม่ดีทำให้เกมไม่สนุก <sup class="ref">1</sup></p></div>
+    <div class="card" data-build><span class="k">ภู · สายคาเฟ่/บอร์ดเกม</span><h3>ถูกคัดออกเร็วแล้วเบื่อ</h3><p>เจอบ่อยในเกมประเภทนี้ ตามรีวิวต่างประเทศ <sup class="ref">13</sup></p></div>
+    <div class="card" data-build><span class="k">มินท์ · นักเล่นมือถือทั่วไป</span><h3>ต้องรวมให้ครบก่อนถึงจะลอง</h3><p>เกมนี้เล่นได้ 6–12 คน เล่นคนเดียวไม่ได้</p></div>
+  </div>
+  <p class="source" data-source>13 · leagueofgamemakers.com, The problems with Werewolf · ตรวจเมื่อ 16 พ.ย. 2026 · ชื่อและโปรไฟล์เป็นสมมติ</p>
+  <aside class="notes">ย้ำว่าสามคนนี้เป็น segment ที่เราสมมติจากข้อมูลบางส่วน ไม่ได้มาจากการสัมภาษณ์ผู้เล่นไทย ถามผู้ฟังว่าตรงกับใครมากที่สุด</aside>
+</section>
+
+<section class="slide" data-layout="journey">
+  <p class="eyebrow" data-build>จากเห็นเกมถึงเล่นซ้ำ</p>
+  <h2 data-build>ด่านที่ยากที่สุดตอนนี้คือการตั้งห้อง</h2>
+  <div class="journey" data-journey data-build></div>
+  <script type="application/json" class="journey-data">
+{"title":"Deadline Necromancer — Journey ผู้เล่นและชุมชน (ไทย)","lang":"th","personas":[
+{"id":"p1","name":"ฟ้า — ผู้จัดวงเกมทีมออฟฟิศ/IT","summary":"จัดเกมให้ทีมหลังงาน ไม่อยากหาคนคุมเกมเก่ง ๆ (โปรไฟล์และชื่อสมมติ)","momentOfTruth":"Onboarding","stages":[
+{"stage":"Awareness","doing":"เห็นเกมธีม Sprint/Deadline ขณะหาเกมให้ทีม","touchpoints":"TikTok/YouTube, LINE กลุ่มทีม, เพื่อนร่วมงาน","thinking":"ธีมตรงชีวิตเรา แต่ต้องมีคนคุมและต้องครบคนไหม","emotion":0,"pains":["หาข้อมูลพฤติกรรมเล่นเกมของทีมออฟฟิศไทยไม่เจอ"],"opportunities":["คลิปสั้นไทยโชว์ธีมออฟฟิศ + หน้าจอ Moderator","โพลถามชุมชนเอง"]},
+{"stage":"Consideration","doing":"เทียบ Werewolf กระดาษ / ONUW ไทย / Wolfia","touchpoints":"ร้านแอป, รีวิว, เพื่อนที่เคยเล่น","thinking":"เล่นกระดาษยังต้องมีคนคุม อันนี้ต่างยังไง","emotion":0,"pains":["moderator ไม่ดี = เกมไม่สนุก","Werewolf ดั้งเดิมต้อง 7+ คน"],"opportunities":["บอกว่า 6–12 คน และหน้าจอ Moderator นำขั้นตอน (มีจริง)","บอกตรง ๆ ว่าเราไม่พบเกมที่รวม 3 อย่างนี้"]},
+{"stage":"Onboarding","doing":"ตั้งห้อง ให้ทุกคนเข้าจากมือถือด้วยรหัสห้อง","touchpoints":"หน้าจอ Moderator (2D/3D), เบราว์เซอร์มือถือ","thinking":"ต้องรันเซิร์ฟเวอร์เอง? ต้อง Wi-Fi เดียวกัน? ใครหลุดทำไง","emotion":-2,"pains":["ปัจจุบันใช้ใน LAN เท่านั้น ไม่มี HTTPS ห้องอยู่ในหน่วยความจำ","ยังไม่ทดสอบมือถือจริงผ่าน Wi-Fi"],"opportunities":["ห้อง playtest ที่โฮสต์ให้ (ข้อเสนอ)","คู่มือโฮสต์ 5 นาที (ข้อเสนอ)","กลับที่นั่งเดิมด้วย token (มีจริง)"]},
+{"stage":"Core use","doing":"เล่นสูงสุด 5 วัน จันทร์–ศุกร์ ดู Mana Task, Event/Trap, โหวต","touchpoints":"จอกลาง + มือถือ (แท็บ เกม/ฉัน/แชทลับ/ผู้เล่น)","thinking":"ระบบประกาศผลให้ ไม่ต้องจำกติกาเอง","emotion":1,"pains":["กติกามีรายละเอียดมาก (อนุมาน)"],"opportunities":["การ์ดบทบาท/คำอธิบายบนมือถือ (มีจริง)","Quick Rules 1 หน้า (ข้อเสนอ)"]},
+{"stage":"Retention / Referral","doing":"ชวนทีมอื่นเล่นต่อ ให้ฟีดแบ็ก","touchpoints":"LINE กลุ่ม, Discord/OpenChat (ยังไม่มีลิงก์), ฟอร์ม","thinking":"อยากเล่นกับทีมอื่น แต่จะแจ้งใครถ้าเจอบั๊ก","emotion":1,"pains":["ไม่มีสถิติ/Match history (ยังไม่สร้าง)","ไม่มีช่องชุมชนที่ยืนยันได้"],"opportunities":["ฟอร์มฟีดแบ็ก/สมัครทดลอง (ข้อเสนอ)","ชุมชน Discord/LINE OpenChat (ข้อเสนอ)","ชุด Sprint session สำหรับทีม (ข้อเสนอ)"]}
+]},
+{"id":"p2","name":"ภู — นักเล่นบอร์ดเกม/สายคาเฟ่","summary":"เล่น Werewolf/ONUW ที่คาเฟ่และวงเพื่อน อยากได้เกมที่ลึกและแปลกใหม่ (โปรไฟล์และชื่อสมมติ)","momentOfTruth":"Consideration","stages":[
+{"stage":"Awareness","doing":"ตามข่าว/งานบอร์ดเกม ดูเกมใหม่","touchpoints":"Meetup กรุงเทพฯ, คาเฟ่, งาน Board Game Show/BIGF","thinking":"มีเกมไทยใหม่ ๆ อีกแล้ว","emotion":0,"pains":["ไม่พบกลุ่ม social-deduction ไทยเฉพาะ","ชุมชนคุยออนไลน์มากกว่าพบหน้า"],"opportunities":["ทดลองเล่นที่งาน/คาเฟ่/มหาวิทยาลัย (ข้อเสนอ)"]},
+{"stage":"Consideration","doing":"เทียบกับ Werewolf, ONUW ไทย, Blood on the Clocktower","touchpoints":"รีวิว, เพื่อนในวง","thinking":"ต่างจาก Werewolf ตรงไหน คุ้มเวลาไหม","emotion":-1,"pains":["ตัวเลือกไทยที่ยืนยันได้มีน้อยและต่างรูปแบบ ต้องบอกความต่างให้ชัด","หาตัวเลขจำนวนผู้เล่นไทยไม่เจอ"],"opportunities":["ชูจุดต่าง: Light/Dark/Independent, Mana Task, Event/Trap Card, Sprint Booster (มีจริงในเกม)"]},
+{"stage":"Onboarding","doing":"นั่งโต๊ะคาเฟ่ เปิดมือถือเข้าห้อง","touchpoints":"โต๊ะคาเฟ่, มือถือ, จอ Moderator","thinking":"Wi-Fi ร้านเอื้อไหม ต้องขออนุญาตร้านไหม","emotion":0,"pains":["ใช้ใน LAN เท่านั้น","ยังไม่ได้ถามคาเฟ่เรื่อง Wi-Fi และนโยบายร้าน"],"opportunities":["ชุดทดลองเล่นที่คาเฟ่ (ข้อเสนอ ต้องมีพาร์ตเนอร์)"]},
+{"stage":"Core use","doing":"เล่น เจอ Event/Trap และโหวตไล่ออก","touchpoints":"จอกลาง, มือถือ","thinking":"วันจันทร์ทุกคนได้ประชุมก่อน ไม่ถูกตัดออกทันที","emotion":1,"pains":["ถูกคัดออกเร็วแล้วเบื่อ (ทั่วไปในเกมประเภทนี้)","กติกายังไม่ระบุว่าผู้ติด Burnout ทำอะไรได้อีกบ้าง จึงยังไม่พูดถึงตรงนี้"],"opportunities":["เน้นกติกาที่มีจริง: ไม่มีโหวตไล่ออกวันจันทร์, คืนแรกสาป Burnout ไม่ได้, ไล่ Dark = Mana +1"]},
+{"stage":"Retention / Referral","doing":"ชวนเพื่อนวงบอร์ดเกม เล่นซ้ำ","touchpoints":"Meetup, LINE/Discord, งานเทศกาล","thinking":"เอาไปเล่นกับวงอื่นได้","emotion":1,"pains":["หาช่องชุมชนและตัวเลขจำนวนผู้เล่นไม่เจอ"],"opportunities":["Discord/LINE OpenChat (ถามผู้เล่นหาลิงก์)","โมเดล tool ฟรี + ชุมชนจำกัด แบบ Blood on the Clocktower (ข้อเสนอ)"]}
+]},
+{"id":"p3","name":"มินท์ — นักเล่นเกมมือถือทั่วไป","summary":"เล่นเกมมือถือ เห็นเกมจากสตรีมเมอร์ ไม่คุ้นบอร์ดเกม (โปรไฟล์และชื่อสมมติ)","momentOfTruth":"Awareness","stages":[
+{"stage":"Awareness","doing":"เลื่อน TikTok/YouTube เจอคลิปเกมวงสังคม","touchpoints":"TikTok, YouTube/Twitch/Facebook","thinking":"ดูสนุก แต่ต้องรวมเพื่อนกี่คน","emotion":-1,"pains":["ไม่พบสตรีมเมอร์ไทยที่เล่น social-deduction","หาตัวเลขจำนวนผู้เล่นไม่เจอ"],"opportunities":["คลิปสั้น/เชิญสตรีมเมอร์เล่น (ข้อเสนอ ไม่มีรายชื่อยืนยัน)"]},
+{"stage":"Consideration","doing":"ถามเพื่อน เทียบกับเกมฟรีที่เล่นอยู่","touchpoints":"แชทเพื่อน, ร้านแอป","thinking":"ฟรีไหม ยากไหม","emotion":0,"pains":["ผู้ไม่เล่นบอกแรงจูงใจคือรางวัล 41.7% และเรียนรู้ง่าย 31.3%","คู่แข่งส่วนใหญ่ฟรี"],"opportunities":["ลองเล่นฟรี (ข้อเสนอ)","Quick Rules ไทย (ข้อเสนอ)","ไม่พูดเรื่องราคา เพราะเรายังไม่ได้ตั้งราคาเกม"]},
+{"stage":"Onboarding","doing":"ชวนเพื่อนให้ครบ 6 คน เปิดเข้าห้อง","touchpoints":"แชทกลุ่ม, เบราว์เซอร์มือถือ","thinking":"ต้องครบ 6 คนถึงลองได้ เลยยังไม่ลอง","emotion":-1,"pains":["ผู้เล่นน้อยกว่า 6 คนเล่นไม่ได้ (กติกา 6–12 คน)"],"opportunities":["โหมดบอทเติมที่นั่งเพื่อทดลอง (ข้อเสนอ; play-bots ในรีโปเป็นเครื่องมือทดสอบ)","ไม่ต้องติดตั้งแอป (มีจริง)"]},
+{"stage":"Core use","doing":"เล่นรอบแรก เรียนรู้ระหว่างเล่น","touchpoints":"มือถือ (การ์ดบทบาท + คำอธิบาย), จอกลาง","thinking":"ตัวเลือกเป็นการ์ดมีคำอธิบาย เข้าใจได้","emotion":1,"pains":["บทบาท/สกิลเยอะสำหรับมือใหม่ (อนุมาน)"],"opportunities":["หน้ากลางคืนแบบขั้นตอน การ์ดพร้อมคำอธิบาย (มีจริง)"]},
+{"stage":"Retention / Referral","doing":"เล่นซ้ำ ชวนเพื่อนเพิ่ม","touchpoints":"LINE/Discord, แชร์คลิป","thinking":"สนุก ลองชวนกลุ่มอื่น","emotion":0,"pains":["ไม่มีสถิติ/Match history","ไม่มีช่องชุมชนที่ยืนยันได้"],"opportunities":["ฟอร์มสมัคร/ฟีดแบ็ก (ข้อเสนอ)","ชุมชน (ข้อเสนอ)"]}
+]}
+]}
+  </script>
+  <aside class="notes">เลือกแท็บของฟ้าก่อน แล้วชี้จุดต่ำสุดที่ Onboarding เพราะวันนี้เซิร์ฟเวอร์ใช้ได้เฉพาะใน LAN จากนั้นสลับไปภูและมินท์ ข้อที่ระบุว่า "ข้อเสนอ" ยังไม่มีจริง ทุกคนเป็น persona สมมติ</aside>
+</section>
+
+<section class="slide" data-layout="list">
+  <p class="eyebrow" data-build>สถานะจริง</p>
+  <h2 data-build>อะไรมีแล้ว อะไรยังเป็นแผน</h2>
+  <ol class="priority">
+    <li data-build><span class="tag must">มีแล้ว</span><span>จอ Moderator + เว็บมือถือ ไม่ต้องติดตั้งแอป<small>แก้ปัญหาเรื่องต้องหาคนคุมเกมเก่ง ๆ</small></span><span class="tag">เล่นได้วันนี้</span></li>
+    <li data-build><span class="tag must">มีแล้ว</span><span>รีเฟรชหน้าแล้วกลับเข้าที่นั่งเดิมได้<small>ข้อจำกัด: เปลี่ยนเครื่องกลางเกมไม่ได้</small></span><span class="tag">เล่นได้วันนี้</span></li>
+    <li data-build><span class="tag should">แผน</span><span>ห้อง playtest ที่ไม่ต้องตั้ง LAN เอง<small>ยังไม่ตัดสินใจว่าจะทำหรือไม่</small></span><span class="tag roadmap">ยังไม่ได้ทำ</span></li>
+    <li data-build><span class="tag should">แผน</span><span>คู่มือโฮสต์ 5 นาที + Quick Rules ไทย 1 หน้า<small>ยังไม่ได้ทำ</small></span><span class="tag roadmap">ยังไม่ได้ทำ</span></li>
+    <li data-build><span class="tag">แผน</span><span>ฟอร์มสมัครทดลองเล่น และชุมชน Discord/LINE<small>ยังไม่มีลิงก์</small></span><span class="tag roadmap">ยังไม่ได้ทำ</span></li>
+  </ol>
+  <p class="source" data-source>ที่มา: สถานะของโปรเจกต์ ณ พ.ย. 2026</p>
+  <aside class="notes">ตอบตรง ๆ ว่าอะไรเล่นได้วันนี้ และอะไรเป็นแผน ไม่สัญญาวันเวลา เพราะยังไม่ได้กำหนด</aside>
+</section>
+
+<section class="slide" data-layout="statement">
+  <p class="eyebrow" data-build>บอกตรง ๆ</p>
+  <h2 data-build>วันนี้ต้องเล่นใน <em style="white-space:nowrap">Wi‑Fi เดียวกัน</em> ยังไม่มีห้องสาธารณะให้เข้าจากที่บ้าน</h2>
+  <p class="lede" data-build>เรายังไม่ได้ทดสอบกับมือถือจริงผ่าน Wi-Fi จึงอยากได้ผู้เล่นมาช่วยลองและบอกว่าตรงไหนสะดุด</p>
+  <p class="source" data-source>ที่มา: สถานะของโปรเจกต์ ณ พ.ย. 2026</p>
+  <aside class="notes">พูดตรง ๆ ว่ารอบแรกจะเป็นการทดลองแบบนัดเล่นร่วมกันในที่เดียว ไม่ใช่เกมที่เปิดให้ทุกคนเข้าจากบ้านได้ ข้อนี้คือเหตุผลที่เราต้องการ playtester ที่ช่วยทดสอบจริง</aside>
+</section>
+
+<section class="slide" data-layout="grid">
+  <p class="eyebrow" data-build>ชุมชน (ไอเดีย ยังไม่ได้ตกลงกับใคร)</p>
+  <h2 data-build>ที่ที่เราอยากไปเจอผู้เล่น</h2>
+  <div class="cards">
+    <div class="card" data-build><span class="k">คาเฟ่</span><h3>บอร์ดเกมคาเฟ่ กรุงเทพฯ</h3><p>มีหลายร้าน เช่น Kopi-O 800+ เกม <sup class="ref">14</sup> ยังหาตัวเลขจำนวนร้านที่เชื่อถือได้ไม่เจอ</p></div>
+    <div class="card" data-build><span class="k">Meetup</span><h3>กลุ่มบอร์ดเกมกรุงเทพฯ</h3><p>1,252 สมาชิก (หน้าเว็บไม่ระบุว่าเป็นตัวเลขเมื่อไหร่) <sup class="ref">15</sup></p></div>
+    <div class="card" data-build><span class="k">งานออกบูธ</span><h3>Board Game Show / BIGF</h3><p>Thailand Board Game Show 7–9 พ.ย. 2025 · BIGF 28–30 ส.ค. 2026 <sup class="ref">16</sup></p></div>
+    <div class="card" data-build><span class="k">ออนไลน์</span><h3>TikTok / YouTube</h3><p>คนไทยออนไลน์มากกว่า 8 ใน 10 ใช้ TikTok รายเดือน <sup class="ref">17</sup></p></div>
+  </div>
+  <p class="source" data-source>14 · Asia City · 15 · Meetup · 16 · boardgamecafe.net · 17 · Time Out Bangkok · ตรวจเมื่อ 16 พ.ย. 2026 · ค้นหาแล้วยังไม่เจอกลุ่ม Discord/LINE OpenChat ภาษาไทยของคนเล่นเกมจับโกหก ถ้ารู้จักบอกเราได้</p>
+  <aside class="notes">เป็นรายการที่เราเห็นว่ามีอยู่ ไม่ได้แปลว่ามีข้อตกลงใด ๆ ช่องทางชุมชนบน Discord หรือ LINE OpenChat เราค้นหาแล้วไม่เจอลิงก์ จึงขอให้ผู้ฟังช่วยบอก</aside>
+</section>
+
+<section class="slide" data-layout="grid">
+  <p class="eyebrow" data-build>มาร่วมกัน</p>
+  <h2 data-build>มาเล่นด้วยกันไหม</h2>
+  <div class="cards">
+    <div class="card" data-build><span class="k">01</span><h3>สมัครมาลองเล่น</h3><p>ลองเล่นแล้วบอกเราว่าตรงไหนสนุก ตรงไหนไม่สนุก<br>[ใส่ลิงก์ฟอร์มสมัคร]</p></div>
+    <div class="card" data-build><span class="k">02</span><h3>เข้ากลุ่มชุมชน</h3><p>คุยกับคนที่สนใจเกมเดียวกัน<br>[ใส่ลิงก์ Discord / LINE OpenChat]</p></div>
+    <div class="card" data-build><span class="k">03</span><h3>ช่วยชี้ทาง</h3><p>รู้จักกลุ่มหรือชุมชนไหนที่เราควรไปเล่นด้วย บอกเราได้เลย</p></div>
+  </div>
+  <aside class="notes">ผู้นำเสนอต้องใส่ลิงก์สมัครและลิงก์ชุมชนก่อนนำเสนอ ยังไม่มีลิงก์ที่ยืนยันได้ในงานวิจัย ปิดด้วยคำเชิญ ไม่ใช่การขอเงิน</aside>
+</section>
+
+<section class="slide sources" data-layout="sources">
+  <p class="eyebrow">Sources</p>
+  <ol>
+    <li>Meeple Mountain, Blood on the Clocktower review — https://www.meeplemountain.com/reviews/blood-on-the-clocktower-review-helping-friends-murder-each-other · 2026-11-16 [fact, paraphrase]</li>
+    <li>IMARC, Thailand board games market — https://www.imarcgroup.com/thailand-board-games-market · 2026-11-16 [estimate]</li>
+    <li>Marketeer — https://marketeeronline.co/archives/479226 · 2026-11-16 [estimate]</li>
+    <li>DataBridge — https://www.databridgemarketresearch.com/nucleus/thailand-playing-cards-and-board-games-market · 2026-11-16 [estimate]</li>
+    <li>GMO Research &amp; AI / Z.com, 2025 — https://gmo-research.ai/en/resources/studies/2025-report-moblie-gaming-th · 2026-11-16 [fact, n=474]</li>
+    <li>Wolfia, App Store — https://apps.apple.com/us/app/id6754548736 · [snippet]</li>
+    <li>Wolvesville — https://www.bluestacks.com/th/apps/role-playing/werewolf-online-on-pc.html · [snippet]</li>
+    <li>Werewolf Offline Party Games — https://apps.apple.com/app/id1536899372 · [snippet]</li>
+    <li>Among Us — https://screenrant.com/among-us-mobile-free-pc-nintendo-switch-price/ · [snippet]</li>
+    <li>Blood on the Clocktower retail — https://www.miniaturemarket.com/blood-on-the-clocktower-retail-edition-tpm01001.html · [snippet]</li>
+    <li>ONUW Thai, Golden Goblin — https://www.goldengoblingames.com/en/one-night-ultimate-werewolf-thai-version.html · [snippet]</li>
+    <li>Wongnai / Sanook, board game cafes — https://www.wongnai.com/articles/recommended-board-game · https://www.sanook.com/women/82213/ · [snippet, may be outdated]</li>
+    <li>leagueofgamemakers.com — https://leagueofgamemakers.com/the-problems-with-werewolf · 2026-11-16 [fact]</li>
+    <li>Asia City, Kopi-O — https://bk.asia-city.com/node/96811 · 2026-11-16 [fact]</li>
+    <li>Meetup, Bangkok board games — https://www.meetup.com/topics/tabletop-role-playing-and-board-games/th · 2026-11-16 [secondary]</li>
+    <li>boardgamecafe.net — https://boardgamecafe.net/2025/11/13/thailand-board-game-show-2025-my-trip/ · https://boardgamecafe.net/2026/09/02/bangkok-international-game-festival-bigf-2026/ · [fact]</li>
+    <li>Time Out Bangkok — https://www.timeout.com/bangkok/news/how-thailand-became-a-global-tiktok-superpower-081525 · [secondary]</li>
+    <li>เกมและสถานะ: docs/deadline_necromancer_player_rules.md, design.md ของรีโป</li>
+  </ol>
+  <aside class="notes">ภาคผนวก ข้อมูลภายนอกทั้งหมดมาจากผลค้นหา ยังไม่ได้เปิดหน้าเต็ม ควรเปิดตรวจก่อนเผยแพร่</aside>
+</section>
+
+</main>
+
+<div class="counter" aria-hidden="true"></div>
+<div class="hint">← → หรือคลิกเพื่อเปลี่ยนหน้า · O ดูทั้งหมด · N โน้ต · F เต็มจอ</div>
+<div class="navbtns" role="group" aria-label="เปลี่ยนหน้า">
+  <button type="button" data-nav="prev" aria-label="หน้าก่อนหน้า">‹</button>
+  <button type="button" data-nav="overview" aria-label="ดูทุกหน้า">☰</button>
+  <button type="button" data-nav="next" aria-label="หน้าถัดไป">›</button>
+</div>
+<div class="notes-panel" role="note"></div>
+<nav class="overview" aria-label="Slide overview"><ol></ol></nav>
+
+<script>
+/* ---------- Spright deck engine (do not edit per deck) ---------- */
+(() => {
+  const slides = [...document.querySelectorAll('.slide')];
+  const $ = (s) => document.querySelector(s);
+  const progress = $('.progress'), counter = $('.counter'), hint = $('.hint');
+  const notesPanel = $('.notes-panel'), overview = $('.overview');
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  let cur = 0, step = 0;
+
+  // build steps: elements with data-build="n" share step n; plain data-build gets its own step
+  const steps = slides.map((s) => {
+    const groups = []; let auto = 0;
+    s.querySelectorAll('[data-build]').forEach((el) => {
+      const n = el.dataset.build ? Number(el.dataset.build) - 1 : auto++;
+      if (el.dataset.build) auto = Math.max(auto, n + 1);
+      (groups[n] ||= []).push(el);
+    });
+    return groups.filter(Boolean);
+  });
+  // first build step shows with the slide, the rest on "next"
+  const firstShown = (i) => Math.min(1, steps[i].length);
+
+  const pad = (n) => String(n).padStart(2, '0');
+  function countUp(el) {
+    if (el.dataset.done || reduce) return;
+    el.dataset.done = 1;
+    const target = parseFloat(el.dataset.count), dec = (el.dataset.count.split('.')[1] || '').length, t0 = performance.now();
+    const tick = (t) => {
+      const k = Math.min(1, (t - t0) / 1100), e = 1 - Math.pow(1 - k, 3);
+      el.textContent = (target * e).toLocaleString(undefined, { minimumFractionDigits: dec, maximumFractionDigits: dec });
+      if (k < 1) requestAnimationFrame(tick);
+    };
+    requestAnimationFrame(tick);
+  }
+  function showSteps(i, upto) {
+    steps[i].forEach((g, n) => g.forEach((el) => {
+      const on = n < upto;
+      el.classList.toggle('is-in', on);
+      if (on) { el.querySelectorAll('[data-count]').forEach(countUp); if (el.matches('[data-count]')) countUp(el); }
+    }));
+  }
+  function go(i, s = null) {
+    i = Math.max(0, Math.min(slides.length - 1, i));
+    slides.forEach((el, n) => { el.classList.toggle('is-active', n === i); el.classList.toggle('is-past', n < i); el.setAttribute('aria-hidden', n !== i); });
+    cur = i; step = steps[i].length; // one press = one slide: every element appears, staggered
+    steps[i].flat().forEach((el, k) => (el.style.transitionDelay = reduce ? '0ms' : `${120 + k * 90}ms`));
+    showSteps(i, step);
+    progress.style.width = `${((i + 1) / slides.length) * 100}%`;
+    counter.textContent = `${pad(i + 1)} / ${pad(slides.length)}`;
+    notesPanel.textContent = slides[i].querySelector('.notes')?.textContent.trim() || '—';
+    history.replaceState(null, '', `#${i + 1}`);
+    overview.querySelectorAll('button').forEach((b, n) => b.setAttribute('aria-current', n === i));
+    const nb = document.querySelector('.navbtns'); if (nb) { nb.querySelector('[data-nav=prev]').disabled = i === 0; nb.querySelector('[data-nav=next]').disabled = i === slides.length - 1; }
+  }
+  function next() { if (cur < slides.length - 1) go(cur + 1); }
+  function prev() { if (cur > 0) go(cur - 1); }
+  const dismissHint = () => hint.classList.add('is-gone');
+
+  // overview
+  overview.querySelector('ol').innerHTML = slides.map((s, n) => {
+    const t = (s.querySelector('h1, h2, blockquote, .eyebrow')?.textContent || '').trim().slice(0, 80);
+    const e = (s.querySelector('.eyebrow')?.textContent || s.dataset.layout || '').trim();
+    return `<li><button data-go="${n}"><span class="n">${pad(n + 1)} · ${e}</span><span>${t}</span></button></li>`;
+  }).join('');
+  overview.addEventListener('click', (e) => { const b = e.target.closest('[data-go]'); if (b) { go(+b.dataset.go); overview.classList.remove('is-open'); } });
+
+  document.querySelector('.navbtns').addEventListener('click', (e) => {
+    const b = e.target.closest('[data-nav]'); if (!b) return; e.stopPropagation();
+    if (b.dataset.nav === 'next') next(); else if (b.dataset.nav === 'prev') prev(); else overview.classList.toggle('is-open');
+    dismissHint();
+  });
+  document.addEventListener('keydown', (e) => {
+    if (e.metaKey || e.ctrlKey || e.altKey) return;
+    const k = e.key;
+    if (['ArrowRight', 'ArrowDown', 'PageDown', ' ', 'Enter'].includes(k)) { e.preventDefault(); next(); dismissHint(); }
+    else if (['ArrowLeft', 'ArrowUp', 'PageUp', 'Backspace'].includes(k)) { e.preventDefault(); prev(); dismissHint(); }
+    else if (k === 'Home') go(0);
+    else if (k === 'End') go(slides.length - 1);
+    else if (k === 'n' || k === 'N') notesPanel.classList.toggle('is-open');
+    else if (k === 'o' || k === 'O' || k === 'Escape') overview.classList.toggle('is-open', k !== 'Escape' && !overview.classList.contains('is-open'));
+    else if (k === 'f' || k === 'F') document.fullscreenElement ? document.exitFullscreen() : document.documentElement.requestFullscreen?.();
+  });
+  // click: left third back, rest forward; interactive elements keep their own clicks
+  document.querySelector('.deck').addEventListener('click', (e) => {
+    if (e.target.closest('a, button, tr, .card, .journey, input, select, textarea') || getSelection().toString()) return;
+    (e.clientX < innerWidth / 3 ? prev : next)(); dismissHint();
+  });
+  let tx = null, ty = null;
+  addEventListener('touchstart', (e) => { tx = e.touches[0].clientX; ty = e.touches[0].clientY; }, { passive: true });
+  addEventListener('touchend', (e) => {
+    if (tx === null) return;
+    const dx = e.changedTouches[0].clientX - tx, dy = e.changedTouches[0].clientY - ty;
+    if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy) * 1.5 && !e.target.closest('.journey, .table-wrap')) (dx < 0 ? next : prev)();
+    tx = null;
+  });
+
+  // compare tables: click a row to show its detail
+  document.querySelectorAll('table.compare').forEach((t) => {
+    const detail = t.closest('.slide').querySelector('.detail');
+    t.addEventListener('click', (e) => {
+      const r = e.target.closest('tbody tr'); if (!r) return;
+      t.querySelectorAll('tr.is-open').forEach((x) => x.classList.remove('is-open'));
+      r.classList.add('is-open');
+      if (detail) detail.textContent = r.dataset.detail || '';
+    });
+  });
+
+  // journeys (the renderer script below loads after this one)
+  addEventListener('DOMContentLoaded', () => document.querySelectorAll('[data-journey]').forEach((el) => {
+    const src = el.closest('.slide')?.querySelector('script.journey-data');
+    try { window.renderJourney(el, JSON.parse(src.textContent)); } catch (err) { el.textContent = 'Journey data could not be read: ' + err.message; }
+  }));
+
+  const start = parseInt(location.hash.slice(1), 10);
+  go(Number.isFinite(start) ? start - 1 : 0);
+  setTimeout(dismissHint, 6000);
+})();
+</script>
+<script>
+/* ---------- journey renderer (shared with journey-map.html; do not edit per deck) ---------- */
+window.renderJourney = function (root, data) {
+  const esc = (s) => String(s ?? '').replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+  const personas = data.personas || [];
+  function draw(p) {
+    const st = p.stages || [], n = st.length, W = n * 100, y = (e) => 48 - Math.max(-2, Math.min(2, e)) * 18;
+    const pts = st.map((s, i) => [i * 100 + 50, y(s.emotion)]);
+    const d = pts.map((q, i) => (i ? 'L' : 'M') + q.join(' ')).join(' ');
+    const mot = (s) => (s.stage === p.momentOfTruth ? ' j-mot' : '');
+    const row = (label, f) => `<div class="j-label">${label}</div>` + st.map((s) => `<div class="${mot(s).trim()}">${f(s)}</div>`).join('');
+    return `<div class="j-grid" style="--n:${n}">
+      <div class="j-label"></div>${st.map((s) => `<div class="j-head${mot(s)}">${esc(s.stage)}</div>`).join('')}
+      ${row('Doing', (s) => esc(s.doing))}
+      ${row('Touchpoints', (s) => esc(s.touchpoints))}
+      ${row('Thinking', (s) => '“' + esc(s.thinking) + '”')}
+      <div class="j-label">Feeling</div>
+      <div class="j-curve"><svg viewBox="0 0 ${W} 96" preserveAspectRatio="none" role="img" aria-label="Emotion curve">
+        <line x1="0" x2="${W}" y1="48" y2="48" vector-effect="non-scaling-stroke"/>
+        <path class="j-line" d="${d}" vector-effect="non-scaling-stroke"/>
+        ${pts.map((q, i) => `<g><title>${esc(st[i].stage)}: ${st[i].emotion}</title><path class="j-dot" d="M${q[0]} ${q[1]}h0" vector-effect="non-scaling-stroke"/><path class="j-dot-in" d="M${q[0]} ${q[1]}h0" vector-effect="non-scaling-stroke"/></g>`).join('')}
+      </svg></div>
+      ${row('Pains', (s) => (s.pains || []).map((x) => `<span class="j-chip pain">${esc(x)}</span>`).join(''))}
+      ${row('Opportunities', (s) => (s.opportunities || []).map((x) => `<span class="j-chip opp">${esc(x)}</span>`).join(''))}
+    </div>`;
+  }
+  const tabs = personas.length > 1
+    ? `<div class="j-tabs" role="tablist">${personas.map((p, i) => `<button role="tab" aria-selected="${i === 0}" data-i="${i}">${esc(p.name)}</button>`).join('')}</div>` : '';
+  root.innerHTML = tabs + `<div class="j-body">${personas[0] ? draw(personas[0]) : ''}</div>`;
+  root.querySelectorAll('.j-tabs button').forEach((b) => b.addEventListener('click', () => {
+    root.querySelectorAll('.j-tabs button').forEach((x) => x.setAttribute('aria-selected', x === b));
+    root.querySelector('.j-body').innerHTML = draw(personas[+b.dataset.i]);
+  }));
+};
+</script>
+</body>
+</html>
