@@ -33,7 +33,7 @@ export function createDirector(env) {
   const V = (x, y, z) => new THREE.Vector3(x, y, z);
   const timed = (ms, fn) => new Promise(res => { let u = 0; items.push((dt, t) => { u += dt/(ms/1000); fn(Math.min(1, u), dt, t); if (u >= 1) { res(); return true; } return false; }); });
   const style = document.createElement('style');
-  style.textContent = `.dstamp{position:fixed;left:50%;top:var(--bandY,40%);transform:translate(-50%,-50%) rotate(-7deg) scale(2.4);font:900 3.2rem "Segoe UI","Noto Sans Thai",system-ui;letter-spacing:2px;padding:.4rem 1.6rem;border:.4rem solid;border-radius:.9rem;background:#0b0818cc;opacity:0;z-index:var(--z-stamp,680);pointer-events:none;text-shadow:0 0 18px currentColor;animation:dstamp 2.1s ease-out forwards}
+  style.textContent = `.dstamp{position:fixed;left:50%;top:var(--bandY,40%);transform:translate(-50%,-50%) rotate(-7deg) scale(2.4);font:900 3.2rem "Noto Sans","Noto Sans Thai",system-ui;letter-spacing:2px;padding:.4rem 1.6rem;border:.4rem solid;border-radius:.9rem;background:#0b0818cc;opacity:0;z-index:var(--z-stamp,680);pointer-events:none;text-shadow:0 0 18px currentColor;animation:dstamp 2.1s ease-out forwards}
   @keyframes dstamp{0%{opacity:0;transform:translate(-50%,-50%) rotate(-7deg) scale(2.8)}14%{opacity:1;transform:translate(-50%,-50%) rotate(-7deg) scale(1)}80%{opacity:1}100%{opacity:0;transform:translate(-50%,-60%) rotate(-7deg) scale(1)}}
   .dbub{position:fixed;left:0;top:0;pointer-events:none;z-index:4;font-weight:800;font-size:.9rem;padding:.05rem .55rem;border-radius:99px;border:2px solid;background:#120f20e6;white-space:nowrap}
   .dbub.y{border-color:#5fe39a;color:#5fe39a}.dbub.n{border-color:#ff5c7a;color:#ff5c7a}

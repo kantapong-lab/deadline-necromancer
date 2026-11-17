@@ -5,7 +5,7 @@
 }
 *{box-sizing:border-box}
 body{margin:0;background:radial-gradient(1200px 600px at 50% -200px,#2a1f4d,var(--bg));color:var(--txt);
-  font-family:"Segoe UI","Noto Sans Thai",Tahoma,sans-serif;min-height:100vh}
+  font-family:"Noto Sans","Noto Sans Thai",sans-serif;min-height:100vh}
 button{font:inherit;color:inherit;cursor:pointer}
 h1,h2,h3{margin:0}
 .btn{background:var(--panel2);border:1px solid var(--line);padding:8px 14px;border-radius:8px;transition:.15s}

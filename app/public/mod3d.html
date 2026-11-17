@@ -1,6 +1,6 @@
 <!doctype html>
 <html lang="th">
-<head>
+<head><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@400;600;700;800;900&family=Noto+Sans:wght@400;600;700;800;900&display=swap" rel="stylesheet">
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Deadline Necromancer — Moderator 3D</title>
@@ -12,7 +12,7 @@
   *{box-sizing:border-box}
   /* fluid scale: ~17px on a 1366 laptop, ~21px on 1080p, up to 28px on a 4K TV — every HUD size below is in rem */
   html{font-size:clamp(16px,min(.55vw + 10px,1.1vh + 8px),28px)}
-  html,body{margin:0;height:100%;background:var(--bg);overflow:hidden;color:var(--txt);font-family:"Segoe UI","Noto Sans Thai",Tahoma,sans-serif}
+  html,body{margin:0;height:100%;background:var(--bg);overflow:hidden;color:var(--txt);font-family:"Noto Sans","Noto Sans Thai",sans-serif}
   #c{position:fixed;left:0;right:0;top:0;bottom:var(--chatH);width:100%;height:calc(100% - var(--chatH));display:block}
   button{font:inherit;color:inherit;cursor:pointer}
   /* ---- phase band (Dota pick/ban style): sits between the team rows, y follows the projected altar ---- */
@@ -58,11 +58,11 @@
   #chatBox::before,#chatBox::after{content:"";position:absolute;top:.4rem;width:.5rem;height:.5rem;border-radius:50%;background:radial-gradient(circle at 35% 30%,#d8c49a,#6b5530 70%);box-shadow:0 .1rem .15rem #0008}
   #chatBox::before{left:.5rem} #chatBox::after{right:.5rem}
   #chatBox .lh{position:absolute;left:50%;top:-1.05rem;transform:translateX(-50%);z-index:2;padding:.18rem 1.6rem;border:.16rem solid #3a2412;border-radius:.3rem;background:linear-gradient(180deg,#8a5a2e,#5e3a1c);box-shadow:0 .25rem .5rem #000a,inset 0 .1rem .1rem #c9965a66;
-    font:800 .82rem/1.2 "Palatino Linotype","Book Antiqua",Georgia,"Noto Serif Thai",serif;letter-spacing:.04em;color:#ffd98a;text-shadow:0 .1rem .15rem #000;white-space:nowrap}
+    font:800 .82rem/1.2 "Noto Sans","Noto Sans Thai",sans-serif;letter-spacing:.04em;color:#ffd98a;text-shadow:0 .1rem .15rem #000;white-space:nowrap}
   #chatBox .lh::before,#chatBox .lh::after{content:"";position:absolute;top:-.6rem;width:.14rem;height:.7rem;background:linear-gradient(180deg,#9aa0a8,#4a4f57)}
   #chatBox .lh::before{left:22%} #chatBox .lh::after{right:22%}
   #chatBox .lh i{font-style:normal;margin-left:.9rem;font-weight:600;letter-spacing:.03em;text-transform:none;color:#e7c98e}
-  #chatLog{flex:1;min-height:0;overflow:auto;display:flex;flex-direction:column;gap:.1rem;padding:.2rem .5rem 0 0;scroll-behavior:smooth;scrollbar-width:thin;scrollbar-color:#8a6a3a transparent;font-family:"Palatino Linotype","Book Antiqua",Georgia,"Noto Serif Thai","Sarabun",serif}
+  #chatLog{flex:1;min-height:0;overflow:auto;display:flex;flex-direction:column;gap:.1rem;padding:.2rem .5rem 0 0;scroll-behavior:smooth;scrollbar-width:thin;scrollbar-color:#8a6a3a transparent;font-family:"Noto Sans","Noto Sans Thai",sans-serif}
   #chatLog .m{display:grid;grid-template-columns:1.9rem 1fr;gap:.6rem;align-items:start;padding:.14rem 0;animation:chatIn .35s ease-out both}
   #chatLog .m:not(.cont){border-top:1px dashed #8a6a3a99} #chatLog .m:first-child{border-top:0}
   #chatLog .m.cont .av{visibility:hidden} #chatLog .m.cont .nm{display:none}
@@ -79,6 +79,7 @@
   #nlog .lh button{background:none;border:0;color:var(--mut);cursor:pointer;font-size:.9rem;padding:0 .25rem} #nlog .lh button:hover{color:var(--txt)}
   .ln{padding:.12rem 0 .12rem .5rem;border-left:3px solid var(--line);margin:.12rem 0;color:var(--txt)}
   .ln.light{border-color:var(--team)} .ln.dark{border-color:var(--cult)} .ln.indie{border-color:var(--seek)} .ln.sys{border-color:var(--light);color:var(--light);font-weight:600}
+  .ln.nsep{border:0;margin:.5rem 0 .15rem;padding:.1rem 0;text-align:center;color:#b48cff;font-weight:700;font-size:.85rem;letter-spacing:.04em;border-top:1px dashed #5a4a86}
   .ln.dchat{border-color:var(--cult);color:#ffc9cf}
   /* ---- moderator tools: slide-in panel on the right edge (never rendered in ?view=tv) ---- */
   #modTab{position:fixed;right:0;top:50%;transform:translateY(-50%);z-index:var(--z-modtab);background:var(--panel2);border:1px solid var(--line);border-right:0;border-radius:.6rem 0 0 .6rem;padding:.9rem .35rem;writing-mode:vertical-rl;font-size:.9rem;opacity:.75;transition:.2s}
@@ -130,7 +131,7 @@
   #phaseFx[data-k=NIGHT]{--pc:#b48cff;--pv:#07031a} #phaseFx[data-k=OVER],#phaseFx[data-k=RESULT]{--pc:#ff5c7a;--pv:#1a0408}
   #phaseFx::before{content:"";position:absolute;inset:0;background:radial-gradient(55% 65% at 50% 50%,color-mix(in srgb,var(--pc) 24%,transparent),transparent 72%),linear-gradient(180deg,transparent 4%,var(--pv) 34%,var(--pv) 66%,transparent 96%);opacity:.94}
   #phaseFx.go{animation:pfxVeil 2.6s ease both}
-  .pfx{position:relative;text-align:center;color:var(--pc);font-family:"Palatino Linotype","Book Antiqua",Georgia,"Noto Serif Thai",serif;text-shadow:0 .15rem 1rem #000}
+  .pfx{position:relative;text-align:center;color:var(--pc);font-family:"Noto Sans","Noto Sans Thai",sans-serif;text-shadow:0 .15rem 1rem #000}
   .pfx b{display:block;font-size:3rem;font-weight:800;letter-spacing:.08em;line-height:1.2}
   .pfx small{display:block;margin-top:.2rem;font-size:1.25rem;color:var(--txt);letter-spacing:.06em}
   .pfx i{display:block;height:.12rem;width:min(36rem,72vw);margin:.55rem auto;background:linear-gradient(90deg,transparent,var(--pc),transparent)}
@@ -356,12 +357,12 @@ const boardTex = new THREE.CanvasTexture(boardCv); boardTex.colorSpace = THREE.S
 function drawBoard(day) {
   const x = boardCv.getContext('2d'); const bg = x.createLinearGradient(0, 0, 0, 560); bg.addColorStop(0, '#2a1d3f'); bg.addColorStop(1, '#181528'); x.fillStyle = bg; x.fillRect(0, 0, 1024, 560);
   x.strokeStyle = '#d8b050'; x.lineWidth = 8; x.strokeRect(6, 6, 1012, 548); x.strokeStyle = '#8a6a2a'; x.lineWidth = 2; x.strokeRect(20, 20, 984, 520);
-  x.fillStyle = '#d8b050'; x.font = '600 34px "Noto Sans Thai",serif'; x.textAlign = 'center'; x.fillText('✦  SPRINT  ·  5 WORKING DAYS  ✦', 512, 62);
+  x.fillStyle = '#d8b050'; x.font = '600 34px "Noto Sans","Noto Sans Thai",sans-serif'; x.textAlign = 'center'; x.fillText('✦  SPRINT  ·  5 WORKING DAYS  ✦', 512, 62);
   for (let i = 0; i < 5; i++) {
     const cx = 100 + i*206, now = i === day - 1, past = i < day - 1;
     x.fillStyle = now ? '#6a35b8' : '#201c36'; x.beginPath(); x.roundRect(cx - 88, 100, 176, 380, 18); x.fill();
     if (now) { x.strokeStyle = '#f5c451'; x.lineWidth = 6; x.stroke(); }
-    x.globalAlpha = past ? .35 : 1; x.fillStyle = '#fff'; x.font = '800 92px "Noto Sans Thai",system-ui'; x.fillText(DAYS[i], cx, 220);
+    x.globalAlpha = past ? .35 : 1; x.fillStyle = '#fff'; x.font = '800 92px "Noto Sans","Noto Sans Thai",system-ui'; x.fillText(DAYS[i], cx, 220);
     x.font = '26px system-ui'; x.fillStyle = now ? '#fff' : '#9a92b8'; x.fillText(DAY_FULL[i], cx, 270);
     if (i === 4) { x.fillStyle = '#ff5c7a'; x.font = '800 34px system-ui'; x.fillText('DEADLINE', cx, 420); x.font = '60px system-ui'; x.fillText('💀', cx, 360); }
     if (past) { x.strokeStyle = '#ff5c7a'; x.lineWidth = 14; x.beginPath(); x.moveTo(cx - 60, 320); x.lineTo(cx + 60, 440); x.moveTo(cx + 60, 320); x.lineTo(cx - 60, 440); x.stroke(); }
@@ -388,7 +389,7 @@ const backTex = tex(300, 417, (x, w, h) => {
   x.translate(w/2, h/2 - 10); x.strokeStyle = '#b05cff'; x.lineWidth = 3; for (const r of [96, 70]) { x.beginPath(); x.arc(0, 0, r, 0, 7); x.stroke(); }
   x.beginPath(); for (let i = 0; i <= 5; i++) { const a = (i*2/5)*6.283 - 1.5708; const px = Math.cos(a)*96, py = Math.sin(a)*96; i ? x.lineTo(px, py) : x.moveTo(px, py); } x.stroke();
   x.fillStyle = '#f5c451'; x.font = '70px system-ui'; x.textAlign = 'center'; x.textBaseline = 'middle'; x.fillText('💀', 0, 6);
-  x.setTransform(1, 0, 0, 1, 0, 0); x.fillStyle = '#d8b050'; x.font = '700 20px serif'; x.textAlign = 'center'; x.fillText('DEADLINE', w/2, h - 68); x.fillText('NECROMANCER', w/2, h - 42);
+  x.setTransform(1, 0, 0, 1, 0, 0); x.fillStyle = '#d8b050'; x.font = '700 20px "Noto Sans","Noto Sans Thai",sans-serif'; x.textAlign = 'center'; x.fillText('DEADLINE', w/2, h - 68); x.fillText('NECROMANCER', w/2, h - 42);
 });
 // foil glint: one shared additive shader; a soft diagonal highlight sweeps each card, phase-shifted by the card's world position so it travels across the board as a wave
 const sheenMat = new THREE.ShaderMaterial({ transparent:true, depthWrite:false, blending:THREE.AdditiveBlending, toneMapped:false, fog:false, uniforms:{ uT:{ value:0 } },
@@ -421,6 +422,7 @@ function buildStandee(root, roleKey) {
 // =====================================================================
 const pageTex = tex(256, 340, (x, w2, h) => { const gr = x.createLinearGradient(0, 0, w2, 0); gr.addColorStop(0, '#fff6d8'); gr.addColorStop(1, '#ffe9a8'); x.fillStyle = gr; x.fillRect(0, 0, w2, h); x.fillStyle = '#7a4aff'; x.font = '24px "Segoe UI Historic","Segoe UI Symbol",serif'; const RS = 'ᚠᚢᚦᚨᚱᚲᚷᚹᚺᚾᛁᛃᛇᛈᛉᛊᛏᛒᛖᛗᛚᛜᛞᛟ'; for (let k = 0; k < 11; k++) x.fillText(RS.slice(k % 6, k % 6 + 9), 22, 40 + k*28); x.strokeStyle = '#7a4aff'; x.lineWidth = 3; x.strokeRect(8, 8, w2 - 16, h - 16); });
 const desks = [], labelsEl = document.body.appendChild(document.createElement('div'));
+labelsEl.style.cssText = 'position:fixed;inset:0;pointer-events:none;z-index:var(--z-rows)';   // own stacking context: per-tag depth z-indexes (10..160) stay inside it, so the MOD panel / chat always sit above the name plates
 // ---- card layout: 2 rows (top / bottom) × 2 columns (left / right) × up to 3 cards = 12 slots; cells fill TL → TR → BL → BR in id order.
 //      Position says nothing about the team: revealing roles only flips the cards in place (no regrouping). Short cells pack to the outer edge. ----
 const FORDER = ['light', 'dark', 'indie'], PITCH = (CARD_W + .2)*CSC*1.1;   // PITCH = card-to-card distance at full size
@@ -593,9 +595,11 @@ let logOn = true; try { logOn = localStorage.getItem('nlogOn') !== '0'; } catch 
 function setLogOn(v) { logOn = v; document.body.classList.toggle('nlogoff', !v); document.getElementById('nlogBtn').textContent = '📜 Night Log: ' + (v ? 'แสดง' : 'ซ่อน'); try { localStorage.setItem('nlogOn', v ? '1' : '0'); } catch (e) {} }
 document.getElementById('nlogBtn').onclick = () => { setLogOn(!logOn); if (logOn && !secrets) say('Night Log จะแสดงเมื่อเปิด “แสดงบทบาทลับ”'); };
 document.getElementById('nlogHide').onclick = () => setLogOn(false);
-document.getElementById('nlogClear').onclick = () => { logEl.querySelectorAll('.ln').forEach(e => e.remove()); logEl.classList.remove('has'); };
+document.getElementById('nlogClear').onclick = () => { logEl.querySelectorAll('.ln').forEach(e => e.remove()); logEl.classList.remove('has'); sepNight = 0; };
 setLogOn(logOn);
-function logLine(d, text) { const el = document.createElement('div'); el.className = 'ln ' + (d ? fac(d) : 'sys'); el.textContent = text; logEl.appendChild(el); logEl.classList.add('has'); logEl.scrollTop = 1e9; }
+let sepNight = 0, fxNight = 1;   // night-log dividers: a "คืนที่ N" header before the first line of each night (fx of night N play once the page is already on day N+1)
+function nightSep(n) { if (sepNight === n) return; sepNight = n; const el = document.createElement('div'); el.className = 'ln nsep'; el.textContent = `🌙 คืนที่ ${n}${DAY_FULL[n - 1] ? ' · ' + DAY_FULL[n - 1] : ''}`; logEl.appendChild(el); logEl.classList.add('has'); }
+function logLine(d, text) { nightSep(fxNight); const el = document.createElement('div'); el.className = 'ln ' + (d ? fac(d) : 'sys'); el.textContent = text; logEl.appendChild(el); logEl.classList.add('has'); logEl.scrollTop = 1e9; }
 // ----- left column: team legend (emblem + head-count per team, shown with the roles) beside the top row + phase band follow the projected rows -----
 const legEl = document.createElement('div'); legEl.className = 'teamLeg'; document.getElementById('rowSides').append(legEl); let legSig = '';
 const bandEl = document.getElementById('band'), tmpP = new THREE.Vector3();
@@ -634,7 +638,8 @@ function renderChat(st) {
 const seenDark = new Set();
 function renderDark(st) {
   if (!secrets) return; (st.darkChat || []).forEach(m => { const k = m.ts + m.name + m.text; if (seenDark.has(k)) return; seenDark.add(k);
-    const el = document.createElement('div'); el.className = 'ln dchat'; el.textContent = `🕯 ${m.name}: ${m.text}`; logEl.appendChild(el); logEl.classList.add('has'); logEl.scrollTop = 1e9; });
+    const put = () => { if (playing || fxQueue.length) return void setTimeout(put, 400);   // wait until the previous night's fx lines are in, so the dividers stay in order
+      nightSep(st.day); const el = document.createElement('div'); el.className = 'ln dchat'; el.textContent = `🕯 ${m.name}: ${m.text}`; logEl.appendChild(el); logEl.classList.add('has'); logEl.scrollTop = 1e9; }; put(); });
 }
 // ----- moderator tools panel (never present in ?view=tv) -----
 const TV = new URLSearchParams(location.search).get('view') === 'tv'; document.body.classList.toggle('tv', TV);
@@ -647,7 +652,7 @@ function deadCanvas(src, kind) { const w = 300, h = 417, c = document.createElem
   try { x.filter = 'grayscale(1) brightness(.6) contrast(1.05)'; x.drawImage(src, 0, 0, w, h); x.filter = 'none'; } catch (e) { x.fillStyle = '#3a3a42'; x.fillRect(0, 0, w, h); }
   x.fillStyle = 'rgba(10,10,14,.38)'; x.fillRect(0, 0, w, h);
   if (kind === 'fired') {                                          // red "FIRED" stamp across the greyed card
-    x.save(); x.translate(w/2, h/2 + 6); x.rotate(-.34); x.strokeStyle = x.fillStyle = '#ff3b4d'; x.globalAlpha = .95; x.lineWidth = 9; x.font = '900 82px "Segoe UI",Arial,sans-serif'; x.textAlign = 'center'; x.textBaseline = 'middle';
+    x.save(); x.translate(w/2, h/2 + 6); x.rotate(-.34); x.strokeStyle = x.fillStyle = '#ff3b4d'; x.globalAlpha = .95; x.lineWidth = 9; x.font = '900 82px "Noto Sans","Noto Sans Thai",Arial,sans-serif'; x.textAlign = 'center'; x.textBaseline = 'middle';
     const tw = x.measureText('FIRED').width; x.strokeRect(-tw/2 - 20, -58, tw + 40, 116); x.lineWidth = 3; x.strokeRect(-tw/2 - 30, -68, tw + 60, 136); x.fillText('FIRED', 0, 4); x.restore();
   } else { x.font = '170px "Segoe UI Emoji","Apple Color Emoji","Noto Color Emoji",sans-serif'; x.textAlign = 'center'; x.textBaseline = 'middle'; x.globalAlpha = .93; x.fillText('💀', w/2, h/2 + 8); }
   return c; }
@@ -678,7 +683,7 @@ document.getElementById('closeEv').onclick = () => act('closeEvent');
 document.getElementById('closeBo').onclick = () => act('closeBooster');
 
 // ----- fx → Director -----
-const fxQueue = []; let playing = false;
+const fxQueue = []; let playing = false, gameEnded = false;
 const skillText = (f, c, T) => { const S = ROLES[f.role], r = f.result || {}; let x = `${S.skill} → ${T.length ? T.map(nm).join(' + ') : '—'}`;
   if (f.role === 'senior_dev') x += `: ${r.bug ? 'แอบวางบั๊ก' : r.none ? 'ไม่ได้ส่งงาน' : 'ส่งงานจริง'}`; else if (f.role === 'qa_hunter') x += `: ${r.hasDark ? 'มีฝ่ายมืดอย่างน้อย 1 คน' : 'ไม่มีฝ่ายมืด'}`;
   else if (f.role === 'oracle_pm' && r.barrierBroke) x += ' (บาเรียแตก! มีออร่ามืด)'; else if (f.role === 'data_oracle') x = `${S.skill}: งานเสร็จจริง ${r.real} ชิ้น · บั๊กแฝง ${r.bugs} ชิ้น`;
@@ -702,7 +707,7 @@ async function playFx(f) {
 // ----- phase transition (morning / night / end game): title card over the stage + a kick to the rune circle and motes -----
 const pfxEl = document.getElementById('phaseFx');
 const resText = st => (st.voteResult && st.voteResult.text) || 'ผลการโหวต';
-const PFX = { MORNING:['รุ่งอรุณ — ประชุมเช้า', st => `${DAY_FULL[st.day - 1] || ''} · วันที่ ${st.day}/5`], RESULT:['ประกาศผลโหวต', resText], NIGHT:['ราตรีมาเยือน', () => 'ลัทธิอู้งานออกล่า…'], OVER:['จบเกม', () => 'Deadline มาถึงแล้ว'] };
+const PFX = { MORNING:['รุ่งอรุณ — ประชุมเช้า', st => `${DAY_FULL[st.day - 1] || ''} · วันที่ ${st.day}/5`], RESULT:['ประกาศผลโหวต', resText], NIGHT:['ราตรีมาเยือน', () => 'ลัทธิอู้งานออกล่า…'], OVER:['จบเกม', st => (st.over && (st.over.why || st.over.text)) || 'Deadline มาถึงแล้ว'] };
 async function phaseFx(key, st) {
   const P = PFX[key]; if (!P) return; phaseKick = 1;
   if (RM) { say(P[0]); if (key === 'RESULT') resCaption(st); return; }   // reduced motion: plain text toast, no title card
@@ -713,8 +718,8 @@ async function phaseFx(key, st) {
 }
 const resCaption = st => { if (curSt && curSt.phase === 'VOTE_RESULT') caption('⚖ ประกาศผลโหวต', resText(st), 600000, 'res'); };
 const played = [];   // every fx the screen handled (kind/role/key + done|err) — read by the e2e check via window.__mod3d
-async function pump() { if (playing) return; playing = true; while (fxQueue.length) { const f = fxQueue.shift(); if (f.kind === 'phase') { try { await phaseFx(f.key, f.st); } catch (e) { console.error('phaseFx', e); } continue; }   // local transition — not an engine fx, so not recorded in `played`
-  const rec = { kind:f.kind, role:f.role, key:f.key, caster:f.caster, pid:f.pid, out:f.out, trap:f.trap, accepted:f.accepted, t:Date.now() }; played.push(rec); try { await playFx(f); rec.done = true; } catch (e) { rec.err = String(e && e.stack || e); console.error('fx', f, e); } await wait(250); } playing = false; }
+async function pump() { if (playing) return; playing = true; while (fxQueue.length) { const f = fxQueue.shift(); if (f.kind === 'phase') { try { await phaseFx(f.key, f.st); } catch (e) { console.error('phaseFx', e); } if (f.key === 'OVER') { fxQueue.length = 0; gameEnded = true; } continue; }   // game over announced → everything still queued is dropped, nothing else plays   // local transition — not an engine fx, so not recorded in `played`
+  const rec = { kind:f.kind, role:f.role, key:f.key, caster:f.caster, pid:f.pid, out:f.out, trap:f.trap, accepted:f.accepted, t:Date.now() }; played.push(rec); try { await playFx(f); rec.done = true; } catch (e) { rec.err = String(e && e.stack || e); console.error('fx', f, e); } await wait(250); } playing = false; if (curSt && curSt.phase === 'OVER') renderPhase(curSt); }
 // ----- phase stepper in the band (full name stays in aria-label + data-phase for readers/tests) -----
 const PHASE_LABEL = { MORNING:'ประชุมเช้า', VOTE:'โหวตไล่ออก', VOTE_INTERIM:'พักโหวต — ผลรอบแรก', VOTE_RESULT:'ประกาศผลโหวต', NIGHT:'กลางคืน — แอ็กชันลับ', OVER:'จบเกม' };
 const STEP_OF = { MORNING:0, VOTE:1, VOTE_INTERIM:1, VOTE_RESULT:2, NIGHT:3 };
@@ -730,14 +735,15 @@ function renderPhase(st) {
 const SCENE_PHASE = { MORNING:'MORNING', VOTE:'VOTE', VOTE_INTERIM:'VOTE', VOTE_RESULT:'VOTE', NIGHT:'NIGHT', OVER:'MORNING' };
 let hydrated = false, lastDay = null, lastPhase = null, phaseKick = 0;
 function applyState(st) {
-  if (lastDay != null && st.day !== lastDay) { clearBadges(); D.clearNight(); }          // new day → last night's skill icons + shield glows are cleared (the night's fx play after this state arrives)
+  if (lastDay != null && st.day !== lastDay) { fxNight = lastDay; clearBadges(); D.clearNight(); }          // new day → last night's skill icons + shield glows are cleared (the night's fx play after this state arrives)
   lastDay = st.day;
   { const pk = st.phase === 'OVER' ? 'OVER' : st.phase === 'VOTE_RESULT' ? 'RESULT' : SCENE_PHASE[st.phase];   // morning / vote result → front of the queue (before the vote fx), end game → after everything still queued
-    if (hydrated && pk !== lastPhase && PFX[pk]) { const f = { kind:'phase', key:pk, st }; pk === 'OVER' ? fxQueue.push(f) : fxQueue.unshift(f); pump(); }
+    if (hydrated && pk !== lastPhase && PFX[pk]) { const f = { kind:'phase', key:pk, st }; if (pk === 'OVER') setTimeout(() => { fxQueue.push(f); pump(); }, 700); else { fxQueue.unshift(f); pump(); } }   // OVER state arrives just before the last night's fx batch → give it a moment so the game-over card really is last and nothing is dropped
     lastPhase = pk; }
   curSt = st; if (!!st.secrets !== srvSecrets) applySecrets(st.secrets); renderChat(st); renderDark(st); desks.forEach(refreshLabel);
   day = st.day; mana = Math.max(0, Math.min(MANA_MAX, st.mana)); renderHud(); setPhaseQuiet(SCENE_PHASE[st.phase] || 'MORNING');
-  renderPhase(st);
+  if (st.phase !== 'OVER') applyState.prev = st.phase; if (st.phase !== 'OVER') gameEnded = false;
+  renderPhase(st.phase === 'OVER' && (playing || fxQueue.length) ? { ...st, phase: applyState.prev || 'NIGHT' } : st);   // the 'game over' stepper waits until the last night skills / vote fx have finished playing
   if (st.phase !== 'VOTE_RESULT' && capEl.classList.contains('res')) capEl.classList.remove('show');   // leave the result caption behind when the night starts
   if (st.phase === 'VOTE_RESULT' && !hydrated) resCaption(st);                                        // page opened mid-result: no title card, show the caption straight away
   st.players.forEach(p => { const d = desks[p.id]; if (!d) return; if (p.role) setRole(d, p.role);
@@ -747,9 +753,9 @@ function applyState(st) {
   const pd = st.pending || {}; document.getElementById('closeEv').style.display = pd.event ? '' : 'none'; document.getElementById('closeBo').style.display = pd.booster ? '' : 'none';
   if (pd.event) document.getElementById('closeEv').textContent = `📞 ปิดโหวต Event (${pd.event.done}/${pd.event.total})`; if (pd.booster) document.getElementById('closeBo').textContent = `🚀 ปิดโหวต Booster (${pd.booster.done}/${pd.booster.total})`;
   const w = pd.vote || pd.night; document.getElementById('waitTxt').textContent = w ? `${st.phase === 'NIGHT' ? 'แอ็กชันลับ' : 'โหวต'} ${w.done}/${w.total}` : '';
-  if (st.phase === 'OVER' && !applyState.over) { applyState.over = true; const showOver = () => { if (!applyState.over) return; if (playing || fxQueue.length) return void setTimeout(showOver, 300); caption('🏁 จบเกม', (st.over && (st.over.why || st.over.text || JSON.stringify(st.over))) || '', 20000, 'boost over'); }; showOver(); } if (st.phase !== 'OVER') applyState.over = false;   // banner waits for the fx queue to drain
+  applyState.over = st.phase === 'OVER';   // no separate game-over banner: the title card already announces it and carries the reason
 }
-const live = { applyState, setReveal, enqueue(batch) { fxQueue.push(...batch); pump(); } };
+const live = { applyState, setReveal, enqueue(batch) { if (gameEnded) return; fxQueue.push(...batch); { const i = fxQueue.findIndex(f => f.kind === 'phase' && f.key === 'OVER'); if (i >= 0 && i < fxQueue.length - 1) fxQueue.push(fxQueue.splice(i, 1)[0]); } pump(); } };   // enqueue keeps the game-over card last: late fx (state arrives before its fx batch) must not play after it
 window.__mod3d = { desks, played, get phase() { return phase; }, get day() { return day; }, get mana() { return mana; }, get manaMax() { return MANA_MAX; }, get secrets() { return secrets; }, get reveal() { return reveal; }, setReveal, get busy() { return playing || fxQueue.length > 0; }, get state() { return curSt; }, D, burn: i => burnDesk(desks[i]), chat: st => renderChat(st), snap() { if (!frame.A) return; layoutT = 0; desks.forEach(d => { const t = frame.A.pos[d.i]; d.g.position.set(t.x, 0, t.z); if (d.state === 'alive') { d.flip = (secrets || (curSt && curSt.phase === 'OVER')) ? 0 : 1; d.pivot.rotation.y = d.flip*Math.PI; } }); } };   // test hook (snap = skip the card-flight animation)
 
 desks.forEach(refreshLabel);
