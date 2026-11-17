@@ -8,7 +8,7 @@
   :root{--bg:#0f0d1a;--panel:#181528;--panel2:#201c36;--line:#33294f;--txt:#ebe7f7;--mut:#a79fc6;
         --light:#f5c451;--dark:#b05cff;--indie:#4ecdc4;--bad:#ff5c7a;--good:#5fe39a;
         --team:#4fd0ff;--cult:#ff4d5e;--seek:#4ee07a;--glass:#120f20e6;--gap:.9rem;--chatH:clamp(11rem,28vh,22rem);--edge:.9rem;
-        --z-rows:4;--z-band:5;--z-chat:6;--z-mod:8;--z-modtab:9;--z-bub:60;--z-dbig:650;--z-cap:660;--z-msg:670;--z-stamp:680;--z-lobby:900;--z-flash:950}
+        --z-rows:4;--z-band:5;--z-chat:6;--z-mod:8;--z-modtab:9;--z-bub:60;--z-dbig:650;--z-cap:660;--z-msg:670;--z-stamp:680;--z-phase:690;--z-lobby:900;--z-flash:950}
   *{box-sizing:border-box}
   /* fluid scale: ~17px on a 1366 laptop, ~21px on 1080p, up to 28px on a 4K TV — every HUD size below is in rem */
   html{font-size:clamp(16px,min(.55vw + 10px,1.1vh + 8px),28px)}
@@ -119,6 +119,31 @@
   #roster{display:flex;flex-wrap:wrap;gap:.4rem;justify-content:center;max-width:46rem;margin:.6rem auto 1rem}
   #roster span{background:var(--panel2);border:1px solid var(--line);border-radius:99px;padding:.2rem .8rem;font-size:.95rem}
   #lobbyWhy{min-height:1.4em;font-size:.9rem}
+  /* ---- phase transition title card (morning / night / end game): veil + drawn sun · crescent · skull seal, covers the 3D stage only ---- */
+  #phaseFx{position:fixed;left:0;right:0;top:0;bottom:var(--chatH);z-index:var(--z-phase);pointer-events:none;display:grid;place-items:center;opacity:0;overflow:hidden;--pc:#f5c451;--pv:#2a1a06}
+  #phaseFx[data-k=NIGHT]{--pc:#b48cff;--pv:#07031a} #phaseFx[data-k=OVER]{--pc:#ff5c7a;--pv:#1a0408}
+  #phaseFx::before{content:"";position:absolute;inset:0;background:radial-gradient(55% 65% at 50% 50%,color-mix(in srgb,var(--pc) 24%,transparent),transparent 72%),linear-gradient(180deg,transparent 4%,var(--pv) 34%,var(--pv) 66%,transparent 96%);opacity:.94}
+  #phaseFx.go{animation:pfxVeil 2.6s ease both}
+  .pfx{position:relative;text-align:center;color:var(--pc);font-family:"Palatino Linotype","Book Antiqua",Georgia,"Noto Serif Thai",serif;text-shadow:0 .15rem 1rem #000}
+  .pfx b{display:block;font-size:3rem;font-weight:800;letter-spacing:.08em;line-height:1.2}
+  .pfx small{display:block;margin-top:.2rem;font-size:1.25rem;color:var(--txt);letter-spacing:.06em}
+  .pfx i{display:block;height:.12rem;width:min(36rem,72vw);margin:.55rem auto;background:linear-gradient(90deg,transparent,var(--pc),transparent)}
+  .pfx .orb{position:relative;width:5rem;height:5rem;margin:0 auto 1.1rem;border-radius:50%}
+  [data-k=MORNING] .orb{background:radial-gradient(circle at 40% 35%,#fff6d0,#f5c451 55%,#d88a20);box-shadow:0 0 2.6rem #f5c451aa}
+  [data-k=MORNING] .orb::before{content:"";position:absolute;inset:-1.7rem;border-radius:50%;background:repeating-conic-gradient(#f5c451aa 0 5deg,transparent 5deg 30deg);-webkit-mask:radial-gradient(circle,transparent 56%,#000 60%,transparent 99%);mask:radial-gradient(circle,transparent 56%,#000 60%,transparent 99%);animation:pfxSpin 14s linear infinite}
+  [data-k=NIGHT] .orb{box-shadow:inset -1.5rem -.55rem 0 0 #e0d2ff;filter:drop-shadow(0 0 1.1rem #b48cffcc)}
+  [data-k=OVER] .orb{display:grid;place-items:center;border:.2rem solid var(--pc);background:#2a0710;box-shadow:0 0 2.2rem #ff5c7a88,inset 0 0 1rem #ff5c7a66}
+  [data-k=OVER] .orb::after{content:"\2620\FE0E";font:400 3.6rem/1 "Segoe UI Symbol","Apple Symbols","Noto Sans Symbols 2",serif;color:var(--pc)}
+  .go .pfx b{animation:pfxTitle 2.6s cubic-bezier(.2,.8,.2,1) both} .go .pfx small{animation:pfxSub 2.6s ease both} .go .pfx i{animation:pfxLine 2.6s cubic-bezier(.2,.8,.2,1) both}
+  .go[data-k=MORNING] .orb{animation:pfxRise 2.6s cubic-bezier(.2,.8,.2,1) both} .go[data-k=NIGHT] .orb{animation:pfxFall 2.6s cubic-bezier(.2,.8,.2,1) both} .go[data-k=OVER] .orb{animation:pfxSlam 2.6s cubic-bezier(.3,1.4,.5,1) both}
+  @keyframes pfxVeil{0%{opacity:0}14%,78%{opacity:1}100%{opacity:0}}
+  @keyframes pfxTitle{0%{letter-spacing:.6em;opacity:0;filter:blur(.4rem)}24%,100%{letter-spacing:.08em;opacity:1;filter:none}}
+  @keyframes pfxSub{0%,22%{opacity:0;transform:translateY(.6rem)}40%,100%{opacity:.9;transform:none}}
+  @keyframes pfxLine{0%{transform:scaleX(0)}28%,100%{transform:scaleX(1)}}
+  @keyframes pfxRise{0%{transform:translateY(4.5rem) scale(.6);opacity:0}32%,100%{transform:none;opacity:1}}
+  @keyframes pfxFall{0%{transform:translateY(-4.5rem) rotate(-50deg);opacity:0}32%,100%{transform:none;opacity:1}}
+  @keyframes pfxSlam{0%{transform:scale(2.6);opacity:0}20%{transform:scale(.9);opacity:1}30%,100%{transform:none;opacity:1}}
+  @keyframes pfxSpin{to{transform:rotate(360deg)}}
   @media (prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important}}
   @media (max-width:900px){.band{grid-template-columns:1fr 5rem 1fr}.rowL,.rowR{display:none}#lobbyCode{font-size:3rem}}
 </style>
@@ -138,6 +163,7 @@
 </div>
 <div id="rowSides"></div>
 <div id="cap"><b id="capT"></b><div id="capD"></div></div><div id="chips"></div><div id="msg"></div><div id="flash"></div>
+<div id="phaseFx" aria-hidden="true"><div class="pfx"><div class="orb"></div><i></i><b></b><small></small><i></i></div></div>
 <section id="chatSec">
   <div id="chatBox"><div class="lh"><span>📜 บันทึกการประชุมเช้า</span><i id="chatMeta"></i></div><div id="chatLog" aria-live="polite"></div></div>
   <div id="nlog"><div class="lh"><span>📜 Night Log &amp; แชทลับ (Moderator เท่านั้น)</span><span><button id="nlogClear" title="ล้างบันทึก">🗑</button><button id="nlogHide" title="ซ่อน">✕</button></span></div></div>
@@ -173,6 +199,7 @@ import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
 import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
 import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js';
 import { OutputPass } from 'three/addons/postprocessing/OutputPass.js';
+import { SMAAPass } from 'three/addons/postprocessing/SMAAPass.js';
 import { createDirector } from './mod3d/director.js';
 
 // =====================================================================
@@ -243,17 +270,27 @@ const renderer = new THREE.WebGLRenderer({ canvas, antialias:true });
 renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
 renderer.shadowMap.enabled = true; renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 renderer.toneMapping = THREE.ACESFilmicToneMapping; renderer.toneMappingExposure = 1.1;
-const scene = new THREE.Scene();
-scene.background = new THREE.Color(0x15121f); scene.fog = new THREE.Fog(0x15121f, 30, 70);
+const scene = new THREE.Scene(), FOG_D = .011;                     // subtle exponential haze: only the far row sinks into the backdrop
+scene.background = new THREE.Color(0x15121f); scene.fog = new THREE.FogExp2(0x15121f, FOG_D);
 const VIEW_H = 10, camera = new THREE.OrthographicCamera(-VIEW_H, VIEW_H, VIEW_H, -VIEW_H, .1, 140);   // orthographic: equal card size in every row (flat board look)
 const composer = new EffectComposer(renderer);
 composer.addPass(new RenderPass(scene, camera));
-const bloom = new UnrealBloomPass(new THREE.Vector2(1, 1), .7, .65, .8);
+const bloom = new UnrealBloomPass(new THREE.Vector2(1, 1), .55, .6, .82);   // tighter + higher threshold: only emissive fx / glints bloom, card art stays crisp
 composer.addPass(bloom); composer.addPass(new OutputPass());
+composer.addPass(new SMAAPass(1, 1));                                   // composer targets have no MSAA → SMAA on the final (display-space) image; sized in resize()
+// procedural studio environment (warm key softbox · cool fill · violet rim) → PMREM, used for reflections on the lit materials only
+const envTex = (() => {
+  const gen = new THREE.PMREMGenerator(renderer), es = new THREE.Scene(); es.background = new THREE.Color(0x0b0914);
+  const panel = (c, i, w, h, x, y, z) => { const m = new THREE.Mesh(new THREE.PlaneGeometry(w, h), new THREE.MeshBasicMaterial({ color:new THREE.Color(c).multiplyScalar(i), side:THREE.DoubleSide })); m.position.set(x, y, z); m.lookAt(0, 0, 0); es.add(m); };
+  panel(0xffe2b0, 6, 8, 5, -7, 9, 6); panel(0x6f9cff, 2.5, 6, 8, 10, 3, 2); panel(0xb05cff, 4, 12, 3, 0, 4, -11);
+  const t = gen.fromScene(es, .04).texture; gen.dispose(); es.traverse(o => { if (o.isMesh) { o.geometry.dispose(); o.material.dispose(); } }); return t;
+})();
 
 // ================= helpers =================
-const std = (c, o = {}) => new THREE.MeshStandardMaterial({ color:c, roughness:.75, metalness:.05, ...o });
-const gold = () => std(0xd8b050, { roughness:.3, metalness:.85 });
+const envMats = [];                                                      // lit materials that reflect envTex; their envMapIntensity follows the phase lighting (see frame)
+const lit = m => { m.envMap = envTex; m.userData.env0 = m.envMapIntensity; envMats.push(m); return m; };
+const std = (c, o = {}) => lit(new THREE.MeshStandardMaterial({ color:c, roughness:.75, metalness:.05, envMapIntensity:.35, ...o }));
+const gold = () => lit(new THREE.MeshPhysicalMaterial({ color:0xd8b050, roughness:.4, metalness:1, clearcoat:.3, clearcoatRoughness:.4, envMapIntensity:1.1 }));   // lacquered gilt
 const emi = (c, i = 2, o = {}) => new THREE.MeshStandardMaterial({ color:0x000000, emissive:c, emissiveIntensity:i, toneMapped:false, ...o });
 const add = (parent, geo, mat, x = 0, y = 0, z = 0, shadow = true) => { const m = new THREE.Mesh(geo, mat); m.position.set(x, y, z); m.castShadow = shadow; m.receiveShadow = true; parent.add(m); return m; };
 const box = (w, h, d) => new THREE.BoxGeometry(w, h, d);
@@ -295,7 +332,12 @@ const floorTex = tex(1024, 1024, (x, w, h) => {
   x.strokeStyle = 'rgba(255,255,255,.035)'; x.lineWidth = 2; for (let i = 0; i <= 8; i++) { x.beginPath(); x.moveTo(i*w/8, 0); x.lineTo(i*w/8, h); x.moveTo(0, i*h/8); x.lineTo(w, i*h/8); x.stroke(); }
   const g = x.createRadialGradient(w/2, h/2, h*.15, w/2, h/2, h*.75); g.addColorStop(0, 'rgba(0,0,0,0)'); g.addColorStop(1, 'rgba(0,0,0,.65)'); x.fillStyle = g; x.fillRect(0, 0, w, h);
 }, [3, 2]);
-const floor = new THREE.Mesh(new THREE.PlaneGeometry(90, 60), std(0xffffff, { map:floorTex, roughness:.85, metalness:.1 })); floor.rotation.x = -Math.PI/2; floor.receiveShadow = true; scene.add(floor);
+const floorBump = tex(512, 512, (x, w, h) => {                          // height map: grainy stone + recessed tile joints (same 8×8 grid as floorTex)
+  x.fillStyle = '#808080'; x.fillRect(0, 0, w, h);
+  for (let i = 0; i < 5000; i++) { const v = 96 + Math.random()*64 | 0; x.fillStyle = `rgba(${v},${v},${v},.5)`; x.fillRect(Math.random()*w, Math.random()*h, 1 + Math.random()*3, 1 + Math.random()*3); }
+  x.strokeStyle = '#202020'; x.lineWidth = 3; for (let i = 0; i <= 8; i++) { x.beginPath(); x.moveTo(i*w/8, 0); x.lineTo(i*w/8, h); x.moveTo(0, i*h/8); x.lineTo(w, i*h/8); x.stroke(); }
+}, [3, 2]); floorBump.colorSpace = THREE.NoColorSpace;
+const floor = new THREE.Mesh(new THREE.PlaneGeometry(90, 60), std(0xffffff, { map:floorTex, bumpMap:floorBump, bumpScale:1.2, roughness:.62, metalness:.15, envMapIntensity:.22 })); floor.rotation.x = -Math.PI/2; floor.receiveShadow = true; scene.add(floor);
 const rowMats = ROWZ.map((z) => { const m = new THREE.MeshBasicMaterial({ color:0x2a2440, transparent:true, opacity:.6, depthWrite:false, toneMapped:false }); const r = new THREE.Mesh(new THREE.PlaneGeometry(60, 5.6), m); r.rotation.x = -Math.PI/2; r.position.set(0, CYW, z); r.renderOrder = -10; m.depthTest = false; scene.add(r); return m; });
 const bandStrip = new THREE.Mesh(new THREE.PlaneGeometry(46, 2.1), new THREE.MeshBasicMaterial({ color:0x07050f, transparent:true, opacity:.7, depthWrite:false, toneMapped:false })); bandStrip.rotation.x = -Math.PI/2; bandStrip.position.set(0, .02, 0); scene.add(bandStrip);
 const winMat = { map:null, needsUpdate:false };                         // (old room window removed — kept so the phase presets stay unchanged)
@@ -341,6 +383,14 @@ const backTex = tex(300, 417, (x, w, h) => {
   x.fillStyle = '#f5c451'; x.font = '70px system-ui'; x.textAlign = 'center'; x.textBaseline = 'middle'; x.fillText('💀', 0, 6);
   x.setTransform(1, 0, 0, 1, 0, 0); x.fillStyle = '#d8b050'; x.font = '700 20px serif'; x.textAlign = 'center'; x.fillText('DEADLINE', w/2, h - 68); x.fillText('NECROMANCER', w/2, h - 42);
 });
+// foil glint: one shared additive shader; a soft diagonal highlight sweeps each card, phase-shifted by the card's world position so it travels across the board as a wave
+const sheenMat = new THREE.ShaderMaterial({ transparent:true, depthWrite:false, blending:THREE.AdditiveBlending, toneMapped:false, fog:false, uniforms:{ uT:{ value:0 } },
+  vertexShader:`varying vec2 vUv; varying float vOff; void main(){ vUv = uv; vOff = modelMatrix[3].x*.045 + modelMatrix[3].z*.03; gl_Position = projectionMatrix*modelViewMatrix*vec4(position, 1.); }`,
+  fragmentShader:`uniform float uT; varying vec2 vUv; varying float vOff;
+    void main(){ float p = fract(uT*.11 + vOff), d = (vUv.x + vUv.y*.35) - (p*3.2 - .9);
+      float band = exp(-d*d*70.) + .35*exp(-(d - .16)*(d - .16)*500.); vec2 e = min(vUv, 1. - vUv);
+      gl_FragColor = vec4(vec3(1., .93, .78)*band*.055*smoothstep(0., .04, min(e.x, e.y)), 1.); }` });
+const sheenGeo = new THREE.PlaneGeometry(CARD_W, CARD_H);
 const cardCache = {};
 function cardTex(key) { if (!cardCache[key]) { const t = texLoader.load(CARD_DIR + ROLE[key].img); t.colorSpace = THREE.SRGBColorSpace; t.anisotropy = 8; cardCache[key] = t; } return cardCache[key]; }
 function buildStandee(root, roleKey) {
@@ -349,13 +399,14 @@ function buildStandee(root, roleKey) {
   halo.position.set(0, .14 + CARD_H/2, -.12); root.add(halo);
   const pivot = new THREE.Group(); pivot.position.y = .15 + CARD_H/2; root.add(pivot);
   { const fw = CARD_W + .2, fh = CARD_H + .2, bt = .1, dp = .16, G = gold();            // slab + four raised bevelled rails = 2.5D frame; the art itself stays a flat 2D plane
-    add(pivot, box(fw, fh, .06), std(0x120d22, { roughness:.6 }), 0, 0, -.02);
+    add(pivot, box(fw, fh, .06), std(0x120d22, { roughness:.45, metalness:.2 }), 0, 0, -.02);
     add(pivot, box(fw, bt, dp), G, 0, fh/2 - bt/2, 0); add(pivot, box(fw, bt, dp), G, 0, -fh/2 + bt/2, 0);
     add(pivot, box(bt, fh - 2*bt, dp), G, -fw/2 + bt/2, 0, 0); add(pivot, box(bt, fh - 2*bt, dp), G, fw/2 - bt/2, 0, 0);
     for (const sx of [-1, 1]) for (const sy of [-1, 1]) add(pivot, box(bt*1.5, bt*1.5, dp + .05), G, sx*(fw/2 - bt/2), sy*(fh/2 - bt/2), 0); }
   const front = new THREE.Mesh(new THREE.PlaneGeometry(CARD_W, CARD_H), new THREE.MeshBasicMaterial({ map:roleKey ? cardTex(roleKey) : null, toneMapped:false, transparent:true })); front.position.z = .035; pivot.add(front);
   const back = new THREE.Mesh(new THREE.PlaneGeometry(CARD_W, CARD_H), new THREE.MeshBasicMaterial({ map:backTex, toneMapped:false })); back.rotation.y = Math.PI; back.position.z = -.055; pivot.add(back);
-  return { pivot, halo, front, back, flip:1 };
+  const sheen = [new THREE.Mesh(sheenGeo, sheenMat), new THREE.Mesh(sheenGeo, sheenMat)]; sheen[0].position.z = .04; sheen[1].position.z = -.06; sheen[1].rotation.y = Math.PI; pivot.add(...sheen);
+  return { pivot, halo, front, back, sheen, flip:1 };
 }
 
 // =====================================================================
@@ -404,7 +455,7 @@ for (let i = 0; i < N; i++) {
   dk.ring = new THREE.Mesh(tor(.5, .03), ringM); dk.ring.rotation.x = Math.PI/2; dk.ring.position.y = .2; worker.add(dk.ring);
   dk.anchor = new THREE.Object3D(); dk.anchor.position.set(0, 2.15, .5); g.add(dk.anchor);
   const el = document.createElement('div'); el.className = 'tag'; el.textContent = NAMES[i]; labelsEl.appendChild(el); dk.el = el; dk.bd = document.createElement('div'); dk.bd.className = 'dbadge'; labelsEl.appendChild(dk.bd);
-  worker.traverse(o => { if (o.material) { (Array.isArray(o.material) ? o.material : [o.material]).forEach(mt => { mt.userData.c0 = mt.color.clone(); mt.userData.e0 = mt.emissiveIntensity; }); } });
+  worker.traverse(o => { if (o.material) { (Array.isArray(o.material) ? o.material : [o.material]).forEach(mt => { if (!mt.color) return; mt.userData.c0 = mt.color.clone(); mt.userData.e0 = mt.emissiveIntensity; }); } });
   g.children.forEach(o => { if (o !== worker && o !== dk.anchor) o.visible = false; });      // board layout: cards only — lecterns, candles and grimoires stay hidden
   worker.scale.setScalar(CSC); worker.position.set(0, 0, CZOFF); dk.anchor.position.set(0, CYW - 2.1*Math.cos(EL), 2.1*Math.sin(EL));
   desks.push(dk);
@@ -412,13 +463,18 @@ for (let i = 0; i < N; i++) {
 const fx = [];
 // ================= vote spotlight =================
 const spot = new THREE.SpotLight(0xffe2b0, 0, 18, .32, .5, 1); spot.position.set(0, 10, 0); scene.add(spot, spot.target);
-const beam = new THREE.Mesh(new THREE.ConeGeometry(1.5, 9, 28, 1, true), new THREE.MeshBasicMaterial({ color:0xffe2b0, transparent:true, opacity:0, blending:THREE.AdditiveBlending, depthWrite:false, side:THREE.DoubleSide, toneMapped:false })); beam.visible = false; scene.add(beam);
+// vote marker = a "judgement seal": ember glow + a small counter-rotating rune ring inside the big circle (replaces the old yellow light cone)
+const beam = new THREE.Group(); beam.rotation.x = -EL; beam.position.set(0, CYW, 0); beam.visible = false; scene.add(beam);
+const sealLayer = (sz, map, col) => { const m = new THREE.Mesh(new THREE.PlaneGeometry(sz, sz), new THREE.MeshBasicMaterial({ map, color:col, transparent:true, opacity:0, blending:THREE.AdditiveBlending, depthWrite:false, depthTest:false, toneMapped:false })); m.renderOrder = -8; beam.add(m); return m; };
+const sealGlow = sealLayer(7.5, dotTex, 0xff6a2a), sealRing = sealLayer(4.4, runes, 0xffc27a);
 let candidate = null;
 
 // ================= lights =================
 const hemi = new THREE.HemisphereLight(0xffffff, 0x3a2a66, 1); scene.add(hemi);
 const sun = new THREE.DirectionalLight(0xffffff, 1.5); sun.position.set(-6, 16, 12); sun.castShadow = true;
-sun.shadow.mapSize.set(2048, 2048); Object.assign(sun.shadow.camera, { left:-22, right:22, top:18, bottom:-18 }); sun.shadow.bias = -.0006; scene.add(sun);
+sun.shadow.mapSize.set(2048, 2048); Object.assign(sun.shadow.camera, { left:-22, right:22, top:18, bottom:-18 }); sun.shadow.bias = -.0006; sun.shadow.normalBias = .02; sun.shadow.camera.near = 2; sun.shadow.camera.far = 60; scene.add(sun);   // key (tight depth range → cleaner soft shadows)
+const fill = new THREE.DirectionalLight(0x7f9cff, .45); fill.position.set(14, 8, 6); scene.add(fill);                  // cool fill from camera-right, no shadows
+const rim = new THREE.DirectionalLight(0xb05cff, .9); rim.position.set(0, 9, -16); scene.add(rim);                     // back/rim light, tinted by the phase's rune colour
 
 // ambient particles
 const P = 260, pg = new THREE.BufferGeometry(), pp = new Float32Array(P*3), pv = [];
@@ -636,14 +692,28 @@ async function playFx(f) {
     case 'voteOut': { if (f.out == null) { D.stamp('ไม่มีใครถูกไล่ออก', '#9a92b8'); say('ไม่มีใครถูกไล่ออก'); await wait(1500); } else { const d = deskOf(f.out); fireDesk(d); flash(.25, '#fff'); say(`${nm(d)} ถูกไล่ออก`); await wait(2600); } break; }
   }
 }
+// ----- phase transition (morning / night / end game): title card over the stage + a kick to the rune circle and motes -----
+const pfxEl = document.getElementById('phaseFx');
+const PFX = { MORNING:['รุ่งอรุณ — ประชุมเช้า', st => `${DAY_FULL[st.day - 1] || ''} · วันที่ ${st.day}/5`], NIGHT:['ราตรีมาเยือน', () => 'ลัทธิอู้งานออกล่า…'], OVER:['จบเกม', () => 'Deadline มาถึงแล้ว'] };
+async function phaseFx(key, st) {
+  const P = PFX[key]; if (!P) return; phaseKick = 1;
+  if (RM) { say(P[0]); return; }                                   // reduced motion: plain text toast, no title card
+  pfxEl.dataset.k = key; pfxEl.querySelector('b').textContent = P[0]; pfxEl.querySelector('small').textContent = P[1](st);
+  pfxEl.classList.remove('go'); void pfxEl.offsetWidth; pfxEl.classList.add('go');
+  await wait(2600); pfxEl.classList.remove('go');
+}
 const played = [];   // every fx the screen handled (kind/role/key + done|err) — read by the e2e check via window.__mod3d
-async function pump() { if (playing) return; playing = true; while (fxQueue.length) { const f = fxQueue.shift(), rec = { kind:f.kind, role:f.role, key:f.key, caster:f.caster, pid:f.pid, out:f.out, trap:f.trap, accepted:f.accepted, t:Date.now() }; played.push(rec); try { await playFx(f); rec.done = true; } catch (e) { rec.err = String(e && e.stack || e); console.error('fx', f, e); } await wait(250); } playing = false; }
+async function pump() { if (playing) return; playing = true; while (fxQueue.length) { const f = fxQueue.shift(); if (f.kind === 'phase') { try { await phaseFx(f.key, f.st); } catch (e) { console.error('phaseFx', e); } continue; }   // local transition — not an engine fx, so not recorded in `played`
+  const rec = { kind:f.kind, role:f.role, key:f.key, caster:f.caster, pid:f.pid, out:f.out, trap:f.trap, accepted:f.accepted, t:Date.now() }; played.push(rec); try { await playFx(f); rec.done = true; } catch (e) { rec.err = String(e && e.stack || e); console.error('fx', f, e); } await wait(250); } playing = false; }
 // ----- engine state → scene -----
 const SCENE_PHASE = { MORNING:'MORNING', VOTE:'VOTE', VOTE_INTERIM:'VOTE', VOTE_RESULT:'VOTE', NIGHT:'NIGHT', OVER:'MORNING' };
-let hydrated = false, lastDay = null;
+let hydrated = false, lastDay = null, lastPhase = null, phaseKick = 0;
 function applyState(st) {
   if (lastDay != null && st.day !== lastDay) { clearBadges(); D.clearNight(); }          // new day → last night's skill icons + shield glows are cleared (the night's fx play after this state arrives)
   lastDay = st.day;
+  { const pk = st.phase === 'OVER' ? 'OVER' : SCENE_PHASE[st.phase];   // morning → front of the queue (before last night's fx), end game → after everything still queued
+    if (hydrated && pk !== lastPhase && PFX[pk]) { const f = { kind:'phase', key:pk, st }; pk === 'OVER' ? fxQueue.push(f) : fxQueue.unshift(f); pump(); }
+    lastPhase = pk; }
   curSt = st; if (!!st.secrets !== srvSecrets) applySecrets(st.secrets); renderChat(st); renderDark(st); desks.forEach(refreshLabel);
   day = st.day; mana = Math.max(0, Math.min(MANA_MAX, st.mana)); renderHud(); setPhaseQuiet(SCENE_PHASE[st.phase] || 'MORNING');
   document.getElementById('phase').textContent = ({ MORNING:'ประชุมเช้า', VOTE:'โหวตไล่ออก', VOTE_INTERIM:'พักโหวต — ผลรอบแรก', VOTE_RESULT:'ประกาศผลโหวต', NIGHT:'กลางคืน — แอ็กชันลับ', OVER:'จบเกม' })[st.phase] || st.phase;
@@ -654,7 +724,7 @@ function applyState(st) {
   const pd = st.pending || {}; document.getElementById('closeEv').style.display = pd.event ? '' : 'none'; document.getElementById('closeBo').style.display = pd.booster ? '' : 'none';
   if (pd.event) document.getElementById('closeEv').textContent = `📞 ปิดโหวต Event (${pd.event.done}/${pd.event.total})`; if (pd.booster) document.getElementById('closeBo').textContent = `🚀 ปิดโหวต Booster (${pd.booster.done}/${pd.booster.total})`;
   const w = pd.vote || pd.night; document.getElementById('waitTxt').textContent = w ? `${st.phase === 'NIGHT' ? 'แอ็กชันลับ' : 'โหวต'} ${w.done}/${w.total}` : '';
-  if (st.phase === 'OVER' && !applyState.over) { applyState.over = true; caption('🏁 จบเกม', (st.over && (st.over.why || st.over.text || JSON.stringify(st.over))) || '', 20000, 'boost over'); } if (st.phase !== 'OVER') applyState.over = false;
+  if (st.phase === 'OVER' && !applyState.over) { applyState.over = true; const showOver = () => { if (!applyState.over) return; if (playing || fxQueue.length) return void setTimeout(showOver, 300); caption('🏁 จบเกม', (st.over && (st.over.why || st.over.text || JSON.stringify(st.over))) || '', 20000, 'boost over'); }; showOver(); } if (st.phase !== 'OVER') applyState.over = false;   // banner waits for the fx queue to drain
 }
 const live = { applyState, setReveal, enqueue(batch) { fxQueue.push(...batch); pump(); } };
 window.__mod3d = { desks, played, get phase() { return phase; }, get day() { return day; }, get mana() { return mana; }, get manaMax() { return MANA_MAX; }, get secrets() { return secrets; }, get reveal() { return reveal; }, setReveal, get busy() { return playing || fxQueue.length > 0; }, get state() { return curSt; }, D, burn: i => burnDesk(desks[i]), chat: st => renderChat(st), snap() { if (!frame.A) return; layoutT = 0; desks.forEach(d => { const t = frame.A.pos[d.i]; d.g.position.set(t.x, 0, t.z); if (d.state === 'alive') { d.flip = (secrets || (curSt && curSt.phase === 'OVER')) ? 0 : 1; d.pivot.rotation.y = d.flip*Math.PI; } }); } };   // test hook (snap = skip the card-flight animation)
@@ -688,9 +758,14 @@ function frame() {
   for (const [key, h] of [['bg', T.bg], ['hemiG', T.hemiG], ['sunC', T.sunC], ['rune', T.rune], ['mon', T.mon], ['partC', T.partC]]) cur[key].lerp(tmpC.set(h), k);
   for (const key of ['hemi', 'sun', 'runeOp', 'part', 'spot', 'torch', 'r', 'h']) cur[key] += (T[key] - cur[key]) * k;
   scene.background.copy(cur.bg); scene.fog.color.copy(cur.bg);
-  hemi.intensity = cur.hemi*D.state.lightMul; hemi.groundColor.copy(cur.hemiG); sun.intensity = cur.sun*D.state.lightMul; sun.color.copy(cur.sunC);
+  const LM = D.state.lightMul, mo = RM ? 0 : 1;                       // mo = 0 → all ambient micro-motion off (prefers-reduced-motion)
+  scene.fog.density = FOG_D*(1 + mo*Math.sin(t*.3)*.08);
+  hemi.intensity = cur.hemi*LM; hemi.groundColor.copy(cur.hemiG); sun.intensity = cur.sun*LM*(1 + mo*Math.sin(t*.7)*.03); sun.color.copy(cur.sunC);
+  fill.intensity = (.2 + .3*cur.hemi)*LM; rim.color.copy(cur.rune); rim.intensity = (.45 + .6*cur.runeOp)*LM; rim.position.x = mo*Math.sin(t*.22)*9;   // rim drifts → highlights glide over the gilt frames
+  { const ek = (.35 + .65*Math.min(1, cur.hemi))*LM; for (const m of envMats) m.envMapIntensity = m.userData.env0*ek; }
+  sheenMat.uniforms.uT.value = t; runeGroup.scale.setScalar(1 + mo*(Math.sin(t*.5)*.015 + phaseKick*.1));
   torchLights.forEach((l, i) => l.intensity = (6 + cur.torch*14) * (.9 + Math.sin(t*9 + i*2)*.1));
-  runeFace.material.color.copy(cur.rune); runeFace.material.opacity = cur.runeOp*.55*(.85 + .15*Math.sin(t*2)); runeFace.rotation.z += RM ? 0 : dt*.06;
+  runeFace.material.color.copy(cur.rune); runeFace.material.opacity = cur.runeOp*.55*(.85 + .15*Math.sin(t*2)); runeFace.rotation.z += RM ? 0 : dt*(.06 + phaseKick*2.2); phaseKick *= Math.pow(.12, dt);   // phase change → the circle spins up, then eases back
   if (winMat.map !== T.sky) { winMat.map = T.sky; winMat.needsUpdate = true; }
   pm.color.copy(cur.partC); pm.opacity = cur.part * .8;
   flames.forEach((f, i) => { f.scale.set(1, .85 + Math.sin(t*10 + i*1.7)*.2, 1); });
@@ -700,8 +775,9 @@ function frame() {
 
   const tgt = candidate && phase === 'VOTE' ? candidate.g.getWorldPosition(v).multiplyScalar(.55) : v.set(0, 1.6, 0);
   tgt.y = 1.6; cur.tgt.lerp(tgt, k);
-  if (candidate && phase === 'VOTE') { candidate.worker.getWorldPosition(spot.target.position); spot.position.set(spot.target.position.x, 10, spot.target.position.z); beam.position.set(spot.target.position.x, 5, spot.target.position.z); }
-  spot.intensity = cur.spot * 260; beam.visible = cur.spot > .05; beam.material.opacity = cur.spot * .1;
+  if (candidate && phase === 'VOTE') { candidate.worker.getWorldPosition(spot.target.position); spot.position.set(spot.target.position.x, 10, spot.target.position.z); beam.position.set(spot.target.position.x, CYW, spot.target.position.z); } else beam.position.set(0, CYW, 0);
+  spot.intensity = cur.spot*(candidate ? 260 : 50); beam.visible = cur.spot > .05;
+  sealRing.material.opacity = cur.spot*.8*(.8 + .2*Math.sin(t*3)); sealGlow.material.opacity = cur.spot*.15*(.75 + .25*Math.sin(t*2.2)); sealRing.rotation.z -= RM ? 0 : dt*.5;
 
   camPos.copy(CAM_BASE); camLook.copy(CAM_LOOK);
   if (punch) {                                                       // short push-in toward the revealed card, then settle back
@@ -724,9 +800,10 @@ function frame() {
     const faceUp = d.state === 'fired' || ((secrets || (curSt && curSt.phase === 'OVER')) && (d.state === 'alive' || d.state === 'burnout'));       // flip card to show the role art
     d.flip += ((faceUp ? 0 : 1) - d.flip)*(1 - Math.pow(.0015, dt)); d.pivot.rotation.y = d.flip*Math.PI;
     const TILT = -EL; d.worker.rotation.y = 0;   // card plane faces the camera head-on (flat 2D read)
+    { const sw = RM || d.state !== 'alive' ? 0 : 1; d.pivot.rotation.z = sw*Math.sin(t*.9 + d.bob)*.012; d.pivot.rotation.x = sw*Math.sin(t*.7 + d.bob*1.3)*.02;   // idle sway (alive cards only)
+      d.sheen[0].visible = d.sheen[1].visible = !!sw; }
     if (d.state === 'alive') { d.worker.rotation.x = TILT;
       d.pivot.position.y = .15 + CARD_H/2 + .06 + Math.sin(t*1.8 + d.bob)*.04 + Math.sin(d.flip*Math.PI)*.18;             // hover + lift while flipping
-      d.pivot.rotation.z = 0;
       d.hm.color.copy(d.fxColor || cur.mon); d.ring.material.opacity += ((showAura ? .7 : 0) - d.ring.material.opacity)*k; d.halo.material.opacity += ((faceUp ? .35 : 0) - d.halo.material.opacity)*k;
     } else if (d.state === 'burnout') {
       const u = Math.min(1, d.t*1.2); d.worker.rotation.x = TILT; tint(d, u);                 // stays upright: grey card + skull instead of lying down
@@ -755,7 +832,7 @@ function frame() {
   }
   layoutLabels(); updateSides();
   for (const c of fx) { c.t += dt; const u = Math.min(1, c.t/1.2); c.card.position.y = 1.2 + u*1.5 + Math.sin(t*1.5)*.04; c.card.scale.setScalar(.2 + u*.8); c.card.rotation.y = (1 - u)*Math.PI*2 + Math.sin(t*.8)*.1; }
-  const a = pg.attributes.position; for (let i = 0; i < P; i++) { let y = a.getY(i) + pv[i]*dt; if (y > 7) y = 0; a.setY(i, y); a.setX(i, a.getX(i) + Math.sin(t + i)*dt*.2); } a.needsUpdate = true;
+  const a = pg.attributes.position; for (let i = 0; i < P; i++) { let y = a.getY(i) + pv[i]*dt*(1 + phaseKick*7); if (y > 7) y = 0; a.setY(i, y); a.setX(i, a.getX(i) + Math.sin(t + i)*dt*.2); } a.needsUpdate = true;
   D.postCamera(); composer.render();
   requestAnimationFrame(frame);
 }

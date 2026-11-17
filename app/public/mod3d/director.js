@@ -262,18 +262,21 @@ export function createDirector(env) {
   //  🪤 TRAPS — placement is secret (Moderator view only); the trigger announces the NAME only
   //  trapPlace:   { owner, target? }          trapTrigger: { owner, target?, inspector?, victim?, mana? }
   // =====================================================================
-  const TRAP_ICON = { blame:'👉', honeypot:'🍯', alibi:'🪞', hijack:'📢', insurance:'☂️', exit:'🚪' };
+  const TRAP_ICON = { blame:'🗡️', honeypot:'🍯', alibi:'🪞', hijack:'📢', insurance:'☂️', exit:'🚪' };
   const TRAP_COLOR = { blame:0xff4d5e, honeypot:0xffb050, alibi:0x7fe3ff, hijack:0xff9a4d, insurance:0xf5c451, exit:0xb05cff };
   const placedTraps = [];
   function trapPlace(key, { owner, target } = {}) {
     const T = TRAPS[key], t = target != null ? D_(target) : null, col = TRAP_COLOR[key];
     const g = new THREE.Group(), glyph = new THREE.Mesh(new THREE.PlaneGeometry(t ? 1.5 : 5.6, t ? 1.5 : 5.6), new THREE.MeshBasicMaterial({ map:assets.runes, color:col, transparent:true, opacity:0, blending:THREE.AdditiveBlending, depthWrite:false, toneMapped:false })); glyph.rotation.x = -Math.PI/2; glyph.position.y = .08; g.add(glyph);
-    const icon = sprite(TRAP_ICON[key], .7); icon.visible = false; g.add(icon); scene.remove(icon); g.add(icon);
-    const mini = new THREE.Mesh(new THREE.PlaneGeometry(.55, .75), new THREE.MeshBasicMaterial({ map:loadTex(env.THUMB + 'traps/' + T.img), transparent:true, side:THREE.DoubleSide, toneMapped:false })); mini.visible = false; g.add(mini);
-    if (t) { t.g.add(g); g.position.set(0, 0, .5); icon.position.set(0, 2.9, 0); mini.position.set(0, 2.2, 0); } else { scene.add(g); icon.position.set(0, 3.2, 3.4); mini.position.set(0, 2.4, 3.4); }
-    const h = { key, owner:D_(owner), target:t, g, glyph, icon, mini, col }; placedTraps.push(h);
-    items.push((dt, tm) => { if (!placedTraps.includes(h)) return true; h.glyph.material.opacity += ((sec() ? .75 + Math.sin(tm*4)*.15 : 0) - h.glyph.material.opacity)*.15; h.glyph.rotation.z += dt*.8; h.icon.visible = h.mini.visible = sec(); h.icon.position.y += Math.sin(tm*3)*.002;
-      h.mini.rotation.y = Math.atan2(camera.position.x, camera.position.z) - (h.target ? h.target.g.rotation.y : 0); return false; });
+    // marker = the trap's own card art in a gilt frame with a trap-coloured glow, facing the camera (no floating emoji)
+    const sz = t ? .65 : 1.15, icon = new THREE.Group(); icon.visible = false; g.add(icon);
+    const layer = (w, hh, o, n) => { const m = new THREE.Mesh(new THREE.PlaneGeometry(w, hh), new THREE.MeshBasicMaterial({ transparent:true, depthWrite:false, depthTest:false, toneMapped:false, ...o })); m.position.z = n*.01; m.renderOrder = 20 + n; icon.add(m); };
+    layer(sz*2.4, sz*2.7, { map:assets.dotTex, color:col, opacity:.6, blending:THREE.AdditiveBlending }, 0);
+    layer(sz + .1, sz*1.39 + .1, { color:0xd8b050 }, 1); layer(sz, sz*1.39, { map:loadTex(env.THUMB + 'traps/' + T.img) }, 2);
+    if (t) { t.g.add(g); g.position.set(0, 0, .5); icon.position.set(-1.05, 3.2, 0); } else   // pinned to the target card's top-left corner (debuff badges use the top-right)
+    { scene.add(g); icon.position.set(0, 2.6, 3.4); }
+    const h = { key, owner:D_(owner), target:t, g, glyph, icon, y0:icon.position.y, col }; placedTraps.push(h);
+    items.push((dt, tm) => { if (!placedTraps.includes(h)) return true; h.glyph.material.opacity += ((sec() ? .75 + Math.sin(tm*4)*.15 : 0) - h.glyph.material.opacity)*.15; h.glyph.rotation.z += dt*.8; h.icon.visible = sec(); h.icon.position.y = h.y0 + Math.sin(tm*2)*.06; h.icon.quaternion.copy(camera.quaternion); return false; });
     if (sec()) ui.caption(`🪤 [Moderator] ฝ่ายมืดหมอบ Trap: ${T.n}`, `${T.d}\nเป้าหมาย: ${t ? nm(t) + ' · ' + ROLE[t.role].n : 'ไม่ต้องเลือกเป้า (ทำงานส่วนกลาง)'}`, 8000, 'trap'); else ui.say('ฝ่ายมืดเลือกแอ็กชันแล้ว…');
     return h;
   }
