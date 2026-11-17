@@ -4,6 +4,7 @@
 // It joins the room twice more as Moderator: a "truth" spectator socket (full view, like the 3D page itself) and a controller
 // socket that plays Moderator (start → close polls → vote → night → …) until the game is over. After every step it waits for the
 // 3D page to finish playing its fx queue and then compares the scene with what the ENGINE says:
+//   chat: every morning-chat message in the engine feed is on the 3D chat panel (bots chat with lines from docs/deadline_necromancer_strategy.md; dark bots use the night chat)
 //   day / mana / phase label + lighting phase, desk count, every player's alive|fired|burnout state, role, card art, label text,
 //   and the fx stream (same count, order and kind as the engine emitted, each one completed without error).
 // Result: window.__e2e = { fails:[…], checks, done, log, summary }   — an empty `fails` means the screen matched the game.
@@ -42,6 +43,9 @@
         if (!d.front.material.map) fail(`${tag}: ${p.name} card art missing`);
         if (d.el.textContent.indexOf(p.name) < 0) fail(`${tag}: name plate lost name for ${p.name}`);
       });
+      const chat = (T.feed || []).filter(x => x.kind === 'chat'), shown = document.querySelectorAll('#chatLog .m').length;   // morning chat from the bots (strategy lines + emoji) must all be on the 3D chat panel
+      if (shown !== chat.length) fail(`${tag}: chat panel shows ${shown} messages, engine feed has ${chat.length}`);
+      E.chatMax = Math.max(E.chatMax || 0, chat.length); E.darkChatMax = Math.max(E.darkChatMax || 0, (T.darkChat || []).length);
       const f = truth.fx, pl = m.played; if (pl.length !== f.length) fail(`${tag}: fx count scene=${pl.length} engine=${f.length}`);
       for (let i = 0; i < Math.min(f.length, pl.length); i++) {
         if (f[i].kind !== pl[i].kind || sig(f[i]) !== sig(pl[i])) { fail(`${tag}: fx #${i} engine=${f[i].kind}/${sig(f[i])} scene=${pl[i].kind}/${sig(pl[i])}`); break; }
@@ -56,7 +60,7 @@
       if (ph === 'MORNING') {
         await waitFor(() => !pd().event || pd().event.done === pd().event.total, 20000, 'event votes'); if (pd().event) await act('closeEvent');
         await waitFor(() => !pd().booster || pd().booster.done === pd().booster.total, 20000, 'booster votes'); if (pd().booster) await act('closeBooster');
-        await settle(E.step + ' polls'); check('morning polls closed d' + d); await act('toVote');
+        await waitFor(() => (truth.st.feed || []).some(x => x.kind === 'chat'), 15000, 'morning chat'); await settle(E.step + ' polls'); check('morning polls closed d' + d); await act('toVote');
       } else if (ph === 'VOTE') { await waitFor(() => { const v = pd().vote; return !v || v.done === v.total; }, 25000, 'votes'); await act('closeVote'); }
       else if (ph === 'VOTE_INTERIM') await act('openRound2');
       else if (ph === 'VOTE_RESULT') await act('toNight');
@@ -64,6 +68,8 @@
       await sleep(500);
     }
     E.step = 'end'; await settle('end'); check('game over'); E.log.push('OVER: ' + JSON.stringify((truth.st.over && (truth.st.over.why || truth.st.over.side)) || ''));
+    if (!E.chatMax) fail('no morning chat was ever sent (bots should chat — is STRATEGY=0 set?)'); if (!E.darkChatMax) fail('no dark night chat was ever seen on the spectator state');
+    E.log.push(`chat: max ${E.chatMax} morning msgs, ${E.darkChatMax} dark night msgs`);
     E.summary = {}; M().played.forEach(r => { const k = r.kind + (r.role ? ':' + r.role : r.key ? ':' + r.key : r.trap ? ':' + r.trap : ''); E.summary[k] = (E.summary[k] || 0) + 1; });
   } catch (e) { fail('CRASH ' + (e && e.stack || e)); }
   window.__jsErrs.forEach(x => fail('page error: ' + x));
