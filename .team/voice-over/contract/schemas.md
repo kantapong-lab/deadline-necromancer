@@ -25,7 +25,7 @@ canSpeak(pid, opts)  // -> boolean, pure, no mutation, no RNG
 | `sdp` (offer/answer) | string, `1 <= length <= 10000`; absent/other type -> ignore |
 | `cand` (ice) | `null`, or object with `candidate` string `<= 512`, `sdpMid` string `<= 64` or null, `sdpMLineIndex` integer `0..64` or null, `usernameFragment` string `<= 64` or absent; else ignore |
 | extra fields | dropped; the relayed object is rebuilt from the whitelist (`{from, kind, sdp}` or `{from, kind, cand}`), never the client object |
-Rate limit: per socket, fixed window 1000 ms, max **150** `v:sig` (an ICE burst from one speaker opening 12 connections is about 100-120); the 151st+ in the window are dropped silently. `voice:on`: same bucket type, max 20 per window. Constants live at the top of `voice.js` so tests can read them. Socket.IO `maxHttpBufferSize` stays default; field caps above bound work per message.
+Rate limit: per socket, fixed window 1000 ms, max **600** `v:sig` (an ICE burst from one speaker opening 12 connections is about 100-120); the 601st+ in the window are dropped silently. `voice:on`: same bucket type, max 20 per window. Constants live at the top of `voice.js` so tests can read them. Socket.IO `maxHttpBufferSize` stays default; field caps above bound work per message.
 
 ## Relay link rules (server-side truth; client fields are never trusted)
 - `offer` S->R: sender is a player pid, `g.canSpeak(S)` live, R registered and connected. Records link `S>R`.
