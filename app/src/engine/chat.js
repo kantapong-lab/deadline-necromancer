@@ -4,6 +4,11 @@ const { EMOJIS, PURGE_MSGS, PURGE_LEN } = require('./constants');
 
 // Chat
 module.exports = {
+  // Voice rule (single source). publicOnly skips ONLY the silenced term: the flag receiver-facing events may use.
+  canSpeak(pid, opts) {
+    const p = this.P(pid);
+    return !!p && !!p.alive && (this.phase === 'MORNING' || this.phase === 'VOTE_INTERIM') && !this.paused && !!((opts && opts.publicOnly) || !p.silenced);
+  },
   chat(pid, text) {
     const p = this.P(pid); if (!p || !p.alive) return 'ผู้เล่นที่ออกจากเกมแล้วพิมพ์ไม่ได้';
     if (this.phase !== 'MORNING' && this.phase !== 'VOTE_INTERIM') return 'พิมพ์แชทได้เฉพาะช่วงประชุมเช้า';
