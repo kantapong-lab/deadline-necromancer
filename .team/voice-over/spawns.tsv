@@ -11,3 +11,4 @@
 4	backend-dev	sonnet	low	2	pass	0	tok:n/a
 4	backend-dev	haiku	low	3	pass	0	tok:n/a
 6	code-reviewer	sonnet	low	3	pass	0	tok:n/a
+7	qa-tester	sonnet	low	1	pass	0	tok:n/a
