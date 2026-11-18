@@ -1,5 +1,5 @@
 # Checkpoint: change-data-oracle-correlation
-Updated: step 2 · round 1
+Updated: step 6 · round 1
 ## Goal
 redesign — Data Oracle skill rework + 2 card-text fixes (deadline-necromancer, app/)
 1. Data Oracle (`data_oracle`, app/src/shared/data.js:13) — replace "KPI Forecast" with Data Correlation: pick 2 other players (t:2, pool:'others', no self); result next morning "Data Correlation: X กับ Y → อยู่ทีมเดียวกัน 🔗" or "→ อยู่คนละทีม ⛓️‍💥", never says which team. Team = real faction, 3-way light/dark/indie (two indies = same team). Card text: "เลือกเพื่อน 2 คน เช้าถัดไปรู้ว่าทั้งคู่อยู่ทีมเดียวกันหรือคนละทีม (ไม่บอกว่าทีมไหน)". Alibi Mirror: dark target with fresh Alibi counts as light. Honeypot on either target flips same↔different. Debug Scanner fixNotes get the true result. Power Outage → no info. Honeypot card text includes Data Oracle. Remove old output (work vs bug counts, light-alive count); update 3D fx payload. Defaults from existing rules: no repeat target on consecutive nights, usable night 1, swappable by Scope Creep/Hot Desking, appears in Rune UX, Mystery Intern can copy, Glory Thief can steal.
@@ -27,5 +27,7 @@ None.
 
 ## History
 - step 2 r1: ac.md: 9 ACs + Unchanged [2-r1]
+- step 6 r1: Approve, 5 suggestions, V-1 deviation accepted [6-r1]
 
 [2-r1]: rounds/2-r1.md
+[6-r1]: rounds/6-r1.md
