@@ -2,7 +2,7 @@
 const { MIN_PLAYERS, MAX_PLAYERS } = require('../engine');
 
 const crypto = require('crypto');
-const { syncVoice } = require('./handlers/voice');   // one-way: voice.js must never require this file
+const { syncVoice } = require('./handlers/voice');
 
 const rooms = new Map();
 // Tokens and room codes use the OS CSPRNG, never Math.random: the game engine shuffles roles with Math.random, so a
@@ -30,7 +30,6 @@ function createPushState(io) {
     // presentation events for the 3D Moderator screen: drained every push (so they never pile up), sent to Moderator sockets only,
     // and redacted like modView(secrets) — skills / curses / trap placement only travel while Secrets are on
     if (g) { const batch = g.drainFx(); if (batch.length) { const out = g.redactFx(batch, room.secrets); for (const sid of room.modSockets) { const o = room.fullSockets && room.fullSockets.has(sid) ? batch : out; if (o.length) io.to(sid).emit('fx', o); } } }
-    // voice: re-evaluate canSpeak for every registered endpoint. LAST statement; never throws (a throw here kills every handler)
     try { syncVoice(io, room); } catch (e) { console.error('syncVoice', e); }
   };
 }

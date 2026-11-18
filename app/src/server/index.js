@@ -13,7 +13,6 @@ const registerPlayer = require('./handlers/player');
 const registerVoice = require('./handlers/voice');
 
 const PORT = process.env.PORT || 3000;
-// HTTPS (needed for the phone mic): both HTTPS_KEY and HTTPS_CERT (PEM file paths) -> https/wss; none -> plain http; anything else fails fast.
 let tls = null;
 if (process.env.HTTPS_KEY || process.env.HTTPS_CERT) {
   try {

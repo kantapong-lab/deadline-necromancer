@@ -1,8 +1,6 @@
-// Voice signalling (WebRTC mesh): voice:on registry, v:sig relay gate, syncVoice re-evaluation.
-// Depends on the engine only (never require('../rooms'): rooms.js requires this file for syncVoice).
 const { MAX_PLAYERS } = require('../../engine');
 
-const SIG_MAX = 150, SIG_WINDOW_MS = 1000, ON_MAX = 20;
+const SIG_MAX = 600, SIG_WINDOW_MS = 1000, ON_MAX = 20;
 const SDP_MAX = 10000, CAND_MAX = 512, STR_MAX = 64, ICE_MAX = 8;
 
 const ack = (cb, v) => { if (typeof cb === 'function') cb(v); };
@@ -63,7 +61,7 @@ function emitDrop(io, r, pid) {
 function syncVoice(io, r) {
   const vr = r && r.voice; if (!vr) return;
   const g = r.game || null;
-  if (g !== vr.game) {                       // new game or reset: pids reshuffled, links are void, endpoints must re-offer
+  if (g !== vr.game) {
     vr.game = g; vr.links.clear();
     for (const m of r.members) if (m.voice) m.voice.gen = ++vr.gen;
     if (vr.mod) vr.mod.gen = ++vr.gen;
@@ -130,13 +128,13 @@ module.exports = function registerVoice(socket, { io, ctx, member }) {
       }
       const g = r.game;
       const can = g.canSpeak(m.pid);
-      if (m.voice && m.voice.sock === socket.id && m.voice.pid === m.pid) {   // idempotent
+      if (m.voice && m.voice.sock === socket.id && m.voice.pid === m.pid) {
         return ack(cb, { ok: true, iceServers: ICE_SERVERS, permit: can, gen: m.voice.gen, peers: peersList(r).filter(p => p.to !== m.pid) });
       }
       const replaced = !!m.voice;
       dropLinks(vr, linksTouching(m.pid));
       m.voice = { sock: socket.id, gen: ++vr.gen, pid: m.pid, can, pub: g.canSpeak(m.pid, { publicOnly: true }) };
-      if (replaced) emitDrop(io, r, m.pid);   // receivers close any stale inbound from the old registration
+      if (replaced) emitDrop(io, r, m.pid);
       emitPeers(io, r, false);
       return ack(cb, { ok: true, iceServers: ICE_SERVERS, permit: can, gen: m.voice.gen, peers: peersList(r).filter(p => p.to !== m.pid) });
     } catch (e) { console.error('voice:on', e); ack(cb, { ok: false, error: 'ผิดพลาด' }); }
@@ -169,7 +167,6 @@ module.exports = function registerVoice(socket, { io, ctx, member }) {
       }
       const r = ctx(); if (!r || !r.voice) return;
       const vr = r.voice, g = r.game;
-      // sender
       let me, m = null;
       if (socket.data.mod) {
         if (!(r.fullSockets && r.fullSockets.has(socket.id) && vr.mod && vr.mod.sock === socket.id)) return;
@@ -180,7 +177,6 @@ module.exports = function registerVoice(socket, { io, ctx, member }) {
         me = m.pid;
       }
       if (tgt === me) return;
-      // target
       let tsock = null;
       if (tgt === 'mod') {
         if (me === 'mod') return;
@@ -190,7 +186,6 @@ module.exports = function registerVoice(socket, { io, ctx, member }) {
         if (tm) tsock = regSock(tm);
       }
       if (!tsock) return;
-      // gate
       const sp = me === 'mod' ? false : g && g.canSpeak(me);
       if (kind === 'offer') {
         if (me === 'mod' || !sp) return;

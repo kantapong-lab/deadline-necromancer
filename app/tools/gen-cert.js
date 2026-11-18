@@ -1,6 +1,3 @@
-// Self-signed cert for the LAN so phones get a secure context (mic needs https).
-//   node tools/gen-cert.js [lanIp]      -> writes app/.certs/voice.key + voice.crt, prints the start commands
-// Needs the `openssl` CLI (>= 1.1.1 for -addext). No npm deps.
 const os = require('os');
 const fs = require('fs');
 const path = require('path');

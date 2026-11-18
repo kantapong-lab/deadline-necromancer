@@ -6,5 +6,4 @@ app/node_modules/
 .team/**/logs/
 .team/onboard/pending.json
 
-# voice-over: local self-signed certs (tools/gen-cert.js)
 app/.certs/
