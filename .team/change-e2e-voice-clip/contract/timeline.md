@@ -51,12 +51,18 @@ Samples of R inside the window; `per[sid]` mapped to seat; per seat: `rms` = med
 | AC-4 | `other players' UI shows no mute/silence text` | per page, matches of the `leaks` regex from `e2e-voice-browser.js` (NDA, Silence, silenc, ปิดปาก, mute, Burnout; case-insensitive) after the replay are a subset of the matches before |
 | AC-4 | `unsilenced: P05 reconnected` | step 6 poll reached |
 | AC-4 | `unsilenced P05 slot: heard on mod3d` / `... on P01` | `heard(4)` and `quiet(others)` |
-| AC-5 | `toVote accepted, phase VOTE` | `r.ok` and `G.phase === 'VOTE'` |
+| AC-5 | `toVote accepted, MORNING left (day 1: VOTE_RESULT)` | `r.ok` and `G.phase !== 'MORNING'` (D-3: the engine skips the vote on day 1 and goes to VOTE_RESULT) |
 | AC-5 | `toVote: no connected peers on any of 13 pages` | poll reached |
-| AC-5 | `toVote: no inbound audio on mod3d and P01` | max `mixRms` over W < `T_OFF` on both |
+| AC-5 | `toVote: no inbound audio on mod3d and P01` | `>= MIN_SAMPLES` samples in W and max `mixRms` over W < `T_OFF` on both (empty window fails, B-1) |
 | AC-6 | `13 page videos and 2 audio recordings saved` | files exist and are non-empty |
 | AC-6 | `clip voice-e2e.mp4 written (video + audio)` | clip.md |
 | AC-6 | `no JS errors on any page, hooks healthy` | `errs` empty and every `__dn.errors` empty |
 | AC-7 | startup `ffmpeg` line | cli.md |
 
 Timeline entries (schemas.md) are written for steps 3-7 whether or not the check passes.
+
+## Round 2: speech + pilot (user change)
+
+- Mic per seat = Thai speech (`say -v Kanya -r <rate>`, one line per seat, looped while on) + pilot sine at `PILOT_BASE + PILOT_STEP*seat` Hz (4000 + 150*seat, about -30 dB under the speech). No `say` / not darwin: WARN, the old sine 220+40*seat Hz replaces the speech.
+- Slots: `SLOT_MS` 2600, `SETTLE_MS` 800, `GAP_MS` 400 of silence before each slot (drains the previous talker's tail), `ALL_MS` 3500. Clip about 65 s.
+- Seat identity = peak inside the pilot band only (bin must be within `BIN_TOL` of the seat's pilot bin). Heard = pilot >= `P_ON` dB and speech rms >= `T_SPEECH`; quiet = pilot < `P_OFF` dB and rms < `T_OFF`. Measured pilot Hz / dB and speech rms are in `report.json` timeline.

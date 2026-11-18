@@ -1,11 +1,11 @@
 // Page-side test hooks for tools/e2e-pw-voice.js, injected with ctx.addInitScript(voiceHook, opts).
 // voiceHook is serialized by Playwright: it must stay self-contained (no closure variables, no require).
-// It wraps RTCPeerConnection + getUserMedia (fake mic = one OscillatorNode per seat) and measures every remote
+// It wraps RTCPeerConnection + getUserMedia (fake mic = speech buffer + pilot OscillatorNode per seat) and measures every remote
 // track on its own AudioContext, so the product code (public/voice.js, public/mod3d/voice.js) is never changed.
 // Every hook body is try/catch; failures go to window.__dn.errors, never to console.error.
 const HOOK_DEFAULTS = {
   role: 'player', seat: null, rx: false, recorder: false, markers: null,
-  toneGain: 0.5, toneBase: 220, toneStep: 40, fft: 8192, sampleRate: 48000, tickMs: 100,
+  speech: null, speechGain: 1, pilotGain: 0.007, pilotBase: 4000, pilotStep: 150, toneBase: 220, toneStep: 40, fft: 8192, sampleRate: 48000, tickMs: 100,
 };
 
 function voiceHook(opts) {
@@ -33,37 +33,56 @@ function voiceHook(opts) {
     return { in: i, out, all: i + out };
   };
 
-  // 2. Fake microphone (players)
+  // 2. Fake microphone (players): speech (AudioBufferSourceNode, looped while "on") + a quiet per-seat ID pilot tone
+  // (OscillatorNode at pilotBase + pilotStep*seat Hz). o.speech = base64 wav; without it the speech is a sine at toneBase+toneStep*seat.
   if (o.role === 'player' && AC) guard('fakemic', () => {
     const ctx = new AC({ sampleRate: o.sampleRate, sinkId: { type: 'none' } });
-    const osc = ctx.createOscillator(), gain = ctx.createGain();
-    dn.freq = o.toneBase + o.toneStep * o.seat;
-    osc.type = 'sine'; osc.frequency.value = dn.freq; gain.gain.value = 0;
-    osc.connect(gain); osc.start();
-    let lastDest = null;
+    dn.freq = o.pilotBase + o.pilotStep * o.seat;
+    const pil = ctx.createOscillator(), pg = ctx.createGain(), sg = ctx.createGain(), out = ctx.createGain();
+    pil.type = 'sine'; pil.frequency.value = dn.freq; pg.gain.value = 0; sg.gain.value = 0;
+    pil.connect(pg); pg.connect(out); sg.connect(out); pil.start();
+    let buf = null, src = null, lastDest = null;
+    if (o.speech) {
+      const bin = atob(o.speech), u8 = new Uint8Array(bin.length);
+      for (let i = 0; i < bin.length; i++) u8[i] = bin.charCodeAt(i);
+      ctx.decodeAudioData(u8.buffer).then(b => { buf = b; dn.speechS = b.duration; }, e => dn.errors.push('decode: ' + (e && e.message || e)));
+    } else {
+      const f = o.toneBase + o.toneStep * o.seat, n = o.sampleRate;
+      buf = ctx.createBuffer(1, n, o.sampleRate);
+      const d = buf.getChannelData(0); for (let i = 0; i < n; i++) d[i] = 0.5 * Math.sin(2 * Math.PI * f * i / n);
+    }
     ctx.resume().catch(() => {});
     dn.tone = on => guard('tone', () => {
-      gain.gain.setValueAtTime(on ? o.toneGain : 0, ctx.currentTime);
+      const now = ctx.currentTime;
+      if (src) { try { src.stop(now + 0.02); } catch (e) { /* already stopped */ } src = null; }
+      if (on) {
+        if (!buf) { dn.errors.push('tone before speech buffer ready'); return; }
+        src = ctx.createBufferSource(); src.buffer = buf; src.loop = true; src.connect(sg); src.start(now);
+      }
+      sg.gain.setValueAtTime(on ? o.speechGain : 0, now);
+      pg.gain.setValueAtTime(on ? o.pilotGain : 0, now);
       dn.toneLog.push({ t: Date.now(), on: !!on });
     });
     const md = navigator.mediaDevices;
     if (md) md.getUserMedia = async () => {
       if (ctx.state !== 'running') await ctx.resume().catch(() => {});
-      if (lastDest) { try { gain.disconnect(lastDest); } catch (e) { /* already gone */ } }
+      if (lastDest) { try { out.disconnect(lastDest); } catch (e) { /* already gone */ } }
       const dest = ctx.createMediaStreamDestination();
-      gain.connect(dest); lastDest = dest;
+      out.connect(dest); lastDest = dest;
       dn.streamIds.push(dest.stream.id);
       return dest.stream;
     };
   });
 
   // 3. Receive side (rx pages): own AudioContext, one analyser per remote stream, sampled every tickMs into
-  // dn.blocks[sid] = [{t, rms, bin}] and dn.mixBlocks = [{t, rms, tone:[dB x12]}] (rms over the last fft samples,
-  // bin = dominant FFT bin >= 1, tone[k] = max dB of the mix over the bins around tone k).
+  // dn.blocks[sid] = [{t, rms, bin, p}] and dn.mixBlocks = [{t, rms, tone:[dB x12]}] (rms over the last fft samples,
+  // bin = dominant FFT bin inside the pilot band only, p = its dB, tone[k] = max dB of the mix around pilot k).
   // sinkId 'none': Chromium headless stops playing out remote audio (inbound totalSamplesReceived stays 0) once a page
   // holds 12 remote streams plus real audio outputs, so the measuring contexts open no audio output at all.
   const fft = o.fft;
-  const hz = k => o.toneBase + o.toneStep * k;
+  const hz = k => o.pilotBase + o.pilotStep * k;
+  const bandLo = Math.floor((o.pilotBase - 200) * fft / o.sampleRate), bandHi = Math.ceil((o.pilotBase + o.pilotStep * 11 + 200) * fft / o.sampleRate);
+  const db = v => (v > -200 ? v : -200);
   dn.blocks = {}; dn.mixBlocks = [];
   let rctx = null, mix = null, mixAn = null, mixDest = null;
   if (o.rx && AC) guard('rxinit', () => {
@@ -97,8 +116,8 @@ function voiceHook(opts) {
       if (e.track.readyState !== 'live') continue;
       const rms = rmsOf(e.an);
       e.an.getFloatFrequencyData(fbuf);
-      let bin = 1; for (let i = 2; i < fbuf.length; i++) if (fbuf[i] > fbuf[bin]) bin = i;
-      (dn.blocks[e.sid] = dn.blocks[e.sid] || []).push({ t, rms, bin });
+      let bin = bandLo; for (let i = bandLo + 1; i <= bandHi; i++) if (fbuf[i] > fbuf[bin]) bin = i;
+      (dn.blocks[e.sid] = dn.blocks[e.sid] || []).push({ t, rms, bin, p: db(fbuf[bin]) });
     }
     const rms = rmsOf(mixAn);
     mixAn.getFloatFrequencyData(fbuf);
@@ -106,7 +125,7 @@ function voiceHook(opts) {
     for (let k = 0; k < 12; k++) {
       const b = Math.round(hz(k) * fft / rctx.sampleRate); let m = -Infinity;
       for (let i = b - 1; i <= b + 1; i++) if (fbuf[i] > m) m = fbuf[i];
-      tone.push(m);
+      tone.push(db(m));
     }
     dn.mixBlocks.push({ t, rms, tone });
   }), o.tickMs);

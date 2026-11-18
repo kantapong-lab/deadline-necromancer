@@ -1,24 +1,31 @@
 // Playwright e2e for the WebRTC mesh voice (ADR 0003) with 12 players + the Moderator 3D screen, recorded as a clip.
 //   PLAYWRIGHT_DIR=<node_modules dir with playwright-core> [CHROME=<chromium binary>] node tools/e2e-pw-voice.js
-// Env: PLAYWRIGHT_DIR, CHROME, E2E_PORT (default 3341), E2E_HEADED=1 (all 12 tones then play out of the speakers),
+// Env: PLAYWRIGHT_DIR, CHROME, E2E_PORT (default 3341), E2E_HEADED=1 (all 12 voices then play out of the speakers),
 //      FFMPEG (ffmpeg binary, default: ffmpeg on PATH; required, `brew install ffmpeg`).
-// Each seat's microphone is an OscillatorNode at 220+40*seat Hz (page hook, tools/e2e-voice-hooks.js); seats talk in turn,
-// then all together, then P05 is NDA-Silenced, then the Moderator leaves MORNING. The receivers (mod3d, P01) measure every
-// remote track (RMS + dominant FFT bin) and sample the speaking markers. Product code is not changed.
+// Each seat's microphone is Thai speech (macOS `say -v Kanya`, one line + rate per seat, generated at run start into raw/speech/)
+// plus a quiet ID pilot tone at 4000+150*seat Hz (page hook, tools/e2e-voice-hooks.js). No `say` / not darwin: WARN and the old
+// sine tone (220+40*seat Hz) stands in for the speech. Seats talk in turn, then all together, then P05 is NDA-Silenced, then the
+// Moderator leaves MORNING. The receivers (mod3d, P01) measure every remote track (RMS + peak inside the pilot band) and sample
+// the speaking markers. Seat identity = pilot bin. Product code is not changed.
 // Output (gitignored): app/e2e-out/voice/{voice-e2e.mp4, report.json, raw/*}. Exit 0 = every check passed, 1 = any FAIL.
 const path = require('path'), fs = require('fs'), { spawnSync } = require('child_process');
 const C = require('./e2e-pw-common');
 const { voiceHook, HOOK_DEFAULTS } = require('./e2e-voice-hooks');
 
 // ---- constants (written to report.json params; tune here, not the rules) ----
-const SR = 48000, FFT = 8192, TICK_MS = 100, TONE_GAIN = 0.5;
-const SLOT_MS = 1500, SETTLE_MS = 700, ALL_MS = 3000, ALL_SETTLE_MS = 1000;
-const T_ON = 0.10, T_OFF = 0.01, FLOOR_DB = -60, BIN_TOL = 1, MIN_SAMPLES = 4;
+const SR = 48000, FFT = 8192, TICK_MS = 100, SPEECH_GAIN = 1, PILOT_GAIN = 0.007;   // pilot ~ -30 dB under the speech
+const PILOT_BASE = 4000, PILOT_STEP = 150;                                           // 12.8 bins apart, above the speech energy
+const SLOT_MS = 2600, SETTLE_MS = 800, GAP_MS = 400, ALL_MS = 3500, ALL_SETTLE_MS = 1000;
+const P_ON = -75, P_OFF = -85, T_SPEECH = 0.02, T_OFF = 0.01, FLOOR_DB = -70, BIN_TOL = 1, MIN_SAMPLES = 4;   // dB / rms
+const SAY_VOICE = 'Kanya', SAY_RATES = [170, 200, 230, 185, 215, 175, 205, 225, 190, 210, 180, 220];
+const SAY_LINES = ['ผู้เล่นหนึ่ง พูดอยู่นะ', 'ผู้เล่นสอง ฉันไม่ใช่หมาป่า', 'ผู้เล่นสาม ได้ยินไหม', 'ผู้เล่นสี่ ขอพูดหน่อย',
+  'ผู้เล่นห้า อย่าโหวตฉันนะ', 'ผู้เล่นหก เมื่อคืนฉันนอนหลับ', 'ผู้เล่นเจ็ด ฉันสงสัยคนข้างๆ', 'ผู้เล่นแปด ฟังทางนี้นะ',
+  'ผู้เล่นเก้า ฉันเป็นคนดี', 'ผู้เล่นสิบ ใครคือหมาป่า', 'ผู้เล่นสิบเอ็ด ฉันไม่รู้เรื่อง', 'ผู้เล่นสิบสอง ขอเวลาอธิบาย'];
 const MESH_WAIT_MS = 60000, SILENCE_WAIT_MS = 5000, RECONNECT_WAIT_MS = 15000, CUT_WAIT_MS = 10000;
 const PREROLL_MS = 1000, TAIL_MS = 1000;
 const N = C.N, sleep = C.sleep;
 const BIN_HZ = SR / FFT;
-const freq = s => 220 + 40 * s;
+const freq = s => PILOT_BASE + PILOT_STEP * s;   // pilot Hz
 const binOf = s => Math.round(freq(s) * FFT / SR);
 const nn = i => String(i).padStart(2, '0');
 const VOICE_ARGS = ['--use-fake-ui-for-media-stream', '--autoplay-policy=no-user-gesture-required',
@@ -26,7 +33,7 @@ const VOICE_ARGS = ['--use-fake-ui-for-media-stream', '--autoplay-policy=no-user
   '--disable-renderer-backgrounding', '--disable-backgrounding-occluded-windows',
   // mod3d on software GL renders ~1 frame/s and starves the page's timers (and the 100 ms sampler); Metal keeps it at 60 fps
   ...(process.platform === 'darwin' ? ['--use-angle=metal', '--ignore-gpu-blocklist'] : [])];
-const OUT = path.join(__dirname, '..', 'e2e-out', 'voice'), RAW = path.join(OUT, 'raw');
+const OUT = path.join(__dirname, '..', 'e2e-out', 'voice'), RAW = path.join(OUT, 'raw'), SPEECH_DIR = path.join(RAW, 'speech');
 const LEAKS = /NDA|Silence|silenc|ปิดปาก|mute|Burnout/gi;
 
 // ---- ffmpeg discovery (AC-7) ----
@@ -41,6 +48,27 @@ function findFfmpeg() {
   return null;
 }
 
+// ---- speech per seat (macOS say) ----
+// returns {wavs: [base64 x12] | null, info: [...]}; null = fall back to sine tones (WARN, never a failure)
+function genSpeech(ffbin) {
+  const fall = why => { console.log(`WARN no Thai speech (${why}): falling back to the sine tones 220+40*seat Hz`); return { wavs: null, info: [], mode: 'sine-fallback' }; };
+  if (process.platform !== 'darwin') return fall('not darwin');
+  const probe = spawnSync('say', ['-v', SAY_VOICE, '-o', path.join(SPEECH_DIR, 'probe.aiff'), 'ทดสอบ'], { encoding: 'utf8' });
+  if (probe.error || probe.status !== 0) return fall(`say -v ${SAY_VOICE} unavailable`);
+  fs.rmSync(path.join(SPEECH_DIR, 'probe.aiff'), { force: true });
+  const wavs = [], info = [];
+  for (let i = 0; i < N; i++) {
+    const aiff = path.join(SPEECH_DIR, `seat${nn(i + 1)}.aiff`), wav = path.join(SPEECH_DIR, `seat${nn(i + 1)}.wav`);
+    const a = spawnSync('say', ['-v', SAY_VOICE, '-r', String(SAY_RATES[i]), '-o', aiff, SAY_LINES[i]], { encoding: 'utf8' });
+    const b = a.status === 0 ? spawnSync(ffbin, ['-y', '-hide_banner', '-loglevel', 'error', '-i', aiff, '-ar', String(SR), '-ac', '1', '-af', 'volume=1', '-c:a', 'pcm_s16le', wav], { encoding: 'utf8' }) : null;
+    if (!b || b.status !== 0 || !fs.existsSync(wav)) return fall(`say/ffmpeg failed for seat ${i + 1}`);
+    const buf = fs.readFileSync(wav);
+    wavs.push(buf.toString('base64'));
+    info.push({ seat: i, rate: SAY_RATES[i], line: SAY_LINES[i], durationS: +((buf.length - 44) / (SR * 2)).toFixed(2) });
+  }
+  return { wavs, info, mode: `say-${SAY_VOICE}` };
+}
+
 // ---- analysis of the in-page data ----
 // rxd = {blocks: {sid: [{t, rms, bin}]}, mixBlocks: [{t, rms, tone[12]}], samples: [{t, mk}], mkEvents: [{t, pid, on}]}
 const median = a => { if (!a.length) return 0; const s = [...a].sort((x, y) => x - y), m = s.length >> 1; return s.length % 2 ? s[m] : (s[m - 1] + s[m]) / 2; };
@@ -50,26 +78,29 @@ function seatStats(rxd, a, b, sidSeat) {
   for (const sid of Object.keys(rxd.blocks)) {
     const seat = sidSeat[sid]; if (seat === undefined) continue;
     const m = per[seat] = per[seat] || new Map();
-    for (const k of inWin(rxd.blocks[sid], a, b)) { const key = Math.round(k.t / 100), cur = m.get(key); if (!cur || cur.rms < k.rms) m.set(key, k); }
+    for (const k of inWin(rxd.blocks[sid], a, b)) { const key = Math.round(k.t / 100), cur = m.get(key); if (!cur || cur.p < k.p) m.set(key, k); }
   }
   const out = { n, seats: {}, mixRms: Math.max(0, ...mixW.map(x => x.rms)), mixTone: Array.from({ length: N }, (_, k) => Math.max(-Infinity, ...mixW.map(x => x.tone[k]))) };
   for (const seat of Object.keys(per)) {
     const v = [...per[seat].values()], rms = v.map(x => x.rms), pad = Math.max(0, n - v.length);
-    const bins = v.filter(x => x.rms >= T_OFF && x.bin).map(x => x.bin);
-    out.seats[seat] = { rms: median(rms.concat(Array(pad).fill(0))), maxRms: Math.max(0, ...rms), bin: median(bins), n: v.length };
+    const ps = v.map(x => x.p).concat(Array(pad).fill(-200));
+    const bins = v.filter(x => x.p >= P_ON).map(x => x.bin);
+    out.seats[seat] = { pilot: median(ps), maxPilot: Math.max(-200, ...ps), maxRms: Math.max(0, ...rms), bin: median(bins), n: v.length };
   }
   return out;
 }
+// heard = pilot peak (restricted to the pilot band) at this seat's bin above P_ON, plus speech energy (rms) in the window
 function heardOf(st, seat) {
   const s = st.seats[seat], ex = binOf(seat);
-  const rms = s ? s.rms : 0, bin = s ? s.bin : 0;
-  return { seat, rms: +rms.toFixed(4), peakHz: +(bin * BIN_HZ).toFixed(1), bin, expectedBin: ex, samples: st.n,
-    ok: st.n >= MIN_SAMPLES && !!s && rms >= T_ON && Math.abs(bin - ex) <= BIN_TOL };
+  const pilot = s ? s.pilot : -200, bin = s ? s.bin : 0, rms = s ? s.maxRms : 0;
+  return { seat, speechRms: +rms.toFixed(4), pilotDb: +pilot.toFixed(1), pilotHz: +(bin * BIN_HZ).toFixed(1), peakHz: +(bin * BIN_HZ).toFixed(1), bin, expectedBin: ex, samples: st.n,
+    ok: st.n >= MIN_SAMPLES && !!s && pilot >= P_ON && Math.abs(bin - ex) <= BIN_TOL && rms >= T_SPEECH };
 }
+// quiet = no pilot above P_OFF and no speech energy above T_OFF on any of these seats
 function quietOf(st, seats) {
-  let max = 0, loud = null;
-  for (const seat of seats) { const s = st.seats[seat]; if (s && s.maxRms > max) { max = s.maxRms; loud = +seat; } }
-  return { ok: st.n >= MIN_SAMPLES && max < T_OFF, maxRms: +max.toFixed(4), loudestSeat: loud };
+  let maxR = 0, maxP = -200, loud = null;
+  for (const seat of seats) { const s = st.seats[seat]; if (!s) continue; if (s.maxRms > maxR) maxR = s.maxRms; if (s.maxPilot > maxP) { maxP = s.maxPilot; if (s.maxPilot >= P_OFF || s.maxRms >= T_OFF) loud = +seat; } }
+  return { samples: st.n, ok: st.n >= MIN_SAMPLES && maxR < T_OFF && maxP < P_OFF, maxRms: +maxR.toFixed(4), maxPilotDb: +maxP.toFixed(1), loudestSeat: loud };
 }
 const seatList = (ex) => Array.from({ length: N }, (_, i) => i).filter(i => !ex.includes(i));
 
@@ -81,6 +112,9 @@ async function main() {
   if (!pw) { console.log('SKIP playwright not found (npm i playwright-core elsewhere and set PLAYWRIGHT_DIR=<its node_modules>)'); return 0; }
   fs.rmSync(OUT, { recursive: true, force: true });
   fs.mkdirSync(path.join(RAW, '.pw'), { recursive: true });
+  fs.mkdirSync(SPEECH_DIR, { recursive: true });
+  const sp = genSpeech(ff.bin);
+  console.log(`speech: ${sp.mode}${sp.info.length ? ' · longest line ' + Math.max(...sp.info.map(x => x.durationS)) + ' s' : ''}`);
 
   const { results, check } = C.makeChecker();
   const errs = [];
@@ -88,7 +122,8 @@ async function main() {
   console.log(`room ${room.code} · out ${OUT}`);
   const report = {
     task: 'change-e2e-voice-clip', generatedAt: new Date().toISOString(), ok: false, room: room.code, port: +process.env.PORT,
-    params: { SR, FFT, binHz: BIN_HZ, TICK_MS, TONE_GAIN, SLOT_MS, SETTLE_MS, ALL_MS, ALL_SETTLE_MS, T_ON, T_OFF, FLOOR_DB, BIN_TOL, MIN_SAMPLES },
+    params: { SR, FFT, binHz: BIN_HZ, TICK_MS, SPEECH_GAIN, PILOT_GAIN, PILOT_BASE, PILOT_STEP, SLOT_MS, SETTLE_MS, GAP_MS, ALL_MS, ALL_SETTLE_MS, P_ON, P_OFF, T_SPEECH, T_OFF, FLOOR_DB, BIN_TOL, MIN_SAMPLES },
+    speech: { mode: sp.mode, voice: SAY_VOICE, lines: sp.info },
     seats: [], checks: results, timeline: [], pageErrors: errs, clip: { path: 'voice-e2e.mp4', ok: false, ffmpeg: ff.version },
   };
   const tl = [];            // raw timeline entries (evaluated after the drain)
@@ -97,7 +132,8 @@ async function main() {
   const videos = {}, videoStart = {}, rec = {};
   let sidSeat = {}, data = {};
 
-  const hookOpts = (role, seatNo, rx, recorder, markers) => ({ ...HOOK_DEFAULTS, role, seat: seatNo, rx, recorder, markers, toneGain: TONE_GAIN, fft: FFT, sampleRate: SR, tickMs: TICK_MS });
+  const hookOpts = (role, seatNo, rx, recorder, markers) => ({ ...HOOK_DEFAULTS, role, seat: seatNo, rx, recorder, markers, speech: sp.wavs && seatNo !== null ? sp.wavs[seatNo] : null,
+    speechGain: SPEECH_GAIN, pilotGain: PILOT_GAIN, pilotBase: PILOT_BASE, pilotStep: PILOT_STEP, fft: FFT, sampleRate: SR, tickMs: TICK_MS });
   const onPage = async (page, ctx, idx, t0) => {
     const name = idx === 'mod' ? 'mod3d' : 'p' + nn(idx + 1);
     videos[name] = page.video(); videoStart[name] = t0;
@@ -132,7 +168,7 @@ async function main() {
     m3 = o.m3; mctx = o.mctx; ctxs.push(mctx);
     const g = await C.startGame(room, m3, check);
     R = g.room; G = g.G; seat = g.seat;
-    report.seats = Array.from({ length: N }, (_, i) => ({ seat: i, name: 'P' + nn(i + 1), pid: seat(i), freqHz: freq(i), bin: binOf(i) }));
+    report.seats = Array.from({ length: N }, (_, i) => ({ seat: i, name: 'P' + nn(i + 1), pid: seat(i), pilotHz: freq(i), bin: binOf(i), speechLine: sp.info[i] ? sp.info[i].line : null }));
     check('AC-2 game is in MORNING', G.phase === 'MORNING', G.phase);
 
     // 2. voice on for all 12, wait for the mesh
@@ -151,13 +187,15 @@ async function main() {
 
     // 3. AC-2 turns
     for (let k = 0; k < N; k++) {
+      // silent gap first: the previous talker's jitter-buffer tail must drain before the next window
+      if (k > 0) { await tone(k - 1, false); await sleep(GAP_MS); }
       const t0 = Date.now();
-      console.log(`slot ${nn(k + 1)} P${nn(k + 1)} ${freq(k)}Hz start`);
-      await Promise.all([k > 0 ? tone(k - 1, false) : null, tone(k, true)].filter(Boolean));
+      console.log(`slot ${nn(k + 1)} P${nn(k + 1)} pilot ${freq(k)}Hz start`);
+      await tone(k, true);
       tl.push({ phase: 'turn', slot: k + 1, talkers: [k], tStart: t0, tEnd: t0 + SLOT_MS, window: [t0 + SETTLE_MS, t0 + SLOT_MS] });
       await sleep(Math.max(0, t0 + SLOT_MS - Date.now()));
     }
-    await tone(N - 1, false); await sleep(500);
+    await tone(N - 1, false); await sleep(700);
 
     // 4. AC-3 all twelve
     console.log('all 12 talking');
@@ -269,7 +307,7 @@ async function main() {
     check('AC-2 every inbound stream maps to a seat', unmapped.size === 0, unmapped.size ? [...unmapped].slice(0, 4).join(',') : `${Object.keys(sidSeat).length} stream ids`);
     // a starved page stamps the marker late: allow 300 ms after the slot
     const markerHit = (key, [a, b], pidv) => rxs[key].samples.some(s => s.t >= a && s.t <= b + 300 && s.mk.includes(pidv)) || rxs[key].mkEvents.some(e => e.on && e.pid === pidv && e.t >= a && e.t <= b + 300);
-    const fmt = x => x.heard.map(h => `P${nn(h.seat + 1)} ${h.rms}/${h.peakHz}Hz`).join(' ');
+    const fmt = x => x.heard.map(h => `P${nn(h.seat + 1)} ${h.speechRms}/${h.pilotHz}Hz`).join(' ');
     const entry = e => { report.timeline.push(e); return e; };
     const rx = (key, e, heardSeats, quietSeats, extra) => {
       const st = seatStats(rxs[key], e.window[0], e.window[1], sidSeat);
@@ -295,8 +333,8 @@ async function main() {
     });
     turns.forEach(e => ['mod3d', 'p01'].forEach(key => {
       const r = e.rx[key];
-      check(`AC-2 slot ${nn(e.slot)} P${nn(e.slot)} ${e.freqHz[0]}Hz ${key === 'p01' ? 'P01' : 'mod3d'}: tone, others quiet, marker`, r.ok,
-        `${r.skipped ? 'own slot skipped' : r.heard.map(h => `rms ${h.rms} peak ${h.peakHz}Hz (want bin ${h.expectedBin} got ${h.bin})`).join('')} · others max ${r.quiet.maxRms}${r.quiet.loudestSeat != null ? ' (P' + nn(r.quiet.loudestSeat + 1) + ')' : ''} · marker ${r.marker}`);
+      check(`AC-2 slot ${nn(e.slot)} P${nn(e.slot)} ${e.freqHz[0]}Hz ${key === 'p01' ? 'P01' : 'mod3d'}: speech+pilot, others quiet, marker`, r.ok,
+        `${r.skipped ? 'own slot skipped' : r.heard.map(h => `speech ${h.speechRms} pilot ${h.pilotDb}dB @${h.pilotHz}Hz (want bin ${h.expectedBin} got ${h.bin})`).join('')} · others max ${r.quiet.maxRms}/${r.quiet.maxPilotDb}dB${r.quiet.loudestSeat != null ? ' (P' + nn(r.quiet.loudestSeat + 1) + ')' : ''} · marker ${r.marker}`);
     }));
 
     // all 12
@@ -325,15 +363,15 @@ async function main() {
     const es = byPhase('silenced')[0];
     if (es) {
       const e = sil(es, false);
-      ['mod3d', 'p01'].forEach(key => check(`AC-4 silenced P05 slot: no P05 tone on ${key === 'p01' ? 'P01' : 'mod3d'}`, e.rx[key].ok,
-        `P05 rms ${e.rx[key].quiet.maxRms} · mix at ${freq(4)}Hz ${e.rx[key].mixToneDb === null ? "-inf" : e.rx[key].mixToneDb} dB (floor ${FLOOR_DB})`));
+      ['mod3d', 'p01'].forEach(key => check(`AC-4 silenced P05 slot: no P05 pilot/speech on ${key === 'p01' ? 'P01' : 'mod3d'}`, e.rx[key].ok,
+        `P05 rms ${e.rx[key].quiet.maxRms} pilot ${e.rx[key].quiet.maxPilotDb}dB · mix at ${freq(4)}Hz ${e.rx[key].mixToneDb === null ? "-inf" : e.rx[key].mixToneDb} dB (floor ${FLOOR_DB})`));
       check('AC-4 silenced P05 slot: no speaking marker for P05', !e.rx.mod3d.marker && !e.rx.p01.marker, `mod3d ${e.rx.mod3d.marker} p01 ${e.rx.p01.marker}`);
-    } else ['mod3d', 'P01'].forEach(k => check(`AC-4 silenced P05 slot: no P05 tone on ${k}`, false, 'not reached'));
+    } else ['mod3d', 'P01'].forEach(k => check(`AC-4 silenced P05 slot: no P05 pilot/speech on ${k}`, false, 'not reached'));
     const eu = byPhase('unsilenced')[0];
     if (eu) {
       const e = sil(eu, true);
       ['mod3d', 'p01'].forEach(key => check(`AC-4 unsilenced P05 slot: heard on ${key === 'p01' ? 'P01' : 'mod3d'}`, e.rx[key].ok,
-        e.rx[key].heard.map(h => `rms ${h.rms} peak ${h.peakHz}Hz`).join('') + ` · others max ${e.rx[key].quiet.maxRms}`));
+        e.rx[key].heard.map(h => `speech ${h.speechRms} pilot ${h.pilotDb}dB @${h.pilotHz}Hz`).join('') + ` · others max ${e.rx[key].quiet.maxRms}`));
     } else ['mod3d', 'P01'].forEach(k => check(`AC-4 unsilenced P05 slot: heard on ${k}`, false, 'not reached'));
 
     // toVote
@@ -341,9 +379,9 @@ async function main() {
     if (ev5) {
       const m = rx('mod3d', ev5, [], [], {}), p = rx('p01', ev5, [], [], {});
       const mm = Math.max(0, ...inWin(rxs.mod3d.mixBlocks, ev5.window[0], ev5.window[1]).map(s => s.rms)), pm = Math.max(0, ...inWin(rxs.p01.mixBlocks, ev5.window[0], ev5.window[1]).map(s => s.rms));
-      m.r.ok = mm < T_OFF && m.r.heard.length === 0; p.r.ok = pm < T_OFF; m.r.mixRms = +mm.toFixed(4); p.r.mixRms = +pm.toFixed(4);
+      m.r.ok = m.r.quiet.ok && mm < T_OFF && m.r.heard.length === 0; p.r.ok = p.r.quiet.ok && pm < T_OFF;   // >= MIN_SAMPLES in the window too m.r.mixRms = +mm.toFixed(4); p.r.mixRms = +pm.toFixed(4);
       entry({ phase: 'toVote', slot: null, talkers: ev5.talkers, freqHz: ev5.talkers.map(freq), tStart: ev5.tStart, tEnd: ev5.tEnd, window: ev5.window, rx: { mod3d: m.r, p01: p.r } });
-      check('AC-5 toVote: no inbound audio on mod3d and P01', m.r.ok && p.r.ok, `mixRms mod3d ${m.r.mixRms} p01 ${p.r.mixRms} (< ${T_OFF})`);
+      check('AC-5 toVote: no inbound audio on mod3d and P01', m.r.ok && p.r.ok, `mixRms mod3d ${m.r.mixRms} p01 ${p.r.mixRms} (< ${T_OFF}) · samples ${m.r.quiet.samples}/${p.r.quiet.samples} (>= ${MIN_SAMPLES})`);
     } else check('AC-5 toVote: no inbound audio on mod3d and P01', false, 'not reached');
   }
 
