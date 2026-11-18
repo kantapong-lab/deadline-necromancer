@@ -1,0 +1,43 @@
+<!doctype html><html lang="th"><meta charset="utf-8"><title>voice-over design spec</title>
+<style>
+:root{--bg:#0f0d1a;--panel:#181528;--panel2:#201c36;--line:#33294f;--txt:#ebe7f7;--mut:#9a92b8;--good:#5fe39a;--bad:#ff5c7a;--light:#f5c451}
+body{margin:0;padding:1.5rem;background:var(--bg);color:var(--txt);font:16px "Segoe UI","Noto Sans Thai",sans-serif}
+h1{color:var(--light)} h2{color:var(--mut);margin-top:2rem} .row{display:flex;flex-wrap:wrap;gap:1rem}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:.8rem;padding:.8rem 1rem;min-width:15rem}
+.card small{display:block;color:var(--mut);margin-bottom:.5rem}
+.btn{background:var(--panel2);border:1px solid var(--line);padding:.55rem 1rem;border-radius:.55rem;color:var(--txt);min-height:44px;font:inherit}
+.on{background:linear-gradient(135deg,#7c3aed,#b05cff);border:0;font-weight:600}
+.spk{box-shadow:0 0 0 3px var(--good)}
+.un{border-style:dashed;opacity:.7}.bad{color:var(--bad)}.gm{opacity:.55}
+.hint{color:var(--mut);font-size:.9rem;margin-top:.4rem}
+.pl{display:flex;align-items:center;gap:.6rem;padding:.3rem}
+.av{width:2rem;height:2rem;border-radius:50%;background:var(--panel2);display:grid;place-items:center}
+.pl.s .av{box-shadow:0 0 0 2px var(--good)}
+.vi{margin-left:auto;display:flex;gap:2px;align-items:end;height:1.2rem;visibility:hidden}.s .vi{visibility:visible}
+.vi i{width:4px;background:var(--good);animation:eq .6s infinite alternate}.vi i:nth-child(2){animation-delay:.15s}.vi i:nth-child(3){animation-delay:.3s}
+@keyframes eq{from{height:30%}to{height:100%}}
+.gate{background:#0f0d1ab3;border:1px solid var(--line);border-radius:.8rem;padding:1.5rem;text-align:center}
+.gate b{display:block;color:var(--light);font-size:1.5rem}
+.desk{text-align:center}.arc{color:var(--good);font-size:1.6rem;animation:pu .9s infinite}
+@keyframes pu{from{transform:scale(1);opacity:.9}to{transform:scale(1.25);opacity:.3}}
+@media (prefers-reduced-motion:reduce){.vi i,.arc{animation:none}}
+</style>
+<h1>voice-over: spec (AC-1,2,3,13,17,18,19)</h1>
+<p>Privacy: others never see a mute marker. Game-muted is one generic state for phase/pause/dead/silenced/burnout.</p>
+<h2>1. Player voice button + mute (AC-1,13,17)</h2><div class="row">
+<div class="card"><small>unavailable-insecure</small><button class="btn un" disabled>🎙️ ไมค์ใช้ไม่ได้</button><div class="hint">ต้องใช้ HTTPS ถึงจะเปิดไมค์ได้ — ยังเล่นเกมต่อได้ตามปกติ</div></div>
+<div class="card"><small>unavailable-nomic</small><button class="btn un" disabled>🎙️ ไม่พบไมโครโฟน</button><div class="hint">ไม่พบไมโครโฟนในอุปกรณ์นี้ — ยังเล่นเกมต่อได้ตามปกติ</div></div>
+<div class="card"><small>denied</small><button class="btn un bad" disabled>🎙️ ไมค์ถูกบล็อก</button> <button class="btn">ลองใหม่</button><div class="hint">เบราว์เซอร์ไม่อนุญาตให้ใช้ไมค์ — เปิดสิทธิ์ที่ไอคอนแม่กุญแจ แล้วกดลองใหม่</div></div>
+<div class="card"><small>off</small><button class="btn">🎙️ เปิดไมค์</button></div>
+<div class="card"><small>on (idle) + mute</small><button class="btn on">🎙️ ไมค์เปิดอยู่ · กดเพื่อปิด</button> <button class="btn" aria-pressed="false">ปิดเสียงตัวเอง</button></div>
+<div class="card"><small>speaking</small><button class="btn on spk">🎙️ กำลังพูด</button></div>
+<div class="card"><small>self-muted</small><button class="btn on">🎙️ ไมค์เปิดอยู่</button> <button class="btn bad" aria-pressed="true">🔇 เปิดเสียงตัวเอง</button></div>
+<div class="card"><small>game-muted (generic, all causes)</small><button class="btn gm" disabled>🎙️ ตอนนี้ยังพูดไม่ได้</button></div>
+<div class="card"><small>silenced private note (only that player)</small>🤐 ถูกปิดปาก — ส่งได้แค่อีโมจิ และพูดทางไมค์ไม่ได้</div></div>
+<h2>2. Player list indicator (AC-3,19)</h2><div class="row"><div class="card">
+<div class="pl s"><div class="av">ก</div>กานต์ <span class="vi"><i></i><i></i><i></i></span></div>
+<div class="pl"><div class="av">ข</div>ขวัญ <span class="vi"><i></i><i></i><i></i></span></div><small>Row 2: not speaking / muted / dead look identical (nothing)</small></div></div>
+<h2>3. Mod3D sound gate (AC-18)</h2><div class="row"><div class="card gate"><span style="font-size:3rem">🔊</span><b>คลิกเพื่อเปิดเสียง</b><div class="hint">เบราว์เซอร์ต้องการให้คลิกก่อน จึงจะได้ยินเสียงผู้เล่น</div><br><button class="btn on">เปิดเสียง</button></div>
+<div class="card gate"><small>failed</small><div class="hint">เปิดเสียงไม่สำเร็จ — คลิกอีกครั้ง</div></div></div>
+<h2>4. Mod3D desk indicator (AC-2,19)</h2><div class="row"><div class="card desk"><small>speaking</small><div class="arc">)))</div><div>กานต์ <u style="text-decoration-color:var(--good)">▁▁▁</u></div></div><div class="card desk"><small>not speaking / muted / dead</small><div>&nbsp;</div><div>ขวัญ</div></div></div>
+</html>
