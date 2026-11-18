@@ -1,0 +1,373 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<title>Deadline Necromancer Trailer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&family=Kanit:wght@400;600;800&display=block" rel="stylesheet">
+<style>
+/* Seekable timeline: every motion is a CSS animation; render.js pauses all
+   animations and sets currentTime per frame. Total length: 43s. */
+:root {
+  --gold: #e8c77a; --gold2: #fff1c4; --red: #ff3b4e; --violet: #9b6bff;
+  --cyan: #59e0ff; --green: #7dffb0; --ink: #07050d;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html, body { width: 1920px; height: 1080px; overflow: hidden; background: var(--ink); }
+body { font-family: 'Kanit', 'Leelawadee UI', sans-serif; color: #fff; }
+.en { font-family: 'Cinzel', serif; }
+.stage { position: absolute; inset: 0; overflow: hidden; }
+.scene { position: absolute; inset: 0; opacity: 0; display: flex; align-items: center; justify-content: center; }
+
+/* scene visibility windows: show(start, dur) via animation-delay/duration */
+@keyframes vis { 0% {opacity:0} 4% {opacity:1} 96% {opacity:1} 100% {opacity:0} }
+@keyframes visHard { 0%,100% {opacity:1} }
+
+/* shared */
+@keyframes fadeUp { from {opacity:0; transform: translateY(40px)} to {opacity:1; transform:none} }
+@keyframes fadeIn { from {opacity:0} to {opacity:1} }
+@keyframes slam { 0% {opacity:0; transform: scale(2.4)} 60% {opacity:1; transform: scale(.94)} 100% {opacity:1; transform: scale(1)} }
+@keyframes shake { 0%,100% {transform: translate(0,0)} 20% {transform: translate(-14px,8px)} 40% {transform: translate(12px,-10px)} 60% {transform: translate(-8px,-6px)} 80% {transform: translate(6px,10px)} }
+@keyframes drift { from {transform: scale(1.12) translateX(-30px)} to {transform: scale(1.22) translateX(30px)} }
+@keyframes pulse { 0%,100% {opacity:.55} 50% {opacity:1} }
+@keyframes flicker { 0%,100%{opacity:1} 8%{opacity:.2} 10%{opacity:1} 52%{opacity:1} 54%{opacity:.3} 56%{opacity:1} }
+@keyframes rise { from {transform: translateY(0); opacity:0} 10% {opacity:.9} to {transform: translateY(-1200px); opacity:0} }
+
+/* ember particles (always on) */
+.embers { position:absolute; inset:0; pointer-events:none; z-index: 50; }
+.embers i { position:absolute; bottom:-20px; width:6px; height:6px; border-radius:50%;
+  background: radial-gradient(circle, #ffd27a, rgba(255,120,60,0)); animation: rise linear infinite; }
+
+/* vignette + grain */
+.vignette { position:absolute; inset:0; z-index: 60; pointer-events:none;
+  background: radial-gradient(ellipse at center, rgba(0,0,0,0) 45%, rgba(0,0,0,.85) 100%); }
+.flash { position:absolute; inset:0; background:#fff; opacity:0; z-index: 70; pointer-events:none; }
+@keyframes flashA { 0% {opacity:.9} 100% {opacity:0} }
+
+/* ---------- S1 HOOK 0–4.5s ---------- */
+#s1 { animation: vis 4.5s linear 0s both; flex-direction: column; gap: 28px;
+  background: radial-gradient(circle at 50% 60%, #2a0610 0%, #07050d 70%); }
+#s1 .clock { font-family: 'Cinzel', serif; font-size: 170px; font-weight: 900; color: var(--red);
+  letter-spacing: 8px; text-shadow: 0 0 40px rgba(255,59,78,.7);
+  animation: slam .5s cubic-bezier(.2,.8,.2,1) .15s both, flicker 1.2s linear 1s infinite; }
+#s1 .clock small { font-size: 60px; display:block; text-align:center; color:#ff9aa5; letter-spacing: 20px; }
+#s1 .l1 { font-size: 64px; font-weight: 600; animation: fadeUp .6s ease 1.2s both; }
+#s1 .l2 { font-size: 78px; font-weight: 800; color: var(--red); animation: slam .45s ease 2.5s both;
+  text-shadow: 0 0 30px rgba(255,59,78,.6); }
+#s1 .l2 span { color:#fff; }
+
+/* ---------- S2 PREMISE 4.5–10s ---------- */
+#s2 { animation: vis 5.5s linear 4.5s both; flex-direction: column; gap: 40px;
+  background: radial-gradient(circle at 50% 40%, #1d1240 0%, #07050d 75%); }
+#s2 .bg { position:absolute; inset:-60px; background: url('../docs/event_cards/01_fast_approval.png') center/cover;
+  filter: blur(14px) brightness(.35) saturate(1.3); animation: drift 6s linear 4.5s both; }
+#s2 .t1 { position:relative; font-size: 46px; color: var(--gold2); font-weight: 400; animation: fadeUp .6s ease 4.8s both; }
+#s2 .t2 { position:relative; font-size: 92px; font-weight: 800; line-height: 1.15; text-align:center;
+  animation: fadeUp .6s ease 5.3s both; }
+#s2 .t2 b { color: var(--gold); }
+#s2 .bar { position:relative; width: 1200px; animation: fadeIn .5s ease 6.3s both; }
+#s2 .track { height: 46px; border: 3px solid var(--gold); border-radius: 30px; background: rgba(0,0,0,.6); overflow:hidden;
+  box-shadow: 0 0 30px rgba(155,107,255,.5); }
+#s2 .fill { height:100%; width: 0; background: linear-gradient(90deg, #5a3cff, #9b6bff, #59e0ff);
+  box-shadow: 0 0 30px #9b6bff; animation: fillBar 3s cubic-bezier(.3,.1,.3,1) 6.6s both; }
+@keyframes fillBar { 0% {width: 8%} 35% {width: 34%} 50% {width: 22%} 100% {width: 92%} }
+#s2 .days { display:flex; justify-content: space-between; margin-top: 16px; font-size: 34px; font-family:'Cinzel',serif; color: var(--gold); padding: 0 20px; }
+#s2 .days span:last-child { color: var(--red); }
+#s2 .lbl { position:absolute; right: 0; top: -58px; font-size: 34px; font-weight: 600; color: var(--cyan); }
+
+/* ---------- Faction scenes (shared) ---------- */
+.fac { flex-direction: row; gap: 80px; padding: 0 120px; }
+.fac .bg { position:absolute; inset:-80px; background-size: cover; background-position:center; filter: blur(22px) brightness(.28) saturate(1.4); }
+.fac .cards { position: relative; width: 980px; height: 900px; flex: none; }
+.fac .card { position:absolute; width: 400px; height: 543px; border-radius: 18px; background-size: cover;
+  box-shadow: 0 30px 80px rgba(0,0,0,.8); top: 170px; }
+.fac .card.c1 { left: 20px; --r: -12deg; }
+.fac .card.c2 { left: 290px; top: 120px; z-index: 2; --r: 0deg; width: 440px; height: 597px; }
+.fac .card.c3 { left: 580px; --r: 12deg; }
+@keyframes dealCard { 0% {opacity:0; transform: translateY(400px) rotate(0deg) scale(.8)} 100% {opacity:1; transform: rotate(var(--r)) scale(1)} }
+.fac .copy { position: relative; flex: 1; }
+.fac .kicker { font-size: 34px; letter-spacing: 6px; font-family: 'Cinzel', serif; opacity:.85; }
+.fac h2 { font-family: 'Cinzel', serif; font-size: 104px; font-weight: 900; line-height: 1; margin: 14px 0 24px; }
+.fac .th { font-size: 48px; font-weight: 600; margin-bottom: 20px; }
+.fac .desc { font-size: 40px; font-weight: 400; line-height: 1.45; opacity: .92; }
+.fac .glow { position:absolute; width: 900px; height: 900px; left: 40px; top: 90px; border-radius:50%; filter: blur(60px); opacity:.5; animation: pulse 2s ease-in-out infinite; }
+
+/* S3 Team Deliver 10–15.5s */
+#s3 { animation: vis 5.5s linear 10s both; }
+#s3 .bg { background-image: url('../docs/deadline_necromancer_role_cards/team_deliver/02_oracle_pm.png'); }
+#s3 .glow { background: radial-gradient(circle, #59e0ff, transparent 65%); }
+#s3 .c1 { background-image: url('../docs/deadline_necromancer_role_cards/team_deliver/01_senior_dev.png'); animation: dealCard .55s cubic-bezier(.2,.9,.3,1.2) 10.3s both; }
+#s3 .c2 { background-image: url('../docs/deadline_necromancer_role_cards/team_deliver/02_oracle_pm.png'); animation: dealCard .55s cubic-bezier(.2,.9,.3,1.2) 10.55s both; }
+#s3 .c3 { background-image: url('../docs/deadline_necromancer_role_cards/team_deliver/03_qa_hunter.png'); animation: dealCard .55s cubic-bezier(.2,.9,.3,1.2) 10.8s both; }
+#s3 .kicker { color: var(--cyan); animation: fadeUp .5s ease 10.9s both; }
+#s3 h2 { color: #dff8ff; text-shadow: 0 0 40px rgba(89,224,255,.7); animation: fadeUp .5s ease 11.1s both; }
+#s3 .th { color: var(--cyan); animation: fadeUp .5s ease 11.4s both; }
+#s3 .desc { animation: fadeUp .5s ease 11.8s both; }
+
+/* S4 Cult of Burnout 15.5–21s */
+#s4 { animation: vis 5.5s linear 15.5s both; flex-direction: row-reverse; }
+#s4 .bg { background-image: url('../docs/deadline_necromancer_role_cards/cult_of_burnout/01_shadow_hr.png'); filter: blur(22px) brightness(.3) saturate(1.6) hue-rotate(-10deg); }
+#s4 .glow { background: radial-gradient(circle, #ff3b4e, transparent 65%); }
+#s4 .c1 { background-image: url('../docs/deadline_necromancer_role_cards/cult_of_burnout/06_chaos_devops.png'); animation: dealCard .55s cubic-bezier(.2,.9,.3,1.2) 15.8s both; }
+#s4 .c2 { background-image: url('../docs/deadline_necromancer_role_cards/cult_of_burnout/01_shadow_hr.png'); animation: dealCard .55s cubic-bezier(.2,.9,.3,1.2) 16.05s both; }
+#s4 .c3 { background-image: url('../docs/deadline_necromancer_role_cards/cult_of_burnout/03_illusionist_sales.png'); animation: dealCard .55s cubic-bezier(.2,.9,.3,1.2) 16.3s both; }
+#s4 .kicker { color: var(--red); animation: fadeUp .5s ease 16.4s both; }
+#s4 h2 { color: #ffd6da; text-shadow: 0 0 40px rgba(255,59,78,.8); animation: fadeUp .5s ease 16.6s both; }
+#s4 .th { color: var(--red); animation: fadeUp .5s ease 16.9s both; }
+#s4 .desc { animation: fadeUp .5s ease 17.3s both; }
+
+/* S5 Severance Seekers 21–26.5s */
+#s5 { animation: vis 5.5s linear 21s both; }
+#s5 .bg { background-image: url('../docs/deadline_necromancer_role_cards/severance_seekers/01_severance_seeker.png'); }
+#s5 .glow { background: radial-gradient(circle, #e8c77a, transparent 65%); }
+#s5 .c1 { background-image: url('../docs/deadline_necromancer_role_cards/severance_seekers/02_soul_recruiter.png'); animation: dealCard .55s cubic-bezier(.2,.9,.3,1.2) 21.3s both; }
+#s5 .c2 { background-image: url('../docs/deadline_necromancer_role_cards/severance_seekers/01_severance_seeker.png'); animation: dealCard .55s cubic-bezier(.2,.9,.3,1.2) 21.55s both; }
+#s5 .c3 { background-image: url('../docs/deadline_necromancer_role_cards/severance_seekers/03_glory_thief.png'); animation: dealCard .55s cubic-bezier(.2,.9,.3,1.2) 21.8s both; }
+#s5 .kicker { color: var(--gold); animation: fadeUp .5s ease 21.9s both; }
+#s5 h2 { color: var(--gold2); text-shadow: 0 0 40px rgba(232,199,122,.8); animation: fadeUp .5s ease 22.1s both; }
+#s5 .th { color: var(--gold); animation: fadeUp .5s ease 22.4s both; }
+#s5 .desc { animation: fadeUp .5s ease 22.8s both; }
+
+/* ---------- S6 CHAOS MONTAGE 26.5–33s : 5 cuts x 1.3s ---------- */
+.cut { position:absolute; inset:0; opacity:0; display:flex; align-items:center; justify-content:center; gap: 90px; }
+@keyframes cutVis { 0%,100% {opacity:1} }
+.cut .bg { position:absolute; inset:-80px; background-size:cover; background-position:center; filter: blur(18px) brightness(.35) saturate(1.5); }
+.cut .card { position:relative; width: 560px; height: 760px; border-radius: 22px; background-size:cover; box-shadow: 0 0 80px rgba(0,0,0,.9); }
+.cut .cap { position:relative; max-width: 900px; }
+.cut .tag { font-family:'Kanit',sans-serif; font-weight: 600; font-size: 42px; letter-spacing: 2px; color: var(--violet); }
+.cut .big { font-size: 120px; font-weight: 800; line-height: 1.05; text-shadow: 0 6px 30px rgba(0,0,0,.8); }
+.cut .sub { font-size: 44px; margin-top: 18px; opacity: .9; }
+@keyframes cardSlam { 0% {opacity:0; transform: scale(1.6) rotate(-8deg)} 55% {opacity:1; transform: scale(.96) rotate(2deg)} 100% {opacity:1; transform: scale(1) rotate(-2deg)} }
+@keyframes textSlide { 0% {opacity:0; transform: translateX(120px)} 100% {opacity:1; transform:none} }
+
+#s6 { animation: vis 6.5s linear 26.5s both; }
+#cutA { animation: cutVis 1.3s linear 26.5s; }
+#cutB { animation: cutVis 1.3s linear 27.8s; }
+#cutC { animation: cutVis 1.3s linear 29.1s; }
+#cutD { animation: cutVis 1.3s linear 30.4s; }
+#cutE { animation: cutVis 1.3s linear 31.7s; }
+#cutA .card { animation: cardSlam .4s ease-out 26.5s both; } #cutA .cap { animation: textSlide .35s ease-out 26.6s both; }
+#cutB .card { animation: cardSlam .4s ease-out 27.8s both; } #cutB .cap { animation: textSlide .35s ease-out 27.9s both; }
+#cutC .card { animation: cardSlam .4s ease-out 29.1s both; } #cutC .cap { animation: textSlide .35s ease-out 29.2s both; }
+#cutD .card { animation: cardSlam .4s ease-out 30.4s both; } #cutD .cap { animation: textSlide .35s ease-out 30.5s both; }
+#cutE .card { animation: cardSlam .4s ease-out 31.7s both; } #cutE .cap { animation: textSlide .35s ease-out 31.8s both; }
+#s6 .shaker { position:absolute; inset:0; animation: shake .25s linear 26.5s 26 both; }
+
+/* ---------- S7 PIP VOTE 33–37s ---------- */
+#s7 { animation: vis 4s linear 33s both; flex-direction: column; gap: 50px;
+  background: radial-gradient(circle at 50% 50%, #2a1446 0%, #07050d 75%); }
+#s7 h3 { font-size: 84px; font-weight: 800; animation: fadeUp .5s ease 33.2s both; }
+#s7 h3 b { color: var(--red); }
+#s7 .row { display:flex; gap: 46px; }
+#s7 .av { width: 210px; height: 210px; border-radius: 50%; background-size: 160%; background-position: 50% 28%;
+  border: 6px solid var(--gold); box-shadow: 0 0 30px rgba(232,199,122,.5); position: relative; }
+#s7 .av:nth-child(1) { animation: fadeUp .4s ease 33.4s both; }
+#s7 .av:nth-child(2) { animation: fadeUp .4s ease 33.5s both; }
+#s7 .av:nth-child(3) { animation: fadeUp .4s ease 33.6s both; }
+#s7 .av:nth-child(4) { animation: fadeUp .4s ease 33.7s both; }
+#s7 .av:nth-child(5) { animation: fadeUp .4s ease 33.8s both; }
+#s7 .av:nth-child(6) { animation: fadeUp .4s ease 33.9s both; }
+#s7 .av.sus { animation: fadeUp .4s ease 33.7s both, susGlow .5s ease 34.6s both; }
+@keyframes susGlow { to { border-color: var(--red); box-shadow: 0 0 60px var(--red); filter: grayscale(.6); } }
+#s7 .stamp { position:absolute; left: 50%; top: 50%; font-family:'Cinzel',serif; font-weight: 900; font-size: 54px; color: var(--red);
+  border: 6px solid var(--red); padding: 4px 18px; border-radius: 10px; background: rgba(10,0,0,.6);
+  transform: translate(-50%,-50%) rotate(-14deg); animation: stampIn .3s cubic-bezier(.2,.8,.3,1.3) 35.3s both; }
+@keyframes stampIn { 0% {opacity:0; transform: translate(-50%,-50%) rotate(-14deg) scale(3)} 100% {opacity:1; transform: translate(-50%,-50%) rotate(-14deg) scale(1)} }
+#s7 .votes { font-size: 40px; color: #cbb9ff; animation: fadeIn .4s ease 34.4s both; }
+
+/* ---------- S8 FEATURES 37–40.5s ---------- */
+#s8 { animation: vis 3.5s linear 37s both; flex-direction: column; gap: 60px;
+  background: radial-gradient(circle at 50% 50%, #161034 0%, #07050d 75%); }
+#s8 .grid { display:grid; grid-template-columns: repeat(4, 380px); gap: 36px; }
+#s8 .f { border: 2px solid rgba(232,199,122,.6); border-radius: 22px; padding: 36px 20px; text-align: center;
+  background: linear-gradient(180deg, rgba(155,107,255,.18), rgba(0,0,0,.3)); }
+#s8 .f .n { font-size: 96px; font-weight: 800; color: var(--gold); line-height: 1; }
+#s8 .f .n.sm { font-size: 72px; padding: 12px 0; }
+#s8 .f .d { font-size: 36px; margin-top: 14px; }
+#s8 .f:nth-child(1) { animation: fadeUp .45s ease 37.2s both; }
+#s8 .f:nth-child(2) { animation: fadeUp .45s ease 37.35s both; }
+#s8 .f:nth-child(3) { animation: fadeUp .45s ease 37.5s both; }
+#s8 .f:nth-child(4) { animation: fadeUp .45s ease 37.65s both; }
+#s8 .note { font-size: 44px; color: var(--gold2); animation: fadeUp .5s ease 38.2s both; }
+
+/* ---------- S9 TITLE 40.5–46s ---------- */
+#s9 { animation: fadeIn .4s linear 40.5s both; flex-direction: column; gap: 10px;
+  background: radial-gradient(circle at 50% 45%, #2b1a52 0%, #07050d 70%); }
+#s9 .bg { position:absolute; inset:0; display:flex; justify-content:center; gap: 30px; align-items:center; opacity:.22; filter: blur(3px); }
+#s9 .bg div { width: 300px; height: 407px; background-size: cover; border-radius: 14px; }
+#s9 .pre { margin-bottom: 18px; font-size: 44px; letter-spacing: 4px; color: var(--gold2); animation: fadeUp .6s ease 40.8s both; position:relative; }
+#s9 h1 { position: relative; font-family: 'Cinzel', serif; font-weight: 900; text-align:center; line-height: .95;
+  background: linear-gradient(180deg, #fff6d8 0%, #e8c77a 45%, #a7792e 100%); -webkit-background-clip: text; background-clip:text; color: transparent;
+  filter: drop-shadow(0 0 30px rgba(232,199,122,.55)); animation: titleIn .9s cubic-bezier(.2,.8,.2,1) 40.9s both; }
+#s9 h1 .a { font-size: 150px; display:block; letter-spacing: 10px; }
+#s9 h1 .b { font-size: 132px; display:block; letter-spacing: 6px; }
+@keyframes titleIn { 0% {opacity:0; transform: scale(1.4); letter-spacing: 40px} 100% {opacity:1; transform: scale(1)} }
+#s9 .tag { position:relative; font-size: 48px; font-weight: 600; margin-top: 26px; animation: fadeUp .6s ease 41.8s both; }
+#s9 .cta { position:relative; margin-top: 40px; font-size: 42px; font-weight: 600; padding: 20px 56px; border-radius: 60px;
+  color: #1a0f00; background: linear-gradient(90deg, #ffe29a, #e8c77a); box-shadow: 0 0 40px rgba(232,199,122,.6);
+  animation: fadeUp .6s ease 42.4s both, ctaPulse 1.4s ease-in-out 43s infinite; }
+@keyframes ctaPulse { 0%,100% {box-shadow: 0 0 30px rgba(232,199,122,.5)} 50% {box-shadow: 0 0 70px rgba(232,199,122,.95)} }
+#fadeout { position:absolute; inset:0; background:#000; z-index: 80; opacity:0; animation: fadeIn 1s linear 45s both; }
+</style>
+</head>
+<body>
+<div class="stage">
+
+  <div class="scene" id="s1">
+    <div class="clock">FRI 17:59<small>DEADLINE</small></div>
+    <div class="l1">โปรเจกต์ต้องส่งวันศุกร์นี้...</div>
+    <div class="l2">แต่มีคนในทีม <span>ตั้งใจ</span> อู้งาน</div>
+  </div>
+
+  <div class="scene" id="s2">
+    <div class="bg"></div>
+    <div class="t1">ยินดีต้อนรับสู่บริษัทเอเจนซีเวทมนตร์</div>
+    <div class="t2">ช่วยกันปั่น<b>โปรเจกต์</b>ให้เสร็จ<br>ภายใน <b>5 วันทำงาน</b></div>
+    <div class="bar">
+      <div class="lbl">ความคืบหน้างาน</div>
+      <div class="track"><div class="fill"></div></div>
+      <div class="days"><span>MON</span><span>TUE</span><span>WED</span><span>THU</span><span>FRI</span></div>
+    </div>
+  </div>
+
+  <div class="scene fac" id="s3">
+    <div class="bg"></div>
+    <div class="cards"><div class="glow"></div><div class="card c1"></div><div class="card c2"></div><div class="card c3"></div></div>
+    <div class="copy">
+      <div class="kicker">FACTION I</div>
+      <h2>TEAM<br>DELIVER</h2>
+      <div class="th">ฝ่ายแสง · พนักงานสายแบก</div>
+      <div class="desc">ใช้สกิลสืบหาตัวการ<br>ปั่นงานให้เสร็จ หรือไล่คนอู้ออกให้หมด</div>
+    </div>
+  </div>
+
+  <div class="scene fac" id="s4">
+    <div class="bg"></div>
+    <div class="cards"><div class="glow"></div><div class="card c1"></div><div class="card c2"></div><div class="card c3"></div></div>
+    <div class="copy">
+      <div class="kicker">FACTION II</div>
+      <h2>CULT OF<br>BURNOUT</h2>
+      <div class="th">ฝ่ายมืด · ลัทธิอู้งาน</div>
+      <div class="desc">แฝงตัว แอบป่วนงาน วางกับดัก<br>เก็บเพื่อนร่วมงานทีละคนตอนกลางคืน</div>
+    </div>
+  </div>
+
+  <div class="scene fac" id="s5">
+    <div class="bg"></div>
+    <div class="cards"><div class="glow"></div><div class="card c1"></div><div class="card c2"></div><div class="card c3"></div></div>
+    <div class="copy">
+      <div class="kicker">FACTION III</div>
+      <h2>SEVERANCE<br>SEEKERS</h2>
+      <div class="th">ฝ่ายอิสระ · แก๊งอยากลาออก</div>
+      <div class="desc">ไม่สนว่าบริษัทจะรอดไหม<br>ขอแค่ภารกิจลับของตัวเองสำเร็จ</div>
+    </div>
+  </div>
+
+  <div class="scene" id="s6">
+    <div class="shaker">
+      <div class="cut" id="cutA">
+        <div class="bg" style="background-image:url('../docs/event_cards/03_server_down.png')"></div>
+        <div class="card" style="background-image:url('../docs/event_cards/03_server_down.png')"></div>
+        <div class="cap"><div class="tag">เหตุการณ์ป่วน</div><div class="big">เซิร์ฟเวอร์ล่ม!</div><div class="sub">เหตุการณ์ไม่คาดฝันโผล่มาแทบทุกวัน</div></div>
+      </div>
+      <div class="cut" id="cutB">
+        <div class="bg" style="background-image:url('../docs/event_cards/02_angry_client.png')"></div>
+        <div class="card" style="background-image:url('../docs/event_cards/02_angry_client.png')"></div>
+        <div class="cap"><div class="tag">เหตุการณ์ป่วน</div><div class="big">ลูกค้าเดือด</div><div class="sub">งานถอยหลังทันที</div></div>
+      </div>
+      <div class="cut" id="cutC">
+        <div class="bg" style="background-image:url('../docs/deadline_necromancer_trap_cards/02_honeypot_bug.png')"></div>
+        <div class="card" style="background-image:url('../docs/deadline_necromancer_trap_cards/02_honeypot_bug.png')"></div>
+        <div class="cap"><div class="tag" style="color:var(--red)">กับดัก</div><div class="big">ข้อมูลปลอม</div><div class="sub">คนที่แอบสืบ ได้ข้อมูลปลอมกลับมา</div></div>
+      </div>
+      <div class="cut" id="cutD">
+        <div class="bg" style="background-image:url('../docs/deadline_necromancer_trap_cards/01_blame_shifting.png')"></div>
+        <div class="card" style="background-image:url('../docs/deadline_necromancer_trap_cards/01_blame_shifting.png')"></div>
+        <div class="cap"><div class="tag" style="color:var(--red)">กับดัก</div><div class="big">โยนความผิด</div><div class="sub">โดนโหวตไล่ออก... แต่รอดหน้าตาเฉย</div></div>
+      </div>
+      <div class="cut" id="cutE">
+        <div class="bg" style="background-image:url('../docs/booster_cards/01_debug_scanner.png')"></div>
+        <div class="card" style="background-image:url('../docs/booster_cards/01_debug_scanner.png')"></div>
+        <div class="cap"><div class="tag" style="color:var(--cyan)">ตัวช่วยทีม</div><div class="big">ส่องหากับดัก</div><div class="sub">ทั้งทีมโหวตใช้ตัวช่วยได้ 1 ครั้ง</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="scene" id="s7">
+    <h3>ใครคือ<b>คนอู้</b>?</h3>
+    <div class="row">
+      <div class="av" style="background-image:url('../docs/deadline_necromancer_role_cards/team_deliver/04_rune_ux_ui.png')"></div>
+      <div class="av" style="background-image:url('../docs/deadline_necromancer_role_cards/team_deliver/07_coffee_admin.png')"></div>
+      <div class="av" style="background-image:url('../docs/deadline_necromancer_role_cards/severance_seekers/04_chaos_intern.png')"></div>
+      <div class="av sus" style="background-image:url('../docs/deadline_necromancer_role_cards/cult_of_burnout/02_mystery_intern.png')"><div class="stamp">FIRED</div></div>
+      <div class="av" style="background-image:url('../docs/deadline_necromancer_role_cards/team_deliver/09_ledger_sage.png')"></div>
+      <div class="av" style="background-image:url('../docs/deadline_necromancer_role_cards/team_deliver/11_release_alchemist.png')"></div>
+    </div>
+    <div class="votes">ทั้งทีมโหวตไล่คนต้องสงสัยออก · พูดให้เนียน แล้วอย่าโดนจับได้</div>
+  </div>
+
+  <div class="scene" id="s8">
+    <div class="grid">
+      <div class="f"><div class="n">6–12</div><div class="d">ผู้เล่น + คนคุมเกม 1 คน</div></div>
+      <div class="f"><div class="n">15–20</div><div class="d">นาทีต่อเกม</div></div>
+      <div class="f"><div class="n">22</div><div class="d">บทบาทลับ 3 ฝ่าย</div></div>
+      <div class="f"><div class="n">20</div><div class="d">การ์ดเหตุการณ์</div></div>
+    </div>
+    <div class="note">เล่นผ่านเว็บบนมือถือ · ใส่รหัสห้อง 4 ตัวแล้วเข้าเกมได้เลย</div>
+  </div>
+
+  <div class="scene" id="s9">
+    <div class="bg">
+      <div style="background-image:url('../docs/deadline_necromancer_role_cards/team_deliver/06_chrono_tech_lead.png')"></div>
+      <div style="background-image:url('../docs/deadline_necromancer_role_cards/cult_of_burnout/07_project_lead_dark.png')"></div>
+      <div style="background-image:url('../docs/deadline_necromancer_role_cards/neutral_npc/lord_client.png')"></div>
+      <div style="background-image:url('../docs/deadline_necromancer_role_cards/team_deliver/10_lantern_keeper.png')"></div>
+      <div style="background-image:url('../docs/deadline_necromancer_role_cards/severance_seekers/02_soul_recruiter.png')"></div>
+    </div>
+    <div class="pre">เกมจับโกหก แนว Werewolf ในออฟฟิศเวทมนตร์</div>
+    <h1><span class="a">DEADLINE</span><span class="b">NECROMANCER</span></h1>
+    <div class="tag">ส่งงานให้ทัน... ถ้าเพื่อนร่วมทีมยอมให้ส่ง</div>
+    <div class="cta">ชวนแก๊งมา 6 คน แล้วเปิดห้องเลย</div>
+  </div>
+
+  <div class="flash" style="animation: flashA .35s ease-out 2.5s forwards"></div>
+  <div class="flash" style="animation: flashA .3s ease-out 10s forwards"></div>
+  <div class="flash" style="animation: flashA .3s ease-out 15.5s forwards; background:#ff3b4e"></div>
+  <div class="flash" style="animation: flashA .3s ease-out 21s forwards; background:#e8c77a"></div>
+  <div class="flash" style="animation: flashA .25s ease-out 26.5s forwards"></div>
+  <div class="flash" style="animation: flashA .3s ease-out 35.3s forwards; background:#ff3b4e"></div>
+  <div class="flash" style="animation: flashA .5s ease-out 40.9s forwards"></div>
+
+  <div class="embers" id="embers"></div>
+  <div class="vignette"></div>
+  <div id="fadeout"></div>
+</div>
+
+<script>
+// Deterministic ember particles (seeded) so every render is identical.
+(function () {
+  let s = 7; const rnd = () => (s = (s * 16807) % 2147483647) / 2147483647;
+  const box = document.getElementById('embers');
+  for (let i = 0; i < 46; i++) {
+    const e = document.createElement('i');
+    const size = 3 + rnd() * 7;
+    e.style.left = (rnd() * 100) + '%';
+    e.style.width = e.style.height = size + 'px';
+    e.style.animationDuration = (6 + rnd() * 8) + 's';
+    e.style.animationDelay = (-rnd() * 14) + 's';
+    e.style.opacity = .4 + rnd() * .6;
+    box.appendChild(e);
+  }
+})();
+window.DURATION = 46;
+window.seek = function (t) {
+  for (const a of document.getAnimations()) { a.pause(); a.currentTime = t * 1000; }
+};
+// Live preview when opened directly in a browser (no ?render).
+if (!location.search.includes('render')) {
+  const t0 = performance.now();
+  (function loop() { window.seek(((performance.now() - t0) / 1000) % window.DURATION); requestAnimationFrame(loop); })();
+}
+</script>
+</body>
+</html>

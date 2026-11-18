@@ -12,9 +12,11 @@ Node + Socket.IO multiplayer game (app/), docs/ rules + card images.
 - change-card-grid-2x2x3: N<12, widths below 900px, team legend and e2e after the card enlargement not checked; nothing committed [[tasks/change-card-grid-2x2x3]]
 - Out-of-scope bugs (see .team/refactor-structure/refactor-plan.md section 1): server.js startsWith guard, unguarded decodeURIComponent, biased seat shuffle, rooms never deleted, docs design.md stale paths after refactor.
 ## Tasks
+- voice-over: done (branch accepted, not merged or pushed): WebRTC mesh voice, Mod3D hears, server-gated mute for Silence/Burnout/voted-out; manual browser steps M1-M4 still owed [[tasks/voice-over]]
 - change-chat-quick-replies: done (branch accepted, not merged or pushed): send button, Enter-clear fix, 23 quick replies [[tasks/change-chat-quick-replies]]
 - change-lobby-ui: done (branch accepted, not merged or pushed) [[tasks/change-lobby-ui]]
 - event-cards-16-20: done (branch accepted, not merged or pushed) [[tasks/event-cards-16-20]]
 - change-refactor-structure: done (merged to main locally, not pushed)
 - change-vote-result-phase-ui: done (committed 5100bad on main, not pushed; documents written afterwards) [[tasks/change-vote-result-phase-ui]]
 - change-card-grid-2x2x3: in progress (implemented in the working tree of main, not committed; documents written afterwards) [[tasks/change-card-grid-2x2x3]]
+- voice-over open issues: M1-M4 manual browser run not done; S-8 ICE gap on simultaneous two-way talk [[tasks/voice-over]]
