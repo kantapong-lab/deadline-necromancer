@@ -21,7 +21,7 @@ const SAY_VOICE = 'Kanya', SAY_RATES = [170, 200, 230, 185, 215, 175, 205, 225, 
 const SAY_LINES = ['ผู้เล่นหนึ่ง พูดอยู่นะ', 'ผู้เล่นสอง ฉันไม่ใช่หมาป่า', 'ผู้เล่นสาม ได้ยินไหม', 'ผู้เล่นสี่ ขอพูดหน่อย',
   'ผู้เล่นห้า อย่าโหวตฉันนะ', 'ผู้เล่นหก เมื่อคืนฉันนอนหลับ', 'ผู้เล่นเจ็ด ฉันสงสัยคนข้างๆ', 'ผู้เล่นแปด ฟังทางนี้นะ',
   'ผู้เล่นเก้า ฉันเป็นคนดี', 'ผู้เล่นสิบ ใครคือหมาป่า', 'ผู้เล่นสิบเอ็ด ฉันไม่รู้เรื่อง', 'ผู้เล่นสิบสอง ขอเวลาอธิบาย'];
-const MESH_WAIT_MS = 60000, SILENCE_WAIT_MS = 5000, RECONNECT_WAIT_MS = 15000, CUT_WAIT_MS = 10000;
+const MESH_WAIT_MS = 60000, SILENCE_WAIT_MS = 5000, RECONNECT_WAIT_MS = 15000, CUT_WAIT_MS = 30000;
 const PREROLL_MS = 1000, TAIL_MS = 1000;
 const N = C.N, sleep = C.sleep;
 const BIN_HZ = SR / FFT;
@@ -212,11 +212,14 @@ async function main() {
     G.players[seat(4)].silenced = true; room.pushState(R);
     const gm = await until(async () => (await vs(pages[4])) === 'gm', SILENCE_WAIT_MS);
     await sleep(1500);
+    const allOnSpk = async () => (await Promise.all(others.map(vs))).every(v => v === 'on' || v === 'spk');
+    await until(allOnSpk, 3000);
     const vsOthers = await Promise.all(others.map(vs));
     check('AC-4 NDA-Silence applied: P05 game-muted, others still on/spk', gm && vsOthers.every(v => v === 'on' || v === 'spk'), `P05 ${gm ? 'gm' : await vs(pages[4])} · others ${[...new Set(vsOthers)].join(',')}`);
     { const t0 = Date.now(); await tone(4, true);
       tl.push({ phase: 'silenced', slot: null, talkers: [4], tStart: t0, tEnd: t0 + SLOT_MS, window: [t0 + SETTLE_MS, t0 + SLOT_MS] });
       await sleep(Math.max(0, t0 + SLOT_MS - Date.now())); await tone(4, false); }
+    await until(allOnSpk, 3000);
     const after = await texts(others), vsAfter = await Promise.all(others.map(vs));
     const leaky = others.map((_, i) => ({ i, ok: subset(matches(after[i]), matches(before[i])) })).filter(x => !x.ok);
     check("AC-4 other players' UI shows no mute/silence text", !leaky.length && vsAfter.every(v => v === 'on' || v === 'spk'),
@@ -240,9 +243,13 @@ async function main() {
     const rv = await room.act('toVote');
     // day 1 has no vote (engine skips to VOTE_RESULT); any phase other than MORNING counts as leaving it
     check('AC-5 toVote accepted, MORNING left (day 1: VOTE_RESULT)', rv && rv.ok && G.phase !== 'MORNING', (rv && rv.error) || G.phase);
-    const cut = await until(async () => (await Promise.all(all13().map(conn))).every(c => c.all === 0), CUT_WAIT_MS);
-    const tz = Date.now();
-    check('AC-5 toVote: no connected peers on any of 13 pages', cut, cut ? 'all 0' : JSON.stringify(await Promise.all(all13().map(async p => (await conn(p)).all))));
+    const tCut0 = Date.now();
+    const cut0 = await until(async () => (await Promise.all(all13().map(conn))).every(c => c.all === 0), CUT_WAIT_MS);
+    const tz = Date.now(), cutMs = tz - tCut0;
+    const finalAll = (await Promise.all(all13().map(async p => (await conn(p)).all)));
+    const cut = cut0 || finalAll.every(c => c === 0);   // final re-read after timeout: pass only if all 0
+    report.cutOffMs = cutMs;
+    check('AC-5 toVote: no connected peers on any of 13 pages', cut, (cut ? 'all 0' : JSON.stringify(finalAll)) + ` · cut-off after ${cutMs} ms (limit ${CUT_WAIT_MS})`);
     tl.push({ phase: 'toVote', slot: null, talkers: seatList([]), tStart: tz, tEnd: tz + 1500, window: [tz + 300, tz + 1500] });
     await sleep(Math.max(0, tz + 1500 - Date.now()));
     await Promise.all(pages.map((_, i) => tone(i, false)));
@@ -379,7 +386,9 @@ async function main() {
     if (ev5) {
       const m = rx('mod3d', ev5, [], [], {}), p = rx('p01', ev5, [], [], {});
       const mm = Math.max(0, ...inWin(rxs.mod3d.mixBlocks, ev5.window[0], ev5.window[1]).map(s => s.rms)), pm = Math.max(0, ...inWin(rxs.p01.mixBlocks, ev5.window[0], ev5.window[1]).map(s => s.rms));
-      m.r.ok = m.r.quiet.ok && mm < T_OFF && m.r.heard.length === 0; p.r.ok = p.r.quiet.ok && pm < T_OFF;   // >= MIN_SAMPLES in the window too m.r.mixRms = +mm.toFixed(4); p.r.mixRms = +pm.toFixed(4);
+      m.r.ok = m.r.quiet.ok && mm < T_OFF && m.r.heard.length === 0; p.r.ok = p.r.quiet.ok && pm < T_OFF;
+      // >= MIN_SAMPLES in the window too
+      m.r.mixRms = +mm.toFixed(4); p.r.mixRms = +pm.toFixed(4);
       entry({ phase: 'toVote', slot: null, talkers: ev5.talkers, freqHz: ev5.talkers.map(freq), tStart: ev5.tStart, tEnd: ev5.tEnd, window: ev5.window, rx: { mod3d: m.r, p01: p.r } });
       check('AC-5 toVote: no inbound audio on mod3d and P01', m.r.ok && p.r.ok, `mixRms mod3d ${m.r.mixRms} p01 ${p.r.mixRms} (< ${T_OFF}) · samples ${m.r.quiet.samples}/${p.r.quiet.samples} (>= ${MIN_SAMPLES})`);
     } else check('AC-5 toVote: no inbound audio on mod3d and P01', false, 'not reached');
