@@ -142,7 +142,7 @@ function render() {
   if (focus === 'chatIn') { const el = $('#chatIn'); if (el) { el.focus(); try { el.setSelectionRange(caret[0], caret[1]); } catch (_) {} } }
   else if (focus && $('#' + focus) && val !== undefined) { const el = $('#' + focus); el.value = val; el.focus({ preventScroll: focus === 'qrToggle' }); }
   else if (qi !== undefined) { const el = $(`.btn.qr[data-qi="${qi}"]`); if (el) el.focus({ preventScroll: true }); }
-  tickTimer();
+  tickTimer(); Voice.paint();
 }
 function joinHTML() {
   return `<div class="setup jn"><h1>🧙 Deadline Necromancer</h1><p class="jn-help">เข้าห้องเล่นกับเพื่อนๆ — รับรหัสห้อง 4 ตัวอักษรจาก Moderator</p>
