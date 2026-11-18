@@ -4,3 +4,10 @@
 3	architect	sonnet	low	1	pass	0	tok:123341
 3	devops	sonnet	low	1	pass	0	tok:40299
 6	code-reviewer	opus	high	1	fail	0	tok:0
+4	frontend-dev	sonnet	low	1	pass	0	tok:91945
+4	backend-dev	sonnet	low	1	pass	0	tok:84055
+6	code-reviewer	opus	low	2	fail	0	tok:80120
+4	frontend-dev	sonnet	low	2	pass	0	tok:40875
+4	backend-dev	sonnet	low	2	pass	0	tok:41334
+4	backend-dev	haiku	low	3	pass	0	tok:18050
+6	code-reviewer	sonnet	low	3	pass	0	tok:14006

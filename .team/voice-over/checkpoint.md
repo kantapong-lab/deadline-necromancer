@@ -1,5 +1,5 @@
 # Checkpoint: voice-over
-Updated: step 6 · round 1
+Updated: step 6 · round 3
 
 ## Goal
 add voice over
@@ -25,18 +25,18 @@ gate 3c passed · user: "Approve (Recommended)" · 2026-11-18
 none yet
 
 ## Loop counters
-6:code-reviewer 1/3
+6:code-reviewer 2/3
 
 ## Open blockers
-- B-1 · app/src/server/handlers/voice.js:66 · BE · rounds open 1
-- B-2 · app/test/voice.js:1 · BE · rounds open 1
-- B-3 · app/public/voice.js:1 · FE · rounds open 1
-- V-1 · - · FE · rounds open 1
-- V-2 · - · BE · rounds open 1
+None.
 
 ## History
 - step 1 r1: L1 brief: mesh WebRTC, HTTPS needed, NDA leak risk [1-r1]
 - step 6 r1: Reject: comment-only B-1..B-3 [6-r1]
+- step 6 r2: review r2 [6-r2]
+- step 6 r3: review r3 [6-r3]
 
 [1-r1]: rounds/1-r1.md
 [6-r1]: rounds/6-r1.md
+[6-r2]: rounds/6-r2.md
+[6-r3]: rounds/6-r3.md

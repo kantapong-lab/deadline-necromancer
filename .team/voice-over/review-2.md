@@ -1,0 +1,1 @@
+# Review 2 (Reject): only B-2 (app/test/voice.js:113 wrong comment). B-1,B-3,S-1,S-2,S-3,S-5,S-6,V-2 closed. Open suggestions: S-8 FE ICE gap while onAnswer awaits setRemoteDescription; S-9 unused state (mod3d/voice.js on, voice.js barSig/tries); S-10 emitPeers force always false; S-11 mod3d.html:122 raw hex. V-1 live browser run for QA.
