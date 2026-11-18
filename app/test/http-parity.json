@@ -3,13 +3,13 @@
   "status": 200,
   "type": "text/html; charset=utf-8",
   "cache": "no-cache",
-  "sha256": "abbf25ae0bf066d3226b622bdd94939925ffd48e4dae40171ae8a98df1826832"
+  "sha256": "b49ddf3077d3b36677f57ad289f775a812bea9bff8a6e1027f7358b7f75c837e"
  },
  "/?room=ABCD": {
   "status": 200,
   "type": "text/html; charset=utf-8",
   "cache": "no-cache",
-  "sha256": "abbf25ae0bf066d3226b622bdd94939925ffd48e4dae40171ae8a98df1826832"
+  "sha256": "b49ddf3077d3b36677f57ad289f775a812bea9bff8a6e1027f7358b7f75c837e"
  },
  "/mod": {
   "status": 200,
@@ -33,7 +33,7 @@
   "status": 200,
   "type": "text/css; charset=utf-8",
   "cache": "no-cache",
-  "sha256": "f6d07974e5f5155aaf2b874fa031ac96e6179cde9e153c8a486cd6edf062a2b3"
+  "sha256": "2cdd7efff8208ceda03b0451e6194ffb71c7785b96fc37edcde100fcf1e61b82"
  },
  "/common.js": {
   "status": 200,
@@ -51,7 +51,7 @@
   "status": 200,
   "type": "text/html; charset=utf-8",
   "cache": "no-cache",
-  "sha256": "abbf25ae0bf066d3226b622bdd94939925ffd48e4dae40171ae8a98df1826832"
+  "sha256": "b49ddf3077d3b36677f57ad289f775a812bea9bff8a6e1027f7358b7f75c837e"
  },
  "/mod.html": {
   "status": 200,
