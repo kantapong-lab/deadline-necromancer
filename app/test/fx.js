@@ -31,13 +31,14 @@ let failed = 0;
 const t = (name, fn) => { try { fn(); console.log('  ok   ' + name); } catch (e) { failed++; console.log('  FAIL ' + name + '\n       ' + (e.stack || e).split('\n').slice(0, 4).join('\n       ')); } };
 
 t('light skills → structured results', () => {
-  const G = night(table(), { 0: skill(7), 1: skill(0), 2: skill(7, 3), 3: skill(8), 4: skill(), 5: skill(0) });
+  const G = night(table(), { 0: skill(7), 1: skill(0), 2: skill(7, 3), 3: skill(8), 4: skill(7, 3), 5: skill(0) });
   assert.deepStrictEqual(skillOf(G, 'senior_dev'), { kind: 'skill', day: 2, phase: 'NIGHT', role: 'senior_dev', caster: 0, targets: [7], result: { bug: false, none: false, extra: false } });
   assert.strictEqual(skillOf(G, 'qa_hunter').result.hasDark, true);
   assert.deepStrictEqual(skillOf(G, 'qa_hunter').targets, [7, 3]);
   assert.deepStrictEqual(skillOf(G, 'oracle_pm').result, { barrierBroke: false });
   assert.deepStrictEqual(skillOf(G, 'coffee_admin').result, { disabled: false });
-  assert.deepStrictEqual(skillOf(G, 'data_oracle').result, { real: 7, bugs: 0 });
+  assert.deepStrictEqual(skillOf(G, 'data_oracle').result, { same: false });
+  assert.deepStrictEqual(skillOf(G, 'data_oracle').targets, [7, 3]);
   assert.deepStrictEqual(skillOf(G, 'rune_ux').targets, [8]);
 });
 t('PM barrier on a dark player breaks', () => {
