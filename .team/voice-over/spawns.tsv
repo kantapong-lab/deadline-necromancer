@@ -3,3 +3,4 @@
 3	designer	sonnet	low	1	pass	0	tok:30528
 3	architect	sonnet	low	1	pass	0	tok:123341
 3	devops	sonnet	low	1	pass	0	tok:40299
+6	code-reviewer	opus	high	1	fail	0	tok:0
