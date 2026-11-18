@@ -47,3 +47,8 @@ none
 
 ## Gaps
 AC-1, 2, 3, 13, 17, 18, 19 unverified at runtime (manual). Client teardown on `voice:permit {false}` and receiver drop timing untested in a browser. No Mod3D audio output test.
+
+## Browser e2e (follow-up)
+`app/tools/e2e-voice-browser.js` (headless Chrome, fake mic, in-process server, 3 player pages + Mod3D page + 3 bots): 25/25 pass. Covers AC-1, 2, 3, 8, 13 (no mic API on the insecure LAN origin), 15, 17, 18, 19, and in a real browser: NDA-Silence, Burnout and voted-out players get the generic game-muted button and close their 3 outbound connections; Burnout/voted-out peers are dropped by Mod3D and the other players; NDA-Silence sends no drop event to others (connection counts unchanged), and voice resumes automatically when permitted again; other players' UI shows no mute/silence/cause text.
+Run: `PUPPETEER_DIR=<node_modules dir with puppeteer> node tools/e2e-voice-browser.js` (SKIPs without puppeteer). Not part of `npm test`.
+Still unverified: audible quality and Mod3D panning (headless cannot judge), real phones, the Thai hint text on the insecure page (only "no mic API" is asserted). A silenced peer's connection eventually times out on receivers (known tell, review S-7).
