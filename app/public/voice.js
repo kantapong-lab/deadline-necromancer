@@ -1,5 +1,3 @@
-// voice-over: player side. Classic script, sets window.Voice. Mesh WebRTC, signalling over Socket.IO (see .team/voice-over/contract).
-// The speaker is always the offerer. Never reveals why a player is muted: the only private signal is `permit` (own socket).
 (function () {
   'use strict';
   const HOLD_MS = 300, LEVEL = 0.02, TICK_MS = 100, ACK_MS = 8000, MAX_TRIES = 3;
@@ -15,21 +13,21 @@
 
   const V = {
     sock: null, getState: () => null,
-    unavail: null,           // null | 'insecure' | 'nomic' | 'denied'
+    unavail: null,
     hint: '', busy: false,
-    wantOn: false,           // user turned voice on (survives reconnects)
-    on: false,               // registered with the server for the current socket
+    wantOn: false,
+    on: false,
     muted: false, permit: false,
     stream: null, track: null, ice: [], peers: [],
-    out: new Map(),          // peer ('mod' | pid) -> {pc, gen, queue, tries}
-    inn: new Map(),          // pid -> {pc, audio, src, an, buf, queue, remote}
-    lastLoud: new Map(),     // pid (or 'self') -> ms
+    out: new Map(),
+    inn: new Map(),
+    lastLoud: new Map(),
     speakSig: '', barSig: '', timer: null, ctx: null, self: null,
     lastYou: undefined, wasLobby: false, retry: new Map(),
   };
 
   const supported = () => !!(window.isSecureContext && navigator.mediaDevices && navigator.mediaDevices.getUserMedia && window.RTCPeerConnection);
-  const safe = fn => { try { return fn(); } catch (e) { /* never throw into socket callbacks */ } };
+  const safe = fn => { try { return fn(); } catch (e) { return undefined; } };
   const emitAck = (ev, data) => new Promise(res => {
     let done = false; const f = r => { if (!done) { done = true; res(r || { ok: false }); } };
     try { V.sock.emit(ev, data, f); } catch { f({ ok: false }); }
@@ -41,7 +39,6 @@
   const ufragOf = sdp => { const m = /a=ice-ufrag:(\S+)/.exec(sdp || ''); return m ? m[1] : null; };
   const candFits = (pc, cand) => { const uf = cand && cand.usernameFragment, rd = pc.remoteDescription; return !uf || !rd || ufragOf(rd.sdp) === uf; };
 
-  // ---------- state for the UI ----------
   function vs() {
     if (V.unavail) return 'un';
     if (!V.on) return 'off';
@@ -56,7 +53,6 @@
   }
   function status() { return { supported: supported(), hint: V.hint, on: V.on, muted: V.muted, permit: V.permit, busy: V.busy, vs: vs(), speaking: speakingMap() }; }
 
-  // ---------- capture ----------
   async function toggle() {
     if (V.busy) return;
     if (V.wantOn) return stop();
@@ -65,7 +61,7 @@
   function start() {
     if (!supported()) { V.unavail = 'insecure'; V.hint = T.insecure; return paint(); }
     V.busy = true; V.hint = T.busy; paint();
-    let gum;   // must be requested synchronously inside the tap handler (iOS)
+    let gum;
     try { gum = navigator.mediaDevices.getUserMedia({ audio: { echoCancellation: true, noiseSuppression: true, autoGainControl: true } }); }
     catch { gum = Promise.reject({ name: 'NotFoundError' }); }
     safe(() => { ensureCtx(); if (V.ctx && V.ctx.state === 'suspended') V.ctx.resume().catch(() => {}); });
@@ -95,7 +91,7 @@
     if (V.sock) safe(() => V.sock.emit('voice:on', { on: false }, () => {}));
     V.hint = ''; paint();
   }
-  // register this socket as the voice socket; applies the ack. Resolves true when ok.
+  // Registers this socket for voice and applies the ack; resolves true when ok.
   async function sendOn() {
     const r = await emitAck('voice:on', { on: true });
     if (!r || !r.ok || !V.wantOn) { V.on = false; return false; }
@@ -104,7 +100,6 @@
   }
   function toggleMute() { V.muted = !V.muted; if (V.track) V.track.enabled = !V.muted; if (V.muted) V.lastLoud.delete('self'); paint(); }
 
-  // ---------- outbound (speaker is always the offerer) ----------
   function closeAllOut() { V.out.forEach(e => closePc(e.pc)); V.out.clear(); }
   function reconcile() {
     if (!(V.on && V.permit && V.track)) { closeAllOut(); return; }
@@ -138,10 +133,9 @@
     try {
       await e.pc.setRemoteDescription({ type: 'answer', sdp });
       const q = e.queue.splice(0); for (const c of q) if (candFits(e.pc, c)) await e.pc.addIceCandidate(c).catch(() => {});
-    } catch { /* bad answer: drop */ }
+    } catch { closePc(e.pc); if (V.out.get(from) === e) V.out.delete(from); }
   }
 
-  // ---------- inbound (listener) ----------
   function ensureCtx() {
     if (V.ctx) return V.ctx;
     const AC = window.AudioContext || window.webkitAudioContext; if (!AC) return null;
@@ -181,15 +175,14 @@
     startTimer();
   }
   function onIce(from, cand) {
-    if (!cand || typeof cand.candidate !== 'string') return;   // null = end of candidates
+    if (!cand || typeof cand.candidate !== 'string') return;
     const i = V.inn.get(from), o = V.out.get(from), c = { candidate: cand.candidate, sdpMid: cand.sdpMid, sdpMLineIndex: cand.sdpMLineIndex, usernameFragment: cand.usernameFragment };
-    // The same pid can be both my speaker (inbound) and my listener (outbound); the candidate's ufrag says which.
-    if (i && !i.remote) { i.queue.push(c); return; }
+    const uf = c.usernameFragment, toOut = !!(o && uf && o.pc.remoteDescription && ufragOf(o.pc.remoteDescription.sdp) === uf);
+    if (i && !i.remote && !toOut) { i.queue.push(c); return; }
     if (i && candFits(i.pc, c) && (c.usernameFragment || !o)) { i.pc.addIceCandidate(c).catch(() => {}); return; }
     if (o) { if (!o.pc.remoteDescription) o.queue.push(c); else if (candFits(o.pc, c)) o.pc.addIceCandidate(c).catch(() => {}); }
   }
 
-  // ---------- speaking meter ----------
   const loud = (an, buf) => { an.getByteTimeDomainData(buf); let s = 0; for (let k = 0; k < buf.length; k++) { const d = (buf[k] - 128) / 128; s += d * d; } return Math.sqrt(s / buf.length) > LEVEL; };
   function startTimer() {
     if (V.timer) return;
@@ -209,7 +202,6 @@
     if (s !== V.speakSig) { V.speakSig = s; paint(); }
   }
 
-  // ---------- painting ----------
   function barHTML() {
     const st = status(), s = st.vs;
     const un = s === 'un', label = un ? UNLABEL[V.unavail] : LABEL[s], dis = un || s === 'gm';
@@ -246,7 +238,6 @@
   }
   function paint() { safe(paintBar); safe(paintList); }
 
-  // ---------- socket wiring ----------
   function init(o) {
     V.sock = o.socket; V.getState = o.getState || V.getState;
     if (!supported()) { V.unavail = 'insecure'; V.hint = T.insecure; }
@@ -266,7 +257,7 @@
     }));
     s.on('disconnect', () => safe(() => { closeAll(); V.on = false; V.permit = false; paint(); }));
   }
-  // call after the existing `player:join` (token) ack on every (re)connect
+  // Re-register after the player:join ack on every (re)connect.
   function onJoined() { safe(() => { closeAll(); if (V.wantOn) sendOn().then(paint).catch(() => {}); }); }
   function onState(st) {
     safe(() => {

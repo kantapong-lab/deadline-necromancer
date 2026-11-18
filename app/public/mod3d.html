@@ -286,11 +286,10 @@ const DAYS = ['จ','อ','พ','พฤ','ศ'], DAY_FULL = ['Monday','Tuesday',
 const socket = io();
 const emitP = (ev, payload) => new Promise(res => socket.emit(ev, payload, res));
 
-// ---- voice: receiver only. Desk positions come from the moving desk groups (seats move), never fixed coordinates ----
 let deskList = null; const _vp = new THREE.Vector3();
 const voice = createModVoice({ socket,
   deskPos: (pid, out) => { const d = deskList && deskList[pid]; if (!d || !d.g) return false; d.g.getWorldPosition(_vp); out.x = _vp.x; out.y = _vp.y; out.z = _vp.z; return true; },
-  onSpeaking: (pid, on) => { const d = deskList && deskList[pid]; if (!d || !d.el) return; if (on) d.el.dataset.spk = '1'; else delete d.el.dataset.spk; } });   // presence only: no marker for anyone who is quiet, muted or absent
+  onSpeaking: (pid, on) => { const d = deskList && deskList[pid]; if (!d || !d.el) return; if (on) d.el.dataset.spk = '1'; else delete d.el.dataset.spk; } });
 {
   const gate = document.getElementById('soundGate'), gbtn = document.getElementById('sgBtn'), gerr = document.getElementById('sgErr'), badge = document.getElementById('soundBadge');
   let tvMuted = false, busy = false, rm = matchMedia('(prefers-reduced-motion:reduce)').matches;
@@ -305,7 +304,7 @@ const voice = createModVoice({ socket,
   gate.addEventListener('click', unlock);
   gbtn.addEventListener('click', e => { e.stopPropagation(); unlock(); });
   badge.addEventListener('click', () => { tvMuted = !tvMuted; voice.setMuted(tvMuted); badge.textContent = tvMuted ? '🔇' : '🔊'; badge.setAttribute('aria-pressed', String(tvMuted)); });
-  setInterval(() => { if (voice.isSuspended() && gate.style.display === 'none') showGate(); }, 1000);   // context suspended later (tab asleep): ask again
+  setInterval(() => { if (voice.isSuspended() && gate.style.display === 'none') showGate(); }, 1000);
   gbtn.focus();
 }
 
@@ -931,7 +930,7 @@ startBtn.onclick = () => socket.emit('mod:do', { action:'start' }, r => { if (r 
 socket.on('connect', async () => {
   const sv = saved(); if (!sv) { showLobby('ยังไม่ได้เข้าห้อง — เปิดหน้า Moderator เพื่อสร้างห้องก่อน แล้วกลับมาหน้านี้'); return; }
   const r = await emitP('mod:join', { ...sv, full:true });   // full = always show roles / secret actions (server-side, independent of the /mod Secrets toggle) if (!r || !r.ok) showLobby((r && r.error) || 'เข้าห้องไม่สำเร็จ');
-  if (r && r.ok) voice.rehandshake();   // re-register for voice after a reconnect (no-op until sound was enabled)
+  if (r && r.ok) voice.rehandshake();
 });
 socket.on('state', async st => {
   if (st.phase === 'LOBBY') { if (liveApi) liveApi.setReveal(false); renderLobby(st); return; }   // new game → secrets back to hidden
