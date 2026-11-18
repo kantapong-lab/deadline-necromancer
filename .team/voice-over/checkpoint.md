@@ -17,9 +17,9 @@ baseline: red (user: continue anyway)
 canvas: https://claude.ai/artifact/6Si4UJcQbKa4GDq44pkb6v
 base: main
 scope confirmed: mic + WebRTC P2P voice (signalling via Socket.IO), Mod3D spatial playback + speaking indicator, server-enforced mute (burnout/silence/voted-out), phases MORNING+VOTE_INTERIM. Out: recording, dark night voice, PTT settings, TURN hosting.
-next: 1 · researcher · brief.md
+next: 4 · frontend-dev ∥ backend-dev · build
 gate 2b passed · user: "Approve (Recommended)" · 2026-11-18
-paused at pause:design-review · resume when user approves the design
+gate 3c passed · user: "Approve (Recommended)" · 2026-11-18
 
 ## Decisions in force
 none yet
