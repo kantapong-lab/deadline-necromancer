@@ -12,12 +12,13 @@ add voice over
 lane: feature · skipped none
 
 ## Status
+closed
 route: full flow · intake: 3 asked
 baseline: red (user: continue anyway)
 canvas: https://claude.ai/artifact/6Si4UJcQbKa4GDq44pkb6v
 base: main
 scope confirmed: mic + WebRTC P2P voice (signalling via Socket.IO), Mod3D spatial playback + speaking indicator, server-enforced mute (burnout/silence/voted-out), phases MORNING+VOTE_INTERIM. Out: recording, dark night voice, PTT settings, TURN hosting.
-next: 4 · frontend-dev ∥ backend-dev · build
+next: none · closed
 gate 2b passed · user: "Approve (Recommended)" · 2026-11-18
 gate 3c passed · user: "Approve (Recommended)" · 2026-11-18
 
