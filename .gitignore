@@ -7,3 +7,4 @@ app/node_modules/
 .team/onboard/pending.json
 
 app/.certs/
+app/e2e-out/
