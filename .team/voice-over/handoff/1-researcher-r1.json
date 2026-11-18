@@ -1,0 +1,1 @@
+{"role":"researcher","task":"voice-over","step":"1","round":1,"status":"done","paths_written":[".team/voice-over/brief.md"],"blockers":[],"quality_checks":{"passed":true,"failed":[]},"summary":"L1 brief: mesh WebRTC + Socket.IO signalling gate, HTTPS self-signed needed on phones, mute via canSpeak on pushState; NDA-Silence leak risk flagged"}
