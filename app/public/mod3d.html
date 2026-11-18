@@ -152,6 +152,19 @@
   @keyframes pfxFall{0%{transform:translateY(-4.5rem) rotate(-50deg);opacity:0}32%,100%{transform:none;opacity:1}}
   @keyframes pfxSlam{0%{transform:scale(2.6);opacity:0}20%{transform:scale(.9);opacity:1}30%,100%{transform:none;opacity:1}}
   @keyframes pfxSpin{to{transform:rotate(360deg)}}
+  /* ---- voice: sound gate overlay, TV badge, speaking marker on the desk label ---- */
+  #soundGate{position:fixed;inset:0;z-index:960;display:grid;place-items:center;background:#0f0d1ab3;cursor:pointer;transition:opacity .2s}
+  #soundGate.gone{opacity:0;pointer-events:none}
+  #soundGate .sg{background:var(--panel);border:1px solid var(--line);border-radius:.8rem;padding:1.6rem 2.4rem;text-align:center;max-width:min(30rem,90vw)}
+  #soundGate .sg-i{font-size:3rem;line-height:1.1} #soundGate h2{margin:.3rem 0;font-size:1.5rem;font-weight:800;color:var(--light)} #soundGate p{margin:.3rem 0 1rem;color:var(--mut)}
+  #soundGate .sg-err{min-height:1.2em;margin:.6rem 0 0;color:var(--bad);font-size:.9rem}
+  #soundGate .btn{font-size:1.1rem;padding:.6rem 1.6rem} #soundGate .btn:focus-visible,#soundBadge:focus-visible{outline:2px solid var(--light);outline-offset:2px}
+  #soundBadge{position:fixed;right:.8rem;top:.8rem;z-index:var(--z-modtab);background:var(--panel2);border:1px solid var(--line);border-radius:99px;padding:.2rem .6rem;font-size:1.1rem;opacity:.6;display:none;cursor:pointer}
+  #soundBadge:hover,#soundBadge:focus-visible{opacity:1}
+  .tag[data-spk]::before{content:")) ";color:var(--good);font-weight:800;animation:spk .9s ease-out infinite}
+  .tag[data-spk]{box-shadow:0 .14rem 0 var(--good)}
+  @keyframes spk{from{opacity:.9}to{opacity:.3}}
+  @media (prefers-reduced-motion:reduce){.tag[data-spk]::before{animation:none;opacity:1}#soundGate{transition:none}}
   @media (prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important}}
   @media (max-width:900px){.band{grid-template-columns:1fr 5rem 1fr}.teamLeg{display:none}#lobbyCode{font-size:3rem}}
 </style>
@@ -201,6 +214,8 @@
   <p id="lobbyWhy"></p>
   <p><button class="btn on" id="startBtn" disabled style="display:none">▶ เริ่มเกม</button> <a class="btn" href="/mod">หน้า Moderator เต็ม</a></p>
 </div></div>
+<div id="soundGate" role="dialog" aria-modal="true" aria-labelledby="sgT"><div class="sg"><div class="sg-i" aria-hidden="true">🔊</div><h2 id="sgT">คลิกเพื่อเปิดเสียง</h2><p>เบราว์เซอร์ต้องการให้คลิกก่อน จึงจะได้ยินเสียงผู้เล่น</p><button class="btn on" id="sgBtn" type="button" autofocus>เปิดเสียง</button><p class="sg-err" id="sgErr" aria-live="polite"></p></div></div>
+<button id="soundBadge" type="button" aria-pressed="false" aria-label="ปิดเสียงผู้เล่นบนจอนี้" title="เสียงผู้เล่น: กดเพื่อปิด/เปิด">🔊</button>
 <script type="module">
 import * as THREE from 'three';
 import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
@@ -209,6 +224,7 @@ import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js'
 import { OutputPass } from 'three/addons/postprocessing/OutputPass.js';
 import { SMAAPass } from 'three/addons/postprocessing/SMAAPass.js';
 import { createDirector } from './mod3d/director.js';
+import { createModVoice } from './mod3d/voice.js';
 
 // =====================================================================
 //  ROLES — keys / names / faction / card art mirror app/src/shared/data.js
@@ -269,6 +285,29 @@ const DAYS = ['จ','อ','พ','พฤ','ศ'], DAY_FULL = ['Monday','Tuesday',
 
 const socket = io();
 const emitP = (ev, payload) => new Promise(res => socket.emit(ev, payload, res));
+
+// ---- voice: receiver only. Desk positions come from the moving desk groups (seats move), never fixed coordinates ----
+let deskList = null; const _vp = new THREE.Vector3();
+const voice = createModVoice({ socket,
+  deskPos: (pid, out) => { const d = deskList && deskList[pid]; if (!d || !d.g) return false; d.g.getWorldPosition(_vp); out.x = _vp.x; out.y = _vp.y; out.z = _vp.z; return true; },
+  onSpeaking: (pid, on) => { const d = deskList && deskList[pid]; if (!d || !d.el) return; if (on) d.el.dataset.spk = '1'; else delete d.el.dataset.spk; } });   // presence only: no marker for anyone who is quiet, muted or absent
+{
+  const gate = document.getElementById('soundGate'), gbtn = document.getElementById('sgBtn'), gerr = document.getElementById('sgErr'), badge = document.getElementById('soundBadge');
+  let tvMuted = false, busy = false, rm = matchMedia('(prefers-reduced-motion:reduce)').matches;
+  const hideGate = () => { gate.classList.add('gone'); setTimeout(() => { gate.style.display = 'none'; }, rm ? 0 : 200); badge.style.display = 'block'; };
+  const showGate = () => { gate.style.display = ''; gate.classList.remove('gone'); badge.style.display = 'none'; gbtn.focus(); };
+  async function unlock() {
+    if (busy) return; busy = true; gbtn.disabled = true; gbtn.textContent = 'กำลังเปิดเสียง…'; gerr.textContent = '';
+    const ok = await voice.enable().catch(() => false);
+    busy = false; gbtn.disabled = false; gbtn.textContent = 'เปิดเสียง';
+    if (ok) hideGate(); else gerr.textContent = 'เปิดเสียงไม่สำเร็จ — คลิกอีกครั้ง';
+  }
+  gate.addEventListener('click', unlock);
+  gbtn.addEventListener('click', e => { e.stopPropagation(); unlock(); });
+  badge.addEventListener('click', () => { tvMuted = !tvMuted; voice.setMuted(tvMuted); badge.textContent = tvMuted ? '🔇' : '🔊'; badge.setAttribute('aria-pressed', String(tvMuted)); });
+  setInterval(() => { if (voice.isSuspended() && gate.style.display === 'none') showGate(); }, 1000);   // context suspended later (tab asleep): ask again
+  gbtn.focus();
+}
 
 async function boot(st) {
 const N = st.players.length, MANA_MAX = st.manaMax || Math.floor(N / 2) + 1, NAMES = st.players.map(p => p.name);
@@ -421,7 +460,7 @@ function buildStandee(root, roleKey) {
 //  DESKS + PLAYERS
 // =====================================================================
 const pageTex = tex(256, 340, (x, w2, h) => { const gr = x.createLinearGradient(0, 0, w2, 0); gr.addColorStop(0, '#fff6d8'); gr.addColorStop(1, '#ffe9a8'); x.fillStyle = gr; x.fillRect(0, 0, w2, h); x.fillStyle = '#7a4aff'; x.font = '24px "Segoe UI Historic","Segoe UI Symbol",serif'; const RS = 'ᚠᚢᚦᚨᚱᚲᚷᚹᚺᚾᛁᛃᛇᛈᛉᛊᛏᛒᛖᛗᛚᛜᛞᛟ'; for (let k = 0; k < 11; k++) x.fillText(RS.slice(k % 6, k % 6 + 9), 22, 40 + k*28); x.strokeStyle = '#7a4aff'; x.lineWidth = 3; x.strokeRect(8, 8, w2 - 16, h - 16); });
-const desks = [], labelsEl = document.body.appendChild(document.createElement('div'));
+const desks = []; deskList = desks; const labelsEl = document.body.appendChild(document.createElement('div'));
 labelsEl.style.cssText = 'position:fixed;inset:0;pointer-events:none;z-index:var(--z-rows)';   // own stacking context: per-tag depth z-indexes (10..160) stay inside it, so the MOD panel / chat always sit above the name plates
 // ---- card layout: 2 rows (top / bottom) × 2 columns (left / right) × up to 3 cards = 12 slots; cells fill TL → TR → BL → BR in id order.
 //      Position says nothing about the team: revealing roles only flips the cards in place (no regrouping). Short cells pack to the outer edge. ----
@@ -862,7 +901,7 @@ function frame() {
   layoutLabels(); updateSides();
   for (const c of fx) { c.t += dt; const u = Math.min(1, c.t/1.2); c.card.position.y = 1.2 + u*1.5 + Math.sin(t*1.5)*.04; c.card.scale.setScalar(.2 + u*.8); c.card.rotation.y = (1 - u)*Math.PI*2 + Math.sin(t*.8)*.1; }
   const a = pg.attributes.position; for (let i = 0; i < P; i++) { let y = a.getY(i) + pv[i]*dt*(1 + phaseKick*7); if (y > 7) y = 0; a.setY(i, y); a.setX(i, a.getX(i) + Math.sin(t + i)*dt*.2); } a.needsUpdate = true;
-  D.postCamera(); composer.render();
+  voice.update(camera); D.postCamera(); composer.render();
   requestAnimationFrame(frame);
 }
 frame();
@@ -892,6 +931,7 @@ startBtn.onclick = () => socket.emit('mod:do', { action:'start' }, r => { if (r 
 socket.on('connect', async () => {
   const sv = saved(); if (!sv) { showLobby('ยังไม่ได้เข้าห้อง — เปิดหน้า Moderator เพื่อสร้างห้องก่อน แล้วกลับมาหน้านี้'); return; }
   const r = await emitP('mod:join', { ...sv, full:true });   // full = always show roles / secret actions (server-side, independent of the /mod Secrets toggle) if (!r || !r.ok) showLobby((r && r.error) || 'เข้าห้องไม่สำเร็จ');
+  if (r && r.ok) voice.rehandshake();   // re-register for voice after a reconnect (no-op until sound was enabled)
 });
 socket.on('state', async st => {
   if (st.phase === 'LOBBY') { if (liveApi) liveApi.setReveal(false); renderLobby(st); return; }   // new game → secrets back to hidden

@@ -12,8 +12,10 @@
 <script src="/data.js"></script>
 <script src="/audio.js"></script>
 <script src="/common.js"></script>
+<script src="/voice.js"></script>
 <script>
 const socket = io();
+Voice.init({ socket, getState: () => S });
 let S = null;                // state ล่าสุดจาก server
 let session = null;          // {code, token, name}
 let UI = { key: '', choice: null, sel: [], side: null, sideSel: [], trapId: null, plus1: false, voteSel: null, boosterSel: null };
@@ -34,7 +36,7 @@ const forgetSession = code => { try { localStorage.removeItem(sessKey(code)); if
 
 socket.on('connect', async () => {
   const s = saved();
-  if (s && (!urlCode() || urlCode() === s.code)) { const r = await emit(socket, 'player:join', { code: s.code, token: s.token, name: s.name }); if (r.ok) session = s; else { forgetSession(s.code); } }
+  if (s && (!urlCode() || urlCode() === s.code)) { const r = await emit(socket, 'player:join', { code: s.code, token: s.token, name: s.name }); if (r.ok) { session = s; Voice.onJoined(); } else { forgetSession(s.code); } }
   render();
 });
 socket.on('state', st => {
@@ -47,7 +49,7 @@ socket.on('state', st => {
     // เปลี่ยนเฟส → กลับแท็บเกม และสั่นเตือนเมื่อถึงตาที่ต้องทำอะไร (เฉพาะอุปกรณ์ที่รองรับ)
     if (st.me) { tab = 'game'; if (st.me.alive && (st.phase === 'VOTE' || st.phase === 'NIGHT')) navigator.vibrate?.(120); }
   }
-  setTimerFrom(st); render();
+  Voice.onState(st); setTimerFrom(st); render();
   if (st.me || st.phase === 'LOBBY') DNAudio.onState(st);
 });
 socket.on('kicked', () => { if (session) forgetSession(session.code); session = null; S = null; error = 'คุณถูกเชิญออกจากห้อง'; render(); });
@@ -112,7 +114,7 @@ function render() {
   else if (S.phase === 'LOBBY') { app.innerHTML = lobbyHTML(); }
   else keepScroll('.chat', () => { app.innerHTML = gameHTML(); });
   if (focus && $('#' + focus) && val !== undefined) { const el = $('#' + focus); el.value = val; el.focus(); }
-  tickTimer();
+  tickTimer(); Voice.paint();
 }
 function joinHTML() {
   return `<div class="setup jn"><h1>🧙 Deadline Necromancer</h1><p class="jn-help">เข้าห้องเล่นกับเพื่อนๆ — รับรหัสห้อง 4 ตัวอักษรจาก Moderator</p>
@@ -148,7 +150,7 @@ function gameHTML() {
   return topbar(S) + `<main>
     <aside class="card sec sec-players ${tab === 'players' ? 'active' : ''}"><h3>พนักงาน (${S.players.filter(p => p.alive).length}/${S.players.length})</h3>${playersListHTML(S.players)}</aside>
     <section class="center-col sec sec-game ${tab === 'game' ? 'active' : ''}">${error ? `<div class="banner warn">${esc(error)}</div>` : ''}${S.paused ? '<div class="banner">⏸️ Moderator พักเกมชั่วคราว</div>' : ''}${stageHTML()}
-      <div class="card"><h3>แชทกลาง</h3><div class="chat">${feedHTML(feed)}</div>${chatBar()}</div></section>
+      <div class="card"><h3>แชทกลาง</h3><div class="chat">${feedHTML(feed)}</div>${S.me ? Voice.barHTML() : ''}${chatBar()}</div></section>
     ${sideHTML()}${S.dark && isMobile() ? darkTabHTML() : ''}</main>${nav}`;
 }
 function chatBar() {
@@ -161,7 +163,7 @@ function chatBar() {
       : `<span class="chip ${left === 1 ? 'bad' : ''}">✂️ พิมพ์ได้อีก ${left}/${total} ข้อความ · ไม่เกิน ${max} ตัวอักษร</span>`;
     chip = `<div class="chips" aria-live="polite">${chip}</div>`;
   }
-  const ph = me().silenced ? '🤐 ถูกปิดปาก — ส่งได้แค่อีโมจิ' : out ? 'โควตาหมดแล้ว — ส่งได้แค่อีโมจิ' : limited ? `พิมพ์ข้อความ… (ไม่เกิน ${max} ตัวอักษร)` : 'พิมพ์ข้อความ…';
+  const ph = me().silenced ? '🤐 ถูกปิดปาก — ส่งได้แค่อีโมจิ และพูดทางไมค์ไม่ได้' : out ? 'โควตาหมดแล้ว — ส่งได้แค่อีโมจิ' : limited ? `พิมพ์ข้อความ… (ไม่เกิน ${max} ตัวอักษร)` : 'พิมพ์ข้อความ…';
   return `${chip}<form class="chatbar" onsubmit="sendChat(event)"><input id="chatIn" oninput="chatDraft=this.value;clearChatErr()" value="${esc(chatDraft)}" placeholder="${ph}" ${me().silenced || out ? 'disabled' : ''} autocomplete="off">
     ${QUICK_EMO.map(e => `<button type="button" class="btn emo" onclick="emoji('${e}')">${e}</button>`).join('')}</form><div id="chatErr">${chatErr ? `<div class="hint bad">${esc(chatErr)}</div>` : ''}</div>`;
 }
@@ -179,7 +181,7 @@ function stageHTML() {
   }
   if (s.phase === 'VOTE') {
     if (!m.alive) return `<div class="card stage">${deadBanner}<h2>🗳️ โหวตไล่ออก</h2>${waitMod('กำลังโหวต')}</div>`;
-    if (m.silenced) return `<div class="card stage"><h2>🗳️ โหวตไล่ออก</h2><p>🤐 คุณถูก NDA Silence — โหวตไม่ได้ในรอบนี้</p>${waitMod('รอปิดโหวต')}</div>`;
+    if (m.silenced) return `<div class="card stage"><h2>🗳️ โหวตไล่ออก</h2><p>🤐 คุณถูก NDA Silence — โหวตไม่ได้ และพูดทางไมค์ไม่ได้ในรอบนี้</p>${waitMod('รอปิดโหวต')}</div>`;
     if (m.hijacked) return `<div class="card stage"><h2>🗳️ โหวตไล่ออก</h2><p>🎤 Meeting Hijack — ไมค์ของคุณถูกยึด คุณถูกบังคับให้ Skip ในรอบนี้</p>${waitMod('รอปิดโหวต')}</div>`;
     const sel = curVoteSel(), rd = s.voteRound;
     const ts = s.voteCandidates.map(id => `<button class="btn ${sel === id ? 'sel' : ''}" onclick="pickVote(${id})">${esc(pname(id))}</button>`).join('');
