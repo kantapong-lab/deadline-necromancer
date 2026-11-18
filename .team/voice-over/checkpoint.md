@@ -17,6 +17,7 @@ baseline: red (user: continue anyway)
 base: main
 scope confirmed: mic + WebRTC P2P voice (signalling via Socket.IO), Mod3D spatial playback + speaking indicator, server-enforced mute (burnout/silence/voted-out), phases MORNING+VOTE_INTERIM. Out: recording, dark night voice, PTT settings, TURN hosting.
 next: 1 · researcher · brief.md
+gate 2b passed · user: "Approve (Recommended)" · 2026-11-18
 
 ## Decisions in force
 none yet
