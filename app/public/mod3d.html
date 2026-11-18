@@ -724,7 +724,7 @@ document.getElementById('closeBo').onclick = () => act('closeBooster');
 const fxQueue = []; let playing = false, gameEnded = false;
 const skillText = (f, c, T) => { const S = ROLES[f.role], r = f.result || {}; let x = `${S.skill} → ${T.length ? T.map(nm).join(' + ') : '—'}`;
   if (f.role === 'senior_dev') x += `: ${r.bug ? 'แอบวางบั๊ก' : r.none ? 'ไม่ได้ส่งงาน' : 'ส่งงานจริง'}`; else if (f.role === 'qa_hunter') x += `: ${r.hasDark ? 'มีฝ่ายมืดอย่างน้อย 1 คน' : 'ไม่มีฝ่ายมืด'}`;
-  else if (f.role === 'oracle_pm' && r.barrierBroke) x += ' (บาเรียแตก! มีออร่ามืด)'; else if (f.role === 'data_oracle') x = `${S.skill}: งานเสร็จจริง ${r.real} ชิ้น · บั๊กแฝง ${r.bugs} ชิ้น`;
+  else if (f.role === 'oracle_pm' && r.barrierBroke) x += ' (บาเรียแตก! มีออร่ามืด)'; else if (f.role === 'data_oracle' && T.length >= 2 && typeof r.same === 'boolean') x = `${S.skill}: ${nm(T[0])} กับ ${nm(T[1])} → ${r.same ? 'อยู่ทีมเดียวกัน 🔗' : 'อยู่คนละทีม ⛓️‍💥'}`;
   else if (f.role === 'shadow_hr') x += ` · เห็นบทบาท ${ROLE[r.role]?.n}`; else if (f.role === 'chaos_intern') x = `${S.skill}: “${r.note || '…'}”`; if (r.disabled) x += ' (ถูกปิดระบบ)'; if (f.via) x = '👻 ก๊อป · ' + x; return x; };
 async function playFx(f) {
   switch (f.kind) {

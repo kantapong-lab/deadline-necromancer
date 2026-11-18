@@ -127,7 +127,6 @@ module.exports = {
     skills('shadow_hr').forEach(a => { if (a.targets[0] != null) { const t = P(a.targets[0]); if (immune[t.id]) { add(a.p.id, `PIP Curse: ${t.name} ดูเหมือนมีภูมิคุ้มกัน (ถูกต้านทาน)`); return; } t.zeroNext = true; add(a.p.id, `PIP Curse: ${t.name} เป็น ${ROLES[t.role].n} (${FNAME[t.faction]}) — พลังโหวตพรุ่งนี้เป็น 0`); } });
     skills('shadow_legal').forEach(a => { if (a.targets[0] != null) { const t = P(a.targets[0]); if (immune[t.id]) { add(a.p.id, `NDA Silence: ${t.name} ดูเหมือนมีภูมิคุ้มกัน (ถูกต้านทาน)`); return; } t.silencedNext = true; add(a.p.id, `NDA Silence: ปิดปาก ${t.name} แล้ว`); } });
     // 5. Mana
-    const lightsAlive = A.filter(a => !a.side && a.p.faction === 'light');
     let passive = 1 - (G.noPenalty ? 0 : Math.min(G.skipStreak, 2));
     if (evId === 'restart') passive = Math.min(passive, 0);
     if (evId === 'scope' && evYes) passive += 1;
@@ -186,8 +185,18 @@ module.exports = {
       fxs('qa_hunter', a.p.id, { targets: a.targets.slice(), result: { hasDark: hit } });
       if (hit !== truth) G.fixNotes.push({ pid: a.p.id, text: '(Debug Scanner แก้ข้อมูล) ' + mk(truth) });
     });
-    if (!blackout) skills('data_oracle').forEach(a => fxs('data_oracle', a.p.id, { result: { real: lightsAlive.length, bugs: A.filter(x => x.type === 'SABOTAGE').length } }));
-    intelSkills('data_oracle').forEach(a => add(a.p.id, `KPI Forecast: งานเสร็จจริง ${lightsAlive.length} ชิ้น vs บั๊กแฝง ${A.filter(x => x.type === 'SABOTAGE').length} ชิ้น`));
+    intelSkills('data_oracle').forEach(a => {
+      if (a.targets.length < 2) return;   // after a swap the oracle may hold 0/1 targets: silent, like qa_hunter
+      const [x, y] = a.targets;
+      const truth = P(x).faction === P(y).faction;
+      const team = id => { const al = alibiOn(id); if (al && P(id).faction === 'dark') { al.triggered = true; return 'light'; } return P(id).faction; };
+      let same = team(x) === team(y);   // both targets evaluated: every fresh Alibi on a dark target is marked
+      const hp = a.targets.map(honeyOn).find(Boolean); if (hp) { same = !same; hp.triggered = true; }   // single flip, first trap only (as qa_hunter)
+      const mk = s => `Data Correlation: ${nm(x)} กับ ${nm(y)} → ${s ? 'อยู่ทีมเดียวกัน 🔗' : 'อยู่คนละทีม ⛓️‍💥'}`;
+      add(a.p.id, mk(same));
+      fxs('data_oracle', a.p.id, { targets: [x, y], result: { same } });
+      if (same !== truth) G.fixNotes.push({ pid: a.p.id, text: '(Debug Scanner แก้ข้อมูล) ' + mk(truth) });
+    });
     intelSkills('rune_ux').forEach(a => {
       const tid = a.targets[0]; if (tid == null) return;
       const all = A.filter(x => x.p.id !== a.p.id && (x.type === 'SKILL' || x.type === 'CURSE') && x.targets?.includes(tid)).map(x => x.p);

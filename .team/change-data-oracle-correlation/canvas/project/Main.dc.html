@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="th"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Data Correlation</title>
+<style>
+:root{--bg:#0f0d1a;--panel:#181528;--panel2:#201c36;--line:#33294f;--txt:#ebe7f7;--mut:#9a92b8;--light:#f5c451;--dark:#b05cff;--indie:#4ecdc4;--bad:#ff5c7a;--good:#5fe39a}
+body{margin:0;background:var(--bg);color:var(--txt);font-family:"Noto Sans","Noto Sans Thai",sans-serif;padding:16px}
+h2{font-size:15px;margin:20px 0 8px}h3{font-size:12px;color:var(--mut);margin:12px 0 4px;font-weight:600}
+.row{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:12px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:12px}
+.btn{background:var(--panel2);border:1px solid var(--line);padding:8px 14px;border-radius:8px;color:var(--txt);margin:2px;font:inherit}
+.btn.sel{border-color:var(--light);background:#3a3216;box-shadow:0 0 0 1px var(--light) inset}
+.btn:disabled{opacity:.35}
+.hint{color:var(--mut);font-size:13px;margin:6px 0}
+.log{border-left:3px solid var(--line);padding:4px 8px;margin:4px 0;font-size:14px}
+.old{text-decoration:line-through;color:var(--mut)}.tag{font-size:11px;color:var(--mut)}
+.fx{height:110px;position:relative;background:#120f22;border-radius:8px}
+.n{position:absolute;width:22px;height:22px;border-radius:50%;background:var(--indie);top:44px}
+.cast{background:var(--light);left:14px;top:44px}
+</style></head><body>
+<h1 style="font-size:18px">Data Oracle: Data Correlation</h1>
+<p class="hint">Tokens = existing app/public/style.css (no design-system dir in project). AC refs on each block.</p>
+
+<h2>1. Night picker (AC-1)</h2>
+<div class="row">
+<div class="card"><h3>BEFORE</h3><p><b>Data Oracle</b> · KPI Forecast</p><p class="hint">รู้ว่าเมื่อคืนมีงานเสร็จจริงกี่ชิ้น vs บั๊กแฝงกี่ชิ้น</p><p class="hint">no picker (t:0)</p></div>
+<div class="card"><h3>AFTER - none picked</h3><p><b>Data Oracle</b> · Data Correlation</p><p class="hint">เลือกเป้าหมาย 2 คน (เลือกแล้ว 0/2)</p>
+<button class="btn">Ann</button><button class="btn">Bo</button><button class="btn">Cat</button><button class="btn" disabled title="ห้ามเป้าเดิมติดกัน">Dee (ซ้ำเมื่อคืน)</button></div>
+<div class="card"><h3>AFTER - 2 picked</h3><p class="hint">เลือกเป้าหมาย 2 คน (เลือกแล้ว 2/2)</p>
+<button class="btn sel">Ann</button><button class="btn sel">Bo</button><button class="btn">Cat</button><button class="btn" disabled>Dee (ซ้ำเมื่อคืน)</button><p class="tag">Self not listed. Third pick: swap oldest or ignored (same as QA Hunter).</p></div>
+<div class="card"><h3>AFTER - fewer than 2 candidates</h3><p class="hint">ไม่มีเป้าหมายให้เลือก</p><p class="tag">Skill unavailable; skip night.</p></div>
+</div>
+
+<h2>2. Morning Night Log (AC-2, 4, 5, 6)</h2>
+<div class="row">
+<div class="card"><h3>BEFORE</h3><div class="log old">KPI Forecast: งานเสร็จจริง 2 ชิ้น · บั๊กแฝง 1 ชิ้น</div></div>
+<div class="card"><h3>AFTER - same</h3><div class="log">Data Correlation: Ann กับ Bo → อยู่ทีมเดียวกัน 🔗</div></div>
+<div class="card"><h3>AFTER - different</h3><div class="log">Data Correlation: Ann กับ Bo → อยู่คนละทีม ⛓️‍💥</div></div>
+<div class="card"><h3>AFTER - Power Outage</h3><div class="log">Data Oracle: ไม่ได้ข้อมูลเลย 🔌</div></div>
+<div class="card"><h3>Debug Scanner (Alibi/Honeypot altered)</h3><div class="log">(Debug Scanner แก้ข้อมูล) Data Correlation: Ann กับ Bo → อยู่คนละทีม ⛓️‍💥</div><p class="tag">Shows TRUE result; absent when unchanged. Same line format, no team named.</p></div>
+</div>
+
+<h2>3. 3D fx (AC-7)</h2>
+<div class="row">
+<div class="card"><h3>BEFORE</h3><div class="fx"><div class="n cast"></div><div style="position:absolute;left:60px;bottom:10px;width:12px;height:50px;background:#4fd0ff"></div><div style="position:absolute;left:84px;bottom:10px;width:12px;height:25px;background:#ff4d5e"></div></div><p class="tag">two bars over caster, 3200ms, real/bugs</p></div>
+<div class="card"><h3>AFTER - same</h3><div class="fx"><div class="n cast"></div><div class="n" style="left:140px;top:20px"></div><div class="n" style="left:140px;top:70px"></div><div style="position:absolute;left:150px;top:42px;width:3px;height:30px;background:#4fd0ff;box-shadow:0 0 8px #4fd0ff"></div><span style="position:absolute;left:170px;top:42px">🔗</span></div><p class="tag">targets[0],[1]: caster beam 0x4fd0ff to each (shoot+ringUp). Tether glows, pulse, hover 🔗 at midpoint.</p></div>
+<div class="card"><h3>AFTER - different</h3><div class="fx"><div class="n cast"></div><div class="n" style="left:140px;top:20px"></div><div class="n" style="left:140px;top:70px"></div><div style="position:absolute;left:150px;top:42px;width:3px;height:12px;background:#4fd0ff"></div><div style="position:absolute;left:150px;top:62px;width:3px;height:12px;background:#4fd0ff"></div><span style="position:absolute;left:170px;top:42px">⛓️‍💥</span></div><p class="tag">Same beams; tether splits in the middle and recoils. Same cyan tone for both results: neutral, never team colors (AC-2).</p></div>
+</div>
+
+<h2>4. Card text (AC-1, 4, 8, 9)</h2>
+<div class="row">
+<div class="card"><h3>Data Oracle d (data.js)</h3><p class="old">รู้ว่าเมื่อคืนมีงานเสร็จจริงกี่ชิ้น vs บั๊กแฝงกี่ชิ้น</p><p>เลือกเพื่อน 2 คน เช้าถัดไปรู้ว่าทั้งคู่อยู่ทีมเดียวกันหรือคนละทีม (ไม่บอกว่าทีมไหน)</p></div>
+<div class="card"><h3>Honeypot d</h3><p class="old">สายสืบ (Senior Dev/QA/UX) ที่ส่องคนนี้คืนนี้จะได้ข้อมูลปลอม</p><p>สายสืบ (Senior Dev/QA/UX/Data Oracle) ที่ส่องคนนี้คืนนี้จะได้ข้อมูลปลอม</p></div>
+<div class="card"><h3>Rune UX d (AC-8)</h3><p class="old">วางรูนที่เพื่อน 1 คน เช้าถัดไปรู้ชื่อทุกคนที่ใช้สกิลใส่คนนี้</p><p>วางรูนที่เพื่อน 1 คน เช้าถัดไปรู้ชื่อทุกคนที่ใช้สกิลใส่คนนี้ (นับตามเป้าหมายหลังถูกสลับโดย Scope Creep/Hot Desking)</p></div>
+<div class="card"><h3>Mystery Intern d (AC-9)</h3><p class="old">ก๊อปสกิลของฝ่ายแสงที่อยู่ถัดไปทางขวามาใช้คืนนี้</p><p>ก๊อปสกิลของผู้เล่นฝ่ายแสงที่ยังอยู่คนหนึ่ง (สุ่ม) มาใช้คืนนี้</p></div>
+<div class="card"><h3>card-info.js data_oracle</h3><p class="old">one: ดูว่าเมื่อคืนมีงานเสร็จและบั๊กอย่างละกี่ชิ้น</p><p>one: เลือก 2 คน รู้ว่าอยู่ทีมเดียวกันหรือไม่<br>what: เลือกเพื่อน 2 คน ระบบบอกว่าสองคนนี้ "อยู่ทีมเดียวกัน" หรือ "อยู่คนละทีม" ไม่บอกว่าทีมไหน<br>tip: ฝ่ายอิสระ 2 คนนับเป็นทีมเดียวกัน ข้อมูลอาจถูกหลอกด้วย Honeypot/Alibi</p></div>
+</div>
+</body></html>

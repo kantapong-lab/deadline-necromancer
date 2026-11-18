@@ -21,7 +21,7 @@ const D = createDirector({ THREE, scene, camera, desks, N, NAMES, ROLE, ROLES, E
 | `oracle_pm` | [เป้า] | `{ barrierBroke }` | โดมบาเรีย; ถ้าบาเรียแตกโดมแดงแตก + "มีออร่ามืด!" |
 | `qa_hunter` | [เป้า 2 คน] | `{ hasDark }` | ยิงสองทาง + 🔎 |
 | `rune_ux` | [เป้า] | `{ reveal:[desk…] }` | วงรูนที่พื้นหน้าเป้า; เฉลยชื่อตอนเช้า (`D.skillMorning`) |
-| `data_oracle` | – | `{ real, bugs }` | แท่งกราฟลอยเหนือการ์ด (งานจริง vs บั๊ก) |
+| `data_oracle` | – | `{ targets:[idA,idB], result:{ same } }` | เส้นเชื่อมระหว่างสองเป้าหมาย 🔗 (ทีมเดียวกัน) / ⛓️‍💥 (คนละทีม) |
 | `chrono_tech_lead` | – | – | นาฬิกายักษ์หมุนย้อน + คลื่นทอง |
 | `coffee_admin` | [เป้า] | – | ☕ บินไปฮีล + 💚 + ป้าย ☕×2 |
 | `shadow_hr` | [เป้า] | `{ role }` | 👁 + ป้าย 0️⃣, ฟองลับเห็นบทบาท |
