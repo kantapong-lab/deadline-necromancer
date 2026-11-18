@@ -110,7 +110,7 @@ async function t4t5() {
   assert.deepStrictEqual(evs(R.ps[0], 'voice:permit').slice(-1), [{ permit: false }], 'dead permit false');
   closeAll(R); console.log('T4/T5 ok');
 }
-// listener-keeps-hearing check on a link whose speaker was flipped to silence-only is covered in the gate: answer/ice back is not gated
+// A silenced listener still relays its answer and ICE back to an active speaker.
 async function t5b() {
   const R = await setup(6, { full: false }); await regAll(R, { mod: false });
   R.g.phase = 'MORNING'; R.g.paused = false; R.g.players.forEach(p => { p.alive = true; p.silenced = false; }); await R.push();
