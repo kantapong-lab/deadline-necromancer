@@ -77,3 +77,18 @@ Output left at `/Users/hyde_harmonyx/development/deadline-necromancer/.worktrees
 
 ## Orchestrator rerun after round 3 (2026-11-19)
 B-3 (dev: 2/6 under load avg 40-90) re-measured on a quieter host: 3/3 runs 46/46 exit 0 (106/101/112 s, load 18-44); AC-5 cut-off 123/244/1298 ms (limit 30000). B-3 = host load, not code.
+
+## Round 3 (rerun only, B-2 closure, L3)
+Branch qa/change-e2e-voice-clip at 9952a3b (round 3 merged, fa39496). Command: `node tools/e2e-pw-voice.js` from `app/`, one run at a time.
+
+| run | load before (1/5/15 min) | result line | exit | AC-5 cut-off ms | PASS count | FAIL lines |
+|---|---|---|---|---|---|---|
+| 1 | 9.50 31.91 48.94 | E2E VOICE OK: 46/46 checks | 0 | 1205 | 46 | none |
+| 2 | 28.64 32.57 46.96 | E2E VOICE OK: 46/46 checks | 0 | 1740 | 46 | none |
+
+Load after run 1: 30.35 32.97 47.18; after run 2: 49.21 38.15 47.21. Logs: `/tmp/qa-r3-run1.log`, `/tmp/qa-r3-run2.log`.
+
+- B-2 (AC-5 poll timeout, 1/3 flake in round 2): closed by the ca9ab62 fix (CUT_WAIT_MS 30000 plus final re-read). Both round 3 runs passed with cut-off well under the 30000 ms limit, including under load above 45. Two passing runs are not statistical proof of zero flake, but the timeout that caused B-2 is now 30 s against cut-offs of 1.2 s and 1.7 s.
+- B-1 (minor, non-blocking): not re-tested in this round; status unchanged.
+- No new bugs. AC table above unchanged.
+- Verdict: Pass, tests 2/2 (runs).
