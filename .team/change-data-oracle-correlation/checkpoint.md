@@ -11,9 +11,11 @@ Out of scope: Senior Dev "none" result being a 100% dark tell.
 lane: change (ui+logic) · skipped 1, 3d
 
 ## Status
+closed · 2026-11-18 · step 11 docs done, step 12 closing done
 step 1 setup done · base: main · baseline: red (user: continue, code is the only truth) · announcement: no · route: change (redesign) · intake: 2 asked
 gate 2b passed · user: "อนุมัติ" · 2026-11-18
 gate 3c passed · user: "อนุมัติ" · 2026-11-18 (recorded by hand: canvas not published — Artifact publish and local server denied by permissions; user reviewed the local file canvas/project/Main.dc.html in the browser pane)
+step 7 QA L3 pass (10/10) · step 10 Human gate approved · user: "อนุมัติ" · 2026-11-18 · role worktrees removed
 canvas: local only (canvas/project/Main.dc.html) · ux-review: skipped (impeccable not installed) · 3c low finding: blackout line reads "Data Correlation: ไฟดับ/เน็ตหลุด ไม่ได้ข้อมูลเลย 🔌" (existing intelSkills text)
 
 ## Decisions in force

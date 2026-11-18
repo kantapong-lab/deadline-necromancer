@@ -179,7 +179,7 @@ export function createDirector(env) {
     async release_alchemist({ caster:c }) { ringUp(c, 0x4fd0ff); burst('⚗️', wp(c, 1.2), { n:8, r:1.3 }); pulse(0, 0, 0x4fd0ff, 6); priv(c, '⚗️ Overclock Deploy +1', 'y'); },
     // result:{ role:roleKey }  (HR sees the target's real role)
     async shadow_hr({ caster:c, targets:[t], result:r = {} }) { await shoot(c, t, 0xb05cff); ringUp(t, 0xb05cff); hover('👁', wp(t, 2.1), 1800); ui.badge(t, '0️⃣'); priv(c, `👁 ${nm(t)} = ${ROLE[r.role || t.role].n}`, 'n'); },
-    // payload extra: result:{ copied:roleKey, source:desk, targets:[…], result:{…} }  (right-hand light neighbour's skill, run by the intern)
+    // payload extra: result:{ copied:roleKey, source:desk, targets:[…], result:{…} }  (skill of a random living light player, run by the intern)
     async mystery_intern({ caster:c, result:r = {} }) { if (!r.copied) { priv(c, '… ไม่มีฝ่ายแสงให้ก๊อป', 'n'); return; } const src = D_(r.source); await fly('👻', wp(src, 1), wp(c, 1), 800, .7); ringUp(c, 0xc8ccd8);
       if (skills[r.copied]) await skills[r.copied]({ caster:c, targets:(r.targets || []).map(D_), result:r.result || {} }); },
     async illusionist_sales({ caster:c, targets:[t] }) { await shoot(c, t, 0xff4d5e); burst('🎭', wp(t, 1), { n:8, r:1.1 }); ui.badge(t, '🎭'); },

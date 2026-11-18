@@ -5,3 +5,4 @@
 4	backend-dev	sonnet	medium	1	pass	0	tok:n/a
 6	code-reviewer	sonnet	high	1	pass	0	tok:n/a
 7	qa-tester	sonnet	medium	1	pass	0	tok:n/a
+11	docs-writer	sonnet	low	1	pass	0	tok:n/a
