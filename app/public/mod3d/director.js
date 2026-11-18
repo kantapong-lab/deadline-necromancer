@@ -154,9 +154,21 @@ export function createDirector(env) {
     // result:{ reveal:[desk…] }  (names of everyone who used a skill on the target — shown next morning; pass later via D.skillMorning)
     async rune_ux({ caster:c, targets:[t], result:r = {} }) { await shoot(c, t, 0x2ab5a8); const g = new THREE.Mesh(new THREE.PlaneGeometry(1.5, 1.5), new THREE.MeshBasicMaterial({ map:assets.runes, color:0x2ab5a8, transparent:true, opacity:.9, blending:THREE.AdditiveBlending, depthWrite:false, toneMapped:false }));
       g.rotation.x = -Math.PI/2; const w = wp(t, 0); g.position.set(w.x, .1, w.z); scene.add(g); persist.push(g); ui.badge(t, '🔮'); hover('🔮', wp(t, 2.1)); if (r.reveal) await skillMorning('rune_ux', { caster:c, targets:[t], result:r }); },
-    // result:{ real:number, bugs:number }
-    async data_oracle({ caster:c, result:r = {} }) { const base = wp(c, 1.7); const bars = [[0x4fd0ff, r.real ?? 0, -.3], [0xff4d5e, r.bugs ?? 0, .3]].map(([col, v, dx]) => { const m = new THREE.Mesh(new THREE.BoxGeometry(.22, 1, .22), glowM(col, 1.4)); scene.add(m); return { m, v, dx }; });
-      priv(c, `📊 จริง ${r.real ?? 0} · บั๊ก ${r.bugs ?? 0}`); await timed(3200, (u, dt, t) => bars.forEach(b => { const h = Math.max(.02, b.v*.35*Math.min(1, u*3)); b.m.scale.y = h; b.m.position.set(base.x + b.dx, base.y + h/2, base.z); b.m.visible = u < .94; })); bars.forEach(b => scene.remove(b.m)); },
+    // result:{ same:boolean }  (shown result after Alibi/Honeypot; same colour for both outcomes, never a faction colour)
+    async data_oracle({ caster:c, targets:[a, b] = [], result:r = {} }) {
+      if (!a || !b) return; const CY = 0x4fd0ff, has = typeof r.same === 'boolean', icon = r.same ? '🔗' : '⛓️‍💥';
+      const pa = wp(a, 1.2), pb = wp(b, 1.2), mid = pa.clone().add(pb).multiplyScalar(.5);
+      if (window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches) { if (has) await hover(icon, mid, 1500); return; }
+      const t0 = performance.now(), Y = new THREE.Vector3(0, 1, 0), meshes = [];
+      const seg = (p, q) => { const m = new THREE.Mesh(new THREE.CylinderGeometry(.03, .03, 1, 8), glowM(CY, 1.6)); scene.add(m); meshes.push(m); const d = q.clone().sub(p), L = d.length() || .001; m.position.copy(p).add(q).multiplyScalar(.5); m.quaternion.setFromUnitVectors(Y, d.normalize()); m.scale.y = L; return { m, p, q, L, dir:d.clone() }; };
+      await Promise.all([shoot(c, a, CY), shoot(c, b, CY)]); ringUp(a, CY); ringUp(b, CY); hover('🔎', wp(a, 2.1)); hover('🔎', wp(b, 2.1));
+      await wait(Math.max(0, 600 - (performance.now() - t0)));
+      const rest = Math.max(1200, 3200 - (performance.now() - t0));
+      if (has) hover(icon, mid.clone().setY(mid.y + .9), rest - 200);
+      if (!has) { await wait(rest); return; }
+      if (r.same) { const s = seg(pa, pb); await timed(rest, u => { const k = 1 + .8*Math.sin(Math.min(1, u*2)*Math.PI); s.m.scale.x = s.m.scale.z = k; }); }
+      else { const h1 = seg(pa, mid), h2 = seg(mid, pb); await timed(rest, u => { const k = .3*Math.min(1, u*3); [[h1, -1], [h2, 1]].forEach(([h, sg]) => { const o = h.dir.clone().normalize().multiplyScalar(sg*k); h.m.position.copy(h.p).add(h.q).multiplyScalar(.5).add(o); }); }); }
+      meshes.forEach(m => { scene.remove(m); m.geometry.dispose(); m.material.dispose(); }); },
     async chrono_tech_lead({ caster:c }) { pulse(0, 0, 0xf5c451, 9); pulse(0, 0, 0xffffff, 6); ui.flash(.3, '#fff4c0'); const clk = clockProp(); await prop(clk.g, 3200, (u, t) => { clk.hand.rotation.z = u*Math.PI*12; clk.g.scale.setScalar(Math.min(1, u*6, (1 - u)*6)); clk.g.position.set(0, 4.6, 0); clk.g.rotation.y = Math.atan2(camera.position.x, camera.position.z); }); },
     async coffee_admin({ caster:c, targets:[t] }) { await fly('☕', wp(c, 1.1), wp(t, 1.1), 900, .6); ringUp(t, 0x7dff9a); burst('💚', wp(t, 1), { n:8, r:1.2 }); ui.badge(t, '☕×2'); },
     // result:{ vote:deskIndex|'SKIP'|null }  (who the target voted for yesterday)
