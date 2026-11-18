@@ -9,16 +9,16 @@ lane: change (internal) · skipped 1, 2, 2b, 3b, 3c, 3d
 ## Status
 step 1 setup done · base: main · baseline: red (user: continue, code is the only truth) · announcement: no · route: change (lite) · owner: BE · ffmpeg installed
 step 3 contract done · step 4 be merged (46/46) · step 6 review-1 Approve (S-1..S-3) · step 7 QA L3 pass 46/46 x2, e2e-pw 20/20, B-1 minor (=S-1)
-fix round 2 (user): Thai say voice + pilot tone, B-1, S-2, S-3 · be r2 running
+fix round 2 (user) done: review-2 Approve; QA r2 Fail B-2 (AC-5 cut wait flake 1/3) · fix round 3 be running (B-2, SG-1, SG-2)
 
 ## Decisions in force
 Grilling decisions in Goal are final (user, 2026-11-18). Product code (voice.js, mod3d, server) not changed; test hooks injected from the script.
 
 ## Loop counters
-None.
+B-2 (QA r2 loop 1)
 
 ## Open blockers
-None.
+B-2 (QA r2 loop 1)
 
 ## History
 - step 6 r1: Approve, 3 suggestions [review-1.md]

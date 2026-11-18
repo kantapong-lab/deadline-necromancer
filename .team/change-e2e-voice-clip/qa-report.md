@@ -74,3 +74,6 @@ Frame at 9.0 s (slot 3): mod3d large left shows P03 card with speaking glow and 
 Suggestions: SG-1..SG-5 from review-2 stand (SG-5 clip 60.7 s; observed 64-90 s). SG-2 not reproduced.
 
 Output left at `/Users/hyde_harmonyx/development/deadline-necromancer/.worktrees/qa-change-e2e-voice-clip/app/e2e-out/voice/` (run 3 output, gitignored).
+
+## Orchestrator rerun after round 3 (2026-11-19)
+B-3 (dev: 2/6 under load avg 40-90) re-measured on a quieter host: 3/3 runs 46/46 exit 0 (106/101/112 s, load 18-44); AC-5 cut-off 123/244/1298 ms (limit 30000). B-3 = host load, not code.
