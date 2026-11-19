@@ -11,7 +11,7 @@ step 1 setup done · base: main · baseline: red (user: continue, code is the on
 r1: contract, be 46/46, review-1 Approve, QA pass (B-1 minor)
 r2 (user: human voice, option a): Thai say Kanya + pilot tone, B-1/S-2/S-3 fixed; review-2 Approve; QA r2 Fail B-2 (AC-5 cut wait flake 1/3)
 r3: B-2/SG-1/SG-2 fixed; dev 2/6 under load 40-90 (B-3 = host load); orchestrator rerun 3/3; review-3 Approve; QA r3 Pass 2/2
-pause:human-gate · resume when user approves the branch
+closed · 2026-11-19 · step 10 Human gate approved · user: "Approve" · step 11 docs skipped (README already updated, no deploy items) · step 12 closing done
 
 ## Decisions in force
 Grilling decisions in Goal are final (user, 2026-11-18). Round 2 voice = speech + pilot (user, 2026-11-19). Product code (voice.js, mod3d, server) not changed; test hooks injected from the script.
