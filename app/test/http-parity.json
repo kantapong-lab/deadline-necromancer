@@ -15,7 +15,7 @@
   "status": 200,
   "type": "text/html; charset=utf-8",
   "cache": "no-cache",
-  "sha256": "c90afd4b37f9bb9918ce5e1a4d50dbaeba4d70e965251562b07ec7497346becb"
+  "sha256": "228c8ffa9a4bc1adf56ddf6d2c63c295bf1285e13d5f1f191c84304d1dcadd23"
  },
  "/gallery": {
   "status": 200,
@@ -29,6 +29,12 @@
   "cache": "no-cache",
   "sha256": "642086337384d9b61478800b18f34f9b1fa87be9d6881f26f58394956f668408"
  },
+ "/lan-ip": {
+  "status": 200,
+  "type": "application/json",
+  "cache": "no-cache",
+  "sha256": "3f71397c52f55111e3db19c2eec34ad64219be94f1c26ae4c5d59f1468ff0633"
+ },
  "/style.css": {
   "status": 200,
   "type": "text/css; charset=utf-8",
@@ -40,6 +46,12 @@
   "type": "text/javascript; charset=utf-8",
   "cache": "no-cache",
   "sha256": "ad2a857c8e400dc1b7468940792ac96aa14ef495293705c6b6b8152020772156"
+ },
+ "/qrcode.js": {
+  "status": 200,
+  "type": "text/javascript; charset=utf-8",
+  "cache": "no-cache",
+  "sha256": "18ae399f81182bc9de916e9c77b195df20cc58d6f2d55a62b085a299f1bf1780"
  },
  "/card-info.js": {
   "status": 200,
@@ -57,7 +69,7 @@
   "status": 200,
   "type": "text/html; charset=utf-8",
   "cache": "no-cache",
-  "sha256": "c90afd4b37f9bb9918ce5e1a4d50dbaeba4d70e965251562b07ec7497346becb"
+  "sha256": "228c8ffa9a4bc1adf56ddf6d2c63c295bf1285e13d5f1f191c84304d1dcadd23"
  },
  "/gallery.html": {
   "status": 200,

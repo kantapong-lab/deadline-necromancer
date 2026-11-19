@@ -13,9 +13,12 @@ if (!/^\d{1,3}(\.\d{1,3}){3}$/.test(ip)) { console.error('lanIp must be an IPv4 
 const dir = path.join(__dirname, '..', '.certs');
 fs.mkdirSync(dir, { recursive: true });
 const key = path.join(dir, 'voice.key'), crt = path.join(dir, 'voice.crt');
+// A stale OPENSSL_CONF (e.g. left by a PostgreSQL installer) makes openssl fail; ignore it if the file is gone.
+const env = { ...process.env };
+if (env.OPENSSL_CONF && !fs.existsSync(env.OPENSSL_CONF)) delete env.OPENSSL_CONF;
 try {
   execFileSync('openssl', ['req', '-x509', '-newkey', 'rsa:2048', '-nodes', '-days', '365', '-keyout', key, '-out', crt,
-    '-subj', '/CN=' + ip, '-addext', `subjectAltName=IP:${ip},DNS:localhost`], { stdio: ['ignore', 'ignore', 'pipe'] });
+    '-subj', '/CN=' + ip, '-addext', `subjectAltName=IP:${ip},DNS:localhost`], { stdio: ['ignore', 'ignore', 'pipe'], env });
 } catch (e) {
   if (e.code === 'ENOENT') console.error('openssl not found. Install OpenSSL >= 1.1.1 (Windows: winget install ShiningLight.OpenSSL.Light; macOS: brew install openssl; Linux: apt install openssl) or use a tunnel (cloudflared / ngrok), see README.');
   else console.error('openssl failed: ' + (e.stderr ? e.stderr.toString() : e.message));

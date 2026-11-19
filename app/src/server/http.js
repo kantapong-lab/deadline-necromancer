@@ -1,7 +1,15 @@
 // Static file serving and the public URL table (public URLs are frozen).
 const fs = require('fs');
 const path = require('path');
+const os = require('os');
 const { PUBLIC, DOCS, SHARED } = require('./paths');
+
+// LAN IPv4 addresses of this machine (for the moderator's join QR when /mod is opened via localhost). Addresses only, no secrets.
+function lanIps() {
+  const out = [];
+  for (const list of Object.values(os.networkInterfaces())) for (const a of list || []) if (a.family === 'IPv4' && !a.internal) out.push(a.address);
+  return out;
+}
 
 const MIME = { '.html': 'text/html; charset=utf-8', '.js': 'text/javascript; charset=utf-8', '.css': 'text/css; charset=utf-8', '.jpg': 'image/jpeg', '.png': 'image/png', '.svg': 'image/svg+xml', '.json': 'application/json' };
 
@@ -19,6 +27,7 @@ function handleRequest(req, res) {
   if (url === '/') return serveFile(res, PUBLIC, 'index.html');
   if (url === '/mod') return serveFile(res, PUBLIC, 'mod.html');
   if (url === '/gallery') return serveFile(res, PUBLIC, 'gallery.html');   // แกลเลอรีรูปการ์ดทั้งหมด
+  if (url === '/lan-ip') { res.writeHead(200, { 'Content-Type': MIME['.json'], 'Cache-Control': 'no-cache' }); return res.end(JSON.stringify({ ips: lanIps() })); }
   if (url === '/data.js') return serveFile(res, SHARED, 'data.js');   // ข้อมูลบทบาท/การ์ดใช้ร่วมกับฝั่ง client
   if (url.startsWith('/docs/')) {
     // เสิร์ฟเฉพาะรูปการ์ดจาก docs (ไม่เปิดไฟล์เอกสารอื่น)
