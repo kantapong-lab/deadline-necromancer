@@ -12,6 +12,7 @@
 <script src="/data.js"></script>
 <script src="/audio.js"></script>
 <script src="/common.js"></script>
+<script src="/qrcode.js"></script>
 <script>
 const socket = io();
 let S = null, session = null, error = '';
@@ -39,8 +40,13 @@ async function doAct(action, payload) {
   const r = await emit(socket, 'mod:do', { action, payload });
   error = r.ok ? '' : r.error; if (!r.ok) render();
 }
-const joinUrl = () => location.origin + '/?room=' + session.code;
+let lanHost = '';   // LAN IP from /lan-ip, used in place of localhost so phones can reach the join link
+const joinUrl = () => (isLocalHost() && lanHost ? location.protocol + '//' + lanHost + (location.port ? ':' + location.port : '') : location.origin) + '/?room=' + session.code;
 function announce(e) { e.preventDefault(); const i = $('#annIn'); const t = i.value.trim(); if (!t) return; i.value = ''; doAct('announce', { text: t }); }
+const isLocalHost = () => /^(localhost|127\.0\.0\.1|\[::1\])$/.test(location.hostname);
+function joinQR() {   // QR of the join link (vendored qrcode.js, no network); phones can't reach localhost, so warn
+  try { const q = qrcode(0, 'M'); q.addData(joinUrl()); q.make(); return `<div class="joinqr" style="background:#fff;padding:10px;border-radius:12px;width:min(260px,70vw);margin:0 auto 12px" role="img" aria-label="QR เข้าห้อง ${esc(session.code)}">${q.createSvgTag({ cellSize: 4, margin: 0, scalable: true })}</div>${isLocalHost() && !lanHost ? '<div class="banner warn">เปิดหน้านี้ผ่าน localhost — โทรศัพท์สแกนแล้วเข้าไม่ได้ ให้เปิด /mod ด้วย IP ของเครื่องแทน (เช่น https://192.168.x.x:3000/mod)</div>' : ''}`; } catch { return ''; }
+}
 const copyUrl = () => navigator.clipboard?.writeText(joinUrl());
 // ยืนยันแบบกดซ้ำในหน้า (ไม่ใช้ confirm() เพราะเบราว์เซอร์ฝังบางตัว เช่น Browser pane ของ Claude, บล็อก dialog แล้วปุ่มจะไม่ทำงานเลย)
 let armed = null;
@@ -69,8 +75,9 @@ function startHTML() {
 function lobbyHTML() {
   const n = S.players.length, ok = n >= S.min && n <= S.max;
   return `<div class="setup" style="max-width:640px"><h1>🪑 ล็อบบี้</h1>
-    <p>ให้ผู้เล่นเปิดลิงก์นี้ หรือกรอกรหัสห้อง</p>
+    <p>ให้ผู้เล่นสแกน QR เปิดลิงก์ หรือกรอกรหัสห้อง</p>
     <div class="code">${esc(S.code)}</div>
+    ${joinQR()}
     <div class="row" style="margin:8px 0 18px"><code class="pill">${esc(joinUrl())}</code><button class="btn" onclick="copyUrl()">คัดลอกลิงก์</button></div>
     ${error ? `<div class="banner warn">${esc(error)}</div>` : ''}
     <div class="plist">${S.players.map(p => `<div class="pl"><div class="av">${esc(p.name[0])}</div><div class="nm" style="flex:1">${esc(p.name)} ${p.connected ? '<span class="ok">●</span>' : '<span class="mut">○ ออฟไลน์</span>'}</div><button class="btn" onclick="doAct('kick',{name:'${esc(p.name)}'})">เตะ</button></div>`).join('') || '<p class="hint">ยังไม่มีผู้เล่น</p>'}</div>
@@ -168,6 +175,7 @@ function gameHTML() {
     <div class="modbody">${body}</div></div>`;
 }
 render();
+if (isLocalHost()) fetch('/lan-ip').then(r => r.json()).then(j => { if (j.ips && j.ips[0]) { lanHost = j.ips[0]; render(); } }).catch(() => {});
 </script>
 </body>
 </html>

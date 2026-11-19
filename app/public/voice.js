@@ -58,11 +58,22 @@
     if (V.wantOn) return stop();
     return start();
   }
+  // Mic constraints: browser AEC/NS/AGC on, mono 48 kHz (Opus native). `ideal` so an unsupported value never fails the capture; goog* are Chrome-only extras, ignored elsewhere.
+  const MIC = { echoCancellation: { ideal: true }, noiseSuppression: { ideal: true }, autoGainControl: { ideal: true }, channelCount: { ideal: 1 }, sampleRate: { ideal: 48000 }, voiceIsolation: { ideal: true },
+    advanced: [{ googEchoCancellation: true }, { googEchoCancellation2: true }, { googNoiseSuppression: true }, { googNoiseSuppression2: true }, { googHighpassFilter: true }, { googAutoGainControl: true }] };
+  // Opus for speech: mono, in-band FEC (survives packet loss on wifi), DTX (silence sends nothing, so room noise/echo tails are not streamed), 32 kbps, 20 ms frames.
+  function tuneOpus(sdp) {
+    const m = /^a=rtpmap:(\d+) opus\/48000\/2/m.exec(sdp); if (!m) return sdp;
+    const pt = m[1], want = 'minptime=10;useinbandfec=1;usedtx=1;stereo=0;sprop-stereo=0;maxaveragebitrate=32000;maxplaybackrate=48000';
+    const re = new RegExp('^a=fmtp:' + pt + ' (.*)$', 'm');
+    if (re.test(sdp)) return sdp.replace(re, (_, p) => 'a=fmtp:' + pt + ' ' + p.split(';').filter(x => x && !/^(minptime|useinbandfec|usedtx|stereo|sprop-stereo|maxaveragebitrate|maxplaybackrate)=/.test(x.trim())).concat(want).join(';'));
+    return sdp.replace(m[0], m[0] + '\r\na=fmtp:' + pt + ' ' + want);
+  }
   function start() {
     if (!supported()) { V.unavail = 'insecure'; V.hint = T.insecure; return paint(); }
     V.busy = true; V.hint = T.busy; paint();
     let gum;
-    try { gum = navigator.mediaDevices.getUserMedia({ audio: { echoCancellation: true, noiseSuppression: true, autoGainControl: true } }); }
+    try { gum = navigator.mediaDevices.getUserMedia({ audio: MIC }); }
     catch { gum = Promise.reject({ name: 'NotFoundError' }); }
     safe(() => { ensureCtx(); if (V.ctx && V.ctx.state === 'suspended') V.ctx.resume().catch(() => {}); });
     return gum.then(async stream => {
@@ -111,7 +122,8 @@
     const e = { pc: null, gen, queue: [], tries: (V.retry.get(to) || 0) };
     try {
       const pc = new RTCPeerConnection({ iceServers: V.ice }); e.pc = pc; V.out.set(to, e);
-      pc.addTrack(V.track, V.stream);
+      const snd = pc.addTrack(V.track, V.stream);
+      safe(() => { const p = snd.getParameters(); p.encodings = p.encodings && p.encodings.length ? p.encodings : [{}]; p.encodings[0].maxBitrate = 32000; return snd.setParameters(p).catch(() => {}); });
       pc.onicecandidate = ev => sig(to, 'ice', { cand: candJSON(ev.candidate) });
       pc.onconnectionstatechange = () => {
         if (pc.connectionState === 'connected') V.retry.delete(to);
@@ -123,9 +135,10 @@
       };
       const offer = await pc.createOffer();
       if (V.out.get(to) !== e) return;
-      await pc.setLocalDescription(offer);
+      const tuned = { type: offer.type, sdp: tuneOpus(offer.sdp) };
+      await pc.setLocalDescription(tuned).catch(() => pc.setLocalDescription(offer));   // fall back to the untouched offer if the browser rejects the munged one
       if (V.out.get(to) !== e) return;
-      sig(to, 'offer', { sdp: offer.sdp });
+      sig(to, 'offer', { sdp: pc.localDescription ? pc.localDescription.sdp : offer.sdp });
     } catch { if (e.pc && V.out.get(to) === e) { closePc(e.pc); V.out.delete(to); } }
   }
   async function onAnswer(from, sdp) {
