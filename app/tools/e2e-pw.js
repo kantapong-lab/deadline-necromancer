@@ -5,81 +5,33 @@
 // night actions); the Moderator phase buttons are driven over its socket. One light seat is made the Data Oracle so the
 // Data Correlation flow is always covered: 2-target picker, morning result line, mod3d fx {targets, result:{same}}.
 // Exit 0 = every check passed. Screenshots: day<N>-<phase>-p<seat>.png, sheet-*.png (12 phones), mod3d-*.png.
-process.env.PORT = process.env.E2E_PORT || '3340';
-delete process.env.HTTPS_KEY; delete process.env.HTTPS_CERT;
 const os = require('os'), path = require('path'), fs = require('fs');
+const C = require('./e2e-pw-common');
+C.initEnv('3340');
 const OUT = process.env.E2E_OUT || path.join(os.tmpdir(), 'dn-e2e-pw');
 fs.mkdirSync(OUT, { recursive: true });
-const N = 12, sleep = ms => new Promise(r => setTimeout(r, ms));
-const results = [];
-const check = (name, ok, detail) => { results.push({ name, ok: !!ok }); console.log((ok ? 'PASS ' : 'FAIL ') + name + (detail ? ' :: ' + detail : '')); };
-
-function loadPw() {
-  for (const d of [process.env.PLAYWRIGHT_DIR, null]) {
-    for (const m of ['playwright-core', 'playwright']) {
-      try { return require(d ? path.join(d, m) : m); } catch (e) { if (e.code !== 'MODULE_NOT_FOUND') throw e; }
-    }
-  }
-  return null;
-}
+const { N, sleep, clickIf } = C;
+const { results, check } = C.makeChecker();
 
 async function main() {
-  const pw = loadPw();
+  const pw = C.loadPw();
   if (!pw) { console.log('SKIP playwright not found (npm i playwright-core elsewhere and set PLAYWRIGHT_DIR=<its node_modules>)'); return 0; }
-  const { io: Client } = require('socket.io-client');
-  const { httpServer, io, rooms } = require('../src/server/index');
-  const { createPushState } = require('../src/server/rooms');
   const { ROLES } = require('../src/shared/data');
-  const pushState = createPushState(io);
-  const base = 'http://localhost:' + process.env.PORT;
-  await new Promise(r => (httpServer.listening ? r() : httpServer.once('listening', r)));
-
-  const mod = Client(base, { forceNew: true });
-  await new Promise(r => mod.on('connect', r));
-  const created = await new Promise(r => mod.emit('mod:create', null, r));
-  const code = created.code;
-  const act = (action, payload) => new Promise(r => mod.emit('mod:do', { action, payload }, r));
+  const room0 = await C.startRoom();
+  const { code, act, pushState, rooms } = room0;
   console.log(`room ${code} · screenshots → ${OUT}`);
 
-  const browser = await pw.chromium.launch({ headless: !process.env.E2E_HEADED, executablePath: process.env.CHROME || undefined });
+  const browser = await C.launchBrowser(pw);
   const errs = [];
-  const watch = (page, tag) => {
-    page.on('pageerror', e => errs.push(`${tag}: ${e.message}`));
-    page.on('console', m => { if (m.type() === 'error' && !/Failed to load resource|WebGL|GPU|AudioContext/i.test(m.text())) errs.push(`${tag} console: ${m.text().slice(0, 200)}`); });
-    page.on('response', r => { if (r.status() >= 400 && !/favicon\.ico$/.test(r.url())) errs.push(`${tag} HTTP ${r.status()} ${r.url()}`); });
-  };
+  const watch = C.makeWatch(errs);
 
   // ---- 12 player phones ----
-  const pages = [];
-  for (let i = 0; i < N; i++) {
-    const ctx = await browser.newContext({ viewport: { width: 390, height: 844 }, deviceScaleFactor: 1 });
-    const page = await ctx.newPage(); watch(page, 'p' + i);
-    await page.goto(`${base}/?room=${code}`);
-    await page.fill('#jname', 'P' + String(i + 1).padStart(2, '0'));
-    await page.click('button:has-text("เข้าห้อง")');
-    await page.waitForFunction(() => typeof S !== 'undefined' && S && S.phase === 'LOBBY', null, { timeout: 15000 });
-    pages.push(page);
-  }
+  const { pages } = await C.joinPlayers(browser, room0, { watch });
   check('12 players joined through the join form', rooms.get(code).members.size >= N || pages.length === N);
 
   // ---- mod3d (desktop) ----
-  const mctx = await browser.newContext({ viewport: { width: 1440, height: 900 } });
-  const m3 = await mctx.newPage(); watch(m3, 'mod3d');
-  await mctx.addInitScript(v => localStorage.setItem('dn-mod', v), JSON.stringify({ code, modToken: created.modToken }));
-  await m3.goto(`${base}/mod3d.html`);
-  await sleep(1500);
-
-  const r0 = await act('start');
-  check('game started', r0 && r0.ok, r0 && r0.error);
-  // mod3d builds the scene in boot(st) on the first game state, and only then sets its test hook
-  const booted = await m3.waitForFunction(() => !!window.__mod3d && window.__mod3d.desks.length > 0, null, { timeout: 60000 }).then(() => true, () => false);
-  check('mod3d booted the 3D scene with a desk per player', booted && (await m3.evaluate(() => window.__mod3d.desks.length)) === N);
-  // the TV needs one click to unlock audio (browser autoplay rule), like the Moderator does on a real screen
-  await clickIfM3();
-  async function clickIfM3() { const b = m3.locator('#sgBtn'); if (await b.isVisible().catch(() => false)) { await b.click(); await sleep(800); } }
-  const room = rooms.get(code), G = room.game;
-  // the browser seat order matches join order; read seat ids by name
-  const seat = i => G.players.findIndex(p => p.name === 'P' + String(i + 1).padStart(2, '0'));
+  const { m3 } = await C.openMod3d(browser, room0, { watch });
+  const { room, G, seat } = await C.startGame(room0, m3, check);
 
   // guarantee a Data Oracle on a light seat (swap roles with whoever holds it, or take the first light non-oracle seat)
   let oracle = G.players.findIndex(p => p.role === 'data_oracle');
@@ -96,7 +48,6 @@ async function main() {
     await Promise.all(pages.map((p, i) => p.screenshot({ path: path.join(OUT, `${tag}-p${String(i + 1).padStart(2, '0')}.png`) })));
     await m3.screenshot({ path: path.join(OUT, `mod3d-${tag}.png`) });
   };
-  const clickIf = async (page, sel) => { const l = page.locator(sel).first(); if (await l.count() && await l.isEnabled()) { await l.click(); return true; } return false; };
   const toGameTab = p => clickIf(p, `button[onclick="setTab('game')"]`);
 
   let oracleNights = 0, oracleResults = [], pickerSeen = false, guard = 0;
@@ -215,7 +166,7 @@ async function main() {
   }
 
   check('no JS errors on any page', errs.length === 0, errs.slice(0, 5).join(' || '));
-  await browser.close(); mod.close(); io.close(); httpServer.close();
+  await browser.close(); room0.close();
   const failed = results.filter(r => !r.ok).length;
   console.log(`\n${failed ? 'E2E FAILED' : 'E2E OK'}: ${results.length - failed}/${results.length} checks · ${G.day} days · winner ${JSON.stringify(G.over?.side || G.over?.why || G.winner || '')} · out ${OUT}`);
   return failed ? 1 : 0;

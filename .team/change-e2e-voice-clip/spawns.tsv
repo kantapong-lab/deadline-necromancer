@@ -1,0 +1,10 @@
+3	architect	sonnet	high	1	pass	0	tok:133143
+4	backend-dev	sonnet	medium	1	pass	0	tok:190735
+6	code-reviewer	sonnet	high	1	pass	0	tok:66822
+7	qa-tester	sonnet	medium	1	pass	0	tok:42188
+4	backend-dev	sonnet	medium	2	pass	0	tok:75645
+6	code-reviewer	sonnet	high	2	pass	0	tok:45811
+7	qa-tester	sonnet	medium	2	fail	0	tok:40345
+4	backend-dev	sonnet	low	3	pass	0	tok:36466
+6	code-reviewer	sonnet	high	3	pass	0	tok:33240
+7	qa-tester	haiku	low	3	pass	0	tok:28648
