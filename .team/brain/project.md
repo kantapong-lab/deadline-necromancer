@@ -6,8 +6,10 @@ Node + Socket.IO multiplayer game (app/), docs/ rules + card images.
 - 2026-11-16: re-record app/test/http-parity.json after every merge that changes a served file; worktrees need NODE_PATH to the main app/node_modules; when artifact publish is denied, serve the mockup from the poc server for gate 3c [[tasks/change-chat-quick-replies]]
 - 2026-11-18: changing a role's target count (`t`) shifts the golden Math.random sequence via bot draws; write the V-1 guard as an A/B of the engine block on identical data. On macOS the `poc` launch config (`python`) fails and publish/preview were denied, so gate 3c ran on a file:// preview [[tasks/change-data-oracle-correlation]]
 - 2026-11-19: Playwright video has no audio (record received audio in-page + ffmpeg); headless 12-stream playout needs AudioContext sinkId none and darwin --use-angle=metal; day 1 toVote lands in VOTE_RESULT; show an early sample clip for audiovisual deliverables [[tasks/change-e2e-voice-clip]]
+- 2026-11-19: put the user-decided rules in requirements.md (brief.md is the researcher output); gate-summary 10 reads `## Bugs` as open bugs, so non-bug items go elsewhere; 3c needs a canvas URL [[tasks/indie-solo-wins]]
 ## Open issues
 - change-e2e-voice-clip: voice e2e flaky under heavy host load (13 recording pages), review SG-3/4/6/7 open, not run off macOS [[tasks/change-e2e-voice-clip]]
+- indie-solo-wins: 3D ghost fx/EXIT stamp not run on a real 3D screen; bots show Light win -6..9 pts at 10-12 players, Thief solo ~28% (needs playtest); review S-1..S-5 open [[tasks/indie-solo-wins]]
 - change-data-oracle-correlation: 3D Data Correlation fx not run in a real browser; test nits S-2/S-3; qa-cards.js 3 failures already on main (stale harness); Senior Dev "none" dark tell is a separate balance task [[tasks/change-data-oracle-correlation]]
 - change-chat-quick-replies: review suggestions S-4/S-5 open; not tested on real touch/iOS; simulate flaked once [[tasks/change-chat-quick-replies]]
 - change-lobby-ui: lobbySeen not pruned (http-parity re-recorded on change-chat-quick-replies branch) [[tasks/change-lobby-ui]]
@@ -17,6 +19,7 @@ Node + Socket.IO multiplayer game (app/), docs/ rules + card images.
 - Out-of-scope bugs (see .team/refactor-structure/refactor-plan.md section 1): server.js startsWith guard, unguarded decodeURIComponent, biased seat shuffle, rooms never deleted, docs design.md stale paths after refactor.
 ## Tasks
 - change-e2e-voice-clip: done (merged to main 238e1fb, not pushed): Playwright voice e2e with clip, Thai speech + pilot tone per seat, 46/46 [[tasks/change-e2e-voice-clip]]
+- indie-solo-wins: done (merged to main via origin): Independent solo wins and instant exit, Glory Thief credit by real effect, Chaos Intern Ghost Write skill [[tasks/indie-solo-wins]]
 - change-data-oracle-correlation: done (branch accepted, not merged or pushed): Data Oracle → Data Correlation, Rune UX / Mystery Intern card text [[tasks/change-data-oracle-correlation]]
 - voice-over: done (branch accepted, not merged or pushed): WebRTC mesh voice, Mod3D hears, server-gated mute for Silence/Burnout/voted-out; manual browser steps M1-M4 still owed [[tasks/voice-over]]
 - change-chat-quick-replies: done (branch accepted, not merged or pushed): send button, Enter-clear fix, 23 quick replies [[tasks/change-chat-quick-replies]]
