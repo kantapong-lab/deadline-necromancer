@@ -126,25 +126,7 @@ module.exports = {
     skills('illusionist_sales').forEach(a => { if (a.targets[0] != null) { P(a.targets[0]).overpromised = true; add(a.p.id, `Overpromise: Log ของ ${nm(a.targets[0])} คืนนี้ดูเหมือนวางบั๊ก`); } });
     skills('shadow_hr').forEach(a => { if (a.targets[0] != null) { const t = P(a.targets[0]); if (immune[t.id]) { add(a.p.id, `PIP Curse: ${t.name} ดูเหมือนมีภูมิคุ้มกัน (ถูกต้านทาน)`); return; } t.zeroNext = true; add(a.p.id, `PIP Curse: ${t.name} เป็น ${ROLES[t.role].n} (${FNAME[t.faction]}) — พลังโหวตพรุ่งนี้เป็น 0`); } });
     skills('shadow_legal').forEach(a => { if (a.targets[0] != null) { const t = P(a.targets[0]); if (immune[t.id]) { add(a.p.id, `NDA Silence: ${t.name} ดูเหมือนมีภูมิคุ้มกัน (ถูกต้านทาน)`); return; } t.silencedNext = true; add(a.p.id, `NDA Silence: ปิดปาก ${t.name} แล้ว`); } });
-    // 5. Mana
-    let passive = 1 - (G.noPenalty ? 0 : Math.min(G.skipStreak, 2));
-    if (evId === 'restart') passive = Math.min(passive, 0);
-    if (evId === 'scope' && evYes) passive += 1;
-    if (evId === 'bonus' && evYes) passive += 1;
-    const bugCap = evId === 'scope' && evYes ? 2 : 1;
-    const insurance = G.traps.find(t => t.kind === 'insurance' && t.fresh);
-    if (chrono && insurance) insurance.triggered = true;
-    const bugCount = (chrono && !insurance) ? 0 : A.filter(a => a.type === 'SABOTAGE').length;
-    const bugs = evId === 'bonus' && evYes ? (bugCount ? 2 : 0) : Math.min(bugCap, bugCount);
-    // Release Alchemist's Overclock Deploy: +1 after the bug deduction, so Hotfix Rollback / Sabotage Insurance don't touch it
-    const overclock = skills('release_alchemist').length ? 1 : 0;
-    skills('release_alchemist').forEach(a => fxs('release_alchemist', a.p.id, {}));
-    const before = G.mana;
-    G.mana = Math.max(0, Math.min(G.manaMax, G.mana + passive - bugs + overclock));
-    // Public line shows the net change only: a "work +1, bug −1" split would make Overclock's +1 impossible to hide
-    // (and would announce the exact bug count). The net is what the table can always compute from the bar anyway.
-    rep.push(`📊 Mana Task ${G.mana >= before ? '+' : ''}${G.mana - before} (ตอนนี้ ${G.mana}/${G.manaMax})${passive < 1 ? ' — ประชุมเสียเวลา' : ''}`);
-    // intel
+    // intel (Code Review runs before the Mana step: a bug it catches is fixed and does not count)
     const shown = a => {
       const p = a.p;
       if (p.overpromised || (er(p) === 'severance_seeker' && a.type === 'SKILL')) return 'bug';
@@ -172,8 +154,31 @@ module.exports = {
         add(a.p.id, mk(sh));
         fxs('senior_dev', a.p.id, { targets: [tid], result: { bug: sh === 'bug', none: sh === 'none', extra: tid !== a.targets[0] } });
         if (sh !== truth) G.fixNotes.push({ pid: a.p.id, text: '(Debug Scanner แก้ข้อมูล) ' + mk(truth) });
+        // Caught a real bug (shown as a bug and the target really sabotaged): that bug has no effect tonight.
+        // Alibi / Honeypot that hide it mean it was not caught. No extra line in the note: saying "fixed" only on
+        // real bugs would tell Code Review apart from Overpromise / Fake Bug Trace / Honeypot fakes.
+        const sab = A.find(x => x.side && x.p.id === tid && x.type === 'SABOTAGE');
+        if (sh === 'bug' && sab) sab.caught = true;
       });
     });
+    // 5. Mana
+    let passive = 1 - (G.noPenalty ? 0 : Math.min(G.skipStreak, 2));
+    if (evId === 'restart') passive = Math.min(passive, 0);
+    if (evId === 'scope' && evYes) passive += 1;
+    if (evId === 'bonus' && evYes) passive += 1;
+    const bugCap = evId === 'scope' && evYes ? 2 : 1;
+    const insurance = G.traps.find(t => t.kind === 'insurance' && t.fresh);
+    if (chrono && insurance) insurance.triggered = true;
+    const bugCount = (chrono && !insurance) ? 0 : A.filter(a => a.type === 'SABOTAGE' && !a.caught).length;
+    const bugs = evId === 'bonus' && evYes ? (bugCount ? 2 : 0) : Math.min(bugCap, bugCount);
+    // Release Alchemist's Overclock Deploy: +1 after the bug deduction, so Hotfix Rollback / Sabotage Insurance don't touch it
+    const overclock = skills('release_alchemist').length ? 1 : 0;
+    skills('release_alchemist').forEach(a => fxs('release_alchemist', a.p.id, {}));
+    const before = G.mana;
+    G.mana = Math.max(0, Math.min(G.manaMax, G.mana + passive - bugs + overclock));
+    // Public line shows the net change only: a "work +1, bug −1" split would make Overclock's +1 impossible to hide
+    // (and would announce the exact bug count). The net is what the table can always compute from the bar anyway.
+    rep.push(`📊 Mana Task ${G.mana >= before ? '+' : ''}${G.mana - before} (ตอนนี้ ${G.mana}/${G.manaMax})${passive < 1 ? ' — ประชุมเสียเวลา' : ''}`);
     intelSkills('qa_hunter').forEach(a => {
       if (a.targets.length < 2) return;
       const truth = a.targets.some(id => P(id).faction === 'dark');

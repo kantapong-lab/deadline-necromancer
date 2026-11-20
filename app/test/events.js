@@ -341,6 +341,26 @@ console.log(failed ? `\n${failed} event test(s) failed` : `\nall ${Object.keys(E
   console.log('  ok   Blame Shifting any faction, Seeker included');
 }
 
+// Code Review fixes the bug it catches: a reviewed player who really sabotaged adds no bug that night
+{
+  const SD = 0, rev = t => ({ [SD]: skill(t) });
+  assert.strictEqual(night(table({ mana: 2 }), { [HR]: bug }).mana, 2, 'baseline: +1 −1');
+  assert.strictEqual(night(table({ mana: 2 }), { ...rev(HR), [HR]: bug }).mana, 3, 'caught bug has no effect');
+  assert.strictEqual(night(table({ mana: 2 }), { ...rev(LEGAL), [HR]: bug }).mana, 2, 'reviewing someone else fixes nothing');
+  // Scope accepted, two bugs, one caught: +2 −1
+  assert.strictEqual(night(setEvent(table({ mana: 2 }), 'scope', true), { ...rev(HR), [HR]: bug, [LEGAL]: bug }).mana, 3);
+  // Alibi / Honeypot hide the bug from Code Review: not caught
+  const trapped = kind => { const G = table({ mana: 2 }); G.traps = [{ kind, owner: LEGAL, target: HR, day: G.day, fresh: true }]; return night(G, { ...rev(HR), [HR]: bug }); };
+  assert.strictEqual(trapped('alibi').mana, 2, 'Alibi hides the bug');
+  assert.strictEqual(trapped('honeypot').mana, 2, 'Honeypot flips the bug to work');
+  // Blackout: Code Review gets nothing, so catches nothing
+  assert.strictEqual(night(setEvent(table({ mana: 2 }), 'blackout'), { ...rev(HR), [HR]: bug }).mana, 2, 'blackout');
+  // the note says nothing extra (a "fixed" line would tell real bugs from Overpromise / Fake Bug Trace fakes)
+  const G = night(table({ mana: 2 }), { ...rev(HR), [HR]: bug });
+  assert.match(intel(G, SD), /Code Review: P7 → แอบวางบั๊ก 🐛$/m);
+  console.log('  ok   Code Review fixes a caught bug (Alibi / Honeypot / blackout block it)');
+}
+
 // No-repeat targeting: a targeted skill / curse / trap target cannot be the same player as last night's chosen target
 {
   const REPEAT = /ห้ามเลือกเป้าหมายเดิม/;

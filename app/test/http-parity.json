@@ -27,7 +27,7 @@
   "status": 200,
   "type": "text/javascript; charset=utf-8",
   "cache": "no-cache",
-  "sha256": "642086337384d9b61478800b18f34f9b1fa87be9d6881f26f58394956f668408"
+  "sha256": "122f3e42b32df3f6e08ee4228318417b62c08554836bb867dd9ca29878985999"
  },
  "/lan-ip": {
   "status": 200,
@@ -57,7 +57,7 @@
   "status": 200,
   "type": "text/javascript; charset=utf-8",
   "cache": "no-cache",
-  "sha256": "63a0e64406d9a692bad8bb89da2af718ee7cb56963f94575b96c87ede429ee90"
+  "sha256": "b109cd3e894a92a30e83553a93fd6df705d9f467e9533e2ed8f7b3b002734f7a"
  },
  "/index.html": {
   "status": 200,

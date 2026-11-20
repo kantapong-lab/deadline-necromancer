@@ -6,7 +6,7 @@ const FNAME = {light:'Team Deliver', dark:'Cult of Burnout', indie:'Severance Se
 // t = จำนวนเป้าหมายสกิล, pool = ใครเลือกได้ ('others' | 'any' | 'nondark' | 'burned' = ผู้ติด Burnout กลางคืนที่ตายแล้ว)
 // once = 1 ครั้ง/เกม, uses = N ครั้ง/เกม (บทบาทที่จำกัดการใช้ พักได้และ Mystery Intern ก๊อปไม่ได้)
 const ROLES = {
-  senior_dev:        {n:'Senior Dev', sub:'จอมขมังเวทย์', f:'light', img:'team_deliver/01_senior_dev.png', skill:'Code Review', t:1, pool:'others', d:'ส่อง Log เพื่อน 1 คนว่า "ส่งงานจริง" หรือ "แอบวางบั๊ก"'},
+  senior_dev:        {n:'Senior Dev', sub:'จอมขมังเวทย์', f:'light', img:'team_deliver/01_senior_dev.png', skill:'Code Review', t:1, pool:'others', d:'ส่อง Log เพื่อน 1 คนว่า "ส่งงานจริง" หรือ "แอบวางบั๊ก" ถ้าจับได้ว่าวางบั๊กจริง บั๊กนั้นไม่มีผลคืนนั้น'},
   oracle_pm:         {n:'Oracle PM', sub:'ผู้หยั่งรู้', f:'light', img:'team_deliver/02_oracle_pm.png', skill:'Stand-up Shield', t:1, pool:'others', d:'กางบาเรียกันเพื่อน 1 คนจาก Burnout (กันโดนฝ่ายมืด = บาเรียสะท้อนใส่ตัวเอง)'},
   qa_hunter:         {n:'QA Hunter', sub:'นักล่าปีศาจ', f:'light', img:'team_deliver/03_qa_hunter.png', skill:'Bug Bounties', t:2, pool:'others', d:'ส่อง 2 คน ระบบบอกว่า "มีฝ่ายมืดอย่างน้อย 1 คนหรือไม่"'},
   rune_ux:           {n:'Rune UX/UI', sub:'นักวาดรูน', f:'light', img:'team_deliver/04_rune_ux_ui.png', skill:'Wireframe Trap', t:1, pool:'others', d:'วางรูนที่เพื่อน 1 คน เช้าถัดไปรู้ชื่อทุกคนที่ใช้สกิลใส่คนนี้ (นับตามเป้าหมายหลังถูกสลับโดย Scope Creep/Hot Desking)'},
